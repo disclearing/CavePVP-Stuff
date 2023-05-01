@@ -1,0 +1,130 @@
+From d9a4bdd6c29de56a367cbbf26a8347d743afb6c9 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Tue, 17 May 2016 01:00:11 +0200
+Subject: [PATCH] Better handling of plugin startup errors
+
+
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index 95e07adb2..97fbde16f 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -275,7 +275,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+     }
+ 
+     protected void t() {
+-        System.exit(0);
++        System.exit(abnormalTermination ? 1 : 0); // SportBukkit
+     }
+ 
+     public void v() { // CraftBukkit - protected -> public (decompile error?)
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 948deffdd..36d95e7a9 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -117,6 +117,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     private static final int SAMPLE_INTERVAL = 100;
+     public final double[] recentTps = new double[ 3 ];
+     // Spigot end
++    protected boolean abnormalTermination; // SportBukkit
+ 
+     // Kohi start
+     public int entities;
+@@ -510,9 +511,11 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+                 }
+                 // Spigot end
+             } else {
+-                this.a((CrashReport) null);
++                //this.a((CrashReport) null); // CraftBukkit - if init fails, stop the server
++                this.abnormalTermination = true; // SportBukkit
+             }
+         } catch (Throwable throwable) {
++            this.abnormalTermination = true; // SportBukkit
+             i.error("Encountered an unexpected exception", throwable);
+             // Spigot Start
+             if ( throwable.getCause() != null )
+@@ -883,6 +886,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+             // CraftBukkit end
+         } catch (Exception exception) {
+             i.fatal("Failed to start the minecraft server", exception);
++            System.exit(1); // Sportbukkit
+         }
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 04e52aea9..ae7d80c10 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -361,6 +361,18 @@ public final class CraftServer implements Server {
+         }
+     }
+ 
++    // SportBukkit start
++    public boolean getRequireAllPlugins() {
++        return this.configuration.getBoolean("settings.require-all-plugins");
++    }
++
++    private void pluginFailedToLoad(Plugin plugin) {
++        if(getRequireAllPlugins()) {
++            throw new RuntimeException("Required plugin " + plugin.getDescription().getFullName() + " failed to load (server will shutdown)");
++        }
++    }
++    // SportBukkit end
++
+     public void loadPlugins() {
+         pluginManager.registerInterface(JavaPluginLoader.class);
+ 
+@@ -373,8 +385,9 @@ public final class CraftServer implements Server {
+                     String message = String.format("Loading %s", plugin.getDescription().getFullName());
+                     plugin.getLogger().info(message);
+                     plugin.onLoad();
+-                } catch (Throwable ex) {
++                } catch (RuntimeException ex) { // SportBukkit
+                     Logger.getLogger(CraftServer.class.getName()).log(Level.SEVERE, ex.getMessage() + " initializing " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
++                    pluginFailedToLoad(plugin); // SportBukkit
+                 }
+             }
+         } else {
+@@ -485,9 +498,15 @@ public final class CraftServer implements Server {
+                     getLogger().log(Level.WARNING, "Plugin " + plugin.getDescription().getFullName() + " tried to register permission '" + perm.getName() + "' but it's already registered", ex);
+                 }
+             }
+-        } catch (Throwable ex) {
++        } catch (RuntimeException ex) { // SportBukkit
+             Logger.getLogger(CraftServer.class.getName()).log(Level.SEVERE, ex.getMessage() + " loading " + plugin.getDescription().getFullName() + " (Is it up to date?)", ex);
+         }
++
++        // SportBukkit start
++        if(!plugin.isEnabled()) {
++            pluginFailedToLoad(plugin);
++        }
++        // SportBukkit end
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index e97394b3f..57fcf6b15 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -183,6 +183,7 @@ public class Main {
+                 MinecraftServer.main(options);
+             } catch (Throwable t) {
+                 t.printStackTrace();
++                System.exit(1); // SportBukkit
+             }
+     }
+ 
+diff --git a/src/main/resources/configurations/bukkit.yml b/src/main/resources/configurations/bukkit.yml
+index 751bbfc7b..096e01ec6 100644
+--- a/src/main/resources/configurations/bukkit.yml
++++ b/src/main/resources/configurations/bukkit.yml
+@@ -22,6 +22,7 @@ settings:
+     plugin-profiling: false
+     connection-throttle: 4000
+     query-plugins: true
++    require-all-plugins: true
+     deprecated-verbose: default
+     shutdown-message: Server closed
+ spawn-limits:
+-- 
+2.13.3
+

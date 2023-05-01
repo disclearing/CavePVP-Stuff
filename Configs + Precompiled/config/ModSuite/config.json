@@ -1,0 +1,7 @@
+{
+    "defaultSlowTime": 5000,
+    "modModeDisabled": false,
+    "modModeOnJoin": true,
+    "muted": false,
+    "slowTime": 0
+}

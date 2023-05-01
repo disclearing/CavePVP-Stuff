@@ -1,0 +1,43 @@
+From 616517c0b7e559bfd95237d83f1ccff9f475ff7b Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sat, 29 Apr 2017 19:09:43 +1000
+Subject: [PATCH] No knockback reduction for rods
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 0995fb99a..4282a1b91 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -762,7 +762,7 @@ public abstract class EntityLiving extends Entity {
+                         }
+ 
+                         this.az = (float) (Math.atan2(d1, d0) * 180.0D / 3.1415927410125732D) - this.yaw;
+-                        this.a(entity, f, d0, d1);
++                        this.a(damagesource, f, d0, d1);
+                     } else {
+                         this.az = (float) ((int) (Math.random() * 2.0D) * 180);
+                     }
+@@ -856,13 +856,19 @@ public abstract class EntityLiving extends Entity {
+ 
+     protected void dropEquipment(boolean flag, int i) {}
+ 
+-    public void a(Entity entity, float f, double d0, double d1) {
++    public void a(DamageSource damageSource, float f, double d0, double d1) {
+         if (this.random.nextDouble() >= this.getAttributeInstance(GenericAttributes.c).getValue()) {
+             this.al = true;
+             float f1 = MathHelper.sqrt(d0 * d0 + d1 * d1);
+             float f2 = 0.4F;
+ 
+             // Kohi start
++            double knockbackReduction;
++            if (damageSource.i() instanceof EntityFishingHook) {
++                knockbackReduction = 0.0;
++            } else {
++                knockbackReduction = this.knockbackReduction;
++            }
+             double friction = 2.0d - knockbackReduction;
+             f2 *= (1d - knockbackReduction);
+ 
+-- 
+2.13.3
+

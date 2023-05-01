@@ -1,0 +1,31 @@
+From f845b7da720aa36d828d408aa8dcb63f4b109626 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 30 Jun 2017 11:17:25 +0100
+Subject: [PATCH] Don't check bounding box of air
+
+
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 3acf60ab6..fcf159713 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -1348,7 +1348,7 @@ public abstract class World implements IBlockAccess {
+                         for ( int y = ystart; y < l; y++ )
+                         {
+                             Block block = chunk.getType(x - cx, y, z - cz );
+-                            if ( block != null )
++                            if ( block != null && block != Blocks.AIR) // MineHQ
+                             {
+                                 // PaperSpigot start - FallingBlocks and TNT collide with specific non-collidable blocks
+                                 if (entity.world.paperSpigotConfig.fallingBlocksCollideWithSigns && (entity instanceof EntityTNTPrimed || entity instanceof EntityFallingBlock) &&
+@@ -1407,7 +1407,7 @@ public abstract class World implements IBlockAccess {
+                             block = Blocks.BEDROCK;
+                         }
+ 
+-                        block.a(this, k1, i2, l1, axisalignedbb, this.L, (Entity) null);
++                        if (block != Blocks.AIR) block.a(this, k1, i2, l1, axisalignedbb, this.L, (Entity) null);
+                     }
+                 }
+             }
+-- 
+2.13.3
+

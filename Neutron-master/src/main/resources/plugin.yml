@@ -1,0 +1,5 @@
+name: Neutron
+main: cc.fyre.neutron.Neutron
+version: 1.0-SNAPSHOT
+depend: [Proton]
+softdepend: [Vault]

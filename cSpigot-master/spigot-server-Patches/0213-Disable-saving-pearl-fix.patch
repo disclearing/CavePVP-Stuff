@@ -1,0 +1,268 @@
+From c8220155959e3e4403759cf2b520481697499eca Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 17 Sep 2017 23:55:51 +0100
+Subject: [PATCH] Disable saving, pearl fix
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityEnderPearl.java b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+index 2b89bf8dd..e88b70c89 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderPearl.java
++++ b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+@@ -2,12 +2,15 @@ package net.minecraft.server;
+ 
+ // CraftBukkit start
+ import org.bukkit.Bukkit;
++import org.bukkit.Location;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.event.player.PlayerTeleportEvent;
+ // CraftBukkit end
+ 
+ public class EntityEnderPearl extends EntityProjectile {
+ 
++    private Location lastValidTeleport = null;
++
+     public EntityEnderPearl(World world) {
+         super(world);
+         this.loadChunks = world.paperSpigotConfig.loadUnloadedEnderPearls; // PaperSpigot
+@@ -18,6 +21,16 @@ public class EntityEnderPearl extends EntityProjectile {
+         this.loadChunks = world.paperSpigotConfig.loadUnloadedEnderPearls; // PaperSpigot
+     }
+ 
++    // MineHQ start
++    public void h() {
++        if (this.world.getCubes(this, this.boundingBox.grow(0.25D, 0.25D, 0.25D)).isEmpty()) {
++            this.lastValidTeleport = getBukkitEntity().getLocation();
++        }
++
++        super.h();
++    }
++    // MineHQ start
++
+     protected void a(MovingObjectPosition movingobjectposition) {
+         if (movingobjectposition.entity != null) {
+             movingobjectposition.entity.damageEntity(DamageSource.projectile(this, this.getShooter()), 0.0F);
+@@ -70,10 +83,10 @@ public class EntityEnderPearl extends EntityProjectile {
+             if (this.getShooter() != null && this.getShooter() instanceof EntityPlayer) {
+                 EntityPlayer entityplayer = (EntityPlayer) this.getShooter();
+ 
+-                if (entityplayer.playerConnection.b().isConnected() && entityplayer.world == this.world) {
++                if (entityplayer.playerConnection.b().isConnected() && entityplayer.world == this.world && this.lastValidTeleport != null) { // MineHQ
+                     // CraftBukkit start - Fire PlayerTeleportEvent
+                     org.bukkit.craftbukkit.entity.CraftPlayer player = entityplayer.getBukkitEntity();
+-                    org.bukkit.Location location = getBukkitEntity().getLocation();
++                    org.bukkit.Location location = this.lastValidTeleport.clone(); // MineHQ
+                     location.setPitch(player.getLocation().getPitch());
+                     location.setYaw(player.getLocation().getYaw());
+ 
+diff --git a/src/main/java/net/minecraft/server/JsonList.java b/src/main/java/net/minecraft/server/JsonList.java
+index 71ae29e90..dce0d1d3d 100644
+--- a/src/main/java/net/minecraft/server/JsonList.java
++++ b/src/main/java/net/minecraft/server/JsonList.java
+@@ -20,6 +20,7 @@ import net.minecraft.util.com.google.gson.JsonObject;
+ import net.minecraft.util.org.apache.commons.io.IOUtils;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import org.spigotmc.SpigotConfig;
+ 
+ public class JsonList {
+ 
+@@ -127,6 +128,7 @@ public class JsonList {
+     }
+ 
+     public void save() throws IOException { // CraftBukkit - Added throws
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         Collection collection = this.d.values();
+         String s = this.b.toJson(collection);
+         BufferedWriter bufferedwriter = null;
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 24157a37a..9abe8a94b 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -42,6 +42,7 @@ import org.bukkit.craftbukkit.util.Waitable;
+ import org.bukkit.event.server.RemoteServerCommandEvent;
+ import org.bukkit.event.world.WorldSaveEvent;
+ // CraftBukkit end
++import org.spigotmc.SpigotConfig;
+ 
+ // Poweruser start
+ import net.frozenorb.ThreadingManager;
+@@ -381,6 +382,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     }
+ 
+     protected void saveChunks(boolean flag) throws ExceptionWorldConflict { // CraftBukkit - added throws
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if (!this.M) {
+             // CraftBukkit start - fire WorldSaveEvent
+             // WorldServer[] aworldserver = this.worldServer;
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index e77faabc8..fee969618 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -30,6 +30,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
+ import org.bukkit.event.player.PlayerRespawnEvent;
+ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+ import org.bukkit.util.Vector;
++import org.spigotmc.SpigotConfig;
+ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+ // CraftBukkit end
+ 
+@@ -302,6 +303,7 @@ public abstract class PlayerList {
+     }
+ 
+     protected void b(EntityPlayer entityplayer) {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if (org.spigotmc.SpigotConfig.disablePlayerFileSaving) { return; } // Poweruser
+         this.playerFileData.save(entityplayer);
+         ServerStatisticManager serverstatisticmanager = (ServerStatisticManager) this.n.get(entityplayer.getUniqueID());
+@@ -1184,6 +1186,7 @@ public abstract class PlayerList {
+     }
+ 
+     public void savePlayers() {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if (org.spigotmc.SpigotConfig.disablePlayerFileSaving) { return; } // Poweruser
+         for (int i = 0; i < this.players.size(); ++i) {
+             this.b((EntityPlayer) this.players.get(i));
+@@ -1330,14 +1333,6 @@ public abstract class PlayerList {
+             File file1 = new File(this.server.getWorldServer(0).getDataManager().getDirectory(), "stats");
+             File file2 = new File(file1, uuid.toString() + ".json");
+ 
+-            if (!file2.exists()) {
+-                File file3 = new File(file1, entityhuman.getName() + ".json");
+-
+-                if (file3.exists() && file3.isFile()) {
+-                    file3.renameTo(file2);
+-                }
+-            }
+-
+             serverstatisticmanager = new ServerStatisticManager(this.server, file2);
+             serverstatisticmanager.a();
+             this.n.put(uuid, serverstatisticmanager);
+diff --git a/src/main/java/net/minecraft/server/PropertyManager.java b/src/main/java/net/minecraft/server/PropertyManager.java
+index fefa221cb..21cae775f 100644
+--- a/src/main/java/net/minecraft/server/PropertyManager.java
++++ b/src/main/java/net/minecraft/server/PropertyManager.java
+@@ -7,6 +7,7 @@ import java.io.IOException;
+ import java.util.Properties;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import org.spigotmc.SpigotConfig;
+ 
+ import joptsimple.OptionSet; // CraftBukkit
+ 
+@@ -66,6 +67,7 @@ public class PropertyManager {
+     }
+ 
+     public void savePropertiesFile() {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         FileOutputStream fileoutputstream = null;
+ 
+         try {
+diff --git a/src/main/java/net/minecraft/server/ServerStatisticManager.java b/src/main/java/net/minecraft/server/ServerStatisticManager.java
+index cea31ae98..d14bb5182 100644
+--- a/src/main/java/net/minecraft/server/ServerStatisticManager.java
++++ b/src/main/java/net/minecraft/server/ServerStatisticManager.java
+@@ -19,6 +19,7 @@ import net.minecraft.util.com.google.gson.JsonParser;
+ import net.minecraft.util.org.apache.commons.io.FileUtils;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import org.spigotmc.SpigotConfig;
+ 
+ public class ServerStatisticManager extends StatisticManager {
+ 
+@@ -43,6 +44,7 @@ public class ServerStatisticManager extends StatisticManager {
+     }
+ 
+     public void a() {
++        if (SpigotConfig.disableSaving) return;
+         if (this.d.isFile()) {
+             try {
+                 this.a.clear();
+@@ -56,6 +58,7 @@ public class ServerStatisticManager extends StatisticManager {
+     }
+ 
+     public void b() {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if ( org.spigotmc.SpigotConfig.disableStatSaving ) return; // Spigot
+         try {
+             FileUtils.writeStringToFile(this.d, a(this.a));
+@@ -65,6 +68,7 @@ public class ServerStatisticManager extends StatisticManager {
+     }
+ 
+     public void setStatistic(EntityHuman entityhuman, Statistic statistic, int i) {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if ( org.spigotmc.SpigotConfig.disableStatSaving ) return; // Spigot
+         int j = statistic.d() ? this.getStatisticValue(statistic) : 0;
+ 
+diff --git a/src/main/java/net/minecraft/server/UserCache.java b/src/main/java/net/minecraft/server/UserCache.java
+index 1ce89c48d..f3b35484b 100644
+--- a/src/main/java/net/minecraft/server/UserCache.java
++++ b/src/main/java/net/minecraft/server/UserCache.java
+@@ -17,6 +17,8 @@ import java.util.Locale;
+ import java.util.Map;
+ import java.util.UUID;
+ 
++import org.spigotmc.SpigotConfig;
++
+ import net.minecraft.util.com.google.common.base.Charsets;
+ import net.minecraft.util.com.google.common.collect.Iterators;
+ import net.minecraft.util.com.google.common.collect.Lists;
+@@ -211,6 +213,7 @@ public class UserCache {
+     }
+ 
+     public void c() {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         String s = this.b.toJson(this.a(org.spigotmc.SpigotConfig.userCacheCap));
+         BufferedWriter bufferedwriter = null;
+ 
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index b79e4ba78..ef249eebd 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -819,6 +819,7 @@ public class WorldServer extends World {
+ 
+     // Poweruser start
+     public void saveOnlyLevel(boolean flag, IProgressUpdate iprogressupdate) throws ExceptionWorldConflict {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if (this.chunkProvider.canSave()) {
+             if (iprogressupdate != null) {
+                 iprogressupdate.a("Saving level");
+@@ -829,6 +830,7 @@ public class WorldServer extends World {
+     }
+ 
+     public boolean saveOnlyChunks(boolean flag, IProgressUpdate iprogressupdate) {
++        if (SpigotConfig.disableSaving) return true; // MineHQ
+         if (this.chunkProvider.canSave()) {
+             if (iprogressupdate != null) {
+                 iprogressupdate.c("Saving chunks");
+@@ -867,12 +869,14 @@ public class WorldServer extends World {
+     }
+ 
+     public void flushSave() {
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         if (this.chunkProvider.canSave()) {
+             this.chunkProvider.c();
+         }
+     }
+ 
+     protected void a() throws ExceptionWorldConflict { // CraftBukkit - added throws
++        if (SpigotConfig.disableSaving) return; // MineHQ
+         this.G();
+         this.dataManager.saveWorldData(this.worldData, this.server.getPlayerList().t());
+         // CraftBukkit start - save worldMaps once, rather than once per shared world
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 931c4b25b..15f7bbb2c 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -531,4 +531,9 @@ public class SpigotConfig
+     private static void reduceArmorDamage() {
+         reduceArmorDamage = getBoolean("settings.reduce-armor-damage", false);
+     }
++
++    public static boolean disableSaving;
++    private static void disableSaving() {
++        disableSaving = getBoolean("settings.disableSaving", false);
++    }
+ }
+-- 
+2.13.5 (Apple Git-94)
+

@@ -1,0 +1,22 @@
+From 54678e8fc08f6e3d9a4983f1e3282efb38aee071 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 13 Nov 2016 10:48:09 -0200
+Subject: [PATCH] Undo rename
+
+
+diff --git a/pom.xml b/pom.xml
+index 95920f74..7504eccc 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1,7 +1,7 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <groupId>net.frozenorb</groupId>
+-    <artifactId>sourspigot-api</artifactId>
++    <artifactId>mspigot-api</artifactId>
+     <version>1.7.10-R0.1-SNAPSHOT</version>
+     <name>mSpigot-API</name>
+     <url>https://frozenorb.net</url>
+-- 
+2.11.0.windows.3
+

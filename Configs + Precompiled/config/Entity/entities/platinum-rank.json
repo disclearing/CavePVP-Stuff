@@ -1,0 +1,70 @@
+{
+    "type": "NPC",
+    "name": "platinum-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 56.5,
+        "y": 69.0,
+        "z": 3.5,
+        "yaw": 89.74457,
+        "pitch": -0.8161538
+    },
+    "commands": [
+        "viewproduct lifetime-platinum"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_platinum-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 56.5,
+            "y": 71.0,
+            "z": 3.5,
+            "yaw": 89.74457,
+            "pitch": -0.8161538
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&3&lPlatinum Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 56.5,
+                    "y": 71.0,
+                    "z": 3.5,
+                    "yaw": 89.74457,
+                    "pitch": -0.8161538
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 56.5,
+                    "y": 70.77,
+                    "z": 3.5,
+                    "yaw": 89.74457,
+                    "pitch": -0.8161538
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "c7SU5u6SepNVVUIg44oc4kIVhx2hPVzd+qDaqyE5o2GLteTr7UjM2ErfMuv4ME8rGhz1A9+AQ2X1krkOb43efUXNqcPeaF0xJ5AQLLUjPuxm6w28e6sjJrmiAEcTeBLB8Caxo+NtpqJaXaioHpXr2d6a5MTOKU0KQxeSGldzA3bz2H7ipMaN5MwTRcgMB8yqkMuYH+ZwttPsjyCxktlwBqiKzh0qx+p3P/ekG+skUd3P3j0wMf+9NvlVZODLUi0iwg3wliPMZwqNbeDT2gQS5QxG3E+LPKl7JW412Np7pEWdI5cYuXWl05ptjHywPP7wyjcEXDRTWQs4MbmpEFG5YnoKxTUkNI+ucbDaqLQu0Gh0fxngpqTP/nUl0mDfYbYS7fGc4kfNHIEKwp16KqOsMSYYbtATqX8rAuD6vS9WhPCuDtK2KbwI/yPtQe+jHv1GDtTiLxEDIbkmXcTStgeS+WR8T852z+M3i0SYeYTAst1nhZwlhnH2Mmabn2fndDL7iU6VXN68YQzENGMBASSjtxpIcwKlScKLc7Lcr1LFHYlDIxx2cKT5DhJNf9K9iKprbgd0OBlkEbfvqVnFMpGGr4NGzpEjMJ9QvZj7Mo0zWb2/K7B9W6v2w5Aznmjk1xz/1ectAPkIasLF6G265U2RvRgYJkYQ4imvZhG9I1XkAdo=",
+    "skinUsername": "minecarted",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNTQ3NDY0MCwKICAicHJvZmlsZUlkIiA6ICJmOTM1M2MxYjE5ZjM0ZWY0YWRkZjg0MWExZWE5YzQyZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtaW5lY2FydGVkIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzg0Yzk5YjAxNWJiYWMyNTgwNjBiYzk1ZDc4OWMyMmFhYTAwMGMxY2U2YWM1ZWE4ZDJhOWQ3ODc5Yzc0NzVlOGMiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

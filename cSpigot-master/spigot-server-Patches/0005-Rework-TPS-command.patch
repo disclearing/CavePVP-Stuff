@@ -1,0 +1,154 @@
+From 445e7c8e6a983108b8251260e0cc27c79df3deba Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 01:39:24 -0400
+Subject: [PATCH] Rework TPS command
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 8c3950aeb..8460a9944 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -114,6 +114,13 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     public final double[] recentTps = new double[ 3 ];
+     // Spigot end
+ 
++    // Kohi start
++    public int entities;
++    public int activeEntities;
++    // Kohi end
++
++    public float lastTickTime = 0F; // MineHQ
++
+     public MinecraftServer(OptionSet options, Proxy proxy) { // CraftBukkit - signature file -> OptionSet
+         net.minecraft.util.io.netty.util.ResourceLeakDetector.setEnabled( false ); // Spigot - disable
+         this.X = new UserCache(this, a);
+@@ -630,6 +637,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+         this.methodProfiler.b();
+         org.spigotmc.WatchdogThread.tick(); // Spigot
+         SpigotTimings.serverTickTimer.stopTiming(); // Spigot
++        this.lastTickTime = (System.nanoTime() - i) / 1000000F;
+         org.spigotmc.CustomTimingsHandler.tick(); // Spigot
+     }
+ 
+@@ -664,6 +672,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+ 
+         int i;
+ 
++        entities = 0;
++        activeEntities = 0;
+         for (i = 0; i < this.worlds.size(); ++i) {
+             long j = System.nanoTime();
+ 
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index a6ef3b68c..a3a6de0ef 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -1602,11 +1602,14 @@ public abstract class World implements IBlockAccess {
+         int j = MathHelper.floor(entity.locZ);
+         byte b0 = 32;
+ 
++        MinecraftServer.getServer().entities++; // Kohi
++
+         // Spigot start
+         if (!org.spigotmc.ActivationRange.checkIfActive(entity)) {
+             entity.ticksLived++;
+             entity.inactiveTick();
+         } else {
++            MinecraftServer.getServer().activeEntities++; // Kohi
+             entity.tickTimer.startTiming(); // Spigot
+             // CraftBukkit end
+             entity.S = entity.locX;
+diff --git a/src/main/java/org/spigotmc/TicksPerSecondCommand.java b/src/main/java/org/spigotmc/TicksPerSecondCommand.java
+index 2b8343d77..8eb00a9c9 100644
+--- a/src/main/java/org/spigotmc/TicksPerSecondCommand.java
++++ b/src/main/java/org/spigotmc/TicksPerSecondCommand.java
+@@ -1,8 +1,8 @@
+ package org.spigotmc;
+ 
+-import com.google.common.base.Joiner;
+ import net.minecraft.server.MinecraftServer;
+-import net.minecraft.util.com.google.common.collect.Iterables;
++import org.apache.commons.lang.StringUtils;
++import org.bukkit.Bukkit;
+ import org.bukkit.ChatColor;
+ import org.bukkit.command.Command;
+ import org.bukkit.command.CommandSender;
+@@ -21,25 +21,63 @@ public class TicksPerSecondCommand extends Command
+     @Override
+     public boolean execute(CommandSender sender, String currentAlias, String[] args)
+     {
+-        if ( !testPermission( sender ) )
+-        {
++        if (!testPermission(sender)) {
+             return true;
+         }
+ 
+-        StringBuilder sb = new StringBuilder( ChatColor.GOLD + "TPS from last 1m, 5m, 15m: " );
+-        for ( double tps : MinecraftServer.getServer().recentTps )
+-        {
+-            sb.append( format( tps ) );
+-            sb.append( ", " );
++        if (sender.hasPermission("bukkit.command.tps.advanced")) {
++            double[] tps = Bukkit.spigot().getTPS();
++            String[] tpsAvg = new String[tps.length];
++
++            for (int i = 0; i < tps.length; i++) {
++                tpsAvg[i] = formatAdvancedTps(tps[i]);
++            }
++
++            int entities = MinecraftServer.getServer().entities;
++            int activeEntities = MinecraftServer.getServer().activeEntities;
++            double activePercent = Math.round(10000.0 * activeEntities / entities) / 100.0;
++
++            sender.sendMessage(ChatColor.GOLD + "TPS from last 1m, 5m, 15m: " + StringUtils.join(tpsAvg, ", "));
++            sender.sendMessage(ChatColor.GOLD + "Full tick: " + formatTickTime(MinecraftServer.getServer().lastTickTime) + " ms");
++            sender.sendMessage(ChatColor.GOLD + "Active entities: " + ChatColor.GREEN + activeEntities + "/" + entities + " (" + activePercent + "%)");
++            sender.sendMessage(ChatColor.GOLD + "Online players: " + ChatColor.GREEN + Bukkit.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers());
++        } else {
++            double tps = Bukkit.spigot().getTPS()[1];
++            StringBuilder tpsBuilder = new StringBuilder();
++
++            tpsBuilder.append(ChatColor.GOLD).append("Server performance: ");
++            tpsBuilder.append(formatBasicTps(tps)).append(ChatColor.GOLD).append("/20.0");
++            tpsBuilder.append(" [").append(tps > 18.0 ? ChatColor.GREEN : tps > 16.0 ? ChatColor.YELLOW : ChatColor.RED);
++
++            int i = 0;
++
++            for (; i < Math.round(tps); i++) {
++                tpsBuilder.append("|");
++            }
++
++            tpsBuilder.append(ChatColor.DARK_GRAY);
++
++            for (; i < 20; i++) {
++                tpsBuilder.append("|");
++            }
++
++            tpsBuilder.append(ChatColor.GOLD).append("]");
++            sender.sendMessage(tpsBuilder.toString());
+         }
+-        sender.sendMessage( sb.substring( 0, sb.length() - 2 ) );
+ 
+         return true;
+     }
+ 
+-    private String format(double tps)
+-    {
+-        return ( ( tps > 18.0 ) ? ChatColor.GREEN : ( tps > 16.0 ) ? ChatColor.YELLOW : ChatColor.RED ).toString()
+-                + ( ( tps > 20.0 ) ? "*" : "" ) + Math.min( Math.round( tps * 100.0 ) / 100.0, 20.0 );
++    private static String formatTickTime(double time) {
++        return (time < 40.0D ? ChatColor.GREEN : time < 60.0D ? ChatColor.YELLOW : ChatColor.RED).toString() + Math.round(time * 10.0D) / 10.0D;
++    }
++
++    private static String formatAdvancedTps(double tps) {
++        return (tps > 18.0 ? ChatColor.GREEN : tps > 16.0 ? ChatColor.YELLOW : ChatColor.RED).toString() + Math.min(Math.round(tps * 100.0D) / 100.0, 20.0);
+     }
++
++    private String formatBasicTps(double tps) {
++        return (tps > 18.0 ? ChatColor.GREEN : tps > 16.0 ? ChatColor.YELLOW : ChatColor.RED).toString() + Math.min(Math.round(tps * 10.0D) / 10.0D, 20.0D);
++    }
++
+ }
+-- 
+2.13.3
+

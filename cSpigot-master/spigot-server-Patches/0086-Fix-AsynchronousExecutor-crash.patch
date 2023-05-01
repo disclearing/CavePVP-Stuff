@@ -1,0 +1,32 @@
+From 2c0777d29aba75681ab2b1791eb05edd7b5317d4 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 01:10:06 -0400
+Subject: [PATCH] Fix AsynchronousExecutor crash
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java b/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java
+index 81bb0d15a..1a1ba7c17 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java
+@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
+ import java.util.concurrent.TimeUnit;
+ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+ 
++import net.minecraft.server.MinecraftServer;
+ import org.apache.commons.lang.Validate;
+ 
+ /**
+@@ -263,7 +264,9 @@ public final class AsynchronousExecutor<P, T, C, E extends Throwable> {
+     public boolean drop(P parameter, C callback) throws IllegalStateException {
+         final Task task = tasks.get(parameter);
+         if (task == null) {
+-            throw new IllegalStateException("Unknown " + parameter);
++            //throw new IllegalStateException("Unknown " + parameter);
++            MinecraftServer.getLogger().error("Unknown " + parameter + " while running AsynchronousExecutor.drop()!");
++            return false;
+         }
+         if (!task.callbacks.remove(callback)) {
+             throw new IllegalStateException("Unknown " + callback + " for " + parameter);
+-- 
+2.13.3
+

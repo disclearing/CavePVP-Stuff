@@ -1,0 +1,175 @@
+From 234c1a2d8524fec5016f0eba96bae0c354d74794 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Tue, 22 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Get rid of some repeated isChunkLoaded checks
+
+
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index 1b5720622..9e3e66806 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -243,7 +243,7 @@ public class Chunk {
+ 
+     private void c(boolean flag) {
+         this.world.methodProfiler.a("recheckGaps");
+-        if (this.world.areChunksLoaded(this.locX * 16 + 8, 0, this.locZ * 16 + 8, 16)) {
++        if (this.areNeighborsLoaded(1)) { // Poweruser
+             for (int i = 0; i < 16; ++i) {
+                 for (int j = 0; j < 16; ++j) {
+                     if (this.c[i + j * 16]) {
+@@ -251,10 +251,12 @@ public class Chunk {
+                         int k = this.b(i, j);
+                         int l = this.locX * 16 + i;
+                         int i1 = this.locZ * 16 + j;
+-                        int j1 = this.world.g(l - 1, i1);
+-                        int k1 = this.world.g(l + 1, i1);
+-                        int l1 = this.world.g(l, i1 - 1);
+-                        int i2 = this.world.g(l, i1 + 1);
++                        // Poweruser start - pass that chunks have already been checked if they are loaded
++                        int j1 = this.world.g(l - 1, i1, true);
++                        int k1 = this.world.g(l + 1, i1, true);
++                        int l1 = this.world.g(l, i1 - 1, true);
++                        int i2 = this.world.g(l, i1 + 1, true);
++                        // Poweruser end
+ 
+                         if (k1 < j1) {
+                             j1 = k1;
+@@ -268,11 +270,13 @@ public class Chunk {
+                             j1 = i2;
+                         }
+ 
+-                        this.g(l, i1, j1);
+-                        this.g(l - 1, i1, k);
+-                        this.g(l + 1, i1, k);
+-                        this.g(l, i1 - 1, k);
+-                        this.g(l, i1 + 1, k);
++                        // Poweruser start - pass that chunks have already been checked if they are loaded
++                        this.g(l, i1, j1, true);
++                        this.g(l - 1, i1, k, true);
++                        this.g(l + 1, i1, k, true);
++                        this.g(l, i1 - 1, k, true);
++                        this.g(l, i1 + 1, k, true);
++                        // Poweruser end
+                         if (flag) {
+                             this.world.methodProfiler.b();
+                             return;
+@@ -288,7 +292,13 @@ public class Chunk {
+     }
+ 
+     private void g(int i, int j, int k) {
+-        int l = this.world.getHighestBlockYAt(i, j);
++    // Poweruser start
++        this.g(i, j, k, false);
++    }
++
++    private void g(int i, int j, int k, boolean chunksHaveAlreadyBeenChecked) {
++        int l = this.world.getHighestBlockYAt(i, j, chunksHaveAlreadyBeenChecked);
++    // Poweruser end
+ 
+         if (l > k) {
+             this.c(i, j, k, l + 1);
+@@ -298,7 +308,13 @@ public class Chunk {
+     }
+ 
+     private void c(int i, int j, int k, int l) {
+-        if (l > k && this.world.areChunksLoaded(i, 0, j, 16)) {
++        // Poweruser start
++        if (l > k) {
++            Chunk chunk = this.world.getChunkIfLoaded(i >> 4, j >> 4);
++            if(chunk == null || !chunk.areNeighborsLoaded(1)) {
++                return;
++            }
++        // Poweruser end
+             for (int i1 = k; i1 < l; ++i1) {
+                 this.world.updateLight(EnumSkyBlock.SKY, i, i1, j); // PaperSpigot - Asynchronous lighting updates
+             }
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index b20aa6574..3b42cbecc 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -803,8 +803,14 @@ public abstract class World implements IBlockAccess {
+     }
+ 
+     public int getHighestBlockYAt(int i, int j) {
++    // Poweruser start
++        return this.getHighestBlockYAt(i, j, false);
++    }
++
++    public int getHighestBlockYAt(int i, int j, boolean chunksHaveAlreadyBeenChecked) {
++    // Poweruser end
+         if (i >= -30000000 && j >= -30000000 && i < 30000000 && j < 30000000) {
+-            if (!this.isChunkLoaded(i >> 4, j >> 4)) {
++            if (!chunksHaveAlreadyBeenChecked && !this.isChunkLoaded(i >> 4, j >> 4)) { // Poweruser
+                 return 0;
+             } else {
+                 Chunk chunk = this.getChunkAt(i >> 4, j >> 4);
+@@ -817,8 +823,14 @@ public abstract class World implements IBlockAccess {
+     }
+ 
+     public int g(int i, int j) {
++    // Poweruser start
++        return this.g(i, j, false);
++    }
++
++    public int g(int i, int j, boolean chunksHaveAlreadyBeenChecked) {
++    // Poweruser end
+         if (i >= -30000000 && j >= -30000000 && i < 30000000 && j < 30000000) {
+-            if (!this.isChunkLoaded(i >> 4, j >> 4)) {
++            if (!chunksHaveAlreadyBeenChecked && !this.isChunkLoaded(i >> 4, j >> 4)) { // Poweruser
+                 return 0;
+             } else {
+                 Chunk chunk = this.getChunkAt(i >> 4, j >> 4);
+@@ -2296,6 +2308,9 @@ public abstract class World implements IBlockAccess {
+         // odds of growth happening vs growth happening in vanilla
+         this.growthOdds = this.modifiedOdds = Math.max( 35, Math.min( 100, ( ( chunksPerPlayer + 1 ) * 100F ) / 15F ) );
+         // Spigot end
++
++        Chunk chunkObj = null; // Poweruser
++
+         for (i = 0; i < this.players.size(); ++i) {
+             entityhuman = (EntityHuman) this.players.get(i);
+             j = MathHelper.floor(entityhuman.locX / 16.0D);
+@@ -2313,7 +2328,7 @@ public abstract class World implements IBlockAccess {
+                 int dx = ( random.nextBoolean() ? 1 : -1 ) * random.nextInt( randRange );
+                 int dz = ( random.nextBoolean() ? 1 : -1 ) * random.nextInt( randRange );
+                 long hash = chunkToKey( dx + j, dz + k );
+-                if ( !chunkTickList.contains( hash ) && this.isChunkLoaded( dx + j, dz + k ) )
++                if ( !chunkTickList.contains( hash ) && ((chunkObj = this.getChunkIfLoaded(dx + j, dz + k)) != null) && chunkObj.areNeighborsLoaded(1) ) // Poweruser
+                 {
+                     chunkTickList.put( hash, (short) -1 ); // no players
+                 }
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 2456ac883..a5d634fbb 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -328,12 +328,6 @@ public class WorldServer extends World {
+             long chunkCoord = iter.key();
+             int chunkX = World.keyToX(chunkCoord);
+             int chunkZ = World.keyToZ(chunkCoord);
+-            // If unloaded, or in procedd of being unloaded, drop it
+-            if ( ( !this.isChunkLoaded( chunkX, chunkZ ) ) || ( this.chunkProviderServer.unloadQueue.contains( chunkX, chunkZ ) ) )
+-            {
+-                iter.remove();
+-                continue;
+-            }
+             // Spigot end
+             // ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair) iterator.next();
+             int k = chunkX * 16;
+@@ -341,7 +335,13 @@ public class WorldServer extends World {
+ 
+             this.methodProfiler.a("getChunk");
+             this.timings.doTickTiles_tickingChunks_getChunk.startTiming(); // Poweruser
+-            Chunk chunk = this.getChunkAt(chunkX, chunkZ);
++            // Poweruser start
++            Chunk chunk = this.getChunkIfLoaded(chunkX, chunkZ);
++            if(chunk == null || chunk.wasUnloaded() || !chunk.areNeighborsLoaded(1) || this.chunkProviderServer.unloadQueue.contains( chunkX, chunkZ )) {
++                iter.remove();
++                continue;
++            }
++            // Poweruser end
+             // CraftBukkit end
+ 
+             this.a(k, l, chunk);
+-- 
+2.13.3
+

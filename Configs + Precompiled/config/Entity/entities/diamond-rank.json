@@ -1,0 +1,70 @@
+{
+    "type": "NPC",
+    "name": "diamond-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 51.5,
+        "y": 69.0,
+        "z": -7.5,
+        "yaw": -0.7115123,
+        "pitch": 0.028377593
+    },
+    "commands": [
+        "viewproduct lifetime-diamond"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_diamond-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 51.5,
+            "y": 71.0,
+            "z": -7.5,
+            "yaw": -0.7115123,
+            "pitch": 0.028377593
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&b&lDiamond Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 51.5,
+                    "y": 71.0,
+                    "z": -7.5,
+                    "yaw": -0.7115123,
+                    "pitch": 0.028377593
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 51.5,
+                    "y": 70.77,
+                    "z": -7.5,
+                    "yaw": -0.7115123,
+                    "pitch": 0.028377593
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "ntXi79FhD1+A1lpzabbwDhU26pky8zP3sDvuOC1BSNYftJQzjp0TY5W4FcxXwy8yKpfpR9GitQn1BoqI/Xr5Qyeff+bHgfWMG4pMn8bjirhx9E6ck7nMmc89rE+5x+yJZM98nYJxgZcF5owUU84yNFUv6k1JLDt8XboSSs+Wq4FAUVDs7J/JR5NspIiqe7iP/Ffv+FqjLOIiNfKZYkhq/smvdSn6eqejI5gCaxKfELlIIOZwhPJPe/eoFP6RPPxpDXFHnfT5Uu8sxDAXpTMGksW1Fyfs5zqzhUamMBWVhz2I008SUNRK3aFwPan4ddFB8zTUurKoBwDVMBVprbc8BZB6qt5CRXpJg/M4OrPi186pAv35JO4NHb/LGpBTa2Vh6EMeFucKEO7cUhCQJ/Qx455XNsg9kZI2A63Yd0uiOnYYBoNXoZUisCFmc1T9wKfime7/J43mPJ4kPhm7bIrXN90+bNGuIrNvh+N3qzcbp0A4tFQ+GLrf6JOSV8/WZuj/JGicpLb4IeMQ8IpqStMKw5MPgBDs6XGrcCPfBETD284W/fsj8BJUYPT603twkALc4Af3iB9PpNq+qc5tcXe4FwUHx5ohn31FA8H8bDE/nXlSJraNrkma948jJ22A4g2ujf3RGKuF/EC89QHvsJHZqeL5Jg+zPeZ3lz7xy/sdCJY=",
+    "skinUsername": "BurningTax75",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNDQ4MzE0MiwKICAicHJvZmlsZUlkIiA6ICIzMzA5NzEzZTY0YzI0NjcyYjU5MmFlNGY5ZmM2OTZiZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJCdXJuaW5nVGF4NzUiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U3MDc0MDIxNGFhMjg4NTIzNjUzZjRhMzFjOTAxNjVmMmE0NmQzYWQxZTdmMThkZTdkODA0NDM1ZmI5NGYxYyIKICAgIH0KICB9Cn0=",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

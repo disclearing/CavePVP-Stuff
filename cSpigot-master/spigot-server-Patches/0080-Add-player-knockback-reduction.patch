@@ -1,0 +1,74 @@
+From 04c4643fb7fe0ac8e35e061ac48fa46abf5c6b88 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:43:34 -0400
+Subject: [PATCH] Add player knockback reduction
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index c8287f8d7..b06ff8669 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -956,7 +956,8 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+ 
+                     if (flag2) {
+                         if (i > 0) {
+-                            entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F));
++                            double kb = entity instanceof EntityLiving ? 1.0 - ((EntityLiving) entity).knockbackReduction : 1.0;
++                            entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F * kb), 0.1D * kb, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F * kb));
+                             this.motX *= 0.6D;
+                             this.motZ *= 0.6D;
+                             this.setSprinting(false);
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 0cab6dd3d..0e4d2ae6d 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -91,6 +91,7 @@ public abstract class EntityLiving extends Entity {
+         ++this.aU; // Above all the floats
+     }
+     // Spigot end
++    public double knockbackReduction; // Kohi
+ 
+     public EntityLiving(World world) {
+         super(world);
+@@ -828,14 +829,20 @@ public abstract class EntityLiving extends Entity {
+             float f1 = MathHelper.sqrt(d0 * d0 + d1 * d1);
+             float f2 = 0.4F;
+ 
+-            this.motX /= 2.0D;
+-            this.motY /= 2.0D;
+-            this.motZ /= 2.0D;
++            // Kohi start
++            double friction = 2.0d - knockbackReduction;
++            f2 *= (1d - knockbackReduction);
++
++            this.motX /= friction;
++            this.motY /= friction;
++            this.motZ /= friction;
++            // Kohi end
++
+             this.motX -= d0 / (double) f1 * (double) f2;
+             this.motY += (double) f2;
+             this.motZ -= d1 / (double) f1 * (double) f2;
+-            if (this.motY > 0.4000000059604645D) {
+-                this.motY = 0.4000000059604645D;
++            if (this.motY > 0.4000000059604645D * (1d - knockbackReduction)) {
++                this.motY = 0.4000000059604645D * (1d - knockbackReduction);
+             }
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 250c05fe9..11a1fb294 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -114,6 +114,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         // this.canPickUpLoot = true; TODO
+         this.maxHealthCache = this.getMaxHealth();
+         // CraftBukkit end
++
++        this.knockbackReduction = 0.1D; // Kohi
+     }
+ 
+     public void a(NBTTagCompound nbttagcompound) {
+-- 
+2.12.2.windows.2
+

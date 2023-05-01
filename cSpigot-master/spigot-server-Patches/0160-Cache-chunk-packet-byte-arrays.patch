@@ -1,0 +1,136 @@
+From e26ee08d815da7b3c7450fffbab10c54e17b97ce Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Wed, 26 Apr 2017 15:43:21 +1000
+Subject: [PATCH] Cache chunk packet byte arrays
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+index 39235fd9a..e964f57f2 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+@@ -1,5 +1,7 @@
+ package net.minecraft.server;
+ 
++import net.frozenorb.ReusableByteArray;
++
+ import java.io.IOException;
+ import java.util.zip.DataFormatException;
+ import java.util.zip.Deflater;
+@@ -11,7 +13,7 @@ public class PacketPlayOutMapChunk extends Packet {
+     private int b;
+     private int c;
+     private int d;
+-    private byte[] e;
++    private static final ReusableByteArray bufferCache = new ReusableByteArray(164196); // MineHQ
+     private byte[] f;
+     private boolean g;
+     private int h;
+@@ -42,6 +44,8 @@ public class PacketPlayOutMapChunk extends Packet {
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException {
++        // MineHQ start - this is client code
++        /*
+         this.a = packetdataserializer.readInt();
+         this.b = packetdataserializer.readInt();
+         this.g = packetdataserializer.readBoolean();
+@@ -78,6 +82,8 @@ public class PacketPlayOutMapChunk extends Packet {
+         } finally {
+             inflater.end();
+         }
++        */
++        // MineHQ end
+     }
+ 
+     public void b(PacketDataSerializer packetdataserializer) {
+@@ -90,17 +96,18 @@ public class PacketPlayOutMapChunk extends Packet {
+         {
+             this.world.spigotConfig.antiXrayInstance.obfuscate(this.a, this.b, mask, this.f, this.world, false); // Spigot
+             Deflater deflater = new Deflater(4); // Spigot
++            byte[] buffer;
+             try {
+                 deflater.setInput(this.f, 0, this.f.length);
+                 deflater.finish();
+-                this.e = new byte[this.f.length];
+-                this.h = deflater.deflate(this.e);
++                buffer = bufferCache.get(this.f.length + 100);
++                this.h = deflater.deflate(buffer);
+             } finally {
+                 deflater.end();
+             }
+             packetdataserializer.writeShort( (short) ( this.d & '\uffff' ) );
+             packetdataserializer.writeInt( this.h );
+-            packetdataserializer.writeBytes( this.e, 0, this.h );
++            packetdataserializer.writeBytes( buffer, 0, this.h );
+         } else
+         {
+             this.world.spigotConfig.antiXrayInstance.obfuscate(this.a, this.b, mask, this.f, this.world, true); // Spigot
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+index b9db43cac..dfcabdafe 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+@@ -1,5 +1,7 @@
+ package net.minecraft.server;
+ 
++import net.frozenorb.ReusableByteArray;
++
+ import java.io.IOException;
+ import java.util.List;
+ import java.util.zip.DataFormatException;
+@@ -13,10 +15,12 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+     private int[] c;
+     private int[] d;
+     private byte[] buffer;
++    private static final ReusableByteArray bufferCache = new ReusableByteArray(820480); // MineHQ
+     private byte[][] inflatedBuffers;
+     private int size;
+     private boolean h;
+-    private byte[] buildBuffer = new byte[0]; // CraftBukkit - remove static
++    private byte[] buildBuffer; // MineHQ
++    private static final ReusableByteArray buildBufferCache = new ReusableByteArray(820480); // MineHQ
+     // CraftBukkit start
+     static final ThreadLocal<Deflater> localDeflater = new ThreadLocal<Deflater>() {
+         @Override
+@@ -94,7 +98,7 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+         }
+ 
+         // Now it's time to efficiently copy the chunk to the build buffer
+-        buildBuffer = new byte[finalBufferSize];
++        buildBuffer = buildBufferCache.get(finalBufferSize); // MineHQ
+         int bufferLocation = 0;
+         for (int i = 0; i < a.length; i++) {
+             System.arraycopy(inflatedBuffers[i], 0, buildBuffer, bufferLocation, inflatedBuffers[i].length);
+@@ -104,10 +108,10 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+ 
+         Deflater deflater = localDeflater.get();
+         deflater.reset();
+-        deflater.setInput(this.buildBuffer);
++        deflater.setInput(this.buildBuffer, 0, finalBufferSize); // MineHQ
+         deflater.finish();
+ 
+-        this.buffer = new byte[this.buildBuffer.length + 100];
++        this.buffer = bufferCache.get(finalBufferSize + 100); // MineHQ
+         this.size = deflater.deflate(this.buffer);
+     }
+     // CraftBukkit end
+@@ -117,6 +121,8 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException { // CraftBukkit - throws IOException
++        // MineHQ start - this is client code
++        /*
+         short short1 = packetdataserializer.readShort();
+ 
+         this.size = packetdataserializer.readInt();
+@@ -171,6 +177,8 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+             System.arraycopy(abyte, i, this.inflatedBuffers[j], 0, i1);
+             i += i1;
+         }
++        */
++        // MineHQ end
+     }
+ 
+     public void b(PacketDataSerializer packetdataserializer) throws IOException { // CraftBukkit - throws IOException
+-- 
+2.13.3
+

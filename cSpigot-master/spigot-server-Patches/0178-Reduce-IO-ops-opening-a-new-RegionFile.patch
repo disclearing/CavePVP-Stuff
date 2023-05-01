@@ -1,0 +1,53 @@
+From b99c39095d67ff617ddbb29c4ca3c6673a52b3b9 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sat, 1 Jul 2017 05:10:06 +0100
+Subject: [PATCH] Reduce IO ops opening a new RegionFile
+
+
+diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
+index 3a1bd5b8f..056504aea 100644
+--- a/src/main/java/net/minecraft/server/RegionFile.java
++++ b/src/main/java/net/minecraft/server/RegionFile.java
+@@ -4,9 +4,12 @@ import java.io.BufferedInputStream;
+ import java.io.ByteArrayInputStream;
+ import java.io.DataInputStream;
+ import java.io.DataOutputStream;
++import java.io.EOFException;
+ import java.io.File;
+ import java.io.IOException;
+ import java.io.RandomAccessFile;
++import java.nio.ByteBuffer;
++import java.nio.IntBuffer;
+ import java.util.ArrayList;
+ import java.util.zip.DeflaterOutputStream;
+ import java.util.zip.GZIPInputStream;
+@@ -84,8 +87,16 @@ public class RegionFile {
+ 
+             int k;
+ 
++            // MineHQ start
++            ByteBuffer header = ByteBuffer.allocate(8192);
++            while (header.hasRemaining())  {
++                if (this.c.getChannel().read(header) == -1) throw new EOFException();
++            }
++            header.clear();
++            IntBuffer headerAsInts = header.asIntBuffer();
++            // MineHQ end
+             for (j = 0; j < 1024; ++j) {
+-                k = this.c.readInt();
++                k = headerAsInts.get(); // MineHQ
+                 this.d[j] = k;
+                 if (k != 0 && (k >> 8) + (k & 255) <= this.f.size()) {
+                     for (int l = 0; l < (k & 255); ++l) {
+@@ -95,7 +106,7 @@ public class RegionFile {
+             }
+ 
+             for (j = 0; j < 1024; ++j) {
+-                k = this.c.readInt();
++                k = headerAsInts.get(); // MineHQ
+                 this.e[j] = k;
+             }
+         } catch (IOException ioexception) {
+-- 
+2.13.3
+

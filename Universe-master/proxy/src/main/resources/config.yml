@@ -1,0 +1,5 @@
+name: "US-Proxy"
+region: "UNITED_STATES"
+redis:
+  host: "localhost"
+  password: "ggMan"

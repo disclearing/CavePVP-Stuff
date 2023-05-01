@@ -1,0 +1,51 @@
+backupSchedule:
+- DAY HOUR:MINUTE PM
+- 2:00 AM
+- 4:00 AM
+- 6:00 AM
+- 8:00 AM
+- 10:00 AM
+- 12:00 AM
+- 2:00 PM
+- 4:00 PM
+- 6:00 PM
+- 8:00 PM
+- 10:00 PM
+- 12:00 PM
+- 1:00 AM
+- 3:00 AM
+- 5:00 AM
+- 7:00 AM
+- 9:00 AM
+- 11:00 AM
+- 1:00 PM
+- 3:00 PM
+- 5:00 PM
+- 7:00 PM
+- 9:00 PM
+- 11:00 PM
+- Mon Tue Wed Thur Fri Sat Sun 2:30
+maxBackupsBeforeErase: 24
+compressionLevel_1-10: 3
+slowdownWhenServerLags: true
+showSlowdownMessage: true
+debug: false
+name: backup_%time%
+extension: zip
+exemptFolders:
+- example/this/folder/wont/backup
+- example/folder
+- example/file.yml
+saveFolder: backups/saves
+allowInGameCommands: false
+notifyAdmins: true
+ftp:
+  enable: false
+  hostname: ftp.example.com
+  port: 21
+  protocol: sftp
+  username: user
+  password: password
+  saveLocation: ''
+  deleteAfterSuccess: false
+  maxBackupsBeforeErase: 4

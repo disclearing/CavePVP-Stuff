@@ -1,0 +1,29 @@
+REDIS:
+  HOST: "0.0.0.0"
+  PORT: 6379
+  AUTHENTICATION:
+    ENABLED: false
+    PASSWORD: ""
+SETTINGS:
+  SERVER_ID: "Fasts" # The server's unique ID
+  SERVER_NAME: "Fasts" # The server's display name (not network name)
+  CACHE_SERVERS: true
+PRIORITY:
+  DEFAULT: 1
+  RANKS:
+    Default:
+      PRIORITY: 1
+      PERMISSION: "ranks.default"
+    VIP:
+      PRIORITY: 2
+      PERMISSION: "ranks.vip"
+    MVP:
+      PRIORITY: 3
+      PERMISSION: "ranks.mvp"
+QUEUE:
+  JOINED: "&aYou have joined the {0} queue."
+  LEFT: "&cYou have been removed from the {0} queue."
+  REMINDER:
+    - "&eYou are position &d#{0} &eof &d{1} &ein the &a{2} &equeue."
+    - "&7Purchase a rank at store.cavepvp.org to get a higher queue priority."
+  SENDING: "&aSending you to {0}..."

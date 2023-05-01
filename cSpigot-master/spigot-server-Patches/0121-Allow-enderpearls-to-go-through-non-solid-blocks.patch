@@ -1,0 +1,69 @@
+From 58c251d47c3de246deaf339197602f7631866d99 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Wed, 23 Dec 2015 06:33:14 +0100
+Subject: [PATCH] Allow enderpearls to go through non-solid blocks
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityEnderPearl.java b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+index 718a63e78..2b89bf8dd 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderPearl.java
++++ b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+@@ -23,6 +23,39 @@ public class EntityEnderPearl extends EntityProjectile {
+             movingobjectposition.entity.damageEntity(DamageSource.projectile(this, this.getShooter()), 0.0F);
+         }
+ 
++        // Poweruser start
++        if(this.world.spigotConfig.enderPearlsCanPassNonSolidBlocks && movingobjectposition.type == EnumMovingObjectType.BLOCK) {
++            double maxMotionVectorComponent = Math.max(Math.max(Math.abs(this.motX), Math.abs(this.motY)), Math.abs(this.motZ));
++            if(maxMotionVectorComponent > 0.001D &&
++               !this.world.getType(movingobjectposition.b, movingobjectposition.c, movingobjectposition.d).getMaterial().isSolid()) {
++                double factor = 0.20D / maxMotionVectorComponent;
++                double shortendMotionX = this.motX * factor;
++                double shortendMotionY = this.motY * factor;
++                double shortendMotionZ = this.motZ * factor;
++                double tempPositionX = movingobjectposition.b + 0.5D;
++                double tempPositionY = movingobjectposition.c + 0.5D;
++                double tempPositionZ = movingobjectposition.d + 0.5D;
++                int nextBlockPositionX;
++                int nextBlockPositionY;
++                int nextBlockPositionZ;
++                do {
++                    tempPositionX += shortendMotionX;
++                    tempPositionY += shortendMotionY;
++                    tempPositionZ += shortendMotionZ;
++                    nextBlockPositionX = MathHelper.floor(tempPositionX);
++                    nextBlockPositionY = (int)(tempPositionY);
++                    nextBlockPositionZ = MathHelper.floor(tempPositionZ);
++                } while (nextBlockPositionX == movingobjectposition.b &&
++                         nextBlockPositionY == movingobjectposition.c &&
++                         nextBlockPositionZ == movingobjectposition.d);
++                Block nextBlock = this.world.getType(nextBlockPositionX, nextBlockPositionY, nextBlockPositionZ);
++                if(!nextBlock.getMaterial().isSolid()) {
++                    return;
++                }
++            }
++        }
++        // Poweruser end
++
+         // PaperSpigot start - Remove entities in unloaded chunks
+         if (inUnloadedChunk && world.paperSpigotConfig.removeUnloadedEnderPearls) {
+             die();
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index d2f523afd..045ed3159 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -370,4 +370,11 @@ public class SpigotWorldConfig
+         log("Mobs enabled: " + mobsEnabled);
+     }
+ 
++    // Poweruser start
++    public boolean enderPearlsCanPassNonSolidBlocks;
++    private void enderPearlsCanPassNonSolidBlocks() {
++        enderPearlsCanPassNonSolidBlocks = getBoolean("enderPearlsCanPassNonSolidBlocks", false);
++        log("Enderpearls can pass non-solid blocks: " + enderPearlsCanPassNonSolidBlocks);
++    }
++    // Poweruser end
+ }
+-- 
+2.13.3
+

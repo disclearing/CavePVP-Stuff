@@ -1,0 +1,16 @@
+{
+  "name": "Nether-Outpost",
+  "capLocation": {
+    "x": 500.5,
+    "y": 32.0,
+    "z": -113.5
+  },
+  "world": "world_nether",
+  "capDistance": 4,
+  "capTime": 900,
+  "hidden": true,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

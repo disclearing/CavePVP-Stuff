@@ -1,0 +1,110 @@
+From 9ef94498639a48d145f33c4b436711a1708f6c75 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 4 Jul 2017 01:23:59 +0100
+Subject: [PATCH] Add ticking toggles
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 4282a1b91..d9b6967aa 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -1643,7 +1643,7 @@ public abstract class EntityLiving extends Entity {
+ 
+     protected void bo() {
+         // Kohi - skip checks if not activated
+-        if (!ActivationRange.checkIfActive(this)) {
++        if (SpigotConfig.disableEntityCollisions || !ActivationRange.checkIfActive(this)) { // MineHQ
+             return;
+         }
+ 
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 8627ef832..4225a7f5f 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -24,6 +24,7 @@ import org.bukkit.event.weather.LightningStrikeEvent;
+ import org.bukkit.event.weather.ThunderChangeEvent;
+ import org.bukkit.event.weather.WeatherChangeEvent;
+ // CraftBukkit end
++import org.spigotmc.SpigotConfig;
+ 
+ public class WorldServer extends World {
+ 
+@@ -161,13 +162,13 @@ public class WorldServer extends World {
+     // CraftBukkit end
+ 
+     public void doTick() {
+-        super.doTick();
++        if (!SpigotConfig.disableWeatherTicking) super.doTick(); // MineHQ
+         if (this.getWorldData().isHardcore() && this.difficulty != EnumDifficulty.HARD) {
+             this.difficulty = EnumDifficulty.HARD;
+         }
+ 
+         this.worldProvider.e.b();
+-        if (this.everyoneDeeplySleeping()) {
++        if (!SpigotConfig.disableSleepCheck && this.everyoneDeeplySleeping()) { // MineHQ
+             if (this.getGameRules().getBoolean("doDaylightCycle")) {
+                 long i = this.worldData.getDayTime() + 24000L;
+ 
+@@ -208,7 +209,7 @@ public class WorldServer extends World {
+         timings.doTickPending.stopTiming(); // Spigot
+         this.methodProfiler.c("tickBlocks");
+         timings.doTickTiles.startTiming(); // Spigot
+-        this.g();
++        if (!SpigotConfig.disableBlockTicking) this.g(); // MineHQ
+         timings.doTickTiles.stopTiming(); // Spigot
+         this.methodProfiler.c("chunkMap");
+         timings.doChunkMap.startTiming(); // Spigot
+@@ -216,8 +217,12 @@ public class WorldServer extends World {
+         timings.doChunkMap.stopTiming(); // Spigot
+         this.methodProfiler.c("village");
+         timings.doVillages.startTiming(); // Spigot
+-        this.villages.tick();
+-        this.siegeManager.a();
++        // MineHQ start
++        if (!SpigotConfig.disableVillageTicking) {
++            this.villages.tick();
++            this.siegeManager.a();
++        }
++        // MineHQ end
+         timings.doVillages.stopTiming(); // Spigot
+         this.methodProfiler.c("portalForcer");
+         timings.doPortalForcer.startTiming(); // Spigot
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 9615d0dc6..7e328ab51 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -495,6 +495,31 @@ public class SpigotConfig
+     private static void disableTracking() {
+         disableTracking = getBoolean("settings.disable.entityTracking", false);
+     }
++
++    public static boolean disableBlockTicking;
++    private static void disableBlockTicking() {
++        disableBlockTicking = getBoolean("settings.disable.ticking.blocks", false);
++    }
++
++    public static boolean disableVillageTicking;
++    private static void disableVillageTicking() {
++        disableVillageTicking = getBoolean("settings.disable.ticking.villages", false);
++    }
++
++    public static boolean disableWeatherTicking;
++    private static void disableWeatherTicking() {
++        disableWeatherTicking = getBoolean("settings.disable.ticking.weather", false);
++    }
++
++    public static boolean disableSleepCheck;
++    private static void disableSleepCheck() {
++        disableSleepCheck = getBoolean("settings.disable.general.sleepcheck", false);
++    }
++
++    public static boolean disableEntityCollisions;
++    private static void disableEntityCollisions() {
++        disableEntityCollisions = getBoolean("settings.disable.general.entity-collisions", false);
++    }
+     // MineHQ end
+ 
+     public static boolean reduceArmorDamage;
+-- 
+2.13.3
+

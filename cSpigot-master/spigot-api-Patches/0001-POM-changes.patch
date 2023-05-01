@@ -1,0 +1,68 @@
+From d9149442fa6b6b62389e0a44a97585471c70fc8f Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Fri, 20 May 2016 01:15:16 +0200
+Subject: [PATCH] POM changes
+
+
+diff --git a/pom.xml b/pom.xml
+index 5dbb186a..b79dec95 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1,18 +1,18 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+-    <groupId>org.spigotmc</groupId>
+-    <artifactId>spigot-api</artifactId>
++    <groupId>net.frozenorb</groupId>
++    <artifactId>mspigot-api</artifactId>
+     <version>1.7.10-R0.1-SNAPSHOT</version>
+-    <name>Spigot-API</name>
+-    <url>http://www.spigotmc.org</url>
++    <name>mSpigot-API</name>
++    <url>https://frozenorb.net</url>
+ 
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     </properties>
+ 
+     <parent>
+-        <groupId>org.spigotmc</groupId>
+-        <artifactId>spigot-parent</artifactId>
++        <groupId>net.frozenorb</groupId>
++        <artifactId>mspigot-parent</artifactId>
+         <version>dev-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+@@ -73,6 +73,13 @@
+         </plugins>
+     </build>
+     <dependencies>
++        <dependency>
++            <groupId>net.md-5</groupId>
++            <artifactId>bungeecord-chat</artifactId>
++            <version>1.8-SNAPSHOT</version>
++            <type>jar</type>
++            <scope>compile</scope>
++        </dependency>
+         <dependency>
+             <groupId>org.yaml</groupId>
+             <artifactId>snakeyaml</artifactId>
+@@ -131,4 +138,15 @@
+             <scope>test</scope>
+         </dependency>
+     </dependencies>
++
++    <distributionManagement>
++        <repository>
++            <id>minehq-repo</id>
++            <url>http://maven.minehq.com:8081/artifactory/minehq-low</url>
++        </repository>
++        <snapshotRepository>
++            <id>minehq-repo</id>
++            <url>http://maven.minehq.com:8081/artifactory/minehq-low</url>
++        </snapshotRepository>
++    </distributionManagement>
+ </project>
+-- 
+2.15.2 (Apple Git-101.1)
+

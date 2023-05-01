@@ -1,0 +1,132 @@
+From 4be0aad53656ca90518f81f1d4cc556d653a8061 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Tue, 30 May 2017 14:47:50 -0300
+Subject: [PATCH] Disguises
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index 1e1db4b9..9301711d 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -768,6 +768,22 @@ public final class Bukkit {
+     }
+     // Guardian end
+ 
++    // MineHQ start
++    /**
++     * @see Server#getPlayerByDisguise(String name)
++     */
++    public static Player getPlayerByDisguise(String name) {
++        return server.getPlayerByDisguise(name);
++    }
++
++    /**
++     * @see Server#getPlayerExactByDisguise(String name)
++     */
++    public static Player getPlayerExactByDisguise(String name) {
++        return server.getPlayerExactByDisguise(name);
++    }
++    // MineHQ end
++
+     /**
+      * @see Server#getUnsafe()
+      */
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 7e708b57..c4f9cf86 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -930,6 +930,28 @@ public interface Server extends PluginMessageRecipient {
+     public boolean shouldGuardianAct();
+     // Guardian end
+ 
++    // MineHQ start
++    /**
++     * Gets a player object by the given disguised name.
++     * <p>
++     * This method may not return objects for disguises not in use.
++     *
++     * @param name the disguised name to look up
++     * @return a player if one was found, null otherwise
++     */
++    public Player getPlayerByDisguise(String name);
++
++    /**
++     * Gets the player with the exact given disguise name, case insensitive
++     * <p>
++     * This method may not return objects for disguises not in use.
++     *
++     * @param name the exact disguised name of a player
++     * @return a player if one was found, null otherwise
++     */
++    public Player getPlayerExactByDisguise(String name);
++    // MineHQ end
++
+     /**
+      * @see UnsafeValues
+      */
+diff --git a/src/main/java/org/bukkit/command/Command.java b/src/main/java/org/bukkit/command/Command.java
+index 31e4f667..796ca241 100644
+--- a/src/main/java/org/bukkit/command/Command.java
++++ b/src/main/java/org/bukkit/command/Command.java
+@@ -92,7 +92,7 @@ public abstract class Command {
+ 
+         ArrayList<String> matchedPlayers = new ArrayList<String>();
+         for (Player player : sender.getServer().getOnlinePlayers()) {
+-            String name = player.getName();
++            String name = player.getDisguisedName(); // MineHQ - Disguises
+             if ((senderPlayer == null || senderPlayer.canSee(player)) && StringUtil.startsWithIgnoreCase(name, lastWord)) {
+                 matchedPlayers.add(name);
+             }
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index e452f203..0efa1968 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -35,6 +35,45 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+      */
+     public String getDisplayName();
+ 
++    // MineHQ start - Disguises
++    /**
++     * Gets the disguised name of this player, or their
++     * actual name if they're not currently disguised.
++     */
++    public String getDisguisedName();
++
++    /**
++     * Is this {@link Player} currently disguised?
++     */
++    public boolean isDisguised();
++
++    /**
++     * Disguise this {@link Player} as someone else.
++     * This will disguise their tab-list name and tab-completion
++     * should take this into account.
++     *
++     * {@link #getDisplayName()} will return the disguised name, as
++     * well as {@link #getDisguisedName()}. {@link #getName()} should
++     * only be used in situations where we absolutely need the player's
++     * real name, and should never be outputted to other players.
++     *
++     * @param name    The name of the player we want to disguise as
++     * @param texture We can add custom skins by doing this.
++     */
++    public void disguise(String name, String texture);
++
++    /**
++     * @see #disguise(String, String)
++     * This method does not allow for a custom skin.
++     */
++    public void disguise(String name);
++
++    /**
++     * Un-disguise this player.
++     */
++    public void undisguise();
++    // MineHQ end
++
+     /**
+      * Sets the "friendly" name to display of this player. This may include
+      * color.
+-- 
+2.13.3
+

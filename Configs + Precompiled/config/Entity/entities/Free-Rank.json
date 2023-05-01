@@ -1,0 +1,80 @@
+{
+    "type": "NPC",
+    "name": "Free-Rank",
+    "location": {
+        "world": "Spawn",
+        "x": 6.5,
+        "y": 70.0,
+        "z": 6.5,
+        "yaw": 137.81062,
+        "pitch": -0.0
+    },
+    "commands": [],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_Free-Rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 6.5,
+            "y": 72.095,
+            "z": 6.5,
+            "yaw": 137.81062,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "§2§l*§a§l NEW §2§l*",
+                "location": {
+                    "world": "Spawn",
+                    "x": 6.5,
+                    "y": 72.325,
+                    "z": 6.5,
+                    "yaw": 137.81062,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&7&lFree Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 6.5,
+                    "y": 72.095,
+                    "z": 6.5,
+                    "yaw": 137.81062,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§f§o/freerank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 6.5,
+                    "y": 71.865,
+                    "z": 6.5,
+                    "yaw": 137.81062,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "okxu7hE3mrGIIs4rqXHGMb7coSo2x6bhYRz0MFZXSzajk9cxJBElLDnQ9rJMBz4LlZCrtkgteRUBhAqotLMRjFT2DTWjfQ3DzKzhoW/cyJ+kYrSWESalT1WeA2DrdnTxs5B/AC6pakXNtNP+vfwBjGqmctkmBg5MLk8IZYLt4laG44vIVsBW6pMwBTgSWgrq8U+/4xkPuL4O44HthRl3bVNPKlAfc2WgPWNmSHbYMyalpVRVU7RR7BWKCDRQeAX6PKo3XhSmmMCsSMx+DqoB8dlKrc+0EtSUcqTlUuGwM18xyE+GdTQ5g5vxr+njpMh1ur+sH6gmjdmNlYGQgLZjLppOzUPEoCpLEZoAHdn1ee4OKiMSP4Gd5UT3c5AB8ihy6fGf3qHgVNvt/cclKUYdBEuwrmg+aXf8bQgwUEQ+DMISrXnSCrZP6jTNhK71swE8ai4u29LcPPmnmVaFPZlkIEVvWVpd+sqtZZotH9PwjOXwQ6KCzbzdYxTZ+C7NhzNLFgpbChuSUXJr3/Qc1gA4j2KR67/XaKSq9ccuTux6WsdoTGdSMUm71vIITkrnMrxLA4hySbvmHB8lGN0IBZXL7tayrfiSHme0uORcOHNV8lZC9eTJUVZ4LVKTE0L4qlXFIVL/K4/y6OlAdzdGRkSwBmoobKxMMr+qrUG86GkQmeA=",
+    "skinUsername": "SamHCF",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1ODkxMTM1MjQ5MCwKICAicHJvZmlsZUlkIiA6ICI3N2YwNTdjN2RiZDc0NjBiOGUwMTViYzg4NmVmOWFiMCIsCiAgInByb2ZpbGVOYW1lIiA6ICJTYW1IQ0YiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGI2NmQxMDg5MGEyOTgzYmM1MzhmYTUwYzNmZDcxMDJhZTIzZGU0ODI4YjAxOTYxMzA1NmY1Y2Q4NjE2NzMwNSIKICAgIH0KICB9Cn0=",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

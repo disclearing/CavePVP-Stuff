@@ -1,0 +1,205 @@
+From c535ec705b6716d9f40296389e02658a29fdaae8 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Wed, 4 Nov 2015 11:51:00 +0100
+Subject: [PATCH] Dont spam InventoryMoveItemEvents for hoppers
+
+
+diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
+index 65ee96c5e..1513075ca 100644
+--- a/src/main/java/net/minecraft/server/TileEntityHopper.java
++++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
+@@ -314,6 +314,16 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+                 for (int j = 0; j < this.getSize(); ++j) {
+                     if (this.getItem(j) != null) {
+                         ItemStack itemstack = this.getItem(j).cloneItemStack();
++
++                        // Poweruser start
++                        ItemStack copyOfItemBeingPushed = itemstack.cloneItemStack();
++                        copyOfItemBeingPushed.count = 1;
++                        int possibleInventorySlot = doesInventoryHaveEnoughSpaceForItem(iinventory, copyOfItemBeingPushed, i);
++                        if(possibleInventorySlot < 0) {
++                            continue;
++                        }
++                        // Poweruser end
++
+                         // CraftBukkit start - Call event when pushing items into other inventories
+                         CraftItemStack oitemstack = CraftItemStack.asCraftMirror(this.splitStack(j, world.spigotConfig.hopperAmount)); // Spigot
+ 
+@@ -333,7 +343,7 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+                             return false;
+                         }
+                         int origCount = event.getItem().getAmount(); // Spigot
+-                        ItemStack itemstack1 = addItem(iinventory, CraftItemStack.asNMSCopy(event.getItem()), i);
++                        ItemStack itemstack1 = addItem(iinventory, possibleInventorySlot, CraftItemStack.asNMSCopy(event.getItem()), i); // Poweruser
+                         if (itemstack1 == null || itemstack1.count == 0) {
+                             if (event.getItem().equals(oitemstack)) {
+                                 iinventory.update();
+@@ -447,6 +457,17 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+ 
+         if (itemstack != null && canTakeItemFromInventory(iinventory, itemstack, i, j)) {
+             ItemStack itemstack1 = itemstack.cloneItemStack();
++
++            // Poweruser start
++            ItemStack copyOfItemBeingSuck = iinventory.getItem(i).cloneItemStack();
++            copyOfItemBeingSuck.count = 1;
++            int facing = -1;
++            int possibleInventorySlot = doesInventoryHaveEnoughSpaceForItem(ihopper, copyOfItemBeingSuck, facing);
++            if(possibleInventorySlot < 0) {
++                return false;
++            }
++            // Poweruser end
++
+             // CraftBukkit start - Call event on collection of items from inventories into the hopper
+             CraftItemStack oitemstack = CraftItemStack.asCraftMirror(iinventory.splitStack(i, ihopper.getWorld().spigotConfig.hopperAmount)); // Spigot
+ 
+@@ -473,7 +494,7 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+                 return false;
+             }
+             int origCount = event.getItem().getAmount(); // Spigot
+-            ItemStack itemstack2 = addItem(ihopper, CraftItemStack.asNMSCopy(event.getItem()), -1);
++            ItemStack itemstack2 = addItem(ihopper, possibleInventorySlot, CraftItemStack.asNMSCopy(event.getItem()), facing); // Poweruser
+ 
+             if (itemstack2 == null || itemstack2.count == 0) {
+                 if (event.getItem().equals(oitemstack)) {
+@@ -499,6 +520,15 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+         if (entityitem == null) {
+             return false;
+         } else {
++            // Poweruser start
++            ItemStack copyOfItemBeingAdded = entityitem.getItemStack().cloneItemStack();
++            int facing = -1;
++            int possibleInventorySlot = doesInventoryHaveEnoughSpaceForItem(iinventory, copyOfItemBeingAdded, facing);
++            if(possibleInventorySlot < 0) {
++                return false;
++            }
++            // Poweruser end
++
+             // CraftBukkit start
+             InventoryPickupItemEvent event = new InventoryPickupItemEvent(iinventory.getOwner().getInventory(), (org.bukkit.entity.Item) entityitem.getBukkitEntity());
+             entityitem.world.getServer().getPluginManager().callEvent(event);
+@@ -508,7 +538,7 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+             // CraftBukkit end
+ 
+             ItemStack itemstack = entityitem.getItemStack().cloneItemStack();
+-            ItemStack itemstack1 = addItem(iinventory, itemstack, -1);
++            ItemStack itemstack1 = addItem(iinventory, possibleInventorySlot, itemstack, facing); // Poweruser
+ 
+             if (itemstack1 != null && itemstack1.count != 0) {
+                 entityitem.setItemStack(itemstack1);
+@@ -522,16 +552,34 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+     }
+ 
+     public static ItemStack addItem(IInventory iinventory, ItemStack itemstack, int i) {
++    // Poweruser start
++        return addItem(iinventory, -1, itemstack, i);
++    }
++
++    public static ItemStack addItem(IInventory iinventory, int possibleInventorySlot, ItemStack itemstack, int i) {
++    // Poweruser end
+         if (iinventory instanceof IWorldInventory && i > -1) {
+             IWorldInventory iworldinventory = (IWorldInventory) iinventory;
+             int[] aint = iworldinventory.getSlotsForFace(i);
+ 
++            // Poweruser start
++            if(possibleInventorySlot >= 0 && possibleInventorySlot < aint.length) {
++                itemstack = tryMoveInItem(iinventory, itemstack, possibleInventorySlot, i);
++            }
++            // Poweruser end
++
+             for (int j = 0; j < aint.length && itemstack != null && itemstack.count > 0; ++j) {
+                 itemstack = tryMoveInItem(iinventory, itemstack, aint[j], i);
+             }
+         } else {
+             int k = iinventory.getSize();
+ 
++            // Poweruser start
++            if(possibleInventorySlot >= 0 && possibleInventorySlot < k) {
++                itemstack = tryMoveInItem(iinventory, itemstack, possibleInventorySlot, i);
++            }
++            // Poweruser end
++
+             for (int l = 0; l < k && itemstack != null && itemstack.count > 0; ++l) {
+                 itemstack = tryMoveInItem(iinventory, itemstack, l, i);
+             }
+@@ -595,17 +643,20 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+     }
+ 
+     public static EntityItem getEntityItemAt(World world, double d0, double d1, double d2) {
++        if(!isPositionOfHopperInUse(world, d0, d1, d2)) { return null; } // Poweruser
+         List list = world.a(EntityItem.class, AxisAlignedBB.a(d0, d1, d2, d0 + 1.0D, d1 + 1.0D, d2 + 1.0D), IEntitySelector.a);
+ 
+         return list.size() > 0 ? (EntityItem) list.get(0) : null;
+     }
+ 
+     public static IInventory getInventoryAt(World world, double d0, double d1, double d2) {
++        if(!isPositionOfHopperInUse(world, d0, d1, d2)) { return null; } // Poweruser
++
+         IInventory iinventory = null;
+         int i = MathHelper.floor(d0);
+         int j = MathHelper.floor(d1);
+         int k = MathHelper.floor(d2);
+-        if ( !world.isLoaded( i, j, k ) ) return null; // Spigot
++        //if ( !world.isLoaded( i, j, k ) ) return null; // Spigot // Poweruser - already covered at this point
+         TileEntity tileentity = world.getTileEntity(i, j, k);
+ 
+         if (tileentity != null && tileentity instanceof IInventory) {
+@@ -631,7 +682,7 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+     }
+ 
+     private static boolean canMergeItems(ItemStack itemstack, ItemStack itemstack1) {
+-        return itemstack.getItem() != itemstack1.getItem() ? false : (itemstack.getData() != itemstack1.getData() ? false : (itemstack.count > itemstack.getMaxStackSize() ? false : ItemStack.equals(itemstack, itemstack1)));
++        return itemstack.getItem() != itemstack1.getItem() ? false : (itemstack.getData() != itemstack1.getData() ? false : (itemstack.count >= itemstack.getMaxStackSize() ? false : ItemStack.equals(itemstack, itemstack1))); // Poweruser - stacks can not merge when count is greater or equal the max stack size
+     }
+ 
+     public double x() {
+@@ -677,4 +728,47 @@ public class TileEntityHopper extends TileEntity implements IHopper {
+         }
+         // Spigot end
+     }
++
++    // Poweruser start
++    private static int doesInventoryHaveEnoughSpaceForItem(IInventory iinventory, ItemStack itemstack, int facing) {
++        if (iinventory instanceof IWorldInventory && facing > -1) {
++            IWorldInventory iworldinventory = (IWorldInventory) iinventory;
++            int[] possibleSlots = iworldinventory.getSlotsForFace(facing);
++            for(int i = 0; i < possibleSlots.length; i++) {
++                int slotId = possibleSlots[i];
++                if(canPlaceItemInInventory(iinventory, itemstack, slotId, facing)) {
++                    ItemStack slot = iinventory.getItem(slotId);
++                    if(slot == null || canMergeItems(slot, itemstack)) {
++                        return slotId;
++                    }
++                }
++            }
++        } else {
++            int size = iinventory.getSize();
++            for(int i = 0; i < size; i++) {
++                if(canPlaceItemInInventory(iinventory, itemstack, i, facing)) {
++                    ItemStack slot = iinventory.getItem(i);
++                    if(slot == null || canMergeItems(slot, itemstack)) {
++                        return i;
++                    }
++                }
++            }
++        }
++        return -1;
++    }
++
++    private static boolean isPositionOfHopperInUse(World world, double d0, double d1, double d2) {
++        int i = MathHelper.floor(d0);
++        int j = MathHelper.floor(d1);
++        int k = MathHelper.floor(d2);
++        return (world.isLoaded(i, j, k) && !unloadQueueContains(world, i, j, k));
++    }
++
++    private static boolean unloadQueueContains(World world, int x, int y, int z) {
++        return world != null &&
++                world.chunkProviderServer != null &&
++                world.chunkProviderServer.unloadQueue != null &&
++                world.chunkProviderServer.unloadQueue.contains(x >> 4, z >> 4);
++    }
++    // Poweruser end
+ }
+-- 
+2.13.3
+

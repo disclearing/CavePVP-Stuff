@@ -1,0 +1,271 @@
+From 1c4eb448affc46f3a9565abeed0cd654495896b0 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 15:42:34 -0400
+Subject: [PATCH] Add a config option to disable mobs
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityChicken.java b/src/main/java/net/minecraft/server/EntityChicken.java
+index a5a5ab5e9..5ff30a17b 100644
+--- a/src/main/java/net/minecraft/server/EntityChicken.java
++++ b/src/main/java/net/minecraft/server/EntityChicken.java
+@@ -24,6 +24,16 @@ public class EntityChicken extends EntityAnimal {
+         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+     }
+ 
++    @Override
++    public void h() {
++        super.h();
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++    }
++
+     public boolean bk() {
+         return true;
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityCow.java b/src/main/java/net/minecraft/server/EntityCow.java
+index df21fde2a..0b8d7f764 100644
+--- a/src/main/java/net/minecraft/server/EntityCow.java
++++ b/src/main/java/net/minecraft/server/EntityCow.java
+@@ -21,6 +21,16 @@ public class EntityCow extends EntityAnimal {
+         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+     }
+ 
++    @Override
++    public void h() {
++        super.h();
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++    }
++
+     public boolean bk() {
+         return true;
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityCreeper.java b/src/main/java/net/minecraft/server/EntityCreeper.java
+index a8162c75f..53fd5f77c 100644
+--- a/src/main/java/net/minecraft/server/EntityCreeper.java
++++ b/src/main/java/net/minecraft/server/EntityCreeper.java
+@@ -105,6 +105,11 @@ public class EntityCreeper extends EntityMonster {
+             }
+         }
+ 
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++
+         super.h();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityEnderman.java b/src/main/java/net/minecraft/server/EntityEnderman.java
+index 87afc9cf4..2372d1867 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderman.java
++++ b/src/main/java/net/minecraft/server/EntityEnderman.java
+@@ -25,6 +25,16 @@ public class EntityEnderman extends EntityMonster {
+         this.W = 1.0F;
+     }
+ 
++    @Override
++    public void h() {
++        super.h();
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++    }
++
+     protected void aD() {
+         super.aD();
+         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(40.0D);
+diff --git a/src/main/java/net/minecraft/server/EntityGhast.java b/src/main/java/net/minecraft/server/EntityGhast.java
+index d543fcaec..a2e6f5fd4 100644
+--- a/src/main/java/net/minecraft/server/EntityGhast.java
++++ b/src/main/java/net/minecraft/server/EntityGhast.java
+@@ -51,6 +51,11 @@ public class EntityGhast extends EntityFlying implements IMonster {
+             this.die();
+         }
+ 
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++
+         this.w();
+         this.bo = this.bp;
+         double d0 = this.i - this.locX;
+@@ -217,7 +222,8 @@ public class EntityGhast extends EntityFlying implements IMonster {
+     }
+ 
+     public boolean canSpawn() {
+-        return this.random.nextInt(20) == 0 && super.canSpawn() && this.world.difficulty != EnumDifficulty.PEACEFUL;
++        // MineHQ - Add mobsEnabled check.
++        return this.random.nextInt(20) == 0 && super.canSpawn() && this.world.difficulty != EnumDifficulty.PEACEFUL && this.world.spigotConfig.mobsEnabled;
+     }
+ 
+     public int bB() {
+diff --git a/src/main/java/net/minecraft/server/EntityMonster.java b/src/main/java/net/minecraft/server/EntityMonster.java
+index 49aef649c..84f87b484 100644
+--- a/src/main/java/net/minecraft/server/EntityMonster.java
++++ b/src/main/java/net/minecraft/server/EntityMonster.java
+@@ -26,6 +26,11 @@ public abstract class EntityMonster extends EntityCreature implements IMonster {
+         if (!this.world.isStatic && this.world.difficulty == EnumDifficulty.PEACEFUL) {
+             this.die();
+         }
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
+     }
+ 
+     protected String H() {
+diff --git a/src/main/java/net/minecraft/server/EntityPig.java b/src/main/java/net/minecraft/server/EntityPig.java
+index 98bfd08fb..f5b51093a 100644
+--- a/src/main/java/net/minecraft/server/EntityPig.java
++++ b/src/main/java/net/minecraft/server/EntityPig.java
+@@ -22,6 +22,16 @@ public class EntityPig extends EntityAnimal {
+         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+     }
+ 
++    @Override
++    public void h() {
++        super.h();
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++    }
++
+     public boolean bk() {
+         return true;
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityPigZombie.java b/src/main/java/net/minecraft/server/EntityPigZombie.java
+index f2e895e84..0a765ad67 100644
+--- a/src/main/java/net/minecraft/server/EntityPigZombie.java
++++ b/src/main/java/net/minecraft/server/EntityPigZombie.java
+@@ -48,7 +48,8 @@ public class EntityPigZombie extends EntityZombie {
+     }
+ 
+     public boolean canSpawn() {
+-        return this.world.difficulty != EnumDifficulty.PEACEFUL && this.world.b(this.boundingBox) && this.world.getCubes(this, this.boundingBox).isEmpty() && !this.world.containsLiquid(this.boundingBox);
++        // MineHQ - Add mobsEnabled check.
++        return this.world.spigotConfig.mobsEnabled && this.world.difficulty != EnumDifficulty.PEACEFUL && this.world.b(this.boundingBox) && this.world.getCubes(this, this.boundingBox).isEmpty() && !this.world.containsLiquid(this.boundingBox);
+     }
+ 
+     public void b(NBTTagCompound nbttagcompound) {
+diff --git a/src/main/java/net/minecraft/server/EntitySheep.java b/src/main/java/net/minecraft/server/EntitySheep.java
+index 381ae7875..237cb3604 100644
+--- a/src/main/java/net/minecraft/server/EntitySheep.java
++++ b/src/main/java/net/minecraft/server/EntitySheep.java
+@@ -32,6 +32,16 @@ public class EntitySheep extends EntityAnimal {
+         this.bq.resultInventory = new InventoryCraftResult(); // CraftBukkit - add result slot for event
+     }
+ 
++    @Override
++    public void h() {
++        super.h();
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++    }
++
+     protected boolean bk() {
+         return true;
+     }
+diff --git a/src/main/java/net/minecraft/server/EntitySkeleton.java b/src/main/java/net/minecraft/server/EntitySkeleton.java
+index 479936f3e..c82f3ccd5 100644
+--- a/src/main/java/net/minecraft/server/EntitySkeleton.java
++++ b/src/main/java/net/minecraft/server/EntitySkeleton.java
+@@ -24,6 +24,16 @@ public class EntitySkeleton extends EntityMonster implements IRangedEntity {
+         }
+     }
+ 
++    @Override
++    public void h() {
++        super.h();
++
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.die();
++        }
++    }
++
+     protected void aD() {
+         super.aD();
+         this.getAttributeInstance(GenericAttributes.d).setValue(0.25D);
+diff --git a/src/main/java/net/minecraft/server/EntitySlime.java b/src/main/java/net/minecraft/server/EntitySlime.java
+index 65cd24dd1..fe305fc13 100644
+--- a/src/main/java/net/minecraft/server/EntitySlime.java
++++ b/src/main/java/net/minecraft/server/EntitySlime.java
+@@ -72,6 +72,11 @@ public class EntitySlime extends EntityInsentient implements IMonster {
+             this.dead = true;
+         }
+ 
++        // MineHQ - Add mobsEnabled check.
++        if (!this.world.isStatic && !this.world.spigotConfig.mobsEnabled) {
++            this.dead = true;
++        }
++
+         this.i += (this.h - this.i) * 0.5F;
+         this.bm = this.i;
+         boolean flag = this.onGround;
+diff --git a/src/main/java/net/minecraft/server/EntitySpider.java b/src/main/java/net/minecraft/server/EntitySpider.java
+index 997044786..b8be8baba 100644
+--- a/src/main/java/net/minecraft/server/EntitySpider.java
++++ b/src/main/java/net/minecraft/server/EntitySpider.java
+@@ -17,6 +17,11 @@ public class EntitySpider extends EntityMonster {
+     public void h() {
+         super.h();
+         if (!this.world.isStatic) {
++            // MineHQ - Add mobsEnabled check.
++            if (!this.world.spigotConfig.mobsEnabled) {
++                this.die();
++            }
++
+             this.a(this.positionChanged);
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 6d7e1b939..14f13fc17 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -312,6 +312,11 @@ public abstract class World implements IBlockAccess {
+         this.a();
+ 
+         this.getServer().addWorld(this.world); // CraftBukkit
++
++        // MineHQ - Set spawn flags based on mobsEnabled.
++        if (!spigotConfig.mobsEnabled) {
++            this.world.setSpawnFlags(false, false);
++        }
+     }
+ 
+     protected abstract IChunkProvider j();
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index ddfc8f2c2..d2f523afd 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -363,4 +363,11 @@ public class SpigotWorldConfig
+         log( "Experience Orb Despawn Rate: " + expDespawnRate );
+     }
+ 
++    public boolean mobsEnabled;
++
++    private void mobsEnabled() {
++        mobsEnabled = getBoolean("mobs-enabled", true);
++        log("Mobs enabled: " + mobsEnabled);
++    }
++
+ }
+-- 
+2.13.3
+

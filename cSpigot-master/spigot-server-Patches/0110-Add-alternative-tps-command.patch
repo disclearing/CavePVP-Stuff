@@ -1,0 +1,205 @@
+From 3eabff7eed8a0d98b851bfda9717a57eea75e32a Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Mon, 23 Nov 2015 21:14:20 +0100
+Subject: [PATCH] Add alternative tps command
+
+
+diff --git a/src/main/java/net/frozenorb/ThreadingManager.java b/src/main/java/net/frozenorb/ThreadingManager.java
+index 8edfe726a..ef9eab186 100644
+--- a/src/main/java/net/frozenorb/ThreadingManager.java
++++ b/src/main/java/net/frozenorb/ThreadingManager.java
+@@ -4,10 +4,13 @@ import java.io.File;
+ import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.OutputStream;
++import java.util.ArrayDeque;
+ import java.util.concurrent.Callable;
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.Executors;
++import java.util.concurrent.ScheduledExecutorService;
+ import java.util.concurrent.TimeUnit;
++import java.util.concurrent.atomic.AtomicInteger;
+ 
+ import net.frozenorb.pathsearch.PathSearchThrottlerThread;
+ import net.frozenorb.pathsearch.jobs.PathSearchJob;
+@@ -23,15 +26,19 @@ public class ThreadingManager {
+     private ExecutorService nbtFileService = Executors.newSingleThreadExecutor(new NamePriorityThreadFactory(Thread.NORM_PRIORITY - 2, "mSpigot_NBTFileSaver"));
+     private static ThreadingManager instance;
+     private PathSearchThrottlerThread pathSearchThrottler;
++    private ScheduledExecutorService timerService = Executors.newScheduledThreadPool(1, new NamePriorityThreadFactory(Thread.NORM_PRIORITY + 2, "mSpigot_TimerService"));
++    private TickCounter tickCounter = new TickCounter();
+ 
+     public ThreadingManager() {
+         instance = this;
+         this.pathSearchThrottler = new PathSearchThrottlerThread(2);
++        this.timerService.scheduleAtFixedRate(this.tickCounter, 1, 1000, TimeUnit.MILLISECONDS);
+     }
+ 
+     public void shutdown() {
+         this.pathSearchThrottler.shutdown();
+         this.nbtFileService.shutdown();
++        this.timerService.shutdown();
+         while(!this.nbtFileService.isTerminated()) {
+             try {
+                 if(!this.nbtFileService.awaitTermination(3, TimeUnit.MINUTES)) {
+@@ -85,4 +92,40 @@ public class ThreadingManager {
+     public static boolean queuePathSearch(PathSearchJob pathSearchJob) {
+         return instance.pathSearchThrottler.queuePathSearch(pathSearchJob);
+     }
++
++    public class TickCounter implements Runnable {
++
++        private ArrayDeque<Integer> ticksPerSecond;
++        private AtomicInteger ticksCounter;
++
++        public TickCounter() {
++            this.ticksPerSecond = new ArrayDeque<Integer>();
++            this.ticksCounter = new AtomicInteger(0);
++        }
++
++        @Override
++        public void run() {
++            int lastCount = this.ticksCounter.getAndSet(0);
++            synchronized(this.ticksPerSecond) {
++                this.ticksPerSecond.addLast(lastCount);
++                if(this.ticksPerSecond.size() > 30) {
++                    this.ticksPerSecond.removeFirst();
++                }
++            }
++        }
++
++        public void increaseTickCounter() {
++            this.ticksCounter.incrementAndGet();
++        }
++
++        public Integer[] getTicksPerSecond() {
++            synchronized(this.ticksPerSecond) {
++                return this.ticksPerSecond.toArray(new Integer[0]);
++            }
++        }
++    }
++
++    public static TickCounter getTickCounter() {
++        return instance.tickCounter;
++    }
+ }
+diff --git a/src/main/java/net/frozenorb/command/TPSCommand.java b/src/main/java/net/frozenorb/command/TPSCommand.java
+new file mode 100644
+index 000000000..033949e1b
+--- /dev/null
++++ b/src/main/java/net/frozenorb/command/TPSCommand.java
+@@ -0,0 +1,83 @@
++package net.frozenorb.command;
++
++import net.frozenorb.ThreadingManager;
++
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.entity.Player;
++
++public class TPSCommand extends Command {
++
++    private int[] steps = new int[] { 20, 19, 18, 14, 9, 0};
++    private String[] notes = new String[] { " > 20", " = 20", " = 19", ">= 15", ">= 10", ">=  1" };
++    private ChatColor[] colors = new ChatColor[] {ChatColor.DARK_GREEN, ChatColor.GREEN, ChatColor.GREEN, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED };
++    private StringBuilder[] builders;
++
++    public TPSCommand(String name) {
++        super(name);
++        this.usageMessage = "/" + name;
++        this.description = "Displays the servers tick rate of the last 30 seconds";
++        this.setPermission( "valor.command.tps2" );
++        this.builders = new StringBuilder[this.steps.length];
++        for(int i = 0; i < this.builders.length; i++) {
++            this.builders[i] = new StringBuilder();
++        }
++    }
++
++    public boolean execute(CommandSender sender, String currentAlias, String[] args) {
++        if(!testPermission(sender)) { return true; }
++        Integer[] array = ThreadingManager.getTickCounter().getTicksPerSecond();
++        boolean runByPlayer = (sender instanceof Player);
++        if(array.length == 0) {
++            sender.sendMessage(ChatColor.GOLD + "TPS statistic: " + ChatColor.RESET + "No data available yet. Try again later");
++            return true;
++        }
++        for(int i = 0; i < this.builders.length; i++) {
++            this.builders[i].delete(0, this.builders[i].length());
++        }
++
++        int start = array.length - 30;
++        for(int i = start; i < array.length; i++) {
++            Integer k;
++            if(i < 0) {
++                k = 0;
++            } else {
++                k = array[i];
++            }
++            for(int j = 0; j < this.steps.length; j++) {
++                if(k > this.steps[j]) {
++                    if(runByPlayer) {
++                        this.builders[j].append(this.colors[j]);
++                        this.builders[j].append('\u2B1B');
++                        this.builders[j].append(ChatColor.RESET);
++                    } else {
++                        this.builders[j].append("#");
++                    }
++                } else {
++                    if(runByPlayer) {
++                        this.builders[j].append(ChatColor.BLACK);
++                        this.builders[j].append('\u2B1C');
++                        this.builders[j].append(ChatColor.RESET);
++                    } else {
++                        this.builders[j].append("_");
++                    }
++                }
++            }
++        }
++        ChatColor current = ChatColor.RED;
++        Integer last = array[array.length - 1];
++        for(int i = 0; i < this.steps.length; i++) {
++            if(this.steps[i] < last) {
++                current = this.colors[i];
++                break;
++            }
++        }
++        sender.sendMessage(ChatColor.GOLD + "  TPS statistic (last 30 seconds)  -  Current TPS: " + current + last);
++        for(int i = 0; i < this.builders.length; i++) {
++            this.builders[i].append("  " + this.notes[i]);
++            sender.sendMessage(this.builders[i].toString());
++        }
++        return true;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index e9fd62c85..ec48ff690 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -591,6 +591,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+         SpigotTimings.serverTickTimer.startTiming(); // Spigot
+         long i = System.nanoTime();
+ 
++        ThreadingManager.getTickCounter().increaseTickCounter(); // Poweruser
++
+         ++this.ticks;
+         if (this.R) {
+             this.R = false;
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index d4fb112e5..0fb5da06d 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -407,5 +407,10 @@ public class SpigotConfig
+             disableStatSaving = true;
+         }
+     }
++
++    private static void powertpsCommand()
++    {
++        commands.put( "tps2", new net.frozenorb.command.TPSCommand( "tps2" ) );
++    }
+     // Poweruser end
+ }
+-- 
+2.13.3
+

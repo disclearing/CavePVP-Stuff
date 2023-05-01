@@ -1,0 +1,91 @@
+# ======================================================= #
+#                                                         #
+#                   CONFIG.YML                            #
+#             Revision-07 by Bart/Dinosaur                #
+#                                                         #
+#        Thank you for supporting CrateReloaded!          #
+#           Developer Note: Enjoy the plugin!             #
+#                                                         #
+# ======================================================= #
+#
+#
+# ======================================================= #
+#                                                         #
+#  Administration                                         #
+#                                                         #
+# ======================================================= #
+#
+# Prefix
+# Goes before every message
+#
+prefix: '&4&lCrate &8┃ &7'
+#
+# Language
+# Currently Supports: en, fr, bg, es, fi
+#
+locale: en
+#
+# Logger
+# Creates a log folder which automatically logs important information.
+#
+logger: false
+#
+#
+# ======================================================= #
+#                                                         #
+#  Crate Settings                                         #
+#  Please view Crate.YML for reward configuration         #
+#                                                         #
+# ======================================================= #
+#
+# Chance Format
+# ex: #.## 1.23
+#
+display:
+  chanceFormat: '#'
+#
+# Global Crate Cooldown
+# Wait time before consecutive crate actions
+#
+usage:
+  cooldown: -1
+#
+# Confirmation Menu
+#
+confirmation-menu:
+    name: 'Are you sure?'
+    yesDisplay: '159:5 1 &a&lOPEN &7Opens_the_Mystery_Box!%line%%line%Action_is_irreversible.'
+    dialogDisplay: '116 1 &f&lCHOOSER'
+    noDisplay: '159:14 1 &4&lCANCEL &7Cancels your previous action.'
+#
+# Preview Menu
+#
+preview-menu:
+    name: 'Crates'
+    backButton: '355 1 &4&lGo_back! &7Return_to_the_crate_selector!'
+#
+# Velocity multipliers
+#
+pushback:
+    enabled: false
+    modifiers:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+#
+# Roulette and CSGO Settings
+#
+glassName: ''
+roulette:
+    length: 5
+csgo:
+    length: 6
+    topPrizeDisplay: 'REDSTONE_TORCH_ON 1 &6Prize!'
+    botPrizeDisplay: 'REDSTONE_TORCH_ON 1 &6Prize!'
+#
+# Holographic Offset
+#
+holographic-offset:
+    x: 0.0
+    y: 5.0
+    z: 0.0

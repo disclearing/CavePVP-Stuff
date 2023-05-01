@@ -1,0 +1,36 @@
+From 807593a85e29bcf1811786d8680dac0233924404 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Tue, 25 Apr 2017 18:26:51 +1000
+Subject: [PATCH] Option to reduce armor damage
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerInventory.java b/src/main/java/net/minecraft/server/PlayerInventory.java
+index 1c77300c9..83d7b75bf 100644
+--- a/src/main/java/net/minecraft/server/PlayerInventory.java
++++ b/src/main/java/net/minecraft/server/PlayerInventory.java
+@@ -443,7 +443,7 @@ public class PlayerInventory implements IInventory {
+     }
+ 
+     public void a(float f) {
+-        f /= 4.0F;
++        f /= org.spigotmc.SpigotConfig.reduceArmorDamage ? 8.0F : 4.0F; // MineHQ
+         if (f < 1.0F) {
+             f = 1.0F;
+         }
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index e2c64849d..749b73b02 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -485,4 +485,9 @@ public class SpigotConfig
+         guardianTesting = getBoolean("settings.guardian.testing", false);
+     }
+     // Guardian end
++
++    public static boolean reduceArmorDamage;
++    private static void reduceArmorDamage() {
++        reduceArmorDamage = getBoolean("settings.reduce-armor-damage", false);
++    }
+ }
+-- 
+2.13.3
+

@@ -1,0 +1,64 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version" apply true
+    id "org.jetbrains.kotlin.kapt" version "$kotlin_version" apply true // moshi
+    id "com.github.johnrengelman.shadow" version "$shadow_version" apply true
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+subprojects {
+
+    repositories {
+
+        flatDir {
+            dirs 'libs'
+        }
+
+        mavenLocal()
+        mavenCentral()
+    }
+
+    this.tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    apply plugin: "kotlin"
+    apply plugin: 'kotlin-kapt'
+    apply plugin: 'maven-publish'
+
+    afterEvaluate {
+
+        this.targetCompatibility = '1.8'
+        this.sourceCompatibility = '1.8'
+
+        sourceSets {
+            main.java.srcDirs += 'src/main/kotlin/'
+        }
+
+        shadowJar {
+            shadowJar.classifier = null
+        }
+
+        compileKotlin {
+            kotlinOptions.jvmTarget = '1.8'
+        }
+
+        dependencies {
+            kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+
+            compileOnly "com.squareup.moshi:moshi-kotlin:$moshi_version"
+            compileOnly "com.squareup.moshi:moshi-adapters:$moshi_version"
+
+            compileOnly "com.squareup.okhttp3:okhttp:$okhttp_version" // Retrofit's okhttp version
+            compileOnly "com.squareup.retrofit2:retrofit:$retrofit_version"
+            compileOnly "com.squareup.retrofit2:converter-moshi:$retrofit_converter_version"
+
+            compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+        }
+
+    }
+
+}

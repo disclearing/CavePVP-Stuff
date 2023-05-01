@@ -1,0 +1,21 @@
+From 72fd5961d7d91b3b24d149b8051eca85cc2305be Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Mon, 24 Apr 2017 13:58:36 +1000
+Subject: [PATCH] Don't try to push players
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 123d19290..0995fb99a 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -1648,6 +1648,7 @@ public abstract class EntityLiving extends Entity {
+             for (int i = 0; i < list.size(); ++i) {
+                 if (numCollisions > world.spigotConfig.maxCollisionsPerEntity) { break; } // Spigot
+                 Entity entity = (Entity) list.get(i);
++                if (entity instanceof EntityPlayer) continue; // MineHQ - players don't get pushed
+ 
+                 // TODO better check now?
+                 // CraftBukkit start - Only handle mob (non-player) collisions every other tick
+-- 
+2.13.3
+

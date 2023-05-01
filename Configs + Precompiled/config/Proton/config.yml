@@ -1,0 +1,11 @@
+Redis:
+  Host: '0.0.0.0'
+  DbId: 3
+  Port: 6379
+Backbone:
+  Host: '0.0.0.0'
+  DbId: 0
+  Port: 6379
+NametagPacketRestriction:
+  Enabled: false
+  BypassPrefix: '&a'

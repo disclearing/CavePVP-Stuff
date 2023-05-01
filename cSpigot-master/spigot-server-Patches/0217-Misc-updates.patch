@@ -1,0 +1,465 @@
+From f1ee21c61b14399ff7801871584870f701ee66f2 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 19 Jan 2018 01:17:28 +0000
+Subject: [PATCH] Misc updates
+
+
+diff --git a/src/main/java/net/frozenorb/command/NoTrackCommand.java b/src/main/java/net/frozenorb/command/NoTrackCommand.java
+index d61f3cfd8..8c3683bf2 100644
+--- a/src/main/java/net/frozenorb/command/NoTrackCommand.java
++++ b/src/main/java/net/frozenorb/command/NoTrackCommand.java
+@@ -33,7 +33,7 @@ public class NoTrackCommand extends Command {
+                 sender.sendMessage("'" + newNTR + "' is not a valid integer.");
+                 return false;
+             }
+-            trackRange = Math.min(Math.max(trackRange, 0), 250);
++            trackRange = Math.max(trackRange, 0);
+             World world = Bukkit.getWorld(worldName);
+             if (world != null) {
+                 CraftWorld craftworld = (CraftWorld) world;
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index a7d7a9934..1ffef2420 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -38,6 +38,10 @@ public class ChunkProviderServer implements IChunkProvider {
+         this.chunkProvider = ichunkprovider;
+     }
+ 
++    public boolean chunkExists(int i, int j) {
++        return ((ChunkRegionLoader) this.f).chunkExists(this.world, i, j);
++    }
++
+     public boolean isChunkLoaded(int i, int j) {
+         return this.chunks.contains(i, j); // CraftBukkit // MineHQ
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityEnderPearl.java b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+index e88b70c89..b17dde605 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderPearl.java
++++ b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+@@ -23,7 +23,7 @@ public class EntityEnderPearl extends EntityProjectile {
+ 
+     // MineHQ start
+     public void h() {
+-        if (this.world.getCubes(this, this.boundingBox.grow(0.25D, 0.25D, 0.25D)).isEmpty()) {
++        if (this.world.getCubes(this, this.boundingBox.grow(0.25D, 0D, 0.25D)).isEmpty()) {
+             this.lastValidTeleport = getBukkitEntity().getLocation();
+         }
+ 
+@@ -36,39 +36,6 @@ public class EntityEnderPearl extends EntityProjectile {
+             movingobjectposition.entity.damageEntity(DamageSource.projectile(this, this.getShooter()), 0.0F);
+         }
+ 
+-        // Poweruser start
+-        if(this.world.spigotConfig.enderPearlsCanPassNonSolidBlocks && movingobjectposition.type == EnumMovingObjectType.BLOCK) {
+-            double maxMotionVectorComponent = Math.max(Math.max(Math.abs(this.motX), Math.abs(this.motY)), Math.abs(this.motZ));
+-            if(maxMotionVectorComponent > 0.001D &&
+-               !this.world.getType(movingobjectposition.b, movingobjectposition.c, movingobjectposition.d).getMaterial().isSolid()) {
+-                double factor = 0.20D / maxMotionVectorComponent;
+-                double shortendMotionX = this.motX * factor;
+-                double shortendMotionY = this.motY * factor;
+-                double shortendMotionZ = this.motZ * factor;
+-                double tempPositionX = movingobjectposition.b + 0.5D;
+-                double tempPositionY = movingobjectposition.c + 0.5D;
+-                double tempPositionZ = movingobjectposition.d + 0.5D;
+-                int nextBlockPositionX;
+-                int nextBlockPositionY;
+-                int nextBlockPositionZ;
+-                do {
+-                    tempPositionX += shortendMotionX;
+-                    tempPositionY += shortendMotionY;
+-                    tempPositionZ += shortendMotionZ;
+-                    nextBlockPositionX = MathHelper.floor(tempPositionX);
+-                    nextBlockPositionY = (int)(tempPositionY);
+-                    nextBlockPositionZ = MathHelper.floor(tempPositionZ);
+-                } while (nextBlockPositionX == movingobjectposition.b &&
+-                         nextBlockPositionY == movingobjectposition.c &&
+-                         nextBlockPositionZ == movingobjectposition.d);
+-                Block nextBlock = this.world.getType(nextBlockPositionX, nextBlockPositionY, nextBlockPositionZ);
+-                if(!nextBlock.getMaterial().isSolid()) {
+-                    return;
+-                }
+-            }
+-        }
+-        // Poweruser end
+-
+         // PaperSpigot start - Remove entities in unloaded chunks
+         if (inUnloadedChunk && world.paperSpigotConfig.removeUnloadedEnderPearls) {
+             die();
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index 853a1388b..48a89062b 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityCombustByEntityEvent;
+ import org.bukkit.event.player.*;
+ // CraftBukkit end
+ import org.spigotmc.ProtocolData; // Spigot - protocol patch
++import org.spigotmc.SpigotConfig;
+ 
+ public abstract class EntityHuman extends EntityLiving implements ICommandListener {
+ 
+@@ -959,7 +960,14 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+ 
+                     if (flag2) {
+                         if (i > 0) {
+-                            entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F));
++                            if (SpigotConfig.alternateKnockback) {
++                                entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F));
++                            } else {
++                                entity.g(
++                                        (double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * SpigotConfig.knockbackExtraHorizontal),
++                                        SpigotConfig.knockbackExtraVertical,
++                                        (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * SpigotConfig.knockbackExtraHorizontal));
++                            }
+                             this.motX *= 0.6D;
+                             this.motZ *= 0.6D;
+                             this.setSprinting(false);
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 2e04409d5..e783c28cc 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -860,28 +860,44 @@ public abstract class EntityLiving extends Entity {
+         if (this.random.nextDouble() >= this.getAttributeInstance(GenericAttributes.c).getValue()) {
+             this.al = true;
+             float f1 = MathHelper.sqrt(d0 * d0 + d1 * d1);
+-            float f2 = 0.4F;
++            if (SpigotConfig.alternateKnockback) {
++                double magnitude = f1;
+ 
+-            // Kohi start
+-            double knockbackReduction;
+-            if (damageSource.i() instanceof EntityFishingHook) {
+-                knockbackReduction = 0.0;
++                this.motX /= SpigotConfig.knockbackFriction;
++                this.motY /= SpigotConfig.knockbackFriction;
++                this.motZ /= SpigotConfig.knockbackFriction;
++
++                this.motX -= d0 / magnitude * SpigotConfig.knockbackHorizontal;
++                this.motY += SpigotConfig.knockbackVertical;
++                this.motZ -= d1 / magnitude * SpigotConfig.knockbackHorizontal;
++
++                if (this.motY > SpigotConfig.knockbackVerticalLimit) {
++                    this.motY = SpigotConfig.knockbackVerticalLimit;
++                }
+             } else {
+-                knockbackReduction = this.knockbackReduction;
+-            }
+-            double friction = 2.0d - knockbackReduction;
+-            f2 *= (1d - knockbackReduction);
+-
+-            this.motX /= friction;
+-            this.motY /= friction;
+-            this.motZ /= friction;
+-            // Kohi end
+-
+-            this.motX -= d0 / (double) f1 * (double) f2;
+-            this.motY += (double) f2;
+-            this.motZ -= d1 / (double) f1 * (double) f2;
+-            if (this.motY > 0.4000000059604645D) {
+-                this.motY = 0.4000000059604645D;
++                float f2 = 0.4F;
++
++                // Kohi start
++                double knockbackReduction;
++                if (damageSource.i() instanceof EntityFishingHook) {
++                    knockbackReduction = 0.0;
++                } else {
++                    knockbackReduction = this.knockbackReduction;
++                }
++                double friction = 2.0d - knockbackReduction;
++                f2 *= (1d - knockbackReduction);
++
++                this.motX /= friction;
++                this.motY /= friction;
++                this.motZ /= friction;
++                // Kohi end
++
++                this.motX -= d0 / (double) f1 * (double) f2;
++                this.motY += (double) f2;
++                this.motZ -= d1 / (double) f1 * (double) f2;
++                if (this.motY > 0.4000000059604645D) {
++                    this.motY = 0.4000000059604645D;
++                }
+             }
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityProjectile.java b/src/main/java/net/minecraft/server/EntityProjectile.java
+index 73f52acc7..5e32faec6 100644
+--- a/src/main/java/net/minecraft/server/EntityProjectile.java
++++ b/src/main/java/net/minecraft/server/EntityProjectile.java
+@@ -2,6 +2,8 @@ package net.minecraft.server;
+ 
+ import java.util.List;
+ 
++import org.spigotmc.SpigotConfig;
++
+ public abstract class EntityProjectile extends Entity implements IProjectile {
+ 
+     private int blockX = -1;
+@@ -112,6 +114,22 @@ public abstract class EntityProjectile extends Entity implements IProjectile {
+         Vec3D vec3d1 = Vec3D.a(this.locX + this.motX, this.locY + this.motY, this.locZ + this.motZ);
+         MovingObjectPosition movingobjectposition = this.world.a(vec3d, vec3d1);
+ 
++        // Riot start - pearling through open fence gates & string
++        if (SpigotConfig.pearlThroughGatesAndTripwire && movingobjectposition != null && movingobjectposition.type == EnumMovingObjectType.BLOCK && this instanceof EntityEnderPearl) {
++            int x = movingobjectposition.b;
++            int y = movingobjectposition.c;
++            int z = movingobjectposition.d;
++            Block block = this.world.getType(x, y, z);
++            if (block == Blocks.FENCE_GATE) {
++                if ((this.world.getData(x, y, z) & 0x4) != 0x0) { // if the fence gate is open
++                    movingobjectposition = null;
++                }
++            } else if (block == Blocks.TRIPWIRE) {
++                movingobjectposition = null;
++            }
++        }
++        // Riot end
++
+         vec3d = Vec3D.a(this.locX, this.locY, this.locZ);
+         vec3d1 = Vec3D.a(this.locX + this.motX, this.locY + this.motY, this.locZ + this.motZ);
+         if (movingobjectposition != null) {
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 7c44c064e..143e41b21 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -251,11 +251,9 @@ public class EntityTrackerEntry {
+                         this.j = this.tracker.motX;
+                         this.k = this.tracker.motY;
+                         this.l = this.tracker.motZ;
+-                        /*
+                         if (this.tracker instanceof EntityArrow || this.tracker instanceof EntityProjectile) {
+                             this.broadcast(new PacketPlayOutEntityVelocity(this.tracker.getId(), this.j, this.k, this.l));
+                         }
+-                        */
+                     }
+                 }
+ 
+@@ -328,7 +326,7 @@ public class EntityTrackerEntry {
+                 if (this.tracker instanceof EntityPlayer) {
+                     ((EntityPlayer) this.tracker).playerConnection.sendPacket(new PacketPlayOutEntityVelocity(this.tracker));
+                 } else if (this.tracker instanceof EntityArrow || this.tracker instanceof EntityProjectile) {
+-                    // this.broadcast(new PacketPlayOutEntityVelocity(this.tracker));
++                    this.broadcast(new PacketPlayOutEntityVelocity(this.tracker));
+                 }
+             }
+             // CraftBukkit end
+@@ -685,4 +683,4 @@ public class EntityTrackerEntry {
+     }
+     // MineHQ end
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 0e95cf08a..d39cfc256 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -30,6 +30,8 @@ import org.bukkit.util.NumberConversions;
+ import org.github.paperspigot.PaperSpigotConfig;
+ import org.spigotmc.SpigotConfig;
+ 
++import com.google.common.collect.Sets;
++
+ import java.io.ByteArrayInputStream;
+ import java.io.DataInputStream;
+ import java.io.IOException;
+@@ -38,6 +40,8 @@ import java.util.*;
+ import java.util.concurrent.Callable;
+ import java.util.concurrent.TimeUnit;
+ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
++import java.util.stream.Collectors;
++import java.util.stream.IntStream;
+ 
+ // CraftBukkit start
+ // CraftBukkit end
+@@ -192,6 +196,19 @@ public class PlayerConnection implements PacketPlayInListener {
+     private int fastFallModuleGAmount;
+     // Guardian end
+ 
++    // Alfie start
++    private static Set<Block> glitchBlocks = Sets.newHashSet(Block.getById(13), 
++            Block.getById(94),
++            Block.getById(145),
++            Block.getById(54),
++            Block.getById(146),
++            Block.getById(44),
++            Block.getById(154),
++            Block.getById(88),
++            Block.getById(78)
++            );
++    // Alfie end
++
+     public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
+         this.minecraftServer = minecraftserver;
+         this.networkManager = networkmanager;
+@@ -489,12 +506,12 @@ public class PlayerConnection implements PacketPlayInListener {
+                             }
+ 
+                             if ((packetplayinflying.hasPos) && (to.getY() > 0.0D) && (to.getY() == from.getY()) && (touchingAir) && (this.networkManager.lastVehicleTime + TimeUnit.SECONDS.toMillis(5) < networkManager.currentTime)) {
+-                                this.hoverPackets += 1;
++                                this.hoverPackets++;
+ 
+-                                if (this.hoverPackets >= 5) {
++                                if (this.hoverPackets >= 10) {
+                                     String message = String.format("%s is hovering at %.1f %.1f %.1f", this.player.getName(), to.getX(), to.getY(), to.getZ());
+                                     Bukkit.getPluginManager().callEvent(
+-                                            new GuardianEvent(getPlayer(), GuardianEvent.Cheat.HOVER, null, GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), to.getX(), to.getY(), to.getZ()))
++                                            new GuardianEvent(getPlayer(), GuardianEvent.Cheat.HOVER, "A", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), to.getX(), to.getY(), to.getZ()))
+                                     );
+                                     this.hoverPackets = 0;
+                                 }
+@@ -902,6 +919,11 @@ public class PlayerConnection implements PacketPlayInListener {
+                             }
+                         }
+ 
++                        // this might perform horribly
++                        if (this.player.world.boundingBoxContainsMaterials(this.player.boundingBox, glitchBlocks)) {
++                            horizontalSpeed *= 5.0D;
++                        }
++
+                         if ((Bukkit.shouldGuardianAct()) && (!teleport)) {
+                             double speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
+ 
+@@ -2478,14 +2500,7 @@ public class PlayerConnection implements PacketPlayInListener {
+ 
+     public void a(PacketPlayInKeepAlive packetplayinkeepalive) {
+         // Guardian start
+-        if (this.lastKeepAlivePacketReceived == -1L) {
+-            this.lastKeepAlivePacketReceived = networkManager.currentTime;
+-        }
+-        else if (this.lastKeepAlivePacketReceived + 2000L < networkManager.currentTime) {
+-            this.lastKeepAlivePacketReceived += 550L;
+-        } else {
+-            this.lastKeepAlivePacketReceived = networkManager.currentTime;
+-        }
++        this.lastKeepAlivePacketReceived = networkManager.currentTime; // change this logic
+ 
+         this.packetsNotReceived -= 1;
+ 
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 539a3ef73..9d7ea688f 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -2039,6 +2039,29 @@ public abstract class World implements IBlockAccess {
+         return false;
+     }
+ 
++    // Alfie start
++    public boolean boundingBoxContainsMaterials(AxisAlignedBB boundingBox, Set<Block> matching) {
++        int i = MathHelper.floor(boundingBox.a);
++        int j = MathHelper.floor(boundingBox.d + 1.0D);
++        int k = MathHelper.floor(boundingBox.b);
++        int l = MathHelper.floor(boundingBox.e + 1.0D);
++        int i1 = MathHelper.floor(boundingBox.c);
++        int j1 = MathHelper.floor(boundingBox.f + 1.0D);
++
++        for (int k1 = i; k1 < j; ++k1) {
++            for (int l1 = k; l1 < l; ++l1) {
++                for (int i2 = i1; i2 < j1; ++i2) {
++                    if (matching.contains(getType(k1, l1, i2))) {
++                        return true;
++                    }
++                }
++            }
++        }
++
++        return false;
++    }
++    // Alfie end
++
+     public boolean b(AxisAlignedBB axisalignedbb, Material material) {
+         int i = MathHelper.floor(axisalignedbb.a);
+         int j = MathHelper.floor(axisalignedbb.d + 1.0D);
+diff --git a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+index 38a930f8b..10e05bd3f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
++++ b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+@@ -52,7 +52,7 @@ public class SpigotTimings {
+     public static final CustomTimingsHandler connectionTimer_PacketFlying_playerChunks = new CustomTimingsHandler("** Connection Handler_PacketFlying_airCheck");
+ 
+     public static CustomTimingsHandler getPacketHandlerTimings(Packet packet) {
+-        String packetType = packet.getClass().getSimpleName();
++        String packetType = packet.getClass().getName();
+         CustomTimingsHandler result = packetHandlerTimingMap.get(packetType);
+         if (result == null) {
+             result = new CustomTimingsHandler("** Connection Handler - " + packetType, connectionTimer);
+@@ -108,7 +108,7 @@ public class SpigotTimings {
+      * @return
+      */
+     public static CustomTimingsHandler getEntityTimings(Entity entity) {
+-        String entityType = entity.getClass().getSimpleName();
++        String entityType = entity.getClass().getName();
+         CustomTimingsHandler result = entityTypeTimingMap.get(entityType);
+         if (result == null) {
+             result = new CustomTimingsHandler("** tickEntity - " + entityType, activatedEntityTimer);
+@@ -123,7 +123,7 @@ public class SpigotTimings {
+      * @return
+      */
+     public static CustomTimingsHandler getTileEntityTimings(TileEntity entity) {
+-        String entityType = entity.getClass().getSimpleName();
++        String entityType = entity.getClass().getName();
+         CustomTimingsHandler result = tileEntityTypeTimingMap.get(entityType);
+         if (result == null) {
+             result = new CustomTimingsHandler("** tickTileEntity - " + entityType, tickTileEntityTimer);
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index 1c8099d37..75bfc6907 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -409,7 +409,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+ 
+         return getHandle().vehicle.getBukkitEntity();
+     }
+-
++ 
+     // Spigot start
+     private final Spigot spigot = new Spigot()
+     {
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index 6748465da..c502e9d87 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -313,11 +313,15 @@ public class CraftInventory implements Inventory {
+                     // Check if it fully fits
+                     if (amount + partialAmount <= maxAmount) {
+                         partialItem.setAmount(amount + partialAmount);
++                        // To make sure the packet is sent to the client
++                        setItem(firstPartial, partialItem);
+                         break;
+                     }
+ 
+                     // It fits partially
+                     partialItem.setAmount(maxAmount);
++                    // To make sure the packet is sent to the client
++                    setItem(firstPartial, partialItem);
+                     item.setAmount(amount + partialAmount - maxAmount);
+                 }
+             }
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index bccf0c4b3..7586a0aae 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -545,4 +545,21 @@ public class SpigotConfig
+     private static void reduceArmorDamage() {
+         reduceArmorDamage = getBoolean("settings.reduce-armor-damage", false);
+     }
++
++    public static boolean alternateKnockback;
++    public static double knockbackFriction = 2.0D;
++    public static double knockbackHorizontal = 0.35D;
++    public static double knockbackVertical = 0.35D;
++    public static double knockbackVerticalLimit = 0.4D;
++    public static double knockbackExtraHorizontal = 0.425D;
++    public static double knockbackExtraVertical = 0.085D;
++    private static void knockback() {
++        alternateKnockback = getBoolean("settings.alternate-knockback", false);
++    }
++
++    public static boolean pearlThroughGatesAndTripwire = false;
++    private static void pearls() {
++        pearlThroughGatesAndTripwire = getBoolean("settings.pearl-through-gates-and-tripwire", false);
++    }
++    
+ }
+-- 
+2.15.2 (Apple Git-101.1)
+

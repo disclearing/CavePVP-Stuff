@@ -1,0 +1,45 @@
+From 5126621de6f644eb385dc5da3675fe2932967605 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 20 Nov 2016 20:32:11 -0200
+Subject: [PATCH] Add Server and Bukkit#getServerGroup()
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index f2ee0fc9..1e1db4b9 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -145,6 +145,13 @@ public final class Bukkit {
+         return server.getServerName();
+     }
+ 
++    /**
++     * @see Server#getServerGroup()
++     */
++    public static String getServerGroup() {
++        return server.getServerGroup();
++    }
++
+     /**
+      * @see Server#getServerId()
+      */
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 70e134aa..7e708b57 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -163,6 +163,13 @@ public interface Server extends PluginMessageRecipient {
+      */
+     public String getServerName();
+ 
++    /**
++     * Get the server group of this server.
++     *
++     * @return the server group of this server
++     */
++    public String getServerGroup();
++
+     /**
+      * Get an ID of this server. The ID is a simple generally alphanumeric ID
+      * that can be used for uniquely identifying this server.
+-- 
+2.15.2 (Apple Git-101.1)
+

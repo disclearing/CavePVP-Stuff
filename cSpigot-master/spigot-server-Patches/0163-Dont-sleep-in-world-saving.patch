@@ -1,0 +1,28 @@
+From 634f637fe49c438a203655ed3ef10f21c78658b7 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sun, 8 Mar 2015 09:42:19 +1100
+Subject: [PATCH] Dont sleep in world saving
+
+
+diff --git a/src/main/java/net/minecraft/server/FileIOThread.java b/src/main/java/net/minecraft/server/FileIOThread.java
+index 28488a2f8..a095e1088 100644
+--- a/src/main/java/net/minecraft/server/FileIOThread.java
++++ b/src/main/java/net/minecraft/server/FileIOThread.java
+@@ -35,11 +35,14 @@ public class FileIOThread implements Runnable {
+                 ++this.d;
+             }
+ 
++            // MineHQ - don't sleep
++            /*
+             try {
+                 Thread.sleep(this.e ? 0L : 10L);
+             } catch (InterruptedException interruptedexception) {
+                 interruptedexception.printStackTrace();
+             }
++            */
+         }
+ 
+         if (this.b.isEmpty()) {
+-- 
+2.13.3
+

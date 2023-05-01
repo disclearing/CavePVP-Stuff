@@ -1,0 +1,94 @@
+From 8f7b7928b19d01287809dffc50a1dd1768122251 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Fri, 20 May 2016 13:21:06 +0200
+Subject: [PATCH] Fix block collisions aka AntiPhase
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 6a48c8003..9efaab07c 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -83,6 +83,13 @@ public class PlayerConnection implements PacketPlayInListener {
+     public boolean checkMovement = true; // CraftBukkit - private -> public
+     private boolean processedDisconnect; // CraftBukkit - added
+ 
++    // Poweruser start
++    private int movedWronglyViolations = 0;
++    private int movedTooQuicklyViolations = 0;
++    private int lastViolationTick = MinecraftServer.currentTick;
++    private double offsetDistanceSum = 0.0D;
++    // Poweruser end
++
+     public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
+         this.minecraftServer = minecraftserver;
+         this.networkManager = networkmanager;
+@@ -374,8 +381,16 @@ public class PlayerConnection implements PacketPlayInListener {
+                 double d10 = d7 * d7 + d8 * d8 + d9 * d9;
+ 
+                 // Spigot: make "moved too quickly" limit configurable
++                // Poweruser start
++                boolean violationDelayPassed = (this.lastViolationTick + 60 < MinecraftServer.currentTick);
++                if(this.movedTooQuicklyViolations > 0 && violationDelayPassed) {
++                    c.warn(this.player.getName() + " moved too quickly! Violations: " + this.movedTooQuicklyViolations);
++                    this.movedTooQuicklyViolations = 0;
++                }
+                 if (d10 > org.spigotmc.SpigotConfig.movedTooQuicklyThreshold && this.checkMovement && (!this.minecraftServer.N() || !this.minecraftServer.M().equals(this.player.getName()))) { // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
+-                    c.warn(this.player.getName() + " moved too quickly! " + d4 + "," + d5 + "," + d6 + " (" + d7 + ", " + d8 + ", " + d9 + ")");
++                    this.movedTooQuicklyViolations++;
++                    this.lastViolationTick = MinecraftServer.currentTick;
++                // Poweruser end
+                     this.a(this.y, this.z, this.q, this.player.yaw, this.player.pitch);
+                     return;
+                 }
+@@ -403,19 +418,44 @@ public class PlayerConnection implements PacketPlayInListener {
+                 boolean flag1 = false;
+ 
+                 // Spigot: make "moved wrongly" limit configurable
+-                if (d10 > org.spigotmc.SpigotConfig.movedWronglyThreshold && !this.player.isSleeping() && !this.player.playerInteractManager.isCreative()) {
++                // Poweruser start
++                double positionOffset = d10;
++                if(this.player.playerInteractManager.isCreative()) {
++                    positionOffset *= 2.0D;
++                }
++
++                if(this.movedWronglyViolations > 0 && violationDelayPassed) {
++                    c.warn(this.player.getName() + " moved wrongly! Violations: " + this.movedWronglyViolations + " Average Offset: " + String.format("%.2f", (this.offsetDistanceSum / (double) this.movedWronglyViolations)));
++                    this.movedWronglyViolations = 0;
++                    this.offsetDistanceSum = 0.0D;
++                }
++
++                if (positionOffset > org.spigotmc.SpigotConfig.movedWronglyThreshold && !this.player.isSleeping()) {
+                     flag1 = true;
+-                    c.warn(this.player.getName() + " moved wrongly!");
++                    this.lastViolationTick = MinecraftServer.currentTick;
++                    this.movedWronglyViolations++;
++                    this.offsetDistanceSum += MathHelper.sqrt(d10);
+                 }
++                // Poweruser end
+ 
++                // Poweruser start
++                double calculatedX = this.player.locX;
++                double calculatedY = this.player.locY;
++                double calculatedZ = this.player.locZ;
+                 this.player.setLocation(d1, d2, d3, f2, f3);
+                 boolean flag2 = worldserver.getCubes(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).isEmpty();
+                 boolean rayTraceCollision = delta > 0.3 && worldserver.rayTrace(Vec3D.a(this.y, this.z + 1.0, this.q), Vec3D.a(d1, d2 + 1.0, d3), false, true, false) != null;
+ 
+-                if (flag && (flag1 || !flag2 || rayTraceCollision) && !this.player.isSleeping()) {
+-                    this.a(this.y, this.z, this.q, f2, f3);
++                this.player.setLocation(calculatedX, calculatedY, calculatedZ, f2, f3);
++                if (flag1 || (!this.player.isSleeping() && flag && !flag2) || rayTraceCollision) {
++                    if(!rayTraceCollision && !flag && e % 3 != 0) {
++                        this.player.setPosition(this.y, this.z, this.q);
++                    } else {
++                        this.a(this.y, this.z, this.q, f2, f3);
++                    }
+                     return;
+                 }
++                // Poweruser end
+ 
+                 AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().grow((double) f4, (double) f4, (double) f4).a(0.0D, -0.55D, 0.0D);
+ 
+-- 
+2.13.3
+

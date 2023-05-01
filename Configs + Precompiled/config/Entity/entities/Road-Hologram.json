@@ -1,0 +1,112 @@
+{
+    "type": "HOLOGRAM",
+    "name": "Road-Hologram",
+    "location": {
+        "world": "world",
+        "x": 0.5,
+        "y": 73.0,
+        "z": 1199.5,
+        "yaw": 0.0,
+        "pitch": 0.0
+    },
+    "lines": [
+        {
+            "type": "TEXT",
+            "text": "§6§lRoad Outpost",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 74.38000000000002,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§8§m------------------------------",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 74.15000000000002,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§7Status: §f§aNeutral",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 73.92000000000002,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§7Controller: §cNone",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 73.69000000000001,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§7Attackers: §cNone",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 73.46000000000001,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§7Percentage: §f§c0.00%",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 73.23,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§7[§a§c■■■■■■■■■■■■■■■■■■■■■■■■ §7]",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 73.0,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        },
+        {
+            "type": "TEXT",
+            "text": "§8§m------------------------------",
+            "location": {
+                "world": "world",
+                "x": 0.5,
+                "y": 72.77,
+                "z": 1199.5,
+                "yaw": 0.0,
+                "pitch": 0.0
+            }
+        }
+    ],
+    "animations": [],
+    "visibility": "VISIBLE"
+}

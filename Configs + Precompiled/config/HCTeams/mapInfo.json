@@ -1,0 +1,43 @@
+{
+  "kitMap": false,
+  "allyLimit": 0,
+  "teamSize": 3,
+  "regenTimeDeath": 30,
+  "regenTimeRaidable": 30,
+  "scoreboardTitle": "\u00264\u0026lCavePvP \u00267┃ \u0026fFasts",
+  "mapStartedString": "Map started Saturday.",
+  "warzone": 1000,
+  "netherBuffer": 250,
+  "worldBuffer": 300,
+  "endPortalLocation": "1000, 1000",
+  "border": 3000,
+  "goppleCooldown": {
+    "$numberLong": "360"
+  },
+  "fastSmeltEnabled": true,
+  "looting": {
+    "base": 1.0,
+    "level1": 1.0,
+    "level2": 1.0,
+    "level3": 1.0
+  },
+  "crafting": {
+    "gopple": true,
+    "reducedMelon": true
+  },
+  "deathban": {
+    "CAVE": 1,
+    "HOLIDAY": 5,
+    "RAVINE": 5,
+    "PLATINUM": 15,
+    "SAPPHIRE": 20,
+    "PEARL": 25,
+    "EMERALD": 30,
+    "DIAMOND": 45,
+    "GOLD": 60,
+    "IRON": 90,
+    "DEFAULT": 120
+  },
+  "minForceInviteMembers": 10,
+  "dtrIncrementMultiplier": 4.5
+}

@@ -1,0 +1,38 @@
+From 780a9cd65f83c5c030e0134690daa9d04804564b Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 20 Nov 2016 20:36:02 -0200
+Subject: [PATCH] Implement Server#getServerGroup() in CraftServer and add
+ CraftServer#setServerGroup()
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 0187fb727..825e1346b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -199,6 +199,7 @@ import jline.console.ConsoleReader;
+ public final class CraftServer implements Server {
+     private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
+     private final String serverName = "CraftBukkit";
++    private String serverGroup = "Dev"; // PowerSpigot
+     private final String serverVersion;
+     private final String bukkitVersion = Versioning.getBukkitVersion();
+     private final Logger logger = Logger.getLogger("Minecraft");
+@@ -645,6 +646,15 @@ public final class CraftServer implements Server {
+         return this.getConfigString("server-name", "Unknown Server");
+     }
+ 
++    @Override
++    public String getServerGroup() {
++        return serverGroup;
++    }
++
++    public void setServerGroup(String serverGroup) {
++        this.serverGroup = serverGroup;
++    }
++
+     @Override
+     public String getServerId() {
+         return this.getConfigString("server-id", "unnamed");
+-- 
+2.15.2 (Apple Git-101.1)
+

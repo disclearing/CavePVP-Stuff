@@ -1,0 +1,82 @@
+From d692738fc9b269cb25618d24427042a3377c99e0 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 2 Nov 2018 20:26:18 +0000
+Subject: [PATCH] Updates
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityEnderPearl.java b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+index fbb051b4..1df389ed 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderPearl.java
++++ b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+@@ -2,6 +2,8 @@ package net.minecraft.server;
+ 
+ import com.google.common.collect.Sets;
+ import org.bukkit.Bukkit;
++import org.bukkit.Location;
++import org.bukkit.Material;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.event.player.PlayerPearlRefundEvent;
+ import org.bukkit.event.player.PlayerTeleportEvent;
+@@ -16,6 +18,7 @@ import java.util.Set;
+ 
+ public class EntityEnderPearl extends EntityProjectile {
+ 
++    private Location lastValidTeleport;
+     private Item toRefundPearl = null;
+     private EntityLiving c;
+ 
+@@ -54,17 +57,22 @@ public class EntityEnderPearl extends EntityProjectile {
+ 
+                 if (bi != null) {
+                     boolean open = true;
++                    boolean hasSolidBlock = false;
+ 
+                     while (bi.hasNext()) {
+                         org.bukkit.block.Block b = bi.next();
+ 
++                        if (b.getType().isSolid() && b.getType().isOccluding()) {
++                            hasSolidBlock = true;
++                        }
++
+                         if (b.getState().getData() instanceof Gate && !((Gate) b.getState().getData()).isOpen()) {
+                             open = false;
+                             break;
+                         }
+                     }
+ 
+-                    if (open) {
++                    if (open && !hasSolidBlock) {
+                         return;
+                     }
+                 }
+@@ -97,7 +105,7 @@ public class EntityEnderPearl extends EntityProjectile {
+                 if (entityplayer.playerConnection.b().isConnected() && entityplayer.world == this.world) { // MineHQ
+                     // CraftBukkit start - Fire PlayerTeleportEvent
+                     org.bukkit.craftbukkit.entity.CraftPlayer player = entityplayer.getBukkitEntity();
+-                    org.bukkit.Location location = this.getBukkitEntity().getLocation();
++                    org.bukkit.Location location = this.lastValidTeleport;
+                     location.setPitch(player.getLocation().getPitch());
+                     location.setYaw(player.getLocation().getYaw());
+ 
+@@ -132,6 +140,18 @@ public class EntityEnderPearl extends EntityProjectile {
+         if (shooter != null && !shooter.isAlive()) {
+             this.die();
+         } else {
++            AxisAlignedBB newBoundingBox = AxisAlignedBB.a(this.locX - 0.3D, this.locY + 0.01D, this.locZ - 0.3D, this.locX + 0.3D, this.locY + 0.25D, this.locZ + 0.3D);
++
++            if (!this.world.boundingBoxContainsMaterials(this.boundingBox.grow(0.25D, 0D, 0.25D), PROHIBITED_PEARL_BLOCKS) && this.world.getCubes(this, newBoundingBox).isEmpty()) {
++                this.lastValidTeleport = getBukkitEntity().getLocation();
++            } else {
++                Material typeHere = this.world.getWorld().getBlockAt(MathHelper.floor(this.locX), MathHelper.floor(this.locY), MathHelper.floor(this.locZ)).getType();
++
++                if (typeHere == Material.STEP || typeHere == Material.WOOD_STEP) {
++
++                }
++            }
++
+             super.h();
+         }
+     }
+-- 
+2.17.2 (Apple Git-113)
+

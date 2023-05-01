@@ -1,0 +1,35 @@
+From 57d51208c44b93d64a8a9904ca9511514e37dcd8 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sun, 16 Jul 2017 21:44:43 +1000
+Subject: [PATCH] Chunk snapshot API
+
+
+diff --git a/src/main/java/net/frozenorb/chunksnapshot/ChunkSnapshot.java b/src/main/java/net/frozenorb/chunksnapshot/ChunkSnapshot.java
+new file mode 100644
+index 00000000..cf740bd8
+--- /dev/null
++++ b/src/main/java/net/frozenorb/chunksnapshot/ChunkSnapshot.java
+@@ -0,0 +1,5 @@
++package net.frozenorb.chunksnapshot;
++
++public interface ChunkSnapshot {
++
++}
+diff --git a/src/main/java/org/bukkit/Chunk.java b/src/main/java/org/bukkit/Chunk.java
+index 05101517..0fa010cd 100644
+--- a/src/main/java/org/bukkit/Chunk.java
++++ b/src/main/java/org/bukkit/Chunk.java
+@@ -121,4 +121,10 @@ public interface Chunk {
+      * @return true if the chunk has unloaded successfully, otherwise false
+      */
+     boolean unload();
++
++
++    // MineHQ start - chunk snapshot api
++    net.frozenorb.chunksnapshot.ChunkSnapshot takeSnapshot();
++    void restoreSnapshot(net.frozenorb.chunksnapshot.ChunkSnapshot snapshot);
++    // MineHQ end
+ }
+-- 
+2.12.2.windows.2
+

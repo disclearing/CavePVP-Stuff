@@ -1,0 +1,47 @@
+From 0837d8b1df13e1fa5ef99c9e01ed488922f944e2 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Thu, 5 Oct 2017 10:29:10 +0100
+Subject: [PATCH] Web hotfix
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 8898f0fe5..a506111eb 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -39,6 +39,7 @@ public abstract class Entity {
+ 
+     // CraftBukkit start
+     private static final int CURRENT_LEVEL = 2;
++    public int inWebTick; // Guardian
+     static boolean isLevelAtLeast(NBTTagCompound tag, int level) {
+         return tag.hasKey("Bukkit.updateLevel") && tag.getInt("Bukkit.updateLevel") >= level;
+     }
+@@ -1796,6 +1797,7 @@ public abstract class Entity {
+     public void as() {
+         this.I = true;
+         this.fallDistance = 0.0F;
++        this.inWebTick = MinecraftServer.currentTick; // Guardian
+     }
+ 
+     public String getName() {
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index c0be166ee..7ca323857 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -889,6 +889,13 @@ public class PlayerConnection implements PacketPlayInListener {
+                             horizontalSpeed *= 3.0D;
+                         }
+ 
++                        // Guardian - web hotfix (prplz)
++                        if (MinecraftServer.currentTick - this.player.inWebTick < 200) { // in web in last 200 ticks?
++                            if (this.player.world.a(this.player.boundingBox.grow(0.5, 0.5, 0.5), Material.WEB)) { // any web possibly near enough to be touching?
++                                horizontalSpeed *= 5.0D;
++                            }
++                        }
++
+                         if ((Bukkit.shouldGuardianAct()) && (!teleport)) {
+                             double speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
+ 
+-- 
+2.13.5 (Apple Git-94)
+

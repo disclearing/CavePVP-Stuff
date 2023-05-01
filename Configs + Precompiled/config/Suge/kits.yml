@@ -1,0 +1,6552 @@
+kits:
+  Custom:
+    slot: 14
+    displayName: §6§lCustom Kit
+    material: INK_SACK
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &6&lCustom &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 14
+    uses: 536
+    category: NORMAL
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lCustom Sword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 16
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for §e§l5 seconds§f!
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: INK_SACK
+        damage: 5
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lPower Stone
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Strength II,
+          - §6❙ §fResistance III and Regeneration III for §e§l10 seconds
+          - §6❙ §fDuring that time you may not use any potions!
+          - ''
+          - §fCan be found in the §6§lOctober Mystery Box§f!
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: NETHER_STAR
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lNinja Star
+          lore:
+          - ''
+          - §6❙ §fTeleport to the last person that
+          - §6❙ §fhit you within the last §e§l30 seconds§f!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATCH
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lTime Warp
+          lore:
+          - ''
+          - §6❙ §fTravel back to where
+          - §6❙ §fyou last threw a pearl!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: REDSTONE
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lReality Stone
+          lore:
+          - ''
+          - §6❙ §fRight Click to teleport to the player
+          - §6❙ §fthat you last hit within a §e§l30 second §fperiod.
+          - ''
+          - §fCan be found in the §6§lOctober Mystery Box§f!
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_INGOT
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lSoul Stone
+          lore:
+          - ''
+          - §6❙ §fUpon going below 2 hearts, you will be instantly
+          - §6❙ §fhealed and given Resistance III for §e§l5 seconds§f.
+          - ''
+          - §fCan be found in the §6§lOctober Mystery Box§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: EMERALD
+        amount: 2
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lTime Stone
+          lore:
+          - ''
+          - §6❙ §fRight Click to reset all of your
+          - §6❙ §fability/partner item cooldowns.
+          - ''
+          - §fCan be found in the §6§lOctober Mystery Box§f!
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lCustom Boots
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          - §cSpeed II
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lCustom Leggings
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          - §cSwift I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lCustom Chestplate
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          - §cInvisibility I
+          - §cFury I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lCustom Helmet
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          - §cGreed I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+  Cave:
+    slot: 23
+    displayName: '&4&lCave Kit'
+    material: INK_SACK
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &4&lCave &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 1
+    category: NORMAL
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l§nCave§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+            FIRE_ASPECT: 2
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 32
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for §e§l5 seconds§f!
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATCH
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lTime Warp
+          lore:
+          - ''
+          - §6❙ §fTravel back to where
+          - §6❙ §fyou last threw a pearl!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l§nCave§7 ┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l§nCave§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          - §cSwift I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l§nCave§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          - §cInvisibility I
+          - §cFury I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l§nCave§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          - §cGreed I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 1912
+  Spring:
+    slot: 22
+    displayName: '&a&lSpring Kit'
+    material: RED_ROSE
+    category: NORMAL
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &a&lSpring &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 8
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lSpring §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+            FIRE_ASPECT: 2
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 24
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lSpring §7┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lSpring §7┃ §fLeggings
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lSpring §7┃ §fChestplate
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          - §cSwift I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lSpring §7┃ §fHelmet
+          lore:
+          - §cHellForged III
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+    uses: 2378
+  Ravine:
+    slot: 24
+    displayName: '&d&lRavine Kit'
+    material: INK_SACK
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &dRavine &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 9
+    category: NORMAL
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lRavine §7┃ §f┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 16
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8270
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lRavine §7┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lRavine §7┃ §fLeggings
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lRavine §7┃ §fChestplate
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lRavine §7┃ §fHelmet
+          lore:
+          - §cHellForged III
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+    uses: 3256
+  Archer:
+    slot: 31
+    displayName: '&d&lArcher Kit'
+    material: BOW
+    cooldown: 24
+    category: NORMAL
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lArcher §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: BOW
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lArcher §7┃ §fBow
+          enchants:
+            ARROW_DAMAGE: 4
+            DURABILITY: 4
+            ARROW_FIRE: 1
+            ARROW_INFINITE: 1
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 32
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: FEATHER
+        amount: 32
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lArcher §7┃ §fSteak
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: ARROW
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lArcher §7┃ §fBoots
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lArcher §7┃ §fLeggings
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lArcher §7┃ §fChestplate
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lArcher §7┃ §fHelmet
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+    damage: 0
+    uses: 5534
+  UltimateRogue:
+    slot: 15
+    displayName: '&3&lUltimate Rogue Kit'
+    material: CHAINMAIL_HELMET
+    cooldown: 24
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    category: ULTIMATE
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lUltimate Rogue §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 64
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: FEATHER
+        amount: 64
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lUltimate Rogue §7┃ §fBoots
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lUltimate Rogue §7┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lUltimate Rogue §7┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lUltimate Rogue §7┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 972
+  Builder:
+    slot: 17
+    displayName: '&c&lBuilder Kit'
+    material: GRASS
+    cooldown: 24
+    lore:
+    - '&7This kit is free to all players!'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    category: FREE
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lBuilder §7┃ §fPickaxe
+          enchants:
+            DIG_SPEED: 5
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_AXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lBuilder §7┃ §fAxe
+          enchants:
+            DIG_SPEED: 5
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SPADE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lBuilder §7┃ §fShovel
+          enchants:
+            DIG_SPEED: 5
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: SMOOTH_BRICK
+        amount: 64
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: SMOOTH_BRICK
+        amount: 64
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: SMOOTH_BRICK
+        amount: 64
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: SMOOTH_BRICK
+        amount: 64
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: SMOOTH_BRICK
+        amount: 64
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: GRASS
+        amount: 64
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: SANDSTONE
+        amount: 64
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: FENCE_GATE
+        amount: 64
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: GLASS
+        amount: 64
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: SANDSTONE
+        amount: 64
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: LOG
+        damage: 2
+        amount: 64
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: LOG
+        damage: 1
+        amount: 64
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: LOG
+        damage: 3
+        amount: 64
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: LOG
+        amount: 64
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: LOG
+        amount: 64
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: STONE
+        amount: 64
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: STONE
+        amount: 64
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: STONE
+        amount: 64
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: STONE
+        amount: 64
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: HOPPER
+        amount: 24
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: PISTON_STICKY_BASE
+        amount: 16
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEVER
+        amount: 64
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: PISTON_BASE
+        amount: 16
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: REDSTONE
+        amount: 64
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEVER
+        amount: 64
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: REDSTONE_COMPARATOR
+        amount: 10
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIODE
+        amount: 64
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: REDSTONE_BLOCK
+        amount: 32
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+    uses: 12252
+  Diamond:
+    slot: 32
+    displayName: '&b&lDiamond Kit'
+    material: DIAMOND_SWORD
+    cooldown: 24
+    category: NORMAL
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lDiamond §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lDiamond §7┃ §fSteak
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lDiamond §7┃ §fBoots
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lDiamond §7┃ §fLeggings
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lDiamond §7┃ §fChestplate
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lDiamond §7┃ §fHelmet
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+    damage: 0
+    uses: 5350
+  Starter:
+    slot: 13
+    displayName: '&e&lStarter Kit'
+    material: FISHING_ROD
+    cooldown: 24
+    lore:
+    - '&7This kit is free to all players!'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    category: FREE
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lStarter §7┃ §fSword
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: FISHING_ROD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          enchants:
+            LURE: 2
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lStarter §7┃ §fPickaxe
+          enchants:
+            DIG_SPEED: 2
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_AXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lStarter §7┃ §fAxe
+          enchants:
+            DIG_SPEED: 2
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_SPADE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lStarter §7┃ §fShovel
+          enchants:
+            DIG_SPEED: 2
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: TRIPWIRE_HOOK
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§ki§6§l Halloween Keys §e§ki
+          lore:
+          - ''
+          - §7Right click the §6§lHalloween Crate §7to obtain rewards
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: TRIPWIRE_HOOK
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lLegendary Key
+          lore:
+          - ''
+          - §7Right click the §5Legendary Crate §7to obtain rewards!
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: COBBLESTONE
+        amount: 64
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 8
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: GLOWSTONE
+        amount: 8
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: FERMENTED_SPIDER_EYE
+        amount: 8
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: SULPHUR
+        amount: 8
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: NETHER_STALK
+        amount: 8
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: SPECKLED_MELON
+        amount: 24
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: SPECKLED_MELON
+        amount: 8
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §e§lStarter §7┃ §fBoots
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §e§lStarter §7┃ §fLeggings
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §e§lStarter §7┃ §fChestplate
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §e§lStarter §7┃ §fHelmet
+    uses: 16999
+  NewSeasonal:
+    slot: 14
+    displayName: '&f&ki&4&l 3.0 Kit&f &ki'
+    material: REDSTONE_BLOCK
+    cooldown: 24
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    category: OP
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 5
+            FIRE_ASPECT: 1
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for §e§l5 seconds§f!
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: NETHER_STAR
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lNinja Star
+          lore:
+          - ''
+          - §6❙ §fTeleport to the last person that
+          - §6❙ §fhit you within the last §e§l30 seconds§f!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: EYE_OF_ENDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lAnti Pearl 2.0
+          lore:
+          - ''
+          - §6❙ §fHit a player to put them on enderpearl cooldown.
+          - §6❙ §fRight Click to remove your enderpearl cooldown.
+          - ''
+          - §fCan be found in the §c§liMakeMcVids Crate§f!
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: SNOW_BALL
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lBall Of Rage
+          lore:
+          - ''
+          - §6❙ §fThrow to create a cloud of effects
+          - §6❙ §fwhere all teammates within 5 block
+          - §6❙ §fradius will be given positive effects.
+          - ''
+          - §fCan be found in the §4§lSimplyTrash Crate§f!
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: MONSTER_EGG
+        damage: 66
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lWitch Effect
+          lore:
+          - ''
+          - §6❙ §fSpawn a witch that gives you passive
+          - '§6❙ §fbard effects: strength, regeneration,'
+          - §6❙ §fand resistance.
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: RAW_FISH
+        damage: 3
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lDebuff Fish
+          lore:
+          - ''
+          - §6❙ §fHit a player §c§l3 times §fto
+          - §6❙ §fhit you deal has a §c§l15% §fchance of
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §4§l3.0§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §4§l3.0§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §4§l3.0§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §4§l3.0§7 ┃ §fBoots
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+            PROTECTION_FALL: 4
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: TRIPWIRE_HOOK
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§ki§6§l Halloween Keys §e§ki
+          lore:
+          - ''
+          - §7Right click the §6§lHalloween Crate §7to obtain rewards
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: BOW
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fBow
+          enchants:
+            ARROW_DAMAGE: 5
+            ARROW_FIRE: 1
+            DURABILITY: 3
+            ARROW_INFINITE: 1
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_CHEST
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§ki§6§l Fall Lootbox §e§ki
+          lore:
+          - §7Unlocked at §fstore.cavepvp.org
+          - ''
+          - §6§lFINAL REWARDS
+          - ' §7➡ §4Cave Rank'
+          - ' §7➡ §6Spooky Rank'
+          - ' §7➡ §6Premium Battle Pass'
+          - ' §7➡ §e§lVIP Subscription'
+          - ' §7➡ §6§lHalloween Kit'
+          - ' §7➡ §2$§a10 Buycraft Voucher'
+          - ' §7➡ §2$§a5 Buycraft Voucher'
+          - ' §7➡ §a§l2x Perk Keys'
+          - ' §7➡ §b§l3x Airdrops'
+          - ' §7➡ §6§l5x Halloween Keys'
+          - ' §7➡ §cRandom Clickable Kit'
+          - ''
+          - §6§lNORMAL REWARDS
+          - ' §7➡ §d16x Eggports'
+          - ' §7➡ §68x Anti-Blockup'
+          - ' §7➡ §a8x Med Kit'
+          - ' §7➡ §68x Midas Touch'
+          - ' §7➡ §cCrowbar'
+          - ' §7➡ §6§lGod Apple'
+          - ' §7➡ §632x Golden Apple'
+          - ' §7➡ §4OP Bow'
+          - ' §7➡ §bDiamond Sword'
+          - ' §7➡ §bDiamond Helmet'
+          - ' §7➡ §bDiamond Chestplate'
+          - ' §7➡ §bDiamond Leggings'
+          - ' §7➡ §bDiamond Boots'
+          - ' §7➡ §bDiamond Pickaxe'
+          - ' §7➡ §d16x Random Valuable Blocks'
+          - ' §7➡ §832x Gun Powder'
+          - ' §7➡ §e32x Glowstone Blocks'
+          - ' §7➡ §432x Nether Wart'
+          - ' §7➡ §c32x Glistering Melons'
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: BEACON
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lReinforce Lootbox
+          lore:
+          - §7Unlocked at §fstore.cavepvp.org
+          - ''
+          - §c§lEND REWARDS
+          - §8┃ §4§lLEGENDARY §4Cave §7Rank
+          - §8┃ §4§lLEGENDARY §aSpring §7Rank
+          - §8┃ §4§lLEGENDARY §dRavine §7Rank
+          - §8┃ §4§lLEGENDARY §2$§a50 §7Buycraft Voucher
+          - §8┃ §4§lLEGENDARY §2$§a25 §7Buycraft Voucher
+          - §8┃ §4§lLEGENDARY §ePremium Battle Pass
+          - §8┃ §5§lRARE §77d §e§lVIP §7Subscription
+          - §8┃ §5§lRARE §72x §c§lPerk §7Keys
+          - §8┃ §5§lRARE §2$§a10 §7Buycraft Voucher
+          - §8┃ §d§lUNCOMMON §73x §b§lAirdrops
+          - §8┃ §a§lCOMMON §7Random Clickable Kit
+          - §8┃ §a§lCOMMON §56x §7End Portal Frames
+          - §8┃ §a§lCOMMON §616x §7God Apples
+          - §8┃ §a§lCOMMON §e64x §7Golden Apples
+          - ''
+          - §c§lREWARDS
+          - §8┃ §c§lRARE §cFire §7Sword
+          - §8┃ §d§lUNCOMMON §bDiamond §7Helmet
+          - §8┃ §d§lUNCOMMON §bDiamond §7Chestplate
+          - §8┃ §d§lUNCOMMON §bDiamond §7Leggings
+          - §8┃ §d§lUNCOMMON §bDiamond §7Boots
+          - §8┃ §d§lUNCOMMON §bDiamond §7Looting Sword
+          - §8┃ §a§lCOMMON §6Gold §7Helmet
+          - §8┃ §a§lCOMMON §6Gold §7Chestplate
+          - §8┃ §a§lCOMMON §6Gold §7Leggings
+          - §8┃ §a§lCOMMON §6Gold §7Boots
+          - §8┃ §a§lCOMMON §dLeather §7Helmet
+          - §8┃ §a§lCOMMON §dLeather §7Chestplate
+          - §8┃ §a§lCOMMON §dLeather §7Leggings
+          - §8┃ §a§lCOMMON §dLeather §7Boots
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 64
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fBoots
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: EMERALD_BLOCK
+        amount: 64
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BLOCK
+        amount: 64
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_BLOCK
+        amount: 64
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_BLOCK
+        amount: 64
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fFortune
+          enchants:
+            DIG_SPEED: 5
+            DURABILITY: 5
+            LOOT_BONUS_BLOCKS: 5
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fBoots
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: ARROW
+        amount: 64
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: INK_SACK
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lInvisibility
+          lore:
+          - ''
+          - §6❙ §fWhen you right click this item
+          - §6❙ §fyour armor will no longer be visible.
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATCH
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lTime Warp
+          lore:
+          - ''
+          - §6❙ §fTravel back to where
+          - §6❙ §fyou last threw a pearl!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged IV
+          - §cImplants V
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§l3.0§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 5
+    uses: 296
+  UltimateMiner:
+    slot: 16
+    displayName: '&f&lUltimate Miner Kit'
+    material: IRON_HELMET
+    cooldown: 24
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    category: ULTIMATE
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fPickaxe
+          enchants:
+            DIG_SPEED: 7
+            DURABILITY: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fFortune
+          enchants:
+            DIG_SPEED: 7
+            DURABILITY: 4
+            LOOT_BONUS_BLOCKS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SPADE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fShovel
+          enchants:
+            DIG_SPEED: 7
+            DURABILITY: 4
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: ANVIL
+        amount: 16
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: EXP_BOTTLE
+        amount: 64
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: WORKBENCH
+        amount: 2
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATER_BUCKET
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: LAVA_BUCKET
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATER_BUCKET
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: LAVA_BUCKET
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lUltimate Miner§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 919
+  Rogue:
+    slot: 33
+    displayName: '&3&lRogue Kit'
+    material: GOLD_SWORD
+    cooldown: 24
+    category: NORMAL
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lRogue§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 32
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lRogue§7 ┃ §fSteak
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: FEATHER
+        amount: 32
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_SWORD
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lRogue§7 ┃ §fBoots
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lRogue§7 ┃ §fLeggings
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lRogue§7 ┃ §fChestplate
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: CHAINMAIL_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lRogue§7 ┃ §fHelmet
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+    damage: 0
+    uses: 2846
+  Bard:
+    slot: 30
+    displayName: '&6&lBard Kit'
+    material: BLAZE_POWDER
+    cooldown: 24
+    category: NORMAL
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBard§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 1
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 14
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_INGOT
+        amount: 32
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 32
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 32
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBard§7 ┃ §fKit
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: SPIDER_EYE
+        amount: 32
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: MAGMA_CREAM
+        amount: 32
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: GHAST_TEAR
+        amount: 32
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: FEATHER
+        amount: 32
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBard§7 ┃ §fBoots
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBard§7 ┃ §fLeggings
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBard§7 ┃ §fChestplate
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBard§7 ┃ §fHelmet
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+    damage: 0
+    uses: 2954
+  UltimateBard:
+    slot: 13
+    displayName: '&6&lUltimate Bard Kit'
+    material: GOLD_HELMET
+    category: ULTIMATE
+    cooldown: 24
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lUltimate Bard§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 64
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_INGOT
+        amount: 64
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 64
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: MAGMA_CREAM
+        amount: 64
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: GHAST_TEAR
+        amount: 64
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: FEATHER
+        amount: 64
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lUltimate Bard§7 ┃ §fBoots
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lUltimate Bard§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lUltimate Bard§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lUltimate Bard§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 1229
+  UltimateDiamond:
+    slot: 14
+    displayName: '&b&lUltimate Diamond Kit'
+    material: DIAMOND_HELMET
+    cooldown: 24
+    category: ULTIMATE
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lUltimate Diamond§7 ┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lUltimate Diamond§7 ┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lUltimate Diamond§7 ┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lUltimate Diamond§7 ┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          - §cFury I
+          - §cSwift I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lUltimate Diamond§7 ┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          - §cGreed I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 1528
+  Miner:
+    slot: 34
+    displayName: '&f&lMiner Kit'
+    material: DIAMOND_PICKAXE
+    cooldown: 24
+    category: NORMAL
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 1
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fPickaxe
+          enchants:
+            DIG_SPEED: 6
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fPickaxe (Fortune)
+          enchants:
+            DIG_SPEED: 6
+            DURABILITY: 3
+            LOOT_BONUS_BLOCKS: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_AXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          enchants:
+            DIG_SPEED: 6
+            DURABILITY: 3
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SPADE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fShovel
+          enchants:
+            DIG_SPEED: 6
+            DURABILITY: 3
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: ANVIL
+        amount: 16
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: WORKBENCH
+        amount: 2
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATER_BUCKET
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fSteak
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: LAVA_BUCKET
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: LAVA_BUCKET
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATER_BUCKET
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: BUCKET
+        amount: 2
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fBoots
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fLeggings
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fChestplate
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §f§lMiner §7┃ §fHelmet
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+    uses: 3772
+  UltimateArcher:
+    slot: 12
+    displayName: '&d&lUltimate Archer Kit'
+    material: LEATHER_HELMET
+    cooldown: 24
+    category: ULTIMATE
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lUltimate Archer §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: BOW
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lUltimate Archer §7┃ §fBow
+          enchants:
+            ARROW_DAMAGE: 5
+            DURABILITY: 4
+            ARROW_FIRE: 1
+            ARROW_INFINITE: 1
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR
+        amount: 64
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: FEATHER
+        amount: 64
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: ARROW
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lUltimate Archer §7┃ §fBoots
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lUltimate Archer §7┃ §fLeggings
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lUltimate Archer §7┃ §fChestplate
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: LEATHER_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: LEATHER_ARMOR
+          display-name: §d§lUltimate Archer §7┃ §fHelmet
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 1376
+  iMake:
+    slot: 16
+    displayName: '&c&liMakeMcVids Kit'
+    material: RED_ROSE
+    cooldown: 24
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 4
+    category: OP
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§l§niMakeMcVids §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 32
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_CHEST
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§liMakeMcVids Lootbox
+          lore:
+          - §7Unlocked at §fstore.cavepvp.org
+          - ''
+          - §c§lFINAL REWARDS
+          - ' §7➡ §4Cave Rank'
+          - ' §7➡ §2$§a10 Buycraft Voucher'
+          - ' §7➡ §6Premium Battle Pass'
+          - ' §7➡ §b3x Airdrops'
+          - ' §7➡ §ciMakeMcVids Kit'
+          - ' §7➡ §c5x iMakeMcVids Keys'
+          - ' §7➡ §ciMakeMcVids Clickable Kit'
+          - ''
+          - §c§lNORMAL REWARDS
+          - ' §7➡ §35x Invisibility'
+          - ' §7➡ §45x TNT Minecart'
+          - ' §7➡ §65x Debuff Fish'
+          - ' §7➡ §c5x Anti-Pearl'
+          - ' §7➡ §c1x Crowbar'
+          - ' §7➡ §62x God Apples'
+          - ' §7➡ §d16x Ender Pearls'
+          - ' §7➡ §632x Golden Apples'
+          - ' §7➡ §bDiamond Sword'
+          - ' §7➡ §bDiamond Helmet'
+          - ' §7➡ §bDiamond Chestplate'
+          - ' §7➡ §bDiamond Leggings'
+          - ' §7➡ §bDiamond Boots'
+          - ' §7➡ §bDiamond Pickaxe'
+          - ' §7➡ §a16x Emerald Blocks'
+          - ' §7➡ §b16x Diamond Blocks'
+          - ' §7➡ §616x Gold Blocks'
+          - ' §7➡ §716x Iron Blocks'
+          - ' §7➡ §832x Gun Powder'
+          - ' §7➡ §e32x Glowstone Blocks'
+          - ' §7➡ §432x Nether Wart'
+          - ' §7➡ §c32x Glistering Melons'
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for 5 seconds!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: EYE_OF_ENDER
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lAnti Pearl 2.0
+          lore:
+          - ''
+          - §6❙ §fHit a player to put them on enderpearl cooldown.
+          - §6❙ §fRight Click to remove your enderpearl cooldown.
+          - ''
+          - §fCan be found in the §c§liMakeMcVids Crate§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§l§niMakeMcVids §7┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§l§niMakeMcVids §7┃ §fLeggings
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§l§niMakeMcVids §7┃ §fChestplate
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§l§niMakeMcVids §7┃ §fHelmet
+          lore:
+          - §cHellForged III
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 449
+  Dylan:
+    slot: 12
+    displayName: '&a&lDylan Kit'
+    material: WATER_LILY
+    cooldown: 24
+    category: OP
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 4
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§l§nDylan §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 32
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_CHEST
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lDylan Lootbox
+          lore:
+          - §7Unlocked at §fstore.cavepvp.org
+          - ''
+          - §2§lEND REWARDS §7(1 item)
+          - §8• §4§lLEGENDARY §4Cave §7Rank
+          - §8• §4§lLEGENDARY §cCupid §7Rank
+          - §8• §4§lLEGENDARY §2$§a25 §7Buycraft Voucher
+          - §8• §4§lLEGENDARY §2$§a5 §7Buycraft Voucher
+          - §8• §4§lLEGENDARY §ePremium Battle Pass
+          - §8• §c§lRARE §73x §c§lCupid Mystery Box
+          - §8• §c§lRARE §75x §b§lAirdrops
+          - §8• §d§lUNCOMMON §730-day §a§lDylan §7Kit
+          - §8• §d§lUNCOMMON §710x §a§lDylan §7Keys
+          - §8• §a§lCOMMON §a§lDylan §7Clickable Kit
+          - ''
+          - §2§lREWARDS §7(9 items)
+          - §8• §c§lRARE §61x §7Crowbar
+          - §8• §c§lRARE §61x §7Random Spawner
+          - §8• §c§lRARE §54x §7End Portal Frames
+          - §8• §d§lUNCOMMON §65x §7God Apples
+          - §8• §d§lUNCOMMON §d32x §7Ender Pearls
+          - §8• §d§lUNCOMMON §664x §7Golden Apples
+          - §8• §d§lUNCOMMON §aDylan §7Fire Sword
+          - §8• §d§lUNCOMMON §aDylan §7Helmet
+          - §8• §d§lUNCOMMON §aDylan §7Chestplate
+          - §8• §d§lUNCOMMON §aDylan §7Leggings
+          - §8• §d§lUNCOMMON §aDylan §7Boots
+          - §8• §d§lUNCOMMON §aDylan §7Pickaxe
+          - §8• §a§lCOMMON §a64x §7Emerald Blocks
+          - §8• §a§lCOMMON §b64x §7Diamond Blocks
+          - §8• §a§lCOMMON §664x §7Gold Blocks
+          - §8• §a§lCOMMON §7§l64x §7Iron Blocks
+          - §8• §a§lCOMMON §8§l64x §7Gun Powder
+          - §8• §a§lCOMMON §e§l64x §7Glowstone Blocks
+          - §8• §a§lCOMMON §c§l64x §7Glistering Melons
+          - §8• §a§lCOMMON §c§l64x §7Nether Wart
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: RED_ROSE
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lCombo Ability
+          lore:
+          - ''
+          - §6❙ §fGet a second of strength II for the
+          - §6❙ §famount of hits dealt within §e§l10 seconds§f.
+          - ''
+          - §fCan be found in the §a§lDylan Crate§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 4
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for 5 seconds!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§l§nDylan §7┃ §fBoots
+          lore:
+          - §cSpeed II
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§l§nDylan §7┃ §fLeggings
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§l§nDylan §7┃ §fChestplate
+          lore:
+          - §cHellForged III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§l§nDylan §7┃ §fHelmet
+          lore:
+          - §cHellForged III
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 301
+  Weekly:
+    slot: 15
+    displayName: §6§lWeekly Kit
+    material: IRON_SWORD
+    cooldown: 168
+    category: FREE
+    lore:
+    - '&7This kit is free to all players!'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Week'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lWeekly §7┃ §fSword
+          enchants:
+            DAMAGE_ALL: 2
+            DURABILITY: 3
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 6
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 6
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: COOKED_BEEF
+        amount: 64
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 8226
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lWeekly §7┃ §fBoots
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 2
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lWeekly §7┃ §fLeggings
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 2
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lWeekly §7┃ §fChestplate
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 2
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lWeekly §7┃ §fHelmet
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 2
+    uses: 3209
+  SOTW:
+    slot: 5
+    displayName: §6§lSOTW
+    material: DIAMOND_SWORD
+    cooldown: 24
+    category: NONE
+    lore:
+    - '&7You may purchase this kit at &fstore.cavepvp.org'
+    - ''
+    - '&7Cooldown: &c1 Day'
+    - '&7Available in: &c{remaining}'
+    - ''
+    - '&7(&c!&7) Right click to preview'
+    damage: 0
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lSOTW Kit
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 8
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - §7Give yourself and your teammates
+          - §7around you Strength 2 for 5 seconds
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - §7Right Click to receive Resistance 3,
+          - §7Regeneration 3, and 4 Absorption
+          - §7Hearts for 5 seconds!
+          - ''
+          - §fCan be found in the §4§l3.0 Crate§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: NETHER_STAR
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lNinja Star
+          lore:
+          - §7Teleport to the last
+          - §7person who hit you within 30 seconds.
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: SNOW_BALL
+        amount: 2
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lBall Of Rage
+          lore:
+          - §7Throw to create a cloud of effects
+          - §7where all teammates within 5 block
+          - §7radius will be given Strength II and
+          - §7Resistance III for 6 seconds.
+          - ''
+          - §fCan be found in the §4§lSimplyTrash §fCrate!
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 2
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - §7When you hit a player with this
+          - §73 times they may not block up for 15 seconds.
+          - ''
+          - §fCan be found in the §4§l3.0 Crate§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: WORKBENCH
+        amount: 2
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lCrafting Chaos
+          lore:
+          - §7Hit an enemy and for 10 seconds, every
+          - §7hit you deal has a 15% chance of
+          - §7putting them in a crafting table.
+          - ''
+          - §fCan be found in the §4§lQnA §fCrate!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lSOTW Kit
+          lore:
+          - §cSpeed II
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_FALL: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lSOTW Kit
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lSOTW Kit
+          lore:
+          - §cHellForged IV
+          - §cRecover I
+          - §cFireResistance I
+          - §cFury I
+          - §cSwift I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lSOTW Kit
+          lore:
+          - §cHellForged IV
+          - §cImplants V
+          - §cMermaid III
+          - §cRecover I
+          - §cFireResistance I
+          - §cGreed I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 4
+            PROTECTION_EXPLOSIONS: 4
+    uses: 0
+  Raider:
+    slot: 11
+    displayName: '&4&lRaider Kit'
+    material: DIAMOND_SWORD
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &6&lCustom &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    uses: 381
+    category: CLASSES
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lRaider Sword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 16
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for 5 seconds!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: INK_SACK
+        damage: 5
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lPower Stone
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Strength II,
+          - §6❙ §fResistance III and Regeneration III for §e§l10 seconds
+          - §6❙ §fDuring that time you may not use any potions!
+          - ''
+          - §fCan be found in the §b§lIlluminated Chest§f!
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATCH
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lTime Warp
+          lore:
+          - ''
+          - §6❙ §fTravel back to where
+          - §6❙ §fyou last threw a pearl!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lAnti-Blockup
+          lore:
+          - ''
+          - §6❙ §fWhen you hit a player with this
+          - §6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: INK_SACK
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lInvisibility
+          lore:
+          - ''
+          - §6❙ §fWhen you right click this item
+          - §6❙ §fyour armor will no longer be visible.
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: NETHER_STAR
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lNinja Star
+          lore:
+          - ''
+          - §6❙ §fTeleport to the last person that
+          - §6❙ §fhit you within the last §e§l30 seconds§f!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: MONSTER_EGG
+        damage: 60
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lBlock Bug
+          lore:
+          - ''
+          - §6❙ §fHit a player §c§lthree times §fand for
+          - §6❙ §fthe next §e§l10 seconds §fall blocks they
+          - §6❙ §fplace will turn into a silverfish.
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: EMPTY_MAP
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lReverse Card
+          lore:
+          - ''
+          - §6❙ §fHit a player three times.
+          - §6❙ §fFor §e§l12 seconds§f, you can click
+          - §6❙ §fany block they click with and you
+          - §6❙ §fcan break any block they place.
+          - ''
+          - §fCan be found in the §6§lSummer Mystery Box§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lRaider Boots
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          - §cSpeed II
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lRaider Leggings
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lRaider Chestplate
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §4§lRaider Helmet
+          lore:
+          - ''
+          - '§4Armor Class: §fRaider'
+          - '§4Perks:'
+          - §4❙ §fDeal 5% more damage
+          - §4❙ §f10% Reduced Partner Item cooldown
+          - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+  Pyromaniac:
+    slot: 15
+    displayName: '&c&lPyromaniac Kit'
+    material: FIREBALL
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &6&lCustom &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    uses: 224
+    category: CLASSES
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lPyromaniac Sword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 8
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 8
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for 5 seconds!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: CLAY_BRICK
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §2§lHulk Smash
+          lore:
+          - ''
+          - §6❙ §fRight Click to be launched, when
+          - §6❙ §fyou land all players within a §c§l5x5 §fradius
+          - §6❙ §fwill take damage and will be launched in the air.
+          - ''
+          - §fCan be found in the §9§lNotRamix Crate§f!
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: SLIME_BALL
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lKryptonite Gas
+          lore:
+          - ''
+          - §6❙ §fClick and all players within a §c§l10 §fblock radius
+          - §6❙ §fwill be given Weakness and Poison for §e§l15 seconds§f.
+          - §6❙ §fYou will also receive Resistance II for §e§l15 seconds§f.
+          - ''
+          - §fCan be found in the §6§lSummer Lootbox§f!
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: WORKBENCH
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lCrafting Chaos
+          lore:
+          - ''
+          - §6❙ §fHit an enemy and for §e§l10 seconds§f, every
+          - §6❙ §fhit you deal has a §c§l15% §fchance of
+          - §6❙ §fputting them in a crafting table.
+          - ''
+          - §fCan be found in the §3§lHeaded Crate§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: INK_SACK
+        damage: 14
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lPortable Bard
+          lore:
+          - ''
+          - §6❙ §fReceive §c§l5 §fportable bard effects!
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: STICK
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lSpin Bot
+          lore:
+          - ''
+          - §6❙ §fHit a player §c§l3 times §fand every
+          - §6❙ §fhit for §e§l10 seconds §fhas a chance
+          - §6❙ §fof rotating their head
+          - ''
+          - §fCan be found in the §d§lPartner Crate§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: MONSTER_EGG
+        damage: 66
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lWitch Effect
+          lore:
+          - ''
+          - §6❙ §fSpawn a witch that give you passive
+          - '§6❙ §fbard effects: strength, regeneration,'
+          - §6❙ §fand resistance.
+          - ''
+          - §fCan be found in the §d§lPartner Crate§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lPyromaniac Boots
+          lore:
+          - ''
+          - '§cArmor Class: §fPyromaniac'
+          - '§cPerks:'
+          - §c❙ §fSHIFT + Click to throw shockwaves
+          - §c❙ §f1% chance of putting them on Fire and giving them Wither I for 8 seconds.
+          - ''
+          - §cSpeed II
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lPyromaniac Leggings
+          lore:
+          - ''
+          - '§cArmor Class: §fPyromaniac'
+          - '§cPerks:'
+          - §c❙ §fSHIFT + Click to throw shockwaves
+          - §c❙ §f1% chance of putting them on Fire and giving them Wither I for 8 seconds.
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lPyromaniac Chestplate
+          lore:
+          - ''
+          - '§cArmor Class: §fPyromaniac'
+          - '§cPerks:'
+          - §c❙ §fSHIFT + Click to throw shockwaves
+          - §c❙ §f1% chance of putting them on Fire and giving them Wither I for 8 seconds.
+          - ''
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lPyromaniac Helmet
+          lore:
+          - ''
+          - '§cArmor Class: §fPyromaniac'
+          - '§cPerks:'
+          - §c❙ §fSHIFT + Click to throw shockwaves
+          - §c❙ §f1% chance of putting them on Fire and giving them Wither I for 8 seconds.
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+  Trapper:
+    slot: 13
+    displayName: '&5&lTrapper Kit'
+    material: COBBLESTONE
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &6&lCustom &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    uses: 248
+    category: CLASSES
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lTrapper Sword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_PICKAXE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lTrapper Pickaxe
+          enchants:
+            DIG_SPEED: 5
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 16
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: EYE_OF_ENDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lAnti Pearl 2.0
+          lore:
+          - ''
+          - §6❙ §fHit a player to put them on enderpearl cooldown.
+          - §6❙ §fRight Click to remove your enderpearl cooldown.
+          - ''
+          - §fCan be found in the §c§liMakeMcVids Crate§f!
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for 5 seconds!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: IRON_FENCE
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lLock In
+          lore:
+          - ''
+          - §6❙ §fHit a player three times to
+          - §6❙ §fbe locked in a 1v1 where only
+          - §6❙ §fyou fight that player for §e§l30 seconds§f.
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: COBBLESTONE
+        amount: 64
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLD_INGOT
+        amount: 3
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lSoul Stone
+          lore:
+          - ''
+          - §6❙ §fUpon going below 2 hearts, you will be instantly
+          - §6❙ §fhealed and given Resistance III for §e§l5 seconds§f.
+          - ''
+          - §fCan be found in the §b§lIlluminated Chest§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: WORKBENCH
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §3§lCrafting Chaos
+          lore:
+          - ''
+          - §6❙ §fHit an enemy and for §e§l10 seconds§f, every
+          - §6❙ §fhit you deal has a §c§l15% §fchance of
+          - §6❙ §fputting them in a crafting table.
+          - ''
+          - §fCan be found in the §3§lHeaded Crate§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: STEP
+        amount: 64
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lTrapper Boots
+          lore:
+          - ''
+          - '§5Armor Class: §fTrapper'
+          - '§5Perks:'
+          - §5❙ §fTake 10% less damage
+          - §5❙ §fMed Kits and Portable Resistance last 25% longer
+          - §5❙ §fSHIFT + Click to put the last player you hit on Ability Item cooldown
+          - ''
+          - §cSpeed II
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lTrapper Leggings
+          lore:
+          - ''
+          - '§5Armor Class: §fTrapper'
+          - '§5Perks:'
+          - §5❙ §fTake 10% less damage
+          - §5❙ §fMed Kits and Portable Resistance last 25% longer
+          - §5❙ §fSHIFT + Click to put the last player you hit on Ability Item cooldown
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lTrapper Chestplate
+          lore:
+          - ''
+          - '§5Armor Class: §fTrapper'
+          - '§5Perks:'
+          - §5❙ §fTake 10% less damage
+          - §5❙ §fMed Kits and Portable Resistance last 25% longer
+          - §5❙ §fSHIFT + Click to put the last player you hit on Ability Item cooldown
+          - ''
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §5§lTrapper Helmet
+          lore:
+          - ''
+          - '§5Armor Class: §fTrapper'
+          - '§5Perks:'
+          - §5❙ §fTake 10% less damage
+          - §5❙ §fMed Kits and Portable Resistance last 25% longer
+          - §5❙ §fSHIFT + Click to put the last player you hit on Ability Item cooldown
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+  Spiderman:
+    slot: 17
+    displayName: '&c&lSpider Man Kit'
+    material: WEB
+    cooldown: 24
+    lore:
+    - '&7An exclusive kit to the &6&lCustom &7rank.'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    uses: 265
+    category: CLASSES
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_SWORD
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lSpider Man Sword
+          enchants:
+            DAMAGE_ALL: 2
+            DAMAGE_UNDEAD: 4
+            DURABILITY: 4
+            DAMAGE_ARTHROPODS: 5
+            LOOT_BONUS_MOBS: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: ENDER_PEARL
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        amount: 16
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: EGG
+        amount: 16
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lEggport
+          lore:
+          - ''
+          - §6❙ §fSwitch places with your
+          - §6❙ §fenemy that are within §c§l15 §fblocks!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: PAPER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §a§lMed Kit
+          lore:
+          - ''
+          - §6❙ §fRight Click to receive Resistance 3,
+          - §6❙ §fRegeneration 3, and 4 Absorption
+          - §6❙ §fHearts for 5 seconds!
+          - ''
+          - §fCan be found in the §6§lSummer Crate§f!
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: GOLDEN_APPLE
+        damage: 1
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_POWDER
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §6§lStrength
+          lore:
+          - ''
+          - §6❙ §fGive you and your teammates
+          - §6❙ §e§l5 seconds §fof §c§lStrength
+          - ''
+          - §fCan be found in an §b§lAirdrop§f!
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_12:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_13:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_14:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_15:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_16:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_17:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_18:
+        ==: org.bukkit.inventory.ItemStack
+        type: FLINT
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §d§lTazer
+          lore:
+          - ''
+          - §6❙ §fHit a player and for the next
+          - §6❙ §e§l5 seconds §fthey will not be able to
+          - §6❙ §fmove or take knockback.
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_19:
+        ==: org.bukkit.inventory.ItemStack
+        type: WATER_BUCKET
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §9§lPortable Clutch
+          lore:
+          - ''
+          - §6❙ §fRight Click on a surface to
+          - §6❙ §fplace water in any claim! (non-spreadable)
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_20:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_21:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_22:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_23:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_24:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_25:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_26:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_27:
+        ==: org.bukkit.inventory.ItemStack
+        type: SPIDER_EYE
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §e§lSpider Ability
+          lore:
+          - ''
+          - §6❙ §fClick to activate and for the
+          - §6❙ §fnext §e§l15 seconds§f, all hits dealt
+          - §6❙ §fhave a §c§l25% §fchance of putting a
+          - §6❙ §fcobweb underneath the enemy.
+          - ''
+          - §fCan be found in the §e§lNicoArg17 Crate§f!
+      item_28:
+        ==: org.bukkit.inventory.ItemStack
+        type: ARROW
+        amount: 5
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lArrow Reflector
+          lore:
+          - ''
+          - §6❙ §fClick and for §e§l15 seconds §fall
+          - §6❙ §farrows shot at you will be shot back
+          - §6❙ §fto the original shooter!
+          - ''
+          - §fCan be found in the §4§lCave Crate§f!
+      item_29:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_30:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_31:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_32:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_33:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_34:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+      item_35:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTION
+        damage: 16421
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BOOTS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lSpider Man Boots
+          lore:
+          - ''
+          - '§cArmor Class: §fSpider Man'
+          - '§cPerks:'
+          - §c❙ §f25% Fall Damage Reduction
+          - §c❙ §fPermanent Jump Boost II, Speed II, Fire Resistance I
+          - §c❙ §fSHIFT + Click to put the last player you hit in cobwebs!
+          - ''
+          - §cSpeed II
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+            PROTECTION_FALL: 4
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_LEGGINGS
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lSpider Man Leggings
+          lore:
+          - ''
+          - '§cArmor Class: §fSpider Man'
+          - '§cPerks:'
+          - §c❙ §f25% Fall Damage Reduction
+          - §c❙ §fPermanent Jump Boost II, Speed II, Fire Resistance I
+          - §c❙ §fSHIFT + Click to put the last player you hit in cobwebs!
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_CHESTPLATE
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lSpider Man Chestplate
+          lore:
+          - ''
+          - '§cArmor Class: §fSpider Man'
+          - '§cPerks:'
+          - §c❙ §f25% Fall Damage Reduction
+          - §c❙ §fPermanent Jump Boost II, Speed II, Fire Resistance I
+          - §c❙ §fSHIFT + Click to put the last player you hit in cobwebs!
+          - ''
+          - §cFireResistance I
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_HELMET
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §c§lSpider Man Helmet
+          lore:
+          - ''
+          - '§cArmor Class: §fSpider Man'
+          - '§cPerks:'
+          - §c❙ §f25% Fall Damage Reduction
+          - §c❙ §fPermanent Jump Boost II, Speed II, Fire Resistance I
+          - §c❙ §fSHIFT + Click to put the last player you hit in cobwebs!
+          - ''
+          enchants:
+            PROTECTION_ENVIRONMENTAL: 2
+            DURABILITY: 3
+  Brewer:
+    slot: 11
+    displayName: §d§lBrewer Kit
+    material: BREWING_STAND_ITEM
+    cooldown: 24
+    lore:
+    - '&7This kit is free to all players!'
+    - ''
+    - '&4&l┃ &fCooldown: &c1 Day'
+    - '&4&l┃ &fAvailable in: &c{remaining}'
+    - ''
+    - '&aRight Click to preview this kit'
+    damage: 0
+    uses: 8860
+    category: FREE
+    content:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: BREWING_STAND_ITEM
+        meta:
+          ==: ItemMeta
+          meta-type: UNSPECIFIC
+          display-name: §b§lFancy Brewer
+          lore:
+          - §7A brewing stand... but fancy.
+          - §7Place the brewer and open to get started.
+          - ''
+          - §aLearn more at cavepvp.org/fancybrewers
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: NETHER_STALK
+        amount: 16
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: SPECKLED_MELON
+        amount: 16
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: GLOWSTONE_DUST
+        amount: 16
+      item_4:
+        ==: org.bukkit.inventory.ItemStack
+        type: SULPHUR
+        amount: 16
+      item_5:
+        ==: org.bukkit.inventory.ItemStack
+        type: SUGAR_CANE
+        amount: 16
+      item_6:
+        ==: org.bukkit.inventory.ItemStack
+        type: FERMENTED_SPIDER_EYE
+        amount: 16
+      item_7:
+        ==: org.bukkit.inventory.ItemStack
+        type: SOUL_SAND
+        amount: 16
+      item_8:
+        ==: org.bukkit.inventory.ItemStack
+        type: MELON_SEEDS
+        amount: 8
+      item_9:
+        ==: org.bukkit.inventory.ItemStack
+        type: BLAZE_ROD
+        amount: 16
+      item_10:
+        ==: org.bukkit.inventory.ItemStack
+        type: CARROT_ITEM
+        amount: 16
+      item_11:
+        ==: org.bukkit.inventory.ItemStack
+        type: POTATO_ITEM
+        amount: 16
+    armor:
+      item_0:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+      item_1:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+      item_2:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0
+      item_3:
+        ==: org.bukkit.inventory.ItemStack
+        type: AIR
+        damage: -1
+        amount: 0

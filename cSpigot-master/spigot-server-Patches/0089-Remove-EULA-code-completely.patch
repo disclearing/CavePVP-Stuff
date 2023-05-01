@@ -1,0 +1,49 @@
+From 7be8b2ce790300ea3415669408c39688393de862 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 01:22:57 -0400
+Subject: [PATCH] Remove EULA code completely
+
+
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index 38b76ba64..95e07adb2 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -77,33 +77,8 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+ 
+         i.info("Loading properties");
+         this.propertyManager = new PropertyManager(this.options); // CraftBukkit - CLI argument support
+-        // PaperSpigot start - Display a EULA warning then continue
+-        File EULALock = new File( ".eula-lock");
+-        // Spigot Start
+-        boolean eulaAgreed = Boolean.getBoolean( "com.mojang.eula.agree" );
+-        if ( eulaAgreed )
+-        {
+-            System.err.println( "You have used the Spigot command line EULA agreement flag." );
+-            System.err.println( "By using this setting you are indicating your agreement to Mojang's EULA (https://account.mojang.com/documents/minecraft_eula)." );
+-            System.err.println( "If you do not agree to the above EULA please stop your server and remove this flag immediately." );
+-            // Spigot End
+-        } else {
+-            if (!EULALock.exists()) {
+-                System.err.println("WARNING: By using this server you are indicating your agreement to Mojang's EULA (https://account.mojang.com/documents/minecraft_eula)");
+-                System.err.println("If you do not agree to the above EULA please stop this server and remove it from your system immediately.");
+-                System.err.println("The server will start in 10 seconds, you will only see this message and have to wait this one time.");
+-                try {
+-                    EULALock.createNewFile();
+-                } catch (IOException e1) {
+-                    System.err.println("Unable to create EULA lock file");
+-                    e1.printStackTrace();
+-                }
+-                try {
+-                    Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+-                } catch (InterruptedException ex) {
+-                }
+-            }
+-                // PaperSpigot end
++        // MineHQ - screw the EULA
++        if (true) {
+             if (this.N()) {
+                 this.c("127.0.0.1");
+             } else {
+-- 
+2.13.3
+

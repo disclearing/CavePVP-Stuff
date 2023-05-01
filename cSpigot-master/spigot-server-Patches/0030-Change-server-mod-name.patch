@@ -1,0 +1,22 @@
+From b6f926209bb66addd54ba7869dc5a54fbcb1556a Mon Sep 17 00:00:00 2001
+From: Zach Brown <Zbob750@live.com>
+Date: Tue, 19 Aug 2014 14:21:37 -0500
+Subject: [PATCH] Change server mod name
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 8460a9944..265aa5835 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -998,7 +998,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     }
+ 
+     public String getServerModName() {
+-        return "Spigot"; // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "MineHQ Cloud v0.2.1 Alpha"; // MineHQ - ayy lmao
+     }
+ 
+     public CrashReport b(CrashReport crashreport) {
+-- 
+2.13.3
+

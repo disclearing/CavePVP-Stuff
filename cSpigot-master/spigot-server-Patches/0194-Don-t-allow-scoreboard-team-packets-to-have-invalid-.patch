@@ -1,0 +1,30 @@
+From 894dd1032b50991f4523d16e5698cf768e08b616 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Thu, 20 Jul 2017 23:37:17 +0100
+Subject: [PATCH] Don't allow scoreboard team packets to have invalid string
+ lengths
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
+index abba46c70..22416fbb6 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutScoreboardTeam.java
+@@ -18,11 +18,15 @@ public class PacketPlayOutScoreboardTeam extends Packet {
+     public PacketPlayOutScoreboardTeam() {}
+ 
+     public PacketPlayOutScoreboardTeam(ScoreboardTeam scoreboardteam, int i) {
++        if (16 < scoreboardteam.getName().length()) throw new IllegalArgumentException("Scoreboard team name '" + scoreboardteam.getName() + "' exceeds maximum length of 16.");
+         this.a = scoreboardteam.getName();
+         this.f = i;
+         if (i == 0 || i == 2) {
++            if (16 < scoreboardteam.getDisplayName().length()) throw new IllegalArgumentException("Scoreboard team display name '" + scoreboardteam.getDisplayName() + "' exceeds maximum length of 16.");
+             this.b = scoreboardteam.getDisplayName();
++            if (16 < scoreboardteam.getPrefix().length()) throw new IllegalArgumentException("Scoreboard team prefix '" + scoreboardteam.getPrefix() + "' exceeds maximum length of 16.");
+             this.c = scoreboardteam.getPrefix();
++            if (16 < scoreboardteam.getSuffix().length()) throw new IllegalArgumentException("Scoreboard team suffix '" + scoreboardteam.getSuffix() + "' exceeds maximum length of 16.");
+             this.d = scoreboardteam.getSuffix();
+             this.g = scoreboardteam.packOptionData();
+         }
+-- 
+2.13.3
+

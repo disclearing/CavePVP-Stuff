@@ -1,0 +1,22 @@
+From 429f3e6b62ae411a496d083fd9d011af8e903ea8 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Thu, 5 Nov 2015 13:05:12 +0100
+Subject: [PATCH] Fix wither still exploding when event is canceled
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityWither.java b/src/main/java/net/minecraft/server/EntityWither.java
+index 434616d58..f004e9a91 100644
+--- a/src/main/java/net/minecraft/server/EntityWither.java
++++ b/src/main/java/net/minecraft/server/EntityWither.java
+@@ -172,7 +172,7 @@ public class EntityWither extends EntityMonster implements IRangedEntity {
+                 }
+                 // CraftBukkit end
+ 
+-                this.world.createExplosion(this, this.locX, this.locY + (double) this.getHeadHeight(), this.locZ, 7.0F, false, this.world.getGameRules().getBoolean("mobGriefing"));
++                //this.world.createExplosion(this, this.locX, this.locY + (double) this.getHeadHeight(), this.locZ, 7.0F, false, this.world.getGameRules().getBoolean("mobGriefing")); // Poweruser - already done in the event handling
+                 // CraftBukkit start - Use relative location for far away sounds
+                 //this.world.b(1013, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
+                 int viewDistance = ((WorldServer) this.world).getServer().getViewDistance() * 16;
+-- 
+2.13.3
+

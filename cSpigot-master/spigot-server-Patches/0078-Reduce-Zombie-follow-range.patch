@@ -1,0 +1,23 @@
+From 673b13e91b7797196a8b49419c71e88c0f91e2a0 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:36:39 -0400
+Subject: [PATCH] Reduce Zombie follow range
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityZombie.java b/src/main/java/net/minecraft/server/EntityZombie.java
+index 41e59ba66..f1debb624 100644
+--- a/src/main/java/net/minecraft/server/EntityZombie.java
++++ b/src/main/java/net/minecraft/server/EntityZombie.java
+@@ -45,7 +45,8 @@ public class EntityZombie extends EntityMonster {
+ 
+     protected void aD() {
+         super.aD();
+-        this.getAttributeInstance(GenericAttributes.b).setValue(40.0D);
++        // Kohi - change follow range from 40.0 to 16.0 for performance
++        this.getAttributeInstance(GenericAttributes.b).setValue(16.0D);
+         this.getAttributeInstance(GenericAttributes.d).setValue(0.23000000417232513D);
+         this.getAttributeInstance(GenericAttributes.e).setValue(3.0D);
+         this.getAttributeMap().b(bp).setValue(this.random.nextDouble() * 0.10000000149011612D);
+-- 
+2.13.3
+

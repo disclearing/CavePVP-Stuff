@@ -1,0 +1,16 @@
+{
+  "name": "NetherCitadel",
+  "capLocation": {
+    "x": -195.51424893866835,
+    "y": 32.0,
+    "z": -497.4992356106338
+  },
+  "world": "world_nether",
+  "capDistance": 4,
+  "capTime": 60,
+  "hidden": false,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

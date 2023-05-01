@@ -1,0 +1,69 @@
+From a92fd54345491517275abba3e4217a33742fa218 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 8 Jul 2018 23:02:17 -0500
+Subject: [PATCH] POM updates for Hylist
+
+
+diff --git a/pom.xml b/pom.xml
+index 1c1e9ebf5..99e83210d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1,12 +1,12 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+-  <groupId>net.frozenorb</groupId>
+-  <artifactId>sourspigot-server</artifactId>
++  <groupId>net.hylist</groupId>
++  <artifactId>spigot-server</artifactId>
+   <packaging>jar</packaging>
+   <version>1.7.10-R0.1-SNAPSHOT</version>
+   <name>mSpigot</name>
+-  <url>https://frozenorb.net</url>
++  <url>https://hylist.net</url>
+ 
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+@@ -21,8 +21,8 @@
+   </properties>
+ 
+   <parent>
+-    <groupId>net.frozenorb</groupId>
+-    <artifactId>sourspigot-parent</artifactId>
++    <groupId>net.hylist</groupId>
++    <artifactId>spigot-parent</artifactId>
+     <version>dev-SNAPSHOT</version>
+     <relativePath>../pom.xml</relativePath>
+   </parent>
+@@ -36,8 +36,8 @@
+ 
+   <dependencies>
+     <dependency>
+-      <groupId>net.frozenorb</groupId>
+-      <artifactId>sourspigot-api</artifactId>
++      <groupId>net.hylist</groupId>
++      <artifactId>spigot-api</artifactId>
+       <version>${project.version}</version>
+       <type>jar</type>
+       <scope>compile</scope>
+@@ -344,17 +344,5 @@
+       </plugins>
+     </pluginManagement>
+   </build>
+-
+-  <distributionManagement>
+-    <repository>
+-      <id>minehq-repo</id>
+-      <url>http://maven.minehq.com:8081/artifactory/minehq-medium</url>
+-    </repository>
+-    <snapshotRepository>
+-      <id>minehq-repo</id>
+-      <url>http://maven.minehq.com:8081/artifactory/minehq-medium</url>
+-    </snapshotRepository>
+-  </distributionManagement>
+-
+ </project>
+ 
+-- 
+2.15.2 (Apple Git-101.1)
+

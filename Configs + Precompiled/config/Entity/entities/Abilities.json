@@ -1,0 +1,85 @@
+{
+    "type": "NPC",
+    "name": "Abilities",
+    "location": {
+        "world": "Spawn",
+        "x": -5.5,
+        "y": 70.0,
+        "z": 6.5,
+        "yaw": 225.0,
+        "pitch": -0.0
+    },
+    "commands": [
+        "abilityitems"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_Abilities_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": -5.5,
+            "y": 72.095,
+            "z": 6.5,
+            "yaw": 225.0,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "§a* §lREVAMPED §a*",
+                "location": {
+                    "world": "Spawn",
+                    "x": -5.5,
+                    "y": 72.325,
+                    "z": 6.5,
+                    "yaw": 225.0,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§4§lAbility Items",
+                "location": {
+                    "world": "Spawn",
+                    "x": -5.5,
+                    "y": 72.095,
+                    "z": 6.5,
+                    "yaw": 225.0,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§f§ostore.cavepvp.org",
+                "location": {
+                    "world": "Spawn",
+                    "x": -5.5,
+                    "y": 71.865,
+                    "z": 6.5,
+                    "yaw": 225.0,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "TJxws2nJAr2J4jjD0Qn+eYkXw1vb6NudT8QmwsB3qNOMR0d/6JmL8u6bP4xM7AEh/Td11DypLpCUfqvTm5/Bts7QCd+yRZf2e4LCAhAucT9QaR+PEg0LVt4szVPvszUCEIMRMtSFclWY/6hxE4vFEqUJXLwSPtDkzFYCHMjTclhccbcaRXwkZM+D6hdrgUP27hHvQr2vcwKo7FJlkTCjf1T29iHXbrimNxIMAVfXoQO94h19vYys0vVzkeEKsAmtaLKnvp8UW/umMXBM0YqvZLHHaYHNcn0hHomZbZfwO4BR1T5u51R/RcQlXoEZxTmU/1kJt5WPTlZ0yZCOFbhl9NwZ78rbcIfsXsf046wTovi3x/BDIBLWShABv6IDSuFCAhx8n9goyoJf8egfOcPv0EHvfHwgmnd7a6YbzK+oyQAtleMbQVKVr13MwltpZyzXCyp+5Jy4pEtlOfQKyLFd9J32V+PgM49IOfD274OIF8btrGoy3heav5Nk+BPFO80tp+sa72E32DDweA/QBxwxw/b6GzG/OVCj3vNut8eiaz44zdsBBy696jpbKLqHZNrPvtVaNvgBdH0T1Ug3fjFUJl89CQJnnl2rX8xrJcI+y/yNrBNOyNxAE0Di1AWJMNE5a74r60jtCb/g2T0HEIeISxX2EnrL83HhmG8ruLGqx9M=",
+    "skinUsername": "iMakeMcVids",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY0NzEwOTQ5ODUyOCwKICAicHJvZmlsZUlkIiA6ICJkYWQ4NDQxZmRlY2U0OTlkYTg5NDc0Y2YzYmQ2M2Q0YSIsCiAgInByb2ZpbGVOYW1lIiA6ICJpTWFrZU1jVmlkcyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9lOTg0ZTdjYzE0MThhY2JlYzJhZTVmNjUwN2JiY2ZmMjU2ZWEyODZkMjhkNjk3ODFjNzU2MzZkZTNlMTllZmUwIgogICAgfQogIH0KfQ==",
+    "animations": [
+        "Rings_DARK_GRAY",
+        "Rings_DARK_RED"
+    ],
+    "visibility": "VISIBLE"
+}

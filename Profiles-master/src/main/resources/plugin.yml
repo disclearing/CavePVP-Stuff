@@ -1,0 +1,8 @@
+name: Profiles
+author: SimplyTrash
+version: 1.0-SNAPSHOT
+main: org.cavepvp.profiles.Profiles
+depend:
+  - Neutron
+  - Proton
+  - Piston

@@ -1,0 +1,21 @@
+From 6917f7931f91c480b6c8a8c1b60477fd1ade91c1 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <cmcdonald.main@gmail.com>
+Date: Sun, 29 Jan 2017 13:30:36 -0500
+Subject: [PATCH] Add REACH cheat type
+
+
+diff --git a/src/main/java/org/bukkit/event/player/GuardianEvent.java b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+index a4d2aac7..f463e161 100644
+--- a/src/main/java/org/bukkit/event/player/GuardianEvent.java
++++ b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+@@ -80,6 +80,7 @@ public class GuardianEvent extends PlayerEvent {
+         FAST_USE,
+         REGENERATION,
+         CLIENT_MODIFICATIONS,
++        REACH,
+ 
+         GENERAL, // Used for wrongly formed packets and other stuff
+ 
+-- 
+2.11.0.windows.3
+

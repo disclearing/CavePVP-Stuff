@@ -1,0 +1,61 @@
+From 60296cc1c22442741c5d031180253ba0d3c285d8 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Wed, 5 Jul 2017 16:09:01 +0100
+Subject: [PATCH] Target selection optimizations
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityCreature.java b/src/main/java/net/minecraft/server/EntityCreature.java
+index 3810671e6..4af862210 100644
+--- a/src/main/java/net/minecraft/server/EntityCreature.java
++++ b/src/main/java/net/minecraft/server/EntityCreature.java
+@@ -63,6 +63,11 @@ public abstract class EntityCreature extends EntityInsentient {
+     }
+     // Poweruser end
+ 
++    // MineHQ start
++    private long lastRayTraceTick = -1L;
++    private boolean lastRayTraceResult = false;
++    // MineHQ end
++
+     public EntityCreature(World world) {
+         super(world);
+     }
+@@ -106,7 +111,14 @@ public abstract class EntityCreature extends EntityInsentient {
+         } else if (this.target.isAlive()) {
+             float f1 = this.target.e((Entity) this);
+ 
+-            if (this.hasLineOfSight(this.target)) {
++            // MineHQ start - don't constantly ray trace
++            if (this.lastRayTraceTick + 50 < this.ticksLived) {
++                this.lastRayTraceTick = this.ticksLived;
++                this.lastRayTraceResult = this.hasLineOfSight(this.target);
++            }
++
++            if (this.lastRayTraceResult) {
++            // MineHQ end
+                 this.a(this.target, f1);
+             }
+         } else {
+diff --git a/src/main/java/net/minecraft/server/EntityMonster.java b/src/main/java/net/minecraft/server/EntityMonster.java
+index df54f1424..123cc0d83 100644
+--- a/src/main/java/net/minecraft/server/EntityMonster.java
++++ b/src/main/java/net/minecraft/server/EntityMonster.java
+@@ -41,7 +41,15 @@ public abstract class EntityMonster extends EntityCreature implements IMonster {
+         return "game.hostile.swim.splash";
+     }
+ 
++    private long lastTargetSearchTick = -1L; // MineHQ
+     protected Entity findTarget() {
++        // MineHQ start
++        if (this.lastTargetSearchTick + 50 < this.ticksLived) {
++            this.lastTargetSearchTick = this.ticksLived;
++        } else {
++            return null;
++        }
++        // MineHQ end
+         EntityHuman entityhuman = this.world.findNearbyVulnerablePlayer(this, 16.0D);
+ 
+         return entityhuman != null && this.hasLineOfSight(entityhuman) ? entityhuman : null;
+-- 
+2.13.3
+

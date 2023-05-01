@@ -1,0 +1,204 @@
+From 20265ccdfa645761658ebdb53e741d16d4be226e Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 28 May 2016 03:51:11 +0200
+Subject: [PATCH] Add more profilings
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index d67d54aa9..aebb9e09f 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -31,6 +31,10 @@ import org.bukkit.event.entity.EntityPortalEvent;
+ import org.bukkit.plugin.PluginManager;
+ // CraftBukkit end
+ 
++// Poweruser start
++import org.bukkit.craftbukkit.SpigotTimings;
++// Poweruser end
++
+ public abstract class Entity {
+ 
+     // CraftBukkit start
+@@ -271,6 +275,7 @@ public abstract class Entity {
+     }
+ 
+     public void C() {
++        SpigotTimings.timerEntity_C.startTiming(); // Poweruser
+         this.world.methodProfiler.a("entityBaseTick");
+         if (this.vehicle != null && this.vehicle.dead) {
+             this.vehicle = null;
+@@ -302,7 +307,9 @@ public abstract class Entity {
+                             b0 = -1;
+                         }
+ 
++                        SpigotTimings.timerEntity_C_portal.startTiming(); // Poweruser
+                         this.b(b0);
++                        SpigotTimings.timerEntity_C_portal.stopTiming(); // Poweruser
+                     }
+ 
+                     this.an = false;
+@@ -369,6 +376,7 @@ public abstract class Entity {
+ 
+         this.justCreated = false;
+         this.world.methodProfiler.b();
++        SpigotTimings.timerEntity_C.stopTiming(); // Poweruser
+     }
+ 
+     public int D() {
+diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
+index 2cb337986..ae3f9a137 100644
+--- a/src/main/java/net/minecraft/server/EntityInsentient.java
++++ b/src/main/java/net/minecraft/server/EntityInsentient.java
+@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
+ // CraftBukkit end
+ 
+ // Poweruser start
++import org.bukkit.craftbukkit.SpigotTimings;
+ import net.frozenorb.pathsearch.AsyncNavigation;
+ // Poweruser end
+ 
+@@ -117,6 +118,7 @@ public abstract class EntityInsentient extends EntityLiving {
+     }
+ 
+     public void C() {
++        SpigotTimings.timerEntityInsentient_C.startTiming(); // Poweruser
+         super.C();
+         this.world.methodProfiler.a("mobBaseTick");
+         if (this.isAlive() && this.random.nextInt(1000) < this.a_++) {
+@@ -125,6 +127,7 @@ public abstract class EntityInsentient extends EntityLiving {
+         }
+ 
+         this.world.methodProfiler.b();
++        SpigotTimings.timerEntityInsentient_C.stopTiming(); // Poweruser
+     }
+ 
+     protected int getExpValue(EntityHuman entityhuman) {
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 677002ba9..10b745a1a 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -163,6 +163,7 @@ public abstract class EntityLiving extends Entity {
+     }
+ 
+     public void C() {
++        SpigotTimings.timerEntityLiving_C.startTiming(); // Poweruser
+         this.aC = this.aD;
+         super.C();
+         this.world.methodProfiler.a("livingEntityBaseTick");
+@@ -251,6 +252,7 @@ public abstract class EntityLiving extends Entity {
+         this.lastYaw = this.yaw;
+         this.lastPitch = this.pitch;
+         this.world.methodProfiler.b();
++        SpigotTimings.timerEntityLiving_C.stopTiming(); // Poweruser
+     }
+ 
+     // CraftBukkit start
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index b35650ee0..f815eebbf 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -28,6 +28,11 @@ import org.spigotmc.SpigotCompressor;
+ import org.spigotmc.SpigotDecompressor;
+ // Spigot end
+ 
++// Poweruser start
++import org.spigotmc.CustomTimingsHandler;
++import org.bukkit.craftbukkit.SpigotTimings;
++// Poweruser end
++
+ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+     private static final Logger i = LogManager.getLogger();
+@@ -190,7 +195,16 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+                     continue;
+                 }
+                 // CraftBukkit end
+-                packet.handle(this.o);
++
++                // Poweruser start
++                CustomTimingsHandler packetHandlerTimer = SpigotTimings.getPacketHandlerTimings(packet);
++                packetHandlerTimer.startTiming();
++                try {
++                    packet.handle(this.o);
++                } finally {
++                    packetHandlerTimer.stopTiming();
++                }
++                // Poweruser end
+             }
+ 
+             this.o.a();
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 9efaab07c..90725d6cb 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutionException;
+ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+ import java.util.HashSet;
+ 
++import org.bukkit.craftbukkit.SpigotTimings;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+@@ -395,6 +396,8 @@ public class PlayerConnection implements PacketPlayInListener {
+                     return;
+                 }
+ 
++                SpigotTimings.connectionTimer_PacketFlying_move.startTiming(); // Poweruser
++
+                 float f4 = 0.0625F;
+                 boolean flag = worldserver.getCubes(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).isEmpty();
+ 
+@@ -447,6 +450,9 @@ public class PlayerConnection implements PacketPlayInListener {
+                 boolean rayTraceCollision = delta > 0.3 && worldserver.rayTrace(Vec3D.a(this.y, this.z + 1.0, this.q), Vec3D.a(d1, d2 + 1.0, d3), false, true, false) != null;
+ 
+                 this.player.setLocation(calculatedX, calculatedY, calculatedZ, f2, f3);
++
++                SpigotTimings.connectionTimer_PacketFlying_move.stopTiming(); // Poweruser
++
+                 if (flag1 || (!this.player.isSleeping() && flag && !flag2) || rayTraceCollision) {
+                     if(!rayTraceCollision && !flag && e % 3 != 0) {
+                         this.player.setPosition(this.y, this.z, this.q);
+@@ -473,7 +479,9 @@ public class PlayerConnection implements PacketPlayInListener {
+                 }
+ 
+                 this.player.onGround = packetplayinflying.i();
++                SpigotTimings.connectionTimer_PacketFlying_playerChunks.startTiming(); // Poweruser
+                 this.minecraftServer.getPlayerList().d(this.player);
++                SpigotTimings.connectionTimer_PacketFlying_playerChunks.stopTiming(); // Poweruser
+                 this.player.b(this.player.locY - d0, packetplayinflying.i());
+             } else if (this.e % 20 == 0) {
+                 this.a(this.y, this.z, this.q, this.player.yaw, this.player.pitch);
+diff --git a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+index 35149225a..e34e6bb37 100644
+--- a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
++++ b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+@@ -42,6 +42,26 @@ public class SpigotTimings {
+     public static final CustomTimingsHandler entityActivationCheckTimer = new CustomTimingsHandler("entityActivationCheck");
+     public static final CustomTimingsHandler checkIfActiveTimer = new CustomTimingsHandler("** checkIfActive");
+ 
++    // Poweruser start
++    public static final HashMap<String, CustomTimingsHandler> packetHandlerTimingMap = new HashMap<String, CustomTimingsHandler>();
++    public static final CustomTimingsHandler timerEntity_C = new CustomTimingsHandler("** livingEntityBaseTick_Entity_C()");
++    public static final CustomTimingsHandler timerEntityInsentient_C = new CustomTimingsHandler("** livingEntityBaseTick_EntityInsentient_C()");
++    public static final CustomTimingsHandler timerEntityLiving_C = new CustomTimingsHandler("** livingEntityBaseTick_EntityLiving_C()");
++    public static final CustomTimingsHandler timerEntity_C_portal = new CustomTimingsHandler("** livingEntityBaseTick_Entity_C()_portal");
++    public static final CustomTimingsHandler connectionTimer_PacketFlying_move = new CustomTimingsHandler("** Connection Handler_PacketFlying_move");
++    public static final CustomTimingsHandler connectionTimer_PacketFlying_playerChunks = new CustomTimingsHandler("** Connection Handler_PacketFlying_airCheck");
++
++    public static CustomTimingsHandler getPacketHandlerTimings(Packet packet) {
++        String packetType = packet.getClass().getSimpleName();
++        CustomTimingsHandler result = packetHandlerTimingMap.get(packetType);
++        if (result == null) {
++            result = new CustomTimingsHandler("** Connection Handler - " + packetType, connectionTimer);
++            packetHandlerTimingMap.put(packetType, result);
++        }
++        return result;
++    }
++    // Poweruser end
++
+     public static final HashMap<String, CustomTimingsHandler> entityTypeTimingMap = new HashMap<String, CustomTimingsHandler>();
+     public static final HashMap<String, CustomTimingsHandler> tileEntityTypeTimingMap = new HashMap<String, CustomTimingsHandler>();
+     public static final HashMap<String, CustomTimingsHandler> pluginTaskTimingMap = new HashMap<String, CustomTimingsHandler>();
+-- 
+2.13.3
+

@@ -1,0 +1,4 @@
+rootProject.name = 'modsuite'
+include 'bukkit'
+include 'proxy'
+

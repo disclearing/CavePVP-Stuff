@@ -1,0 +1,68 @@
+From 2b2858e8799d27ccbb6a6f740a2367993455e9f5 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:10:18 -0400
+Subject: [PATCH] Looting and fortune exp boost
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockOre.java b/src/main/java/net/minecraft/server/BlockOre.java
+index 42f44006d..68214c11e 100644
+--- a/src/main/java/net/minecraft/server/BlockOre.java
++++ b/src/main/java/net/minecraft/server/BlockOre.java
+@@ -59,15 +59,15 @@ public class BlockOre extends Block {
+             int j1 = 0;
+ 
+             if (this == Blocks.COAL_ORE) {
+-                j1 = MathHelper.nextInt(world.random, 0, 2);
++                j1 = MathHelper.nextInt(world.random, 0, 2 * (i1 + 1)); // Kohi - boosted
+             } else if (this == Blocks.DIAMOND_ORE) {
+-                j1 = MathHelper.nextInt(world.random, 3, 7);
++                j1 = MathHelper.nextInt(world.random, 3, 7 * (i1 + 1)); // Kohi - boosted
+             } else if (this == Blocks.EMERALD_ORE) {
+-                j1 = MathHelper.nextInt(world.random, 3, 7);
++                j1 = MathHelper.nextInt(world.random, 3, 7 * (i1 + 1)); // Kohi - boosted
+             } else if (this == Blocks.LAPIS_ORE) {
+-                j1 = MathHelper.nextInt(world.random, 2, 5);
++                j1 = MathHelper.nextInt(world.random, 2, 5 * (i1 + 1)); // Kohi - boosted
+             } else if (this == Blocks.QUARTZ_ORE) {
+-                j1 = MathHelper.nextInt(world.random, 2, 5);
++                j1 = MathHelper.nextInt(world.random, 2, 5 * (i1 + 1)); // Kohi - boosted
+             }
+ 
+             return j1;
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 546b95254..0cab6dd3d 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -806,8 +806,10 @@ public abstract class EntityLiving extends Entity {
+                     }
+                 }
+ 
++                int exp = this.getExpReward() * (1 + this.random.nextInt(1 + i)); // Kohi - Caculate xp here and not in the event factory
++
+                 // CraftBukkit start - Call death event
+-                CraftEventFactory.callEntityDeathEvent(this, this.drops);
++                CraftEventFactory.callEntityDeathEvent(this, this.drops, exp); // Kohi - Specify the exp to drop
+                 this.drops = null;
+             } else {
+                 CraftEventFactory.callEntityDeathEvent(this);
+diff --git a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+index c493da563..220574b80 100644
+--- a/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
++++ b/src/main/java/org/bukkit/craftbukkit/event/CraftEventFactory.java
+@@ -373,8 +373,12 @@ public class CraftEventFactory {
+     }
+ 
+     public static EntityDeathEvent callEntityDeathEvent(EntityLiving victim, List<org.bukkit.inventory.ItemStack> drops) {
++        return callEntityDeathEvent(victim, drops, victim.getExpReward());
++    }
++
++    public static EntityDeathEvent callEntityDeathEvent(EntityLiving victim, List<org.bukkit.inventory.ItemStack> drops, int exp) {
+         CraftLivingEntity entity = (CraftLivingEntity) victim.getBukkitEntity();
+-        EntityDeathEvent event = new EntityDeathEvent(entity, drops, victim.getExpReward());
++        EntityDeathEvent event = new EntityDeathEvent(entity, drops, exp);
+         CraftWorld world = (CraftWorld) entity.getWorld();
+         Bukkit.getServer().getPluginManager().callEvent(event);
+ 
+-- 
+2.13.3
+

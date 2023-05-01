@@ -1,0 +1,150 @@
+From 08fa4127f519350e79d823b7571be0150f07b2fe Mon Sep 17 00:00:00 2001
+From: rbrick <rbrickproductions123@gmail.com>
+Date: Sun, 3 Apr 2016 00:48:42 -0500
+Subject: [PATCH] Create a dedicated config directory
+
+
+diff --git a/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java b/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java
+index c6a9abb4a..8d131230d 100644
+--- a/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java
++++ b/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java
+@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
+ 
+ public class PotionsConfig
+ {
+-    private static final YamlConfiguration conf = YamlConfiguration.loadConfiguration(new File("potions.yml"));
++    private static final YamlConfiguration conf = YamlConfiguration.loadConfiguration(new File("config/server", "potions.yml")); // MineHQ
+     private static final List<PotionMatcher> disableBrewing = new ArrayList<PotionMatcher>();
+     private static final Map<Integer, Boolean> disableBrewingCache = new HashMap<Integer, Boolean>();
+ 
+diff --git a/src/main/java/net/minecraft/server/Enchantment.java b/src/main/java/net/minecraft/server/Enchantment.java
+index 60398271e..42638276c 100644
+--- a/src/main/java/net/minecraft/server/Enchantment.java
++++ b/src/main/java/net/minecraft/server/Enchantment.java
+@@ -9,7 +9,7 @@ import java.util.List;
+ 
+ public abstract class Enchantment {
+ 
+-    private static final File CONFIG_FILE = new File("enchantments.yml");
++    private static final File CONFIG_FILE = new File("config/server", "enchantments.yml"); // MineHQ - Dedicated config directory
+     protected static YamlConfiguration config = YamlConfiguration.loadConfiguration(CONFIG_FILE);
+ 
+     // CraftBukkit - update CraftEnchant.getName(i) if this changes
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index f6390520f..948deffdd 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -50,7 +50,7 @@ import net.frozenorb.ThreadingManager;
+ public abstract class MinecraftServer implements ICommandListener, Runnable, IMojangStatistics {
+ 
+     private static final Logger i = LogManager.getLogger();
+-    private static final File a = new File("usercache.json");
++    private static final File a = new File( "config/misc", "usercache.json"); // MineHQ - Dedicated config directory
+     private static MinecraftServer j;
+     public Convertable convertable; // CraftBukkit - private final -> public
+     private final MojangStatisticsGenerator l = new MojangStatisticsGenerator("server", this, ar());
+diff --git a/src/main/java/net/minecraft/server/MobEffectList.java b/src/main/java/net/minecraft/server/MobEffectList.java
+index 618362650..369bea25d 100644
+--- a/src/main/java/net/minecraft/server/MobEffectList.java
++++ b/src/main/java/net/minecraft/server/MobEffectList.java
+@@ -20,7 +20,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
+ 
+ public class MobEffectList {
+ 
+-    private static final File CONFIG_FILE = new File("effects.yml");
++    private static final File CONFIG_FILE = new File("config/server", "effects.yml"); // MineHQ - Dedicated config directory
+     protected static YamlConfiguration config = YamlConfiguration.loadConfiguration(CONFIG_FILE);
+ 
+     public static final MobEffectList[] byId = new MobEffectList[32];
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 46cfe0f1c..61142a1e2 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -41,10 +41,12 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+ 
+ public abstract class PlayerList {
+ 
+-    public static final File a = new File("banned-players.json");
+-    public static final File b = new File("banned-ips.json");
+-    public static final File c = new File("ops.json");
+-    public static final File d = new File("whitelist.json");
++    // MineHQ start - Dedicated config directory
++    public static final File a = new File("config/misc", "banned-players.json");
++    public static final File b = new File("config/misc", "banned-ips.json");
++    public static final File c = new File("config/misc", "ops.json");
++    public static final File d = new File("config/misc", "whitelist.json");
++    // MineHQ end
+     private static final Logger g = LogManager.getLogger();
+     private static final SimpleDateFormat h = new SimpleDateFormat("yyyy-MM-dd \'at\' HH:mm:ss z");
+     private final MinecraftServer server;
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index f958a7f2c..e97394b3f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -30,7 +30,7 @@ public class Main {
+                 acceptsAll(asList("c", "config"), "Properties file to use")
+                         .withRequiredArg()
+                         .ofType(File.class)
+-                        .defaultsTo(new File("server.properties"))
++                        .defaultsTo(new File("config/server", "server.properties")) // MineHQ - Dedicated config directory
+                         .describedAs("Properties file");
+ 
+                 acceptsAll(asList("P", "plugins"), "Plugin directory to use")
+@@ -103,13 +103,13 @@ public class Main {
+                 acceptsAll(asList("b", "bukkit-settings"), "File for bukkit settings")
+                         .withRequiredArg()
+                         .ofType(File.class)
+-                        .defaultsTo(new File("bukkit.yml"))
++                        .defaultsTo(new File("config/server", "bukkit.yml")) // MineHQ - Dedicated config directory
+                         .describedAs("Yml file");
+ 
+                 acceptsAll(asList("C", "commands-settings"), "File for command settings")
+                         .withRequiredArg()
+                         .ofType(File.class)
+-                        .defaultsTo(new File("commands.yml"))
++                        .defaultsTo(new File("config/server", "commands.yml")) // MineHQ - Dedicated config directory
+                         .describedAs("Yml file");
+ 
+                 acceptsAll(asList("nojline"), "Disables jline and emulates the vanilla console");
+diff --git a/src/main/java/org/bukkit/craftbukkit/help/HelpYamlReader.java b/src/main/java/org/bukkit/craftbukkit/help/HelpYamlReader.java
+index 60a6221b4..98b4eee85 100644
+--- a/src/main/java/org/bukkit/craftbukkit/help/HelpYamlReader.java
++++ b/src/main/java/org/bukkit/craftbukkit/help/HelpYamlReader.java
+@@ -27,7 +27,7 @@ public class HelpYamlReader {
+     public HelpYamlReader(Server server) {
+         this.server = server;
+ 
+-        File helpYamlFile = new File("help.yml");
++        File helpYamlFile = new File("config/misc", "help.yml"); // MineHQ - Dedicated config directory
+         YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("configurations/help.yml"), Charsets.UTF_8));
+ 
+         try {
+diff --git a/src/main/java/org/github/paperspigot/PaperSpigotConfig.java b/src/main/java/org/github/paperspigot/PaperSpigotConfig.java
+index a44a7f68c..3d3630504 100644
+--- a/src/main/java/org/github/paperspigot/PaperSpigotConfig.java
++++ b/src/main/java/org/github/paperspigot/PaperSpigotConfig.java
+@@ -22,7 +22,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
+ public class PaperSpigotConfig
+ {
+ 
+-    private static final File CONFIG_FILE = new File( "paper.yml" );
++    private static final File CONFIG_FILE = new File( "config/server", "paper.yml" ); // MineHQ - Dedicated config directory
+     private static final String HEADER = "This is the main configuration file for PaperSpigot.\n"
+             + "As you can see, there's tons to configure. Some options may impact gameplay, so use\n"
+             + "with caution, and make sure you know what each option does before configuring.\n"
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 5bbe73ad3..e888296b3 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -31,7 +31,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
+ public class SpigotConfig
+ {
+ 
+-    private static final File CONFIG_FILE = new File( "spigot.yml" );
++    private static final File CONFIG_FILE = new File( "config/server", "spigot.yml" ); // MineHQ - Dedicated config directory
+     private static final String HEADER = "This is the main configuration file for Spigot.\n"
+             + "As you can see, there's tons to configure. Some options may impact gameplay, so use\n"
+             + "with caution, and make sure you know what each option does before configuring.\n"
+-- 
+2.13.3
+

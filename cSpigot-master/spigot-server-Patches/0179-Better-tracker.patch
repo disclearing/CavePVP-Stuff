@@ -1,0 +1,707 @@
+From 6f56372721fddcba11180377b32871098ef6e723 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Mon, 3 Jul 2017 23:22:19 +0100
+Subject: [PATCH] Better tracker
+
+
+diff --git a/src/main/java/net/frozenorb/command/NoTrackCommand.java b/src/main/java/net/frozenorb/command/NoTrackCommand.java
+new file mode 100644
+index 000000000..d61f3cfd8
+--- /dev/null
++++ b/src/main/java/net/frozenorb/command/NoTrackCommand.java
+@@ -0,0 +1,53 @@
++package net.frozenorb.command;
++
++import org.bukkit.Bukkit;
++import org.bukkit.World;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.craftbukkit.CraftWorld;
++
++import net.minecraft.server.EntityTracker;
++
++public class NoTrackCommand extends Command {
++
++    public NoTrackCommand(String name) {
++        super(name);
++        this.usageMessage = "/" + name + " <world name> <view distance>";
++        this.description = "Adjusts a world's no track distance";
++        this.setPermission("valor.command.notrack");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String arg1, String[] args) {
++        if (!testPermission(sender)) {
++            return true;
++        }
++
++        if (args != null && args.length == 2) {
++            String worldName = args[0];
++            String newNTR = args[1];
++            int trackRange = -1;
++            try {
++                trackRange = Integer.parseInt(newNTR);
++            } catch (NumberFormatException e) {
++                sender.sendMessage("'" + newNTR + "' is not a valid integer.");
++                return false;
++            }
++            trackRange = Math.min(Math.max(trackRange, 0), 250);
++            World world = Bukkit.getWorld(worldName);
++            if (world != null) {
++                CraftWorld craftworld = (CraftWorld) world;
++                EntityTracker entityTracker = craftworld.getHandle().getTracker();
++                entityTracker.setNoTrackDistance(trackRange);
++                sender.sendMessage("Track distance of world '" + worldName + "' was set to " + trackRange);
++            } else {
++                sender.sendMessage("World '" + worldName + "' was not found!");
++            }
++            return true;
++        } else {
++            sender.sendMessage("[mSpigot] Command - notrack: " + this.description + "\nUsage: " + this.usageMessage);
++        }
++        return false;
++    }
++
++}
+diff --git a/src/main/java/net/frozenorb/util/IndexedLinkedHashSet.java b/src/main/java/net/frozenorb/util/IndexedLinkedHashSet.java
+new file mode 100644
+index 000000000..a8ed735ec
+--- /dev/null
++++ b/src/main/java/net/frozenorb/util/IndexedLinkedHashSet.java
+@@ -0,0 +1,97 @@
++package net.frozenorb.util;
++
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.HashSet;
++import java.util.Iterator;
++import java.util.Set;
++
++public final class IndexedLinkedHashSet<E> implements Set<E> {
++
++    private final ArrayList<E> list = new ArrayList<E>();
++    private final HashSet<E> set = new HashSet<E>();
++
++    public boolean add(E e) {
++        if (set.add(e)) {
++            return list.add(e);
++        }
++        return false;
++    }
++
++    public boolean remove(Object o) {
++        if (set.remove(o)) {
++            return list.remove(o);
++        }
++        return false;
++    }
++
++    @Override
++    public boolean containsAll(Collection<?> c) {
++        return set.containsAll(c);
++    }
++
++    public void clear() {
++        set.clear();
++        list.clear();
++    }
++
++    public E get(int index) {
++        return list.get(index);
++    }
++
++    public boolean removeAll(Collection<?> c) {
++        if (set.removeAll(c)) {
++            return list.removeAll(c);
++        }
++        return true;
++    }
++
++    public boolean retainAll(Collection<?> c) {
++        if (set.retainAll(c)) {
++            return list.retainAll(c);
++        }
++        return false;
++    }
++
++    public boolean addAll(Collection<? extends E> c) {
++        boolean modified = false;
++        for (E e : c)
++            if (add(e))
++                modified = true;
++        return modified;
++    }
++
++    @Override
++    public int size() {
++        return set.size();
++    }
++
++    @Override
++    public boolean isEmpty() {
++        return set.isEmpty();
++    }
++
++    @Override
++    public boolean contains(Object o) {
++        return set.contains(o);
++    }
++
++    @Override
++    public Iterator<E> iterator() {
++        return list.iterator();
++    }
++
++    @Override
++    public Object[] toArray() {
++        return list.toArray();
++    }
++
++    @Override
++    public <T> T[] toArray(T[] a) {
++        return list.toArray(a);
++    }
++    
++    public int indexOf(Object o) {
++        return list.indexOf(o);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 597f8a7da..8338bed30 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -44,7 +44,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     public double e;
+     public final List chunkCoordIntPairQueue = new LinkedList();
+     public final Set<ChunkCoordIntPair> paddingChunks = new HashSet<ChunkCoordIntPair>(); // MineHQ
+-    public final List removeQueue = new LinkedList(); // CraftBukkit - private -> public
++    // public final List removeQueue = new LinkedList(); // CraftBukkit - private -> public // MineHQ
+     private final ServerStatisticManager bO;
+     private float bP = Float.MIN_VALUE;
+     private float bQ = -1.0E8F;
+@@ -210,6 +210,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             this.activeContainer = this.defaultContainer;
+         }
+ 
++        // MineHQ start - nope
++        /*
+         while (!this.removeQueue.isEmpty()) {
+             int i = Math.min(this.removeQueue.size(), 127);
+             int[] aint = new int[i];
+@@ -223,6 +225,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+             this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(aint));
+         }
++        */
++        // MineHQ end
+ 
+         if (!this.chunkCoordIntPairQueue.isEmpty()) {
+             ArrayList arraylist = new ArrayList();
+@@ -270,12 +274,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+                     this.b(tileentity);
+                 }
+ 
++                // MineHQ start - nope
++                /*
+                 iterator2 = arraylist.iterator();
+ 
+                 while (iterator2.hasNext()) {
+                     chunk = (Chunk) iterator2.next();
+                     this.r().getTracker().a(this, chunk);
+                 }
++                */
++                // MineHQ end
+             }
+         }
+         this.world.timings.entityPlayerTickNormal.stopTiming(); // Poweruser
+@@ -1030,7 +1038,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         this.lastSentExp = -1;
+         this.bQ = -1.0F;
+         this.bR = -1;
+-        this.removeQueue.addAll(((EntityPlayer) entityhuman).removeQueue);
++        // this.removeQueue.addAll(((EntityPlayer) entityhuman).removeQueue); // MineHQ
+     }
+ 
+     protected void a(MobEffect mobeffect) {
+@@ -1164,11 +1172,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+ 
+     public void d(Entity entity) {
+-        if (entity instanceof EntityHuman) {
+-            this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(new int[] { entity.getId()}));
+-        } else {
+-            this.removeQueue.add(Integer.valueOf(entity.getId()));
+-        }
++        this.playerConnection.sendPacket(new PacketPlayOutEntityDestroy(new int[] { entity.getId() })); // MineHQ
+     }
+ 
+     public long x() {
+diff --git a/src/main/java/net/minecraft/server/EntityTracker.java b/src/main/java/net/minecraft/server/EntityTracker.java
+index 766cb1e93..a7c4b25c3 100644
+--- a/src/main/java/net/minecraft/server/EntityTracker.java
++++ b/src/main/java/net/minecraft/server/EntityTracker.java
+@@ -1,27 +1,42 @@
+ package net.minecraft.server;
+ 
+ import java.util.*;
+-import java.util.concurrent.Callable;
++import java.util.concurrent.CountDownLatch;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
+ 
+-import org.apache.logging.log4j.LogManager;
+-import org.apache.logging.log4j.Logger;
++import com.google.common.util.concurrent.ThreadFactoryBuilder;
++
++import net.frozenorb.util.IndexedLinkedHashSet;
+ 
+ public class EntityTracker {
+ 
+-    private static final Logger a = LogManager.getLogger();
+-    private final WorldServer world;
+-    private Set c = new HashSet();
++    // MineHQ start
++    private IndexedLinkedHashSet<EntityTrackerEntry> c = new IndexedLinkedHashSet<EntityTrackerEntry>();
+     public IntHashMap trackedEntities = new IntHashMap(); // CraftBukkit - private -> public
++
++    private int noTrackDistance = 0;
++
++    public int getNoTrackDistance() {
++        return this.noTrackDistance;
++    }
++
++    public void setNoTrackDistance(int noTrackDistance) {
++        this.noTrackDistance = noTrackDistance;
++    }
++    // MineHQ end
+     private int e;
+ 
++
+     public EntityTracker(WorldServer worldserver) {
+-        this.world = worldserver;
+-        this.e = worldserver.getMinecraftServer().getPlayerList().d();
++        this.e = 128; // MineHQ
+     }
+ 
+     public void track(Entity entity) {
+         if (entity instanceof EntityPlayer) {
+             this.addEntity(entity, 512, 2);
++            // MineHQ start 
++            /*
+             EntityPlayer entityplayer = (EntityPlayer) entity;
+             Iterator iterator = this.c.iterator();
+ 
+@@ -32,6 +47,8 @@ public class EntityTracker {
+                     entitytrackerentry.updatePlayer(entityplayer);
+                 }
+             }
++            */
++            // MineHQ end
+         } else if (entity instanceof EntityFishingHook) {
+             this.addEntity(entity, 64, 5, true);
+         } else if (entity instanceof EntityArrow) {
+@@ -99,27 +116,14 @@ public class EntityTracker {
+                 throw new IllegalStateException("Entity is already tracked!");
+             }
+ 
+-            EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entity, i, j, flag);
++            EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(this, entity, i, j, flag); // MineHQ
+ 
+             this.c.add(entitytrackerentry);
+             this.trackedEntities.a(entity.getId(), entitytrackerentry);
+-            entitytrackerentry.scanPlayers(this.world.players);
++            // entitytrackerentry.scanPlayers(this.world.players); // MineHQ
++            entitytrackerentry.addNearPlayers();
+         } catch (Throwable throwable) {
+-            CrashReport crashreport = CrashReport.a(throwable, "Adding entity to track");
+-            CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Entity To Track");
+-
+-            crashreportsystemdetails.a("Tracking range", (i + " blocks"));
+-            crashreportsystemdetails.a("Update interval", (Callable) (new CrashReportEntityTrackerUpdateInterval(this, j)));
+-            entity.a(crashreportsystemdetails);
+-            CrashReportSystemDetails crashreportsystemdetails1 = crashreport.a("Entity That Is Already Tracked");
+-
+-            ((EntityTrackerEntry) this.trackedEntities.get(entity.getId())).tracker.a(crashreportsystemdetails1);
+-
+-            try {
+-                throw new ReportedException(crashreport);
+-            } catch (ReportedException reportedexception) {
+-                a.error("\"Silently\" catching entity tracking error.", reportedexception);
+-            }
++            throwable.printStackTrace();
+         }
+     }
+ 
+@@ -144,32 +148,32 @@ public class EntityTracker {
+         }
+     }
+ 
++    // MineHQ start - parallel tracking
++    private static int trackerThreads = 4; // <-- 3 non-this threads, one this
++    private static ExecutorService pool = Executors.newFixedThreadPool(trackerThreads - 1, new ThreadFactoryBuilder().setNameFormat("entity-tracker-%d").build());
+     public void updatePlayers() {
+-        ArrayList arraylist = new ArrayList();
+-        Iterator iterator = this.c.iterator();
+-
+-        while (iterator.hasNext()) {
+-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+-
+-            entitytrackerentry.track(this.world.players);
+-            if (entitytrackerentry.n && entitytrackerentry.tracker instanceof EntityPlayer) {
+-                arraylist.add((EntityPlayer) entitytrackerentry.tracker);
+-            }
+-        }
+-
+-        for (int i = 0; i < arraylist.size(); ++i) {
+-            EntityPlayer entityplayer = (EntityPlayer) arraylist.get(i);
+-            Iterator iterator1 = this.c.iterator();
+-
+-            while (iterator1.hasNext()) {
+-                EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry) iterator1.next();
+-
+-                if (entitytrackerentry1.tracker != entityplayer) {
+-                    entitytrackerentry1.updatePlayer(entityplayer);
++        int offset = 0;
++        final CountDownLatch latch = new CountDownLatch(trackerThreads); 
++        for (int i = 1; i <= trackerThreads; i++) {
++            final int localOffset = offset++;
++            Runnable runnable = new Runnable() {
++                @Override
++                public void run() {
++                    for (int i = localOffset; i < c.size(); i += trackerThreads) {
++                        c.get(i).update();
++                    }
++                    latch.countDown();
+                 }
+-            }
++            };
++            if (i < trackerThreads) pool.execute(runnable); else runnable.run();
++        }
++        try {
++            latch.await();
++        } catch (Exception e) {
++            e.printStackTrace();
+         }
+     }
++    // MineHQ end
+ 
+     public void a(Entity entity, Packet packet) {
+         EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) this.trackedEntities.get(entity.getId());
+@@ -197,6 +201,8 @@ public class EntityTracker {
+         }
+     }
+ 
++    // MineHQ start - nope
++    /*
+     public void a(EntityPlayer entityplayer, Chunk chunk) {
+         // Kohi start - Optimized EntityTracker
+         for (List<Entity> slice : chunk.entitySlices) {
+@@ -212,5 +218,6 @@ public class EntityTracker {
+         }
+         // Kohi end
+     }
++    */
+ 
+ }
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 76edf13a9..d4f3fd427 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -1,6 +1,7 @@
+ package net.minecraft.server;
+ 
+ import java.util.*;
++import java.util.function.Consumer;
+ 
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+@@ -10,6 +11,8 @@ import org.bukkit.entity.Player;
+ import org.bukkit.event.player.PlayerVelocityEvent;
+ // CraftBukkit end
+ 
++import org.spigotmc.SpigotConfig;
++
+ public class EntityTrackerEntry {
+ 
+     private static final Logger p = LogManager.getLogger();
+@@ -35,9 +38,18 @@ public class EntityTrackerEntry {
+     private Entity w;
+     private boolean x;
+     public boolean n;
+-    public Set trackedPlayers = new HashSet();
+-
+-    public EntityTrackerEntry(Entity entity, int i, int j, boolean flag) {
++    public Set trackedPlayers = new LinkedHashSet(); // MineHQ - LHS has faster iteration
++
++    // MineHQ start
++    private List<EntityPlayer> toRemove = new ArrayList<>();
++    private EntityTracker entityTracker;
++    private int addRemoveRate;
++    private int addRemoveCooldown;
++    private boolean withinNoTrack = false;
++    // MineHQ end
++
++    public EntityTrackerEntry(EntityTracker entityTracker, Entity entity, int i, int j, boolean flag) { // MineHQ
++        this.entityTracker = entityTracker; // MineHQ
+         this.tracker = entity;
+         this.b = i;
+         this.c = j;
+@@ -48,6 +60,19 @@ public class EntityTrackerEntry {
+         this.yRot = MathHelper.d(entity.yaw * 256.0F / 360.0F);
+         this.xRot = MathHelper.d(entity.pitch * 256.0F / 360.0F);
+         this.i = MathHelper.d(entity.getHeadRotation() * 256.0F / 360.0F);
++
++        // MineHQ start
++        if (SpigotConfig.disableTracking) {
++            this.addRemoveRate = 100;
++        } else if (this.tracker instanceof EntityArrow || this.tracker instanceof EntityProjectile) {
++            this.addRemoveRate = 5; // projectile things
++        } else if (this.tracker instanceof EntityPlayer) {
++            this.addRemoveRate = 5; // players
++        } else {
++            this.addRemoveRate = 10; // default
++        }
++        this.addRemoveCooldown = this.tracker.getId() % addRemoveRate;
++        // MineHQ end
+     }
+ 
+     public boolean equals(Object object) {
+@@ -58,6 +83,79 @@ public class EntityTrackerEntry {
+         return this.tracker.getId();
+     }
+ 
++    // MineHQ start
++    public void update() {
++        this.withinNoTrack = this.withinNoTrack();
++        if (--this.addRemoveCooldown <= 0) {
++            this.removeFarPlayers();
++            this.addNearPlayers();
++            this.addRemoveCooldown = this.addRemoveRate;
++        }
++
++        this.track(null);
++    }
++
++    private void removeFarPlayers() {
++        if (this.withinNoTrack) {
++            toRemove.addAll(this.trackedPlayers);
++            processToRemove();
++            return;
++        }
++
++        for (EntityPlayer entityplayer : (Collection<EntityPlayer>) trackedPlayers) {
++            double d0 = entityplayer.locX - this.tracker.locX;
++            double d1 = entityplayer.locZ - this.tracker.locZ;
++            int range = this.getRange();
++
++            if (!(d0 >= (double) (-range) && d0 <= (double) range && d1 >= (double) (-range) && d1 <= (double) range) || withinNoTrack()) {
++                toRemove.add(entityplayer);
++            }
++        }
++
++        this.processToRemove();
++    }
++
++    public void processToRemove() {
++        for (EntityPlayer entityPlayer : toRemove) {
++            entityPlayer.d(this.tracker);
++            this.trackedPlayers.remove(entityPlayer);
++        }
++
++        toRemove.clear();
++    }
++
++    public void addNearPlayers() {
++        addNearPlayers(false);
++    }
++
++    private void addNearPlayers(boolean updateCooldown) {
++        if (this.withinNoTrack) return;
++        if (updateCooldown) this.addRemoveCooldown = addRemoveRate;
++        this.tracker.world.playerMap.forEachNearby(this.tracker.locX, this.tracker.locY, this.tracker.locZ, this.getRange(), false, addNearPlayersConsumer);
++    }
++
++    private boolean withinNoTrack() {
++        return this.withinNoTrack(this.tracker);
++    }
++
++    private boolean withinNoTrack(Entity entity) {
++        if (!(entity instanceof EntityPlayer)) return false; // ensure all non-players are always tracked
++        double xDistSqrd = entity.locX * entity.locX;
++        double zDistSqrd = entity.locZ * entity.locZ;
++
++        int noTrackDistanceSqrd = entityTracker.getNoTrackDistance() * entityTracker.getNoTrackDistance();
++        return noTrackDistanceSqrd != 0 && xDistSqrd <= noTrackDistanceSqrd && zDistSqrd <= noTrackDistanceSqrd;
++    }
++
++    private final Consumer<EntityPlayer> addNearPlayersConsumer = new Consumer<EntityPlayer>() {
++
++        @Override
++        public void accept(EntityPlayer entityPlayer) {
++            if (!SpigotConfig.disableTracking || tracker.passenger == entityPlayer) updatePlayer(entityPlayer);
++        }
++    };
++    // MineHQ end
++
+     public void track(List list) {
+         this.n = false;
+         if (!this.isMoving || this.tracker.e(this.q, this.r, this.s) > 16.0D) {
+@@ -66,7 +164,7 @@ public class EntityTrackerEntry {
+             this.s = this.tracker.locZ;
+             this.isMoving = true;
+             this.n = true;
+-            this.scanPlayers(list);
++            // this.scanPlayers(list); // MineHQ
+         }
+ 
+         if (this.w != this.tracker.vehicle || this.tracker.vehicle != null && this.m % 60 == 0) {
+@@ -138,11 +236,6 @@ public class EntityTrackerEntry {
+                         }
+                     } else {
+                         this.v = 0;
+-                        // CraftBukkit start - Refresh list of who can see a player before sending teleport packet
+-                        if (this.tracker instanceof EntityPlayer) {
+-                            this.scanPlayers(new java.util.ArrayList(this.trackedPlayers));
+-                        }
+-                        // CraftBukkit end
+                         object = new PacketPlayOutEntityTeleport(this.tracker.getId(), i, j, k, (byte) l, (byte) i1, tracker.onGround, tracker instanceof EntityFallingBlock || tracker instanceof EntityTNTPrimed); // Spigot - protocol patch // Spigot Update - 20140916a
+                     }
+                 }
+@@ -318,13 +411,17 @@ public class EntityTrackerEntry {
+     }
+ 
+     public void updatePlayer(EntityPlayer entityplayer) {
+-        org.spigotmc.AsyncCatcher.catchOp( "player tracker update"); // Spigot
++        // org.spigotmc.AsyncCatcher.catchOp( "player tracker update"); // Spigot // MineHQ
+         if (entityplayer != this.tracker) {
+-            double d0 = entityplayer.locX - (double) (this.xLoc / 32);
+-            double d1 = entityplayer.locZ - (double) (this.zLoc / 32);
++            // MineHQ start - this.tracker.locN / 32 -> this.tracker.locN
++            double d0 = entityplayer.locX - this.tracker.locX;
++            double d1 = entityplayer.locZ - this.tracker.locZ;
++            // MineHQ end
++            int range = this.getRange();
+ 
+-            if (d0 >= (double) (-this.b) && d0 <= (double) this.b && d1 >= (double) (-this.b) && d1 <= (double) this.b) {
++            if (d0 >= (double) (-range) && d0 <= (double) range && d1 >= (double) (-range) && d1 <= (double) range) {
+                 if (!this.trackedPlayers.contains(entityplayer) && (this.d(entityplayer) || this.tracker.attachedToPlayer)) {
++                    if (this.tracker instanceof EntityPlayer && withinNoTrack()) return; // MineHQ
+                     // CraftBukkit start - respect vanish API
+                     if (this.tracker instanceof EntityPlayer) {
+                         Player player = ((EntityPlayer) this.tracker).getBukkitEntity();
+@@ -333,7 +430,7 @@ public class EntityTrackerEntry {
+                         }
+                     }
+ 
+-                    entityplayer.removeQueue.remove(Integer.valueOf(this.tracker.getId()));
++                    // entityplayer.removeQueue.remove(Integer.valueOf(this.tracker.getId())); // MineHQ
+                     // CraftBukkit end
+ 
+                     this.trackedPlayers.add(entityplayer);
+@@ -448,11 +545,13 @@ public class EntityTrackerEntry {
+         return entityplayer.r().getPlayerChunkMap().a(entityplayer, this.tracker.ah, this.tracker.aj);
+     }
+ 
+-    public void scanPlayers(List list) {
+-        for (int i = 0; i < list.size(); ++i) {
+-            this.updatePlayer((EntityPlayer) list.get(i));
+-        }
+-    }
++    // MineHQ start
++    //public void scanPlayers(List list) {
++    //    for (int i = 0; i < list.size(); ++i) {
++    //        this.updatePlayer((EntityPlayer) list.get(i));
++    //    }
++    //}
++    // MineHQ end
+ 
+     private Packet c() {
+         if (this.tracker.dead) {
+@@ -560,8 +659,7 @@ public class EntityTrackerEntry {
+ 
+     public void clear(EntityPlayer entityplayer) {
+         org.spigotmc.AsyncCatcher.catchOp( "player tracker clear"); // Spigot
+-        if (this.trackedPlayers.contains(entityplayer)) {
+-            this.trackedPlayers.remove(entityplayer);
++        if (this.trackedPlayers.remove(entityplayer)) { // MineHQ
+             entityplayer.d(this.tracker);
+         }
+     }
+@@ -570,4 +668,13 @@ public class EntityTrackerEntry {
+         return this.tracker.isAlive() && (this.tracker instanceof EntityPlayer);
+     }
+ 
+-}
++    // MineHQ start
++    public int getRange() {
++        if (this.tracker.passenger == null) {
++            return this.b;
++        }
++        return Math.max(this.b, org.spigotmc.TrackingRange.getEntityTrackingRange(this.tracker.passenger, 0));
++    }
++    // MineHQ end
++
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 749b73b02..9615d0dc6 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -486,6 +486,17 @@ public class SpigotConfig
+     }
+     // Guardian end
+ 
++    // MineHQ start
++    private static void noTrackCommand() {
++        commands.put( "notrack", new net.frozenorb.command.NoTrackCommand( "notrack" ) );
++    }
++
++    public static boolean disableTracking;
++    private static void disableTracking() {
++        disableTracking = getBoolean("settings.disable.entityTracking", false);
++    }
++    // MineHQ end
++
+     public static boolean reduceArmorDamage;
+     private static void reduceArmorDamage() {
+         reduceArmorDamage = getBoolean("settings.reduce-armor-damage", false);
+diff --git a/src/main/java/org/spigotmc/TrackingRange.java b/src/main/java/org/spigotmc/TrackingRange.java
+index 4bf4d2ac6..fd56866fa 100644
+--- a/src/main/java/org/spigotmc/TrackingRange.java
++++ b/src/main/java/org/spigotmc/TrackingRange.java
+@@ -1,7 +1,10 @@
+ package org.spigotmc;
+ 
+ import net.minecraft.server.Entity;
++import net.minecraft.server.EntityArrow;
++import net.minecraft.server.EntityEnderPearl;
+ import net.minecraft.server.EntityExperienceOrb;
++import net.minecraft.server.EntityFishingHook;
+ import net.minecraft.server.EntityGhast;
+ import net.minecraft.server.EntityItem;
+ import net.minecraft.server.EntityItemFrame;
+@@ -25,7 +28,19 @@ public class TrackingRange
+         if ( entity instanceof EntityPlayer )
+         {
+             return config.playerTrackingRange;
+-        }  else if ( entity.activationType == 1 )
++        // MineHQ start
++        } else if ( entity instanceof EntityArrow )
++        { 
++            return config.playerTrackingRange;
++        } else if (entity instanceof EntityEnderPearl)
++        {
++            return config.playerTrackingRange;
++        } else if (entity instanceof EntityFishingHook)
++        {
++            return config.playerTrackingRange;
++        }
++        // MineHQ end
++        else if ( entity.activationType == 1 )
+         {
+             return config.monsterTrackingRange;
+         } else if ( entity instanceof EntityGhast )
+-- 
+2.13.3
+

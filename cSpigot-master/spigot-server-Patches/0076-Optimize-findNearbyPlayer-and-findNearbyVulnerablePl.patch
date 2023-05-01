@@ -1,0 +1,35 @@
+From 9fa0a20047d449ccfbd3bd971991fbfdb9074128 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:28:52 -0400
+Subject: [PATCH] Optimize findNearbyPlayer and findNearbyVulnerablePlayer
+
+
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 0c942aab1..6d7e1b939 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -2911,8 +2911,8 @@ public abstract class World implements IBlockAccess {
+         double d4 = -1.0D;
+         EntityHuman entityhuman = null;
+ 
+-        for (int i = 0; i < this.players.size(); ++i) {
+-            EntityHuman entityhuman1 = (EntityHuman) this.players.get(i);
++        for (Object o : a(EntityHuman.class, AxisAlignedBB.a(d0 - d3, d1 - d3, d2 - d3, d0 + d3, d1 + d3, d2 + d3))) {
++            EntityHuman entityhuman1 = (EntityHuman) o;
+             // CraftBukkit start - Fixed an NPE
+             if (entityhuman1 == null || entityhuman1.dead) {
+                 continue;
+@@ -2937,8 +2937,8 @@ public abstract class World implements IBlockAccess {
+         double d4 = -1.0D;
+         EntityHuman entityhuman = null;
+ 
+-        for (int i = 0; i < this.players.size(); ++i) {
+-            EntityHuman entityhuman1 = (EntityHuman) this.players.get(i);
++        for (Object o : a(EntityHuman.class, AxisAlignedBB.a(d0 - d3, d1 - d3, d2 - d3, d0 + d3, d1 + d3, d2 + d3))) {
++            EntityHuman entityhuman1 = (EntityHuman) o;
+             // CraftBukkit start - Fixed an NPE
+             if (entityhuman1 == null || entityhuman1.dead) {
+                 continue;
+-- 
+2.13.3
+

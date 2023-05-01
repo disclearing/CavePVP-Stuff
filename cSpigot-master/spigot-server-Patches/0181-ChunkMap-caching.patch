@@ -1,0 +1,173 @@
+From 51bb05aed16f053631bf97be648970b8dd966da2 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 4 Jul 2017 23:05:53 +0100
+Subject: [PATCH] ChunkMap caching
+
+
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index d3453f644..e228a0b29 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger; // PaperSpigot
+ 
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+-
+ import org.bukkit.Bukkit; // CraftBukkit
++import org.spigotmc.SpigotConfig;
+ 
+ public class Chunk {
+ 
+@@ -75,6 +75,63 @@ public class Chunk {
+     }
+     // CraftBukkit end
+ 
++    // MineHQ start
++    private ChunkMap chunkMap17;
++    private ChunkMap chunkMap18;
++    private int emptySectionBits;
++
++    public ChunkMap getChunkMap(boolean groundUpContinuous, int primaryBitMask, int version) {
++        if (!SpigotConfig.cacheChunkMaps || !groundUpContinuous || (primaryBitMask != 0 && primaryBitMask != '\uffff')) {
++            return PacketPlayOutMapChunk.a(this, groundUpContinuous, primaryBitMask, version);
++        }
++
++        if (primaryBitMask == 0) {
++            ChunkMap chunkMap = new ChunkMap();
++            chunkMap.a = new byte[0];
++            return chunkMap;
++        }
++
++        boolean isDirty = false;
++        for (int i = 0; i < sections.length; ++i) {
++            ChunkSection section = sections[i];
++            if (section == null) {
++                if ((emptySectionBits & (1 << i)) == 0) {
++                    isDirty = true;
++                    emptySectionBits |= (1 << i);
++                }
++            } else {
++                if ((emptySectionBits & (1 << i)) == 1) {
++                    isDirty = true;
++                    emptySectionBits &= ~(1 << i);
++                    section.isDirty = false;
++                } else if (section.isDirty) {
++                    isDirty = true;
++                    section.isDirty = false;
++                }
++            }
++        }
++
++        if (isDirty) {
++            chunkMap17 = null;
++            chunkMap18 = null;
++        }
++
++        if (version < 24) {
++            if (chunkMap17 == null) {
++                chunkMap17 = PacketPlayOutMapChunk.a(this, true, '\uffff', version);
++            }
++
++            return chunkMap17;
++        } else {
++            if (chunkMap18 == null) {
++                chunkMap18 = PacketPlayOutMapChunk.a(this, true, '\uffff', version);
++            }
++
++            return chunkMap18;
++        }
++    }
++    // MineHQ end
++
+     public Chunk(World world, int i, int j) {
+         this.sections = new ChunkSection[16];
+         this.v = new byte[256];
+diff --git a/src/main/java/net/minecraft/server/ChunkSection.java b/src/main/java/net/minecraft/server/ChunkSection.java
+index b0e92d6c9..527559097 100644
+--- a/src/main/java/net/minecraft/server/ChunkSection.java
++++ b/src/main/java/net/minecraft/server/ChunkSection.java
+@@ -18,6 +18,7 @@ public class ChunkSection {
+     private byte compactData;
+     private byte compactEmitted;
+     private byte compactSky;
++    public boolean isDirty = false;
+ 
+     // Pre-generated (read-only!) NibbleArrays for every possible value, used for chunk saving
+     private static NibbleArray[] compactPregen = new NibbleArray[16];
+@@ -143,6 +144,7 @@ public class ChunkSection {
+ 
+         this.blockIds[j << 8 | k << 4 | i] = (byte) (i1 & 255);
+         // MineHQ start
++        isDirty = true;
+         /*
+         if (i1 > 255) {
+             if (this.extBlockIds == null) {
+@@ -175,6 +177,7 @@ public class ChunkSection {
+             this.blockData = expandCompactNibble(this.compactData);
+         }
+         // CraftBukkit end
++        isDirty = true; // MineHQ
+         this.blockData.a(i, j, k, l);
+     }
+ 
+@@ -199,6 +202,7 @@ public class ChunkSection {
+             this.skyLight = expandCompactNibble(this.compactSky);
+         }
+         // CraftBukkit end
++        isDirty = true; // MineHQ
+         this.skyLight.a(i, j, k, l);
+     }
+ 
+@@ -220,6 +224,7 @@ public class ChunkSection {
+             this.emittedLight = expandCompactNibble(this.compactEmitted);
+         }
+         // CraftBukkit end
++        isDirty = true; // MineHQ
+         this.emittedLight.a(i, j, k, l);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+index fed2f0492..1ae362328 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+@@ -36,7 +36,7 @@ public class PacketPlayOutMapChunk extends Packet {
+             return;
+         }
+         // MineHQ end
+-        ChunkMap chunkmap = a(chunk, flag, i, version);
++        ChunkMap chunkmap = chunk.getChunkMap(flag, i, version); // MineHQ
+ 
+         this.d = chunkmap.c;
+         this.c = chunkmap.b;
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+index 28e966fe0..0c8b4a4c1 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+@@ -47,7 +47,7 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+ 
+         for (int k = 0; k < i; ++k) {
+             Chunk chunk = (Chunk) list.get(k);
+-            ChunkMap chunkmap = PacketPlayOutMapChunk.a(chunk, true, '\uffff', version);
++            ChunkMap chunkmap = chunk.getChunkMap(true, '\uffff', version); // MineHQ
+ 
+             // Spigot start
+             world = chunk.world;
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 7e328ab51..931c4b25b 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -520,6 +520,11 @@ public class SpigotConfig
+     private static void disableEntityCollisions() {
+         disableEntityCollisions = getBoolean("settings.disable.general.entity-collisions", false);
+     }
++
++    public static boolean cacheChunkMaps;
++    private static void cacheChunkMaps() {
++        cacheChunkMaps = getBoolean("settings.cache-chunk-maps", false);
++    }
+     // MineHQ end
+ 
+     public static boolean reduceArmorDamage;
+-- 
+2.13.3
+

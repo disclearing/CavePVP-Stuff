@@ -1,0 +1,92 @@
+From af0abb42307e02801f93c2a7740f76995df3a20e Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 20 Nov 2016 19:01:45 -0200
+Subject: [PATCH] More renaming
+
+
+diff --git a/src/main/java/org/bukkit/event/player/GuardianEvent.java b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+index 0a772743..a4d2aac7 100644
+--- a/src/main/java/org/bukkit/event/player/GuardianEvent.java
++++ b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+@@ -1,8 +1,12 @@
+ package org.bukkit.event.player;
+ 
++import org.bukkit.Location;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.HandlerList;
+ 
++import java.util.HashMap;
++import java.util.Map;
++
+ import lombok.Getter;
+ 
+ public class GuardianEvent extends PlayerEvent {
+@@ -10,19 +14,34 @@ public class GuardianEvent extends PlayerEvent {
+     @Getter private static HandlerList handlerList = new HandlerList();
+ 
+     @Getter private final Cheat cheat;
++    @Getter private final String module;
++
+     @Getter private final DisplayLevel level;
+-    @Getter private final String type;
+-    @Getter private final String extraInfo;
+-    @Getter private final String legacyString;
+ 
+-    public GuardianEvent(Player player, Cheat cheat, DisplayLevel level, String type, String extraInfo, String legacyString) {
++    @Getter private final String message;
++    @Getter private final Location location;
++
++    @Getter private Map<String, Object> data = new HashMap<String, Object>();
++
++    public GuardianEvent(Player player, Cheat cheat, String module, DisplayLevel level, String message) {
++        super(player);
++
++        this.cheat = cheat;
++        this.level = level;
++        this.module = module;
++        this.message = message;
++        this.location = player.getLocation();
++    }
++
++    // Use this constructor if you want to override the location of the alert
++    public GuardianEvent(Player player, Cheat cheat, String module, DisplayLevel level, String message, Location location) {
+         super(player);
+ 
+         this.cheat = cheat;
+         this.level = level;
+-        this.type = type;
+-        this.extraInfo = extraInfo;
+-        this.legacyString = legacyString;
++        this.module = module;
++        this.message = message;
++        this.location = location;
+     }
+ 
+     @Override
+@@ -30,6 +49,23 @@ public class GuardianEvent extends PlayerEvent {
+         return handlerList;
+     }
+ 
++    public GuardianEvent addData(String key, Object value) {
++        data.put(key, value);
++        return this;
++    }
++
++    public int getInt(String key) {
++        return (Integer) data.get(key);
++    }
++
++    public String getString(String key) {
++        return (String) data.get(key);
++    }
++
++    public double getDouble(String key) {
++        return (Double) data.get(key);
++    }
++
+     public enum Cheat {
+ 
+         SPEED_HACKS,
+-- 
+2.11.0.windows.3
+

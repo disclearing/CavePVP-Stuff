@@ -1,0 +1,337 @@
+From a46af3aa59484ecb9b0091aceb817b7b16cd2a78 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 8 Jul 2018 20:33:26 -0500
+Subject: [PATCH] Riot-style HCF changes for better QOL
+
+
+diff --git a/pom.xml b/pom.xml
+index e73aec85..b5286cad 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -110,6 +110,12 @@
+             <type>jar</type>
+             <scope>compile</scope>
+         </dependency>
++        <dependency>
++            <groupId>com.google.code.gson</groupId>
++            <artifactId>gson</artifactId>
++            <version>2.8.0</version>
++            <scope>compile</scope>
++        </dependency>
+         <dependency>
+             <groupId>com.google.guava</groupId>
+             <artifactId>guava</artifactId>
+diff --git a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java b/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
+index 575b1674..37168f38 100644
+--- a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
+@@ -2,6 +2,7 @@ package org.bukkit.command.defaults;
+ 
+ import java.io.File;
+ import java.io.IOException;
++import java.io.InputStreamReader;
+ import java.io.PrintStream;
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -27,11 +28,17 @@ import java.net.URL;
+ import java.net.URLEncoder;
+ import java.util.logging.Level;
+ 
++import javax.net.ssl.HttpsURLConnection;
++
+ import org.bukkit.command.RemoteConsoleCommandSender;
+ import org.bukkit.plugin.SimplePluginManager;
+ import org.spigotmc.CustomTimingsHandler;
+ // Spigot end
+ 
++import com.google.gson.Gson;
++import com.google.gson.JsonElement;
++import com.google.gson.JsonObject;
++
+ public class TimingsCommand extends BukkitCommand {
+     private static final List<String> TIMINGS_SUBCOMMANDS = ImmutableList.of("report", "reset", "on", "off", "paste"); // Spigot
+     public static long timingStart = 0; // Spigot
+@@ -220,29 +227,25 @@ public class TimingsCommand extends BukkitCommand {
+             }
+         }
+ 
++        
+         @Override
+-        public void run()
+-        {
+-            try
+-            {
+-                HttpURLConnection con = (HttpURLConnection) new URL( "http://e2edd884e4737839e548.prplz.io/725dabf49e189295c322d38e1fd8738f" ).openConnection();
+-                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36");
+-                con.setDoOutput( true );
+-                con.setRequestMethod( "POST" );
+-                con.setInstanceFollowRedirects( false );
+-
+-                OutputStream out = con.getOutputStream();
+-                out.write( "poster=Spigot&syntax=text&content=".getBytes( "UTF-8" ) );
+-                out.write( URLEncoder.encode( bout.toString( "UTF-8" ), "UTF-8" ).getBytes( "UTF-8" ) );
+-                out.close();
++        public void run() {
++            try {
++                final HttpURLConnection con = (HttpURLConnection)new URL("https://timings.spigotmc.org/paste").openConnection();
++                con.setDoOutput(true);
++                con.setRequestMethod("POST");
++                con.setInstanceFollowRedirects(false);
++                try (final OutputStream out = con.getOutputStream()) {
++                    out.write(this.bout.toByteArray());
++                }
++                final JsonObject location = new Gson().fromJson(new InputStreamReader(con.getInputStream()), JsonObject.class);
+                 con.getInputStream().close();
+-
+-                String location = con.getHeaderField( "Location" );
+-                sender.sendMessage( ChatColor.GREEN + "View timings results can be viewed at " + location );
+-            } catch ( IOException ex )
+-            {
+-                sender.sendMessage( ChatColor.RED + "Error pasting timings, check your console for more information" );
+-                Bukkit.getServer().getLogger().log( Level.WARNING, "Could not paste timings", ex );
++                final String pasteID = location.get("key").getAsString();
++                this.sender.sendMessage(ChatColor.GREEN + "Timings results can be viewed at https://www.spigotmc.org/go/timings?url=" + pasteID);
++            }
++            catch (IOException ex) {
++                this.sender.sendMessage(ChatColor.RED + "Error pasting timings, check your console for more information");
++                Bukkit.getServer().getLogger().log(Level.WARNING, "Could not paste timings", ex);
+             }
+         }
+     }
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
+new file mode 100644
+index 00000000..248052ee
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
+@@ -0,0 +1,40 @@
++package org.bukkit.event.entity;
++
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.potion.PotionEffect;
++
++import lombok.Getter;
++import lombok.Setter;
++
++
++public class PotionEffectAddEvent extends PotionEffectEvent implements Cancellable {
++    
++    private static final HandlerList handlers = new HandlerList();
++    
++    @Getter @Setter private boolean cancelled;
++    @Getter protected final EffectCause effectCause;
++
++    public PotionEffectAddEvent(LivingEntity entity, PotionEffect effect, EffectCause effectCause) {
++        super(entity, effect);
++        this.effectCause = effectCause;
++    }
++    
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++    
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++    
++    public enum EffectCause {
++        POTION_SPLASH,
++        BEACON,
++        WITHER_SKELETON,
++        PLUGIN,
++        UNKNOWN
++    }
++}
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
+new file mode 100644
+index 00000000..4af5e2f3
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
+@@ -0,0 +1,23 @@
++package org.bukkit.event.entity;
++
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.potion.PotionEffect;
++
++import lombok.Getter;
++
++public abstract class PotionEffectEvent extends EntityEvent {
++    
++    @Getter private final PotionEffect effect;
++    
++    public PotionEffectEvent(LivingEntity what, PotionEffect effect) {
++        super(what);
++        this.effect = effect;
++    }
++    
++    @Override
++    public LivingEntity getEntity() {
++        return (LivingEntity) super.getEntity();
++    }
++    
++    
++}
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
+new file mode 100644
+index 00000000..14719849
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
+@@ -0,0 +1,30 @@
++package org.bukkit.event.entity;
++
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.potion.PotionEffect;
++
++import lombok.Getter;
++
++public class PotionEffectExpireEvent extends PotionEffectRemoveEvent {
++    
++    @Getter private int duration = 0;
++    
++    public PotionEffectExpireEvent(LivingEntity entity, PotionEffect effect) {
++        super(entity, effect);
++    }
++    
++    public void setDuration(int duration) {
++        this.duration = Math.max(0, duration);
++    }
++    
++    @Override
++    public boolean isCancelled() {
++        return duration > 0;
++    }
++    
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.duration = cancel ? Integer.MAX_VALUE : 0;
++    }
++    
++}
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
+new file mode 100644
+index 00000000..3dbdd268
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
+@@ -0,0 +1,16 @@
++package org.bukkit.event.entity;
++
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.potion.PotionEffect;
++
++import lombok.Getter;
++
++public class PotionEffectExtendEvent extends PotionEffectAddEvent {
++    
++    @Getter private final PotionEffect oldEffect;
++    
++    public PotionEffectExtendEvent(LivingEntity entity, PotionEffect effect, PotionEffect oldEffect, EffectCause effectCause) {
++        super(entity, effect, effectCause);
++        this.oldEffect = oldEffect;
++    }
++}
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
+new file mode 100644
+index 00000000..4bb7f51e
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
+@@ -0,0 +1,30 @@
++package org.bukkit.event.entity;
++
++import org.bukkit.entity.LivingEntity;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.potion.PotionEffect;
++
++import lombok.Getter;
++import lombok.Setter;
++
++public class PotionEffectRemoveEvent extends PotionEffectEvent implements Cancellable {
++    
++    private static final HandlerList handlers = new HandlerList();
++    
++    @Getter @Setter private boolean cancelled;
++    
++    public PotionEffectRemoveEvent(LivingEntity entity, PotionEffect effect) {
++        super(entity, effect);
++    }
++    
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++    
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++    
++}
+diff --git a/src/main/java/org/bukkit/event/inventory/EquipmentSetEvent.java b/src/main/java/org/bukkit/event/inventory/EquipmentSetEvent.java
+new file mode 100644
+index 00000000..befa2841
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/inventory/EquipmentSetEvent.java
+@@ -0,0 +1,31 @@
++package org.bukkit.event.inventory;
++
++import org.bukkit.entity.HumanEntity;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.bukkit.inventory.ItemStack;
++
++import lombok.AllArgsConstructor;
++import lombok.Getter;
++import lombok.Setter;
++
++@Getter @Setter @AllArgsConstructor
++public class EquipmentSetEvent extends Event {
++    
++    private static final HandlerList handlers = new HandlerList();
++    
++    private final HumanEntity humanEntity;
++    private final int slot;
++    private final ItemStack previousItem;
++    private final ItemStack newItem;
++    
++    
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++    
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++}
+diff --git a/src/main/java/org/bukkit/event/player/PlayerPearlRefundEvent.java b/src/main/java/org/bukkit/event/player/PlayerPearlRefundEvent.java
+new file mode 100644
+index 00000000..7491f127
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/player/PlayerPearlRefundEvent.java
+@@ -0,0 +1,21 @@
++package org.bukkit.event.player;
++
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++
++public class PlayerPearlRefundEvent extends PlayerEvent {
++    private static final HandlerList handlers = new HandlerList();
++
++    public PlayerPearlRefundEvent(final Player player) {
++        super(player);
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+\ No newline at end of file
+-- 
+2.15.2 (Apple Git-101.1)
+

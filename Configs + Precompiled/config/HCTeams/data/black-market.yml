@@ -1,0 +1,172 @@
+rewards:
+  reward_1:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLD_INGOT
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §e§lSoul Stone
+        lore:
+        - §7Upon going below 2 hearts, you will be instantly
+        - §7healed and given Resistance III for 5 seconds.
+        - ''
+        - §fCan be found in the §6§lNew Years Mystery Box§f!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_2:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 5
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5§lPower Stone
+        lore:
+        - §7Right Click to receive Strength 2, Resistance 3
+        - §7Regeneration 3 for 10 seconds. Within those
+        - §710 seconds you may not use any sort of potions.
+        - ''
+        - §fCan be found in the §6§lNew Years Mystery Box§f!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_3:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 14
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §e§lMind Stone
+        lore:
+        - §7Hit a player to rotate their
+        - §7head 180 degrees and give them
+        - §7Blindness X, Slowness III and
+        - §7Nausea III for 8 seconds.
+        - ''
+        - §fCan be found in the §6§lNew Years Mystery Box§f!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_4:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: REDSTONE
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§lReality Stone
+        lore:
+        - §7Right Click to teleport to the player
+        - §7that YOU last hit within a 30 second period.
+        - ''
+        - §fCan be found in the §6§lNew Years Mystery Box§f!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_5:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 4
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §9§lSpace Stone
+        lore:
+        - §7Click to get launched
+        - §7forward and into the air!
+        - ''
+        - §fCan be found in the §6§lNew Years Mystery Box§f!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_6:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 10
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §a§lTime Stone
+        lore:
+        - §7Right Click to receive Strength 2 and Speed 3
+        - §7for 10 seconds. After the effects are over you
+        - §7will be teleported back to your starting location.
+        - ''
+        - §fCan be found in the §6§lNew Years Mystery Box§f!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_7:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: STICK
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lSwitch Stick
+        lore:
+        - §7Hit a player to turn their head 180 degrees.
+        - ''
+        - §fCan be found in the §5§lItems §fCrate!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_8:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: MONSTER_EGG
+      damage: 66
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5§lWitch Effect
+        lore:
+        - §7Spawn a witch that give you passive
+        - '§7bard effects: strength, regeneration,'
+        - §7and resistance.
+        - ''
+        - §fCan be found in the §5§lItems §fCrate!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20
+  reward_9:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: RED_ROSE
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§lCombo
+        lore:
+        - §7Get a second of strength II for the
+        - §7amount of hits dealt within 10 seconds.
+        - ''
+        - §fCan be found in the §5§lItems §fCrate!
+    price: 20
+    command: none
+    giveItem: true
+    maximumAmount: 20

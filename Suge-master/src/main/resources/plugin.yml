@@ -1,0 +1,5 @@
+name: Suge
+author: SimplyTrash
+main: org.cavepvp.suge.Suge
+version: 1.0-SNAPSHOT
+depend: ["Proton"]

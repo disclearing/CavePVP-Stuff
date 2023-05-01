@@ -1,0 +1,4 @@
+name: "Fasts"
+group: "HCF"
+redis:
+  host: "0.0.0.0"

@@ -1,0 +1,27 @@
+From a00c209811ec68bedb5dd3959cc951510fe8add5 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Tue, 7 Mar 2017 13:42:16 -0300
+Subject: [PATCH] Better setHealth() for Players
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
+index add554e9b..a09b972cb 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
+@@ -81,11 +81,11 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+             throw new IllegalArgumentException("Health must be between 0 and " + getMaxHealth());
+         }
+ 
++        getHandle().setHealth((float) health);
++
+         if (entity instanceof EntityPlayer && health == 0) {
+             ((EntityPlayer) entity).die(DamageSource.GENERIC);
+         }
+-
+-        getHandle().setHealth((float) health);
+     }
+ 
+     public double getMaxHealth() {
+-- 
+2.13.3
+

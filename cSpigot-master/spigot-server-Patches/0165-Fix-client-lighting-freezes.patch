@@ -1,0 +1,233 @@
+From 9ec985a95828cca8653f5bc15de2c72e68010f57 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sun, 30 Apr 2017 18:10:35 +1000
+Subject: [PATCH] Fix client lighting freezes
+
+... due to opacity changing at the edge of the farthest loadded chunk.
+Also slightly optimize unload chunk packets.
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 5c115c191..73332d6a2 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -8,6 +8,7 @@ import java.util.HashSet;
+ import java.util.Iterator;
+ import java.util.LinkedList;
+ import java.util.List;
++import java.util.Set;
+ 
+ import net.minecraft.util.com.google.common.collect.Sets;
+ import net.minecraft.util.com.mojang.authlib.GameProfile;
+@@ -42,6 +43,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     public double d;
+     public double e;
+     public final List chunkCoordIntPairQueue = new LinkedList();
++    public final Set<ChunkCoordIntPair> paddingChunks = new HashSet<ChunkCoordIntPair>(); // MineHQ
+     public final List removeQueue = new LinkedList(); // CraftBukkit - private -> public
+     private final ServerStatisticManager bO;
+     private float bP = Float.MIN_VALUE;
+@@ -242,6 +244,18 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             }
+ 
+             if (!arraylist.isEmpty()) {
++                // MineHQ start - if any real chunks overlap padding chunks, first send an unload then remove it from this player's padding list
++                for (Object o : arraylist) {
++                    if (this.paddingChunks.isEmpty()) {
++                        break;
++                    }
++                    Chunk c = (Chunk) o;
++                    if (this.paddingChunks.contains(c.l())) {
++                        this.paddingChunks.remove(c.l());
++                        this.playerConnection.sendPacket(PacketPlayOutMapChunk.unload(c.locX, c.locZ));
++                    }
++                }
++                // MineHQ end
+                 this.playerConnection.sendPacket(new PacketPlayOutMapChunkBulk(arraylist, this.playerConnection.networkManager.getVersion())); // Spigot - protocol patch
+                 Iterator iterator2 = arraylist1.iterator();
+ 
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+index e964f57f2..ee27c15e5 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+@@ -31,6 +31,11 @@ public class PacketPlayOutMapChunk extends Packet {
+         this.a = chunk.locX;
+         this.b = chunk.locZ;
+         this.g = flag;
++        // MineHQ start - don't need to do chunkmap for unload chunk packets
++        if (i == 0 && this.g) {
++            return;
++        }
++        // MineHQ end
+         ChunkMap chunkmap = a(chunk, flag, i, version);
+ 
+         this.d = chunkmap.c;
+@@ -39,6 +44,16 @@ public class PacketPlayOutMapChunk extends Packet {
+         this.f = chunkmap.a;
+     }
+ 
++    // MineHQ start - constructor for unload chunk packets
++    public static PacketPlayOutMapChunk unload(int x, int z) {
++        PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk();
++        packet.a = x;
++        packet.b = z;
++        packet.g = true;
++        return packet;
++    }
++    // MineHQ end
++
+     public static int c() {
+         return 196864;
+     }
+@@ -91,6 +106,17 @@ public class PacketPlayOutMapChunk extends Packet {
+         packetdataserializer.writeInt(this.b);
+         packetdataserializer.writeBoolean(this.g);
+         packetdataserializer.writeShort((short) (this.c & '\uffff'));
++        // MineHQ start - don't send any data for unload chunks, the client still accepts the packets fine without it
++        if (this.g && this.c == 0) {
++            if (packetdataserializer.version < 27) {
++                packetdataserializer.writeShort((short) (this.d & '\uffff'));
++                packetdataserializer.writeInt(0);
++            } else {
++                packetdataserializer.b(0);
++            }
++            return;
++        }
++        // MineHQ end
+         // Spigot start - protocol patch
+         if ( packetdataserializer.version < 27 )
+         {
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+index dfcabdafe..28e966fe0 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunkBulk.java
+@@ -84,6 +84,19 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+         */
+     }
+ 
++    // MineHQ start - constructor for "padding" chunk of all air
++    public static PacketPlayOutMapChunkBulk paddingChunk(World world, int x, int z) {
++        PacketPlayOutMapChunkBulk packet = new PacketPlayOutMapChunkBulk();
++        packet.a = new int[]{x};
++        packet.b = new int[]{z};
++        packet.c = new int[]{0};
++        packet.d = new int[]{0};
++        packet.inflatedBuffers = new byte[][]{new byte[256]}; // still have to send biome array to actually create a chunk!
++        packet.h = !world.worldProvider.g;
++        return packet;
++    }
++    // MineHQ end
++
+     // Add compression method
+     public void compress() {
+         if (this.buffer != null) {
+@@ -93,7 +106,7 @@ public class PacketPlayOutMapChunkBulk extends Packet {
+         int finalBufferSize = 0;
+         // Obfuscate all sections
+         for (int i = 0; i < a.length; i++) {
+-            world.spigotConfig.antiXrayInstance.obfuscate(a[i], b[i], c[i], inflatedBuffers[i], world, false);
++            if (world != null) world.spigotConfig.antiXrayInstance.obfuscate(a[i], b[i], c[i], inflatedBuffers[i], world, false); // MineHQ - padding chunk
+             finalBufferSize += inflatedBuffers[i].length;
+         }
+ 
+diff --git a/src/main/java/net/minecraft/server/PlayerChunk.java b/src/main/java/net/minecraft/server/PlayerChunk.java
+index 8436562d6..c2abd00e8 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunk.java
++++ b/src/main/java/net/minecraft/server/PlayerChunk.java
+@@ -1,11 +1,13 @@
+ package net.minecraft.server;
+ 
+ import java.util.ArrayList;
++import java.util.HashSet;
+ import java.util.List;
+ 
+ // CraftBukkit start
+ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
+ import java.util.HashMap;
++import java.util.Set;
+ // CraftBukkit end
+ 
+ class PlayerChunk {
+@@ -150,6 +152,49 @@ class PlayerChunk {
+             int j;
+             int k;
+ 
++            // MineHQ start - if we send any block changes to clients on the edge of their render, add a "padding"
++            //      chunk to stop them freezing
++            if (this.dirtyCount < 64) {
++                Set<ChunkCoordIntPair> affectedChunks = null;
++                for (i = 0; i < this.dirtyCount; i++) {
++                    int x = this.dirtyBlocks[i] >> 12 & 15;
++                    int z = this.dirtyBlocks[i] >> 8 & 15;
++                    if (x == 0) {
++                        if (affectedChunks == null) affectedChunks = new HashSet<ChunkCoordIntPair>();
++                        affectedChunks.add(new ChunkCoordIntPair(this.location.x - 1, this.location.z));
++                    } else if (x == 15) {
++                        if (affectedChunks == null) affectedChunks = new HashSet<ChunkCoordIntPair>();
++                        affectedChunks.add(new ChunkCoordIntPair(this.location.x + 1, this.location.z));
++                    }
++                    if (z == 0) {
++                        if (affectedChunks == null) affectedChunks = new HashSet<ChunkCoordIntPair>();
++                        affectedChunks.add(new ChunkCoordIntPair(this.location.x, this.location.z - 1));
++                    } else if (z == 15) {
++                        if (affectedChunks == null) affectedChunks = new HashSet<ChunkCoordIntPair>();
++                        affectedChunks.add(new ChunkCoordIntPair(this.location.x, this.location.z + 1));
++                    }
++                }
++                if (affectedChunks != null) {
++                    for (ChunkCoordIntPair chunk : affectedChunks) {
++                        for (Object o : this.b) {
++                            EntityPlayer player = (EntityPlayer) o;
++                            // not applicable to 1.8 clients
++                            if (player.playerConnection.networkManager.getVersion() > 5) {
++                                continue;
++                            }
++                            if (player.chunkCoordIntPairQueue.contains(chunk) || player.paddingChunks.contains(chunk)) {
++                                continue;
++                            }
++                            if (!this.playerChunkMap.a(player, chunk.x, chunk.z)) {
++                                player.paddingChunks.add(chunk);
++                                player.playerConnection.sendPacket(PacketPlayOutMapChunkBulk.paddingChunk(this.playerChunkMap.a(), chunk.x, chunk.z));
++                            }
++                        }
++                    }
++                }
++            }
++            // MineHQ end
++
+             if (this.dirtyCount == 1) {
+                 i = this.location.x * 16 + (this.dirtyBlocks[0] >> 12 & 15);
+                 j = this.dirtyBlocks[0] & 255;
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index 219d10500..fc75c750b 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -211,6 +211,7 @@ public class PlayerChunkMap {
+                 }
+             }
+         }
++        entityplayer.paddingChunks.clear(); // MineHQ
+ 
+         this.managedPlayers.remove(entityplayer);
+     }
+@@ -242,6 +243,18 @@ public class PlayerChunkMap {
+             List<ChunkCoordIntPair> chunksToLoad = new LinkedList<ChunkCoordIntPair>(); // CraftBukkit
+ 
+             if (j1 != 0 || k1 != 0) {
++                // MineHQ start - unload padding chunks when players move away from them
++                Iterator<ChunkCoordIntPair> iter = entityplayer.paddingChunks.iterator();
++                while (iter.hasNext()) {
++                    ChunkCoordIntPair chunk = iter.next();
++                    int xDist = chunk.x - k;
++                    int zDist = chunk.z - l;
++                    if (xDist > i1 || zDist > i1 || xDist < -i1 || zDist < -i1) {
++                        entityplayer.playerConnection.sendPacket(PacketPlayOutMapChunk.unload(chunk.x, chunk.z));
++                        iter.remove();
++                    }
++                }
++                // MineHQ end
+                 for (int l1 = i - i1; l1 <= i + i1; ++l1) {
+                     for (int i2 = j - i1; i2 <= j + i1; ++i2) {
+                         if (!this.a(l1, i2, k, l, i1)) {
+-- 
+2.13.3
+

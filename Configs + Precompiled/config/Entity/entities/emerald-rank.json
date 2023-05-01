@@ -1,0 +1,70 @@
+{
+    "type": "NPC",
+    "name": "emerald-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 37.5,
+        "y": 69.0,
+        "z": 6.5,
+        "yaw": 180.22023,
+        "pitch": 2.1000037
+    },
+    "commands": [
+        "viewproduct lifetime-emerald"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_emerald-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 37.5,
+            "y": 71.0,
+            "z": 6.5,
+            "yaw": 180.22023,
+            "pitch": 2.1000037
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&a&lEmerald Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 37.5,
+                    "y": 71.0,
+                    "z": 6.5,
+                    "yaw": 180.22023,
+                    "pitch": 2.1000037
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 37.5,
+                    "y": 70.77,
+                    "z": 6.5,
+                    "yaw": 180.22023,
+                    "pitch": 2.1000037
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "wg5dLBikPS/gljybCTLTao9KGZPQO51PgELnFNWVqmkxs2EFg86m8cF75oSjEDossa5Bmp9cOp+ngJOWFRo90Yt71rblgkAyObkz9qZ0YBMSsJ7mb/UH7crcnjp25Om/DvVJotuCFv17N/n7MLi7tMTSm0frOVRLDPeZa75HWedZST5ctfCckU9kDiK3vESNyaEAFp+0222lp4W6vudr1wg0yET78zcLa4lLIjIoFzYVXPJpmxptnyFTgfqt3RtAAz5DQn6g0C7039VjSAjlFUg/Kd5X291OEiZIAPpJkw1mIMuYeI71jnSH82MqWs1E/xzWPBjkZQ1kt7oCcsk2J3m0embs4BQPsKyCHhc5HkrZ/yHQgh7O6YINMlYdRwViTKINplpaVZEggkSqBUOxuuO+pzOmiRmDYzwAhMQhYthGXm4eBP93stYnviMhiUwAg6/Ft9x7Pbft8588vdYYX6rslPzewWFYIbtSoNSWj1SGC1Laz3sLLqqF0Rxheff294GgxJqG7UjbCs9ifq4vYadWjRYU6yWP/gqqFPsPocdCMmWWwAIVoj1ItJEdHvkgrfkLRlB/ZN06vkJ7UcmWIPmsvBAbmYcptoHIkRLKW1H4e9S8xJ3Qzr2nk3+2ELVuvYOwpGz7KZqVlGb4Dg3f7qTpv5aCD4pOIjoiri+aG+E=",
+    "skinUsername": "EmeraldSuffers",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNDM3NDU1NSwKICAicHJvZmlsZUlkIiA6ICIyZjRjN2I5MDFmZDc0YTExOTY0NzIzODhlOWI2Nzg5MCIsCiAgInByb2ZpbGVOYW1lIiA6ICJFbWVyYWxkU3VmZmVycyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9jNDU4NjQ3NjE3NmEyNTY0NzM4MThhMTg0OTE1N2U4NDRjNTYzODcyNGJjZjgzMDlmMGQ5ZGYyN2NhOTU5MTYwIgogICAgfQogIH0KfQ==",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

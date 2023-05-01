@@ -1,0 +1,356 @@
+id: iMakeMcVids
+displayName: §c§liMakeMcVids Lootbox
+material: ENDER_CHEST
+fireworkColor: 16711680
+lore:
+- §7Unlocked at §fstore.cavepvp.org
+- ''
+- §c§lFINAL REWARDS
+- ' &7➡ §4Cave Rank'
+- ' &7➡ §2$§a10 Buycraft Voucher'
+- ' &7➡ §6Premium Battle Pass'
+- ' &7➡ §b3x Airdrops'
+- ' &7➡ §ciMakeMcVids Kit'
+- ' &7➡ §c5x iMakeMcVids Keys'
+- ' &7➡ §ciMakeMcVids Clickable Kit'
+- ''
+- §c§lNORMAL REWARDS
+- ' &7➡ §35x Invisibility'
+- ' &7➡ §45x TNT Minecart'
+- ' &7➡ §65x Debuff Fish'
+- ' &7➡ §c5x Anti-Pearl'
+- ' &7➡ §c1x Crowbar'
+- ' &7➡ §62x God Apples'
+- ' &7➡ §d16x Ender Pearls'
+- ' &7➡ §632x Golden Apples'
+- ' &7➡ §bDiamond Sword'
+- ' &7➡ §bDiamond Helmet'
+- ' &7➡ §bDiamond Chestplate'
+- ' &7➡ §bDiamond Leggings'
+- ' &7➡ §bDiamond Boots'
+- ' &7➡ §bDiamond Pickaxe'
+- ' &7➡ §a16x Emerald Blocks'
+- ' &7➡ §b16x Diamond Blocks'
+- ' &7➡ §616x Gold Blocks'
+- ' &7➡ §716x Iron Blocks'
+- ' &7➡ §832x Gun Powder'
+- ' &7➡ §e32x Glowstone Blocks'
+- ' &7➡ §432x Nether Wart'
+- ' &7➡ §c32x Glistering Melons'
+items:
+  DIAMOND_BLOCK_1:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  EMERALD_BLOCK_2:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EMERALD_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  GOLD_BLOCK_3:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLD_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  IRON_BLOCK_4:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: IRON_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_HELMET_5:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_HELMET
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids §7┃ §fHelmet
+        lore:
+        - §cHellForged IV
+        - §cImplants V
+        - §cMermaid III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+          PROTECTION_EXPLOSIONS: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_CHESTPLATE_6:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_CHESTPLATE
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids §7┃ §fChestplate
+        lore:
+        - §cHellForged IV
+        - §cImplants V
+        - §cMermaid III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+          PROTECTION_EXPLOSIONS: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_LEGGINGS_7:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_LEGGINGS
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids §7┃ §fLeggings
+        lore:
+        - §cHellForged IV
+        - §cImplants V
+        - §cMermaid III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+          PROTECTION_EXPLOSIONS: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_BOOTS_8:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_BOOTS
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids §7┃ §fBoots
+        lore:
+        - §cHellForged IV
+        - §cImplants V
+        - §cMermaid III
+        - §cRecover I
+        - §cFireResistance I
+        - §cSpeed II
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+          PROTECTION_FALL: 4
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_PICKAXE_9:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_PICKAXE
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids §7┃ §fPickaxe
+        enchants:
+          DIG_SPEED: 6
+          DURABILITY: 3
+          LOOT_BONUS_BLOCKS: 3
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  GOLDEN_APPLE_10:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      damage: 1
+      amount: 2
+    chance: 2.0
+    giveItem: true
+    broadcast: false
+  GOLDEN_APPLE_11:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      amount: 32
+    chance: 4.0
+    giveItem: true
+    broadcast: false
+  ENDER_PEARL_12:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: ENDER_PEARL
+      amount: 16
+    chance: 4.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_SWORD_13:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_SWORD
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids §7┃ §fSword
+        enchants:
+          DAMAGE_ALL: 2
+          DURABILITY: 5
+          FIRE_ASPECT: 2
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_HOE_14:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_HOE
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §cCrowbar
+        lore:
+        - ''
+        - '§7Can Break:'
+        - '§f - §bEnd Portals: §e{§96§e}'
+        - '§f - §bSpawners: §e{§91§e}'
+    chance: 3.0
+    giveItem: true
+    broadcast: false
+  SULPHUR_15:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: SULPHUR
+      amount: 32
+    chance: 5.0
+    giveItem: true
+    broadcast: false
+  GLOWSTONE_DUST_16:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GLOWSTONE_DUST
+      amount: 32
+    chance: 5.0
+    giveItem: true
+    broadcast: false
+  NETHER_STALK_17:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: NETHER_STALK
+      amount: 32
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  SPECKLED_MELON_18:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: SPECKLED_MELON
+      amount: 32
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  BEDROCK_19:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a10 Buycraft Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.2
+    command: vouchers addamount {player} 10
+    giveItem: false
+    broadcast: true
+  BEDROCK_20:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§l14-day iMakeMcVids Kit
+        enchants:
+          DURABILITY: 1000
+    chance: 0.1
+    command: vouchers addrank {player} iMake-Kit 14d {displayName}
+    giveItem: false
+    broadcast: true
+  BEDROCK_21:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§l7-day Cave Rank
+        enchants:
+          DURABILITY: 1000
+    chance: 0.1
+    command: vouchers addrank {player} Cave 7d {displayName}
+    giveItem: false
+    broadcast: true
+  INK_SACK_22:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 1
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§liMakeMcVids Key
+        lore:
+        - ''
+        - §7Right click the §ciMakeMcVids Crate §7to obtain rewards!
+        enchants:
+          DURABILITY: 1
+    chance: 8.0
+    giveItem: true
+    broadcast: false
+  EYE_OF_ENDER_23:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EYE_OF_ENDER
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§lAnti Pearl 2.0
+        lore:
+        - §7Hit a player to put them on enderpearl cooldown.
+        - §7Right Click to remove your enderpearl cooldown.
+        - ''
+        - §fCan be found in the §c§liMakeMcVids Lootbox§f!
+    chance: 5.0
+    command: ability antipearl 5 {name}
+    giveItem: false
+    broadcast: false
+  INK_SACK_24:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §3§lInvisibility
+        lore:
+        - §7When you right click this item
+        - §7your armor will no longer be visible.
+        - ''
+        - §fCan be found in the §c§liMakeMcVids Lootbox§f!
+    chance: 5.0
+    command: ability invisibility 5 {name}
+    giveItem: false
+    broadcast: false

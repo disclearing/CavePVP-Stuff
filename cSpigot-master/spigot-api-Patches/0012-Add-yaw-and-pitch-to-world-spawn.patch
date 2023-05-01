@@ -1,0 +1,76 @@
+From 482bcbaf272605f627c5472269158c7196e4d0bb Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 4 Jun 2016 06:26:14 +0200
+Subject: [PATCH] Add yaw and pitch to world spawn
+
+
+diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
+index c962e7de..7c943197 100644
+--- a/src/main/java/org/bukkit/World.java
++++ b/src/main/java/org/bukkit/World.java
+@@ -476,6 +476,20 @@ public interface World extends PluginMessageRecipient, Metadatable {
+      */
+     public boolean setSpawnLocation(int x, int y, int z);
+ 
++    // Poweruser start
++    /**
++     * Sets the spawn location of the world
++     *
++     * @param x X coordinate
++     * @param y Y coordinate
++     * @param z Z coordinate
++     * @param yaw left-right rotation
++     * @param pitch up-down rotation
++     * @return True if it was successfully set.
++     */
++    public boolean setSpawnLocation(int x, int y, int z, float yaw, float pitch);
++    // Poweruser end
++
+     /**
+      * Gets the relative in-game time of this world.
+      * <p>
+diff --git a/src/main/java/org/bukkit/command/defaults/SetWorldSpawnCommand.java b/src/main/java/org/bukkit/command/defaults/SetWorldSpawnCommand.java
+index 59c50591..18f1e2ca 100644
+--- a/src/main/java/org/bukkit/command/defaults/SetWorldSpawnCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/SetWorldSpawnCommand.java
+@@ -35,6 +35,7 @@ public class SetWorldSpawnCommand extends VanillaCommand {
+         }
+ 
+         final int x, y, z;
++        Float yaw = null, pitch = null; // Poweruser
+ 
+         if (args.length == 0) {
+             if (player == null) {
+@@ -47,6 +48,10 @@ public class SetWorldSpawnCommand extends VanillaCommand {
+             x = location.getBlockX();
+             y = location.getBlockY();
+             z = location.getBlockZ();
++            // Poweruser start
++            yaw = new Float(location.getYaw());
++            pitch = new Float(location.getPitch());
++            // Poweruser end
+         } else if (args.length == 3) {
+             try {
+                 x = getInteger(sender, args[0], MIN_COORD, MAX_COORD, true);
+@@ -61,9 +66,16 @@ public class SetWorldSpawnCommand extends VanillaCommand {
+             return false;
+         }
+ 
+-        world.setSpawnLocation(x, y, z);
++        // Poweruser start
++        if(yaw != null && pitch != null) {
++            world.setSpawnLocation(x, y, z, yaw.floatValue(), pitch.floatValue());
++            Command.broadcastCommandMessage(sender, "Set world " + world.getName() + "'s spawnpoint to (" + x + ", " + y + ", " + z + ", yaw=" + yaw.floatValue() + ", pitch=" + pitch.floatValue());
++        } else {
++            world.setSpawnLocation(x, y, z);
++            Command.broadcastCommandMessage(sender, "Set world " + world.getName() + "'s spawnpoint to (" + x + ", " + y + ", " + z + ")");
++        }
++        // Poweruser end
+ 
+-        Command.broadcastCommandMessage(sender, "Set world " + world.getName() + "'s spawnpoint to (" + x + ", " + y + ", " + z + ")");
+         return true;
+ 
+     }
+-- 
+2.11.0.windows.3
+

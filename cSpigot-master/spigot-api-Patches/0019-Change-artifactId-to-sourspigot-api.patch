@@ -1,0 +1,25 @@
+From a74e2fa629305713a7853a0e1cf7abfaa4915d8f Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 13 Nov 2016 10:48:09 -0200
+Subject: [PATCH] Change artifactId to sourspigot-api
+
+
+diff --git a/pom.xml b/pom.xml
+index 7504eccc..f1c26698 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1,9 +1,8 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+-    <groupId>net.frozenorb</groupId>
+-    <artifactId>mspigot-api</artifactId>
++    <artifactId>sourspigot-api</artifactId>
+     <version>1.7.10-R0.1-SNAPSHOT</version>
+-    <name>mSpigot-API</name>
++    <name>sourspigot-api</name>
+     <url>https://frozenorb.net</url>
+ 
+     <properties>
+-- 
+2.13.3
+

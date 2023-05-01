@@ -1,0 +1,27 @@
+From b13e44bf31152078ecf377029fdf13c4e41c6996 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Mon, 6 Jul 2015 21:01:45 -0400
+Subject: [PATCH] Implement getTPS method
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 58b4839e3..04e52aea9 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1857,6 +1857,13 @@ public final class CraftServer implements Server {
+                 player.spigot().sendMessage( components );
+             }
+         }
++
++        // PaperSpigot start - Add getTPS
++        @Override
++        public double[] getTPS() {
++            return MinecraftServer.getServer().recentTps;
++        }
++        // PaperSpigot end
+     };
+ 
+     public Spigot spigot()
+-- 
+2.13.3
+

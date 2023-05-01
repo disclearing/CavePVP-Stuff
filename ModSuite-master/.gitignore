@@ -1,0 +1,9 @@
+/gradle/
+/gradlew
+/gradlew.bat
+/bukkit/build/
+/build/
+/proxy/build/
+/.idea/
+/.gradle/
+/bukkit/libs/

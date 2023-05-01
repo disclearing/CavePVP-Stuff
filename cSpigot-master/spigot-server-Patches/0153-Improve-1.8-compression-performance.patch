@@ -1,0 +1,139 @@
+From 6604a1f3bd3e6dd37e050df1937e1f75b2eb9d38 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <cmcdonald.main@gmail.com>
+Date: Wed, 26 Apr 2017 23:23:20 -0400
+Subject: [PATCH] Improve 1.8 compression performance
+
+
+diff --git a/src/main/java/net/frozenorb/ReusableByteArray.java b/src/main/java/net/frozenorb/ReusableByteArray.java
+new file mode 100644
+index 000000000..7616f7266
+--- /dev/null
++++ b/src/main/java/net/frozenorb/ReusableByteArray.java
+@@ -0,0 +1,29 @@
++package net.frozenorb;
++
++public class ReusableByteArray {
++
++    private final ThreadLocal<byte[]> arrays;
++
++    public ReusableByteArray(final int initialSize) {
++        arrays = new ThreadLocal<byte[]>() {
++            @Override
++            protected byte[] initialValue() {
++                return new byte[initialSize];
++            }
++        };
++    }
++
++    /**
++     * Returns a (thread local) byte array of at least minSize
++     * @param minSize Minimum size of returned array
++     * @return byte array
++     */
++    public byte[] get(int minSize) {
++        byte[] array = arrays.get();
++        if (array.length < minSize) {
++            array = new byte[minSize];
++            arrays.set(array);
++        }
++        return array;
++    }
++}
+diff --git a/src/main/java/org/spigotmc/SpigotCompressor.java b/src/main/java/org/spigotmc/SpigotCompressor.java
+index 2e0857ea0..431c9ae82 100644
+--- a/src/main/java/org/spigotmc/SpigotCompressor.java
++++ b/src/main/java/org/spigotmc/SpigotCompressor.java
+@@ -1,5 +1,6 @@
+ package org.spigotmc;
+ 
++import net.frozenorb.ReusableByteArray;
+ import net.minecraft.server.PacketDataSerializer;
+ import net.minecraft.util.io.netty.buffer.ByteBuf;
+ import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
+@@ -12,32 +13,42 @@ public class SpigotCompressor extends MessageToByteEncoder
+ 
+     private final byte[] buffer = new byte[8192];
+     private final Deflater deflater = new Deflater();
++    private static final ReusableByteArray reusableData = new ReusableByteArray(0x70000); // rough size estimate from a quick play test
+ 
+     @Override
+     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception
+     {
+         ByteBuf in = (ByteBuf) msg;
+         int origSize = in.readableBytes();
+-        PacketDataSerializer serializer = new PacketDataSerializer( out );
+ 
+         if ( origSize < 256 )
+         {
+-            serializer.b( 0 );
+-            serializer.writeBytes( in );
++            writeVarInt( 0, out );
++            out.writeBytes( in );
+         } else
+         {
+-            byte[] data = new byte[ origSize ];
+-            in.readBytes( data );
++            byte[] data = reusableData.get(origSize);
++            in.readBytes( data, 0, origSize );
+ 
+-            serializer.b( data.length );
++            writeVarInt( origSize, out );
+ 
+-            deflater.setInput( data );
++            deflater.setInput( data, 0, origSize );
+             deflater.finish();
+             while (!deflater.finished()) {
+                 int count = deflater.deflate( buffer );
+-                serializer.writeBytes( buffer, 0, count );
++                out.writeBytes( buffer, 0, count );
+             }
+             deflater.reset();
+         }
+     }
++
++    public static void writeVarInt(int val, ByteBuf out) {
++        while ((val & -128) != 0) {
++            out.writeByte(val & 127 | 128);
++            val >>>= 7;
++        }
++
++        out.writeByte(val);
++    }
++
+ }
+diff --git a/src/main/java/org/spigotmc/SpigotDecompressor.java b/src/main/java/org/spigotmc/SpigotDecompressor.java
+index ffebf5db1..7f4eebaa3 100644
+--- a/src/main/java/org/spigotmc/SpigotDecompressor.java
++++ b/src/main/java/org/spigotmc/SpigotDecompressor.java
+@@ -1,5 +1,6 @@
+ package org.spigotmc;
+ 
++import net.frozenorb.ReusableByteArray;
+ import net.minecraft.server.PacketDataSerializer;
+ import net.minecraft.util.io.netty.buffer.ByteBuf;
+ import net.minecraft.util.io.netty.buffer.Unpooled;
+@@ -13,6 +14,7 @@ public class SpigotDecompressor extends ByteToMessageDecoder
+ {
+ 
+     private final Inflater inflater = new Inflater();
++    private static final ReusableByteArray reusableCompressedData = new ReusableByteArray(8192);
+ 
+     @Override
+     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> objects) throws Exception
+@@ -29,9 +31,10 @@ public class SpigotDecompressor extends ByteToMessageDecoder
+             objects.add( serializer.readBytes( serializer.readableBytes() ) );
+         } else
+         {
+-            byte[] compressedData = new byte[ serializer.readableBytes() ];
+-            serializer.readBytes( compressedData );
+-            inflater.setInput( compressedData );
++            int compressedSize = serializer.readableBytes();
++            byte[] compressedData = reusableCompressedData.get(compressedSize);
++            serializer.readBytes( compressedData, 0, compressedSize );
++            inflater.setInput( compressedData, 0, compressedSize );
+ 
+             byte[] data = new byte[ size ];
+             inflater.inflate( data );
+-- 
+2.13.3
+

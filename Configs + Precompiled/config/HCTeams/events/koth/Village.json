@@ -1,0 +1,16 @@
+{
+  "name": "Village",
+  "capLocation": {
+    "x": -500.5,
+    "y": 78.0,
+    "z": -500.5
+  },
+  "world": "world",
+  "capDistance": 3,
+  "capTime": 480,
+  "hidden": false,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

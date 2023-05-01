@@ -1,0 +1,68 @@
+From af9f13fd56c523efb201fa473dfe8c84db0bb64b Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Mon, 24 Apr 2017 17:24:48 +1000
+Subject: [PATCH] Fix reference leaks in 1.8 compat
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+index fcd126b30..39235fd9a 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+@@ -17,14 +17,14 @@ public class PacketPlayOutMapChunk extends Packet {
+     private int h;
+     private static byte[] i = new byte[196864];
+ 
+-    private Chunk chunk; // Spigot
++    private World world; // MineHQ - use world instead of chunk
+     private int mask; // Spigot
+ 
+     public PacketPlayOutMapChunk() {}
+ 
+     // Spigot start - protocol patch
+     public PacketPlayOutMapChunk(Chunk chunk, boolean flag, int i, int version) {
+-        this.chunk = chunk;
++        this.world = chunk.world;
+         this.mask = i;
+         this.a = chunk.locX;
+         this.b = chunk.locZ;
+@@ -88,7 +88,7 @@ public class PacketPlayOutMapChunk extends Packet {
+         // Spigot start - protocol patch
+         if ( packetdataserializer.version < 27 )
+         {
+-            chunk.world.spigotConfig.antiXrayInstance.obfuscate(chunk.locX, chunk.locZ, mask, this.f, chunk.world, false); // Spigot
++            this.world.spigotConfig.antiXrayInstance.obfuscate(this.a, this.b, mask, this.f, this.world, false); // Spigot
+             Deflater deflater = new Deflater(4); // Spigot
+             try {
+                 deflater.setInput(this.f, 0, this.f.length);
+@@ -103,7 +103,7 @@ public class PacketPlayOutMapChunk extends Packet {
+             packetdataserializer.writeBytes( this.e, 0, this.h );
+         } else
+         {
+-            chunk.world.spigotConfig.antiXrayInstance.obfuscate(chunk.locX, chunk.locZ, mask, this.f, chunk.world, true); // Spigot
++            this.world.spigotConfig.antiXrayInstance.obfuscate(this.a, this.b, mask, this.f, this.world, true); // Spigot
+             a( packetdataserializer, this.f );
+         }
+         // Spigot end - protocol patch
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java b/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
+index 15f3ff855..3acf11d03 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMultiBlockChange.java
+@@ -16,7 +16,6 @@ public class PacketPlayOutMultiBlockChange extends Packet {
+     // Spigot start - protocol patch
+     private short[] ashort;
+     private int[] blocks;
+-    private Chunk chunk;
+     // Spigot end
+ 
+     public PacketPlayOutMultiBlockChange() {}
+@@ -27,7 +26,6 @@ public class PacketPlayOutMultiBlockChange extends Packet {
+         this.ashort = new short[ashort.length];
+         System.arraycopy(ashort, 0, this.ashort, 0, ashort.length);
+         // PaperSpigot end
+-        this.chunk = chunk;
+         // Spigot end
+         this.b = new ChunkCoordIntPair(chunk.locX, chunk.locZ);
+         this.d = i;
+-- 
+2.13.3
+

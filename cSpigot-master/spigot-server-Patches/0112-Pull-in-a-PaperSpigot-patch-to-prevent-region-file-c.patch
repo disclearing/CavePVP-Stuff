@@ -1,0 +1,50 @@
+From 0fa5a072ed0a98fed2d7cec0343094923c1d2bd6 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Thu, 10 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Pull in a PaperSpigot patch to prevent region file creation
+ when checking if a chunk exists
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkRegionLoader.java b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+index 59fe8acae..6907b40df 100644
+--- a/src/main/java/net/minecraft/server/ChunkRegionLoader.java
++++ b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+@@ -38,7 +38,8 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+             // Spigot end
+         }
+ 
+-        return RegionFileCache.a(this.e, i, j).chunkExists(i & 31, j & 31);
++        final RegionFile region = RegionFileCache.a(this.e, i, j, false); // PaperSpigot
++        return region != null && region.chunkExists(i & 31, j & 31); // PaperSpigot
+     }
+     // CraftBukkit end
+ 
+diff --git a/src/main/java/net/minecraft/server/RegionFileCache.java b/src/main/java/net/minecraft/server/RegionFileCache.java
+index 829f4a309..81ff30aca 100644
+--- a/src/main/java/net/minecraft/server/RegionFileCache.java
++++ b/src/main/java/net/minecraft/server/RegionFileCache.java
+@@ -12,7 +12,13 @@ public class RegionFileCache {
+ 
+     public static final Map a = new HashMap(); // CraftBukkit - private -> public
+ 
++    // PaperSpigot start
+     public static synchronized RegionFile a(File file1, int i, int j) {
++        return a(file1, i, j, true);
++    }
++
++    public static synchronized RegionFile a(File file1, int i, int j, boolean create) {
++    // PaperSpigot end
+         File file2 = new File(file1, "region");
+         File file3 = new File(file2, "r." + (i >> 5) + "." + (j >> 5) + ".mca");
+         RegionFile regionfile = (RegionFile) a.get(file3);
+@@ -20,6 +26,7 @@ public class RegionFileCache {
+         if (regionfile != null) {
+             return regionfile;
+         } else {
++            if (!create && !file3.exists()) { return null; } // PaperSpigot
+             if (!file2.exists()) {
+                 file2.mkdirs();
+             }
+-- 
+2.13.3
+

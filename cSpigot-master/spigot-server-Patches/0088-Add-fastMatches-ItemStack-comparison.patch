@@ -1,0 +1,64 @@
+From fe052c9e1f83309184a62b1e0e6da5f9798c1b06 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 01:21:06 -0400
+Subject: [PATCH] Add fastMatches ItemStack comparison
+
+
+diff --git a/src/main/java/net/minecraft/server/Container.java b/src/main/java/net/minecraft/server/Container.java
+index a10108b9f..5cc23bab0 100644
+--- a/src/main/java/net/minecraft/server/Container.java
++++ b/src/main/java/net/minecraft/server/Container.java
+@@ -27,6 +27,7 @@ public abstract class Container {
+     private final Set h = new HashSet();
+     protected List listeners = new ArrayList();
+     private Set i = new HashSet();
++    private int tickCount; // Spigot
+ 
+     // CraftBukkit start
+     public boolean checkReachable = true;
+@@ -74,7 +75,7 @@ public abstract class Container {
+             ItemStack itemstack = ((Slot) this.c.get(i)).getItem();
+             ItemStack itemstack1 = (ItemStack) this.b.get(i);
+ 
+-            if (!ItemStack.matches(itemstack1, itemstack)) {
++            if (!ItemStack.fastMatches(itemstack1, itemstack) || (tickCount % 5 == 0 && !ItemStack.matches(itemstack1, itemstack))) { // Spigot
+                 itemstack1 = itemstack == null ? null : itemstack.cloneItemStack();
+                 this.b.set(i, itemstack1);
+ 
+@@ -83,6 +84,8 @@ public abstract class Container {
+                 }
+             }
+         }
++
++        tickCount++; // Spigot
+     }
+ 
+     public boolean a(EntityHuman entityhuman, int i) {
+diff --git a/src/main/java/net/minecraft/server/ItemStack.java b/src/main/java/net/minecraft/server/ItemStack.java
+index ee82aba5a..6d84291e2 100644
+--- a/src/main/java/net/minecraft/server/ItemStack.java
++++ b/src/main/java/net/minecraft/server/ItemStack.java
+@@ -442,6 +442,20 @@ public final class ItemStack {
+         return itemstack;
+     }
+ 
++    // Spigot start
++    public static boolean fastMatches(ItemStack itemstack, ItemStack itemstack1) {
++        if (itemstack == null && itemstack1 == null) {
++            return true;
++        }
++
++        if (itemstack != null && itemstack1 != null) {
++            return itemstack.item == itemstack1.item && itemstack.count == itemstack1.count && itemstack.damage == itemstack1.damage;
++        }
++
++        return false;
++    }
++    // Spigot End
++
+     public static boolean equals(ItemStack itemstack, ItemStack itemstack1) {
+         return itemstack == null && itemstack1 == null ? true : (itemstack != null && itemstack1 != null ? (itemstack.tag == null && itemstack1.tag != null ? false : itemstack.tag == null || itemstack.tag.equals(itemstack1.tag)) : false);
+     }
+-- 
+2.13.3
+

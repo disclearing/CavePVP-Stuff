@@ -1,0 +1,39 @@
+From f6cd7e524d16bf2581750c7458d66160d27745fd Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 16 Dec 2018 14:41:05 -0600
+Subject: [PATCH] Updates for git
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java b/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
+index 3a1a5a59..cf9680a5 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutBlockChange.java
+@@ -2,9 +2,9 @@ package net.minecraft.server;
+ 
+ public class PacketPlayOutBlockChange extends Packet {
+ 
+-    private int a;
+-    private int b;
+-    private int c;
++    public int a;
++    public int b;
++    public int c;
+     public Block block; // CraftBukkit - public
+     public int data; // CraftBukkit - public
+     public boolean fake = false;
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 7c648ca5..6600d881 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -821,7 +821,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         Validate.isTrue(amount > 0, "Amount must be greater than 0");
+         setStatistic(statistic, material, getStatistic(statistic, material) - amount);
+     }
+-    
++
+     @Override
+     public void setStatistic(Statistic statistic, Material material, int newValue) {
+         Validate.notNull(statistic, "Statistic cannot be null");
+-- 
+2.17.2 (Apple Git-113)
+

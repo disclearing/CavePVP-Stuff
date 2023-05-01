@@ -1,0 +1,164 @@
+From e166e81a0f5fe0b25ade62b795052d99c0dc5744 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:50:16 -0400
+Subject: [PATCH] Add potion limiter
+
+
+diff --git a/src/main/java/io/kohi/kspigot/potion/PotionMatcher.java b/src/main/java/io/kohi/kspigot/potion/PotionMatcher.java
+new file mode 100644
+index 000000000..db664e3ca
+--- /dev/null
++++ b/src/main/java/io/kohi/kspigot/potion/PotionMatcher.java
+@@ -0,0 +1,60 @@
++package io.kohi.kspigot.potion;
++
++import java.util.Map;
++import org.bukkit.potion.Potion;
++import org.bukkit.potion.PotionType;
++
++public class PotionMatcher
++{
++    private PotionType type;
++    private Integer level;
++    private Boolean extended;
++    private Boolean splash;
++
++    public PotionMatcher(Map conf)
++    {
++        if (conf.containsKey("type"))
++        {
++            try
++            {
++                type = PotionType.valueOf((String) conf.get("type"));
++            }
++            catch (IllegalArgumentException ex)
++            {
++            }
++        }
++        if (conf.containsKey("level"))
++        {
++            level = (Integer) conf.get("level");
++        }
++        if (conf.containsKey("extended"))
++        {
++            extended = (Boolean) conf.get("extended");
++        }
++        if (conf.containsKey("splash"))
++        {
++            splash = (Boolean) conf.get("splash");
++        }
++    }
++
++    public boolean matches(int damage)
++    {
++        if (type != null && type.getDamageValue() != (damage & 15))
++        {
++            return false;
++        }
++        if (level != null && level != ((damage >> 5) & 1) + 1)
++        {
++            return false;
++        }
++        if (extended != null && extended != (((damage >> 6) & 1) == 1))
++        {
++            return false;
++        }
++        if (splash != null && splash != (((damage >> 14) & 1) == 1))
++        {
++            return false;
++        }
++        return true;
++    }
++}
+diff --git a/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java b/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java
+new file mode 100644
+index 000000000..c6a9abb4a
+--- /dev/null
++++ b/src/main/java/io/kohi/kspigot/potion/PotionsConfig.java
+@@ -0,0 +1,49 @@
++package io.kohi.kspigot.potion;
++
++import java.io.File;
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++import org.bukkit.configuration.file.YamlConfiguration;
++
++public class PotionsConfig
++{
++    private static final YamlConfiguration conf = YamlConfiguration.loadConfiguration(new File("potions.yml"));
++    private static final List<PotionMatcher> disableBrewing = new ArrayList<PotionMatcher>();
++    private static final Map<Integer, Boolean> disableBrewingCache = new HashMap<Integer, Boolean>();
++
++    static
++    {
++        List<?> disable = conf.getList("disable-brewing");
++        if (disable != null)
++        {
++            for (Object obj : disable)
++            {
++                if (obj instanceof Map)
++                {
++                    disableBrewing.add(new PotionMatcher((Map) obj));
++                }
++            }
++        }
++    }
++
++    public static boolean isBrewingDisabled(int damage)
++    {
++        Boolean cached = disableBrewingCache.get(damage);
++        if (cached != null)
++        {
++            return cached;
++        }
++        for (PotionMatcher potion : disableBrewing)
++        {
++            if (potion.matches(damage))
++            {
++                disableBrewingCache.put(damage, true);
++                return true;
++            }
++        }
++        disableBrewingCache.put(damage, false);
++        return false;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/TileEntityBrewingStand.java b/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
+index c0ca4a49d..b9acbf9d8 100644
+--- a/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
++++ b/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
+@@ -6,6 +6,7 @@ import java.util.List;
+ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+ import org.bukkit.entity.HumanEntity;
+ import org.bukkit.event.inventory.BrewEvent;
++import io.kohi.kspigot.potion.PotionsConfig;
+ // CraftBukkit end
+ 
+ public class TileEntityBrewingStand extends TileEntity implements IWorldInventory {
+@@ -113,6 +114,10 @@ public class TileEntityBrewingStand extends TileEntity implements IWorldInventor
+                         int j = this.items[i].getData();
+                         int k = this.c(j, itemstack);
+ 
++                        if (k > 0 && PotionsConfig.isBrewingDisabled(k)) {
++                            continue;
++                        }
++
+                         if (!ItemPotion.g(j) && ItemPotion.g(k)) {
+                             flag = true;
+                             break;
+@@ -156,6 +161,10 @@ public class TileEntityBrewingStand extends TileEntity implements IWorldInventor
+                     List list = Items.POTION.c(j);
+                     List list1 = Items.POTION.c(k);
+ 
++                    if (k > 0 && PotionsConfig.isBrewingDisabled(k)) {
++                        continue;
++                    }
++
+                     if ((j <= 0 || list != list1) && (list == null || !list.equals(list1) && list1 != null)) {
+                         if (j != k) {
+                             this.items[i].setData(k);
+-- 
+2.13.3
+

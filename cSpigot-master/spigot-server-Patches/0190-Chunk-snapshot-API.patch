@@ -1,0 +1,350 @@
+From 0d08570f6364d8347ab6bf48a24500aef30817f6 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sun, 16 Jul 2017 21:44:24 +1000
+Subject: [PATCH] Chunk snapshot API
+
+
+diff --git a/src/main/java/net/frozenorb/chunksnapshot/ChunkSectionSnapshot.java b/src/main/java/net/frozenorb/chunksnapshot/ChunkSectionSnapshot.java
+new file mode 100644
+index 000000000..d26f0988b
+--- /dev/null
++++ b/src/main/java/net/frozenorb/chunksnapshot/ChunkSectionSnapshot.java
+@@ -0,0 +1,79 @@
++package net.frozenorb.chunksnapshot;
++
++import net.minecraft.server.NibbleArray;
++
++public class ChunkSectionSnapshot {
++
++    private final int nonEmptyBlockCount;
++    private final int tickingBlockCount;
++    private final byte[] blockIds;
++    private final NibbleArray blockData;
++    private final NibbleArray emittedLight;
++    private final NibbleArray skyLight;
++    private final int compactId;
++    private final byte compactData;
++    private final byte compactEmitted;
++    private final byte compactSky;
++
++    public ChunkSectionSnapshot(int nonEmptyBlockCount,
++            int tickingBlockCount,
++            byte[] blockIds,
++            NibbleArray blockData,
++            NibbleArray emittedLight,
++            NibbleArray skyLight,
++            int compactId,
++            byte compactData,
++            byte compactEmitted,
++            byte compactSky) {
++        this.nonEmptyBlockCount = nonEmptyBlockCount;
++        this.tickingBlockCount = tickingBlockCount;
++        this.blockIds = blockIds;
++        this.blockData = blockData;
++        this.emittedLight = emittedLight;
++        this.skyLight = skyLight;
++        this.compactId = compactId;
++        this.compactData = compactData;
++        this.compactEmitted = compactEmitted;
++        this.compactSky = compactSky;
++    }
++
++    public final int getNonEmptyBlockCount() {
++        return nonEmptyBlockCount;
++    }
++
++    public final int getTickingBlockCount() {
++        return tickingBlockCount;
++    }
++
++    public final byte[] getBlockIds() {
++        return blockIds;
++    }
++
++    public final NibbleArray getBlockData() {
++        return blockData;
++    }
++
++    public final NibbleArray getEmittedLight() {
++        return emittedLight;
++    }
++
++    public final NibbleArray getSkyLight() {
++        return skyLight;
++    }
++
++    public final int getCompactId() {
++        return compactId;
++    }
++
++    public final byte getCompactData() {
++        return compactData;
++    }
++
++    public final byte getCompactEmitted() {
++        return compactEmitted;
++    }
++
++    public final byte getCompactSky() {
++        return compactSky;
++    }
++}
+diff --git a/src/main/java/net/frozenorb/chunksnapshot/CraftChunkSnapshot.java b/src/main/java/net/frozenorb/chunksnapshot/CraftChunkSnapshot.java
+new file mode 100644
+index 000000000..3d7135c9b
+--- /dev/null
++++ b/src/main/java/net/frozenorb/chunksnapshot/CraftChunkSnapshot.java
+@@ -0,0 +1,20 @@
++package net.frozenorb.chunksnapshot;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import net.minecraft.server.NBTTagCompound;
++
++public class CraftChunkSnapshot implements ChunkSnapshot {
++
++    private final ChunkSectionSnapshot[] sections = new ChunkSectionSnapshot[16];
++    private final List<NBTTagCompound> tileEntities = new ArrayList<NBTTagCompound>();
++
++    public ChunkSectionSnapshot[] getSections() {
++        return this.sections;
++    }
++
++    public List<NBTTagCompound> getTileEntities() {
++        return this.tileEntities;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index e228a0b29..a192194aa 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -29,7 +29,7 @@ public class Chunk {
+     public final int locX;
+     public final int locZ;
+     private boolean w;
+-    public Map tileEntities;
++    public Map<ChunkPosition, TileEntity> tileEntities; // MineHQ - added generic
+     public List[] entitySlices;
+     public boolean done;
+     public boolean lit;
+diff --git a/src/main/java/net/minecraft/server/ChunkSection.java b/src/main/java/net/minecraft/server/ChunkSection.java
+index 527559097..84bcd9a94 100644
+--- a/src/main/java/net/minecraft/server/ChunkSection.java
++++ b/src/main/java/net/minecraft/server/ChunkSection.java
+@@ -1,5 +1,7 @@
+ package net.minecraft.server;
+ 
++import net.frozenorb.chunksnapshot.ChunkSectionSnapshot;
++
+ import java.util.Arrays; // CraftBukkit
+ 
+ public class ChunkSection {
+@@ -444,4 +446,48 @@ public class ChunkSection {
+         return byteArray;
+     }
+     // CraftBukkit end
++
++    // MineHQ start - chunk snapshot api
++    public ChunkSectionSnapshot createSnapshot() {
++        return new ChunkSectionSnapshot(
++                nonEmptyBlockCount,
++                tickingBlockCount,
++                clone(blockIds),
++                clone(blockData),
++                clone(emittedLight),
++                clone(skyLight),
++                compactId,
++                compactData,
++                compactEmitted,
++                compactSky);
++    }
++
++    public void restoreSnapshot(ChunkSectionSnapshot snap) {
++        nonEmptyBlockCount = snap.getNonEmptyBlockCount();
++        tickingBlockCount = snap.getTickingBlockCount();
++        blockIds = clone(snap.getBlockIds());
++        blockData = clone(snap.getBlockData());
++        emittedLight = clone(snap.getEmittedLight());
++        skyLight = clone(snap.getSkyLight());
++        compactId = snap.getCompactId();
++        compactData = snap.getCompactData();
++        compactEmitted = snap.getCompactEmitted();
++        compactSky = snap.getCompactSky();
++        isDirty = true;
++    }
++
++    private static byte[] clone(byte[] array) {
++        if (array != null) {
++            return array.clone();
++        }
++        return null;
++    }
++
++    private static NibbleArray clone(NibbleArray array) {
++        if (array != null) {
++            return array.clone();
++        }
++        return null;
++    }
++    // MineHQ end
+ }
+diff --git a/src/main/java/net/minecraft/server/NibbleArray.java b/src/main/java/net/minecraft/server/NibbleArray.java
+index 266e5d3f2..b28899efc 100644
+--- a/src/main/java/net/minecraft/server/NibbleArray.java
++++ b/src/main/java/net/minecraft/server/NibbleArray.java
+@@ -33,4 +33,10 @@ public class NibbleArray {
+         this.a[position >> 1] = (byte) (this.a[position >> 1] & ~(15 << shift) | (l & 15) << shift);
+         // MineHQ end
+     }
++
++    // MineHQ start - chunk snapshot api
++    public NibbleArray clone() {
++        return new NibbleArray(a.clone(), 4);
++    }
++    // MineHQ end
+ }
+diff --git a/src/main/java/net/minecraft/server/PlayerChunk.java b/src/main/java/net/minecraft/server/PlayerChunk.java
+index c2abd00e8..fa704d80e 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunk.java
++++ b/src/main/java/net/minecraft/server/PlayerChunk.java
+@@ -270,4 +270,14 @@ class PlayerChunk {
+     static List b(PlayerChunk playerchunk) {
+         return playerchunk.b;
+     }
++
++    // MineHQ start - chunk snapshot api
++    public void resend() {
++        if (this.dirtyCount == 0) {
++            PlayerChunkMap.d(this.playerChunkMap).add(this);
++        }
++        this.dirtyCount = 64;
++        this.f = 0xFFFF;
++    }
++    // MineHQ end
+ }
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index fc75c750b..c9042a021 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -407,4 +407,14 @@ public class PlayerChunkMap {
+     public int getWorldViewDistance() {
+         return this.g;
+     }
++
++    // MineHQ start - chunk snapshot api
++    public void resend(int chunkX, int chunkZ) {
++        PlayerChunk playerchunk = this.a(chunkX, chunkZ, false);
++
++        if (playerchunk != null) {
++            playerchunk.resend();
++        }
++    }
++    // MineHQ end
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
+index 8208a06c2..70fe2a1be 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
+@@ -1,12 +1,17 @@
+ package org.bukkit.craftbukkit;
+ 
+ import java.lang.ref.WeakReference;
++import java.util.ArrayList;
+ import java.util.Arrays;
++import java.util.Map;
+ 
+ import net.minecraft.server.BiomeBase;
+ import net.minecraft.server.ChunkPosition;
+ import net.minecraft.server.ChunkSection;
+ import net.minecraft.server.EmptyChunk;
++import net.minecraft.server.IInventory;
++import net.minecraft.server.NBTTagCompound;
++import net.minecraft.server.TileEntity;
+ import net.minecraft.server.WorldChunkManager;
+ import net.minecraft.server.WorldServer;
+ 
+@@ -15,8 +20,10 @@ import org.bukkit.World;
+ import org.bukkit.block.Block;
+ import org.bukkit.block.BlockState;
+ import org.bukkit.craftbukkit.block.CraftBlock;
++import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+ import org.bukkit.entity.Entity;
+ import org.bukkit.ChunkSnapshot;
++import org.bukkit.entity.HumanEntity;
+ 
+ public class CraftChunk implements Chunk {
+     private WeakReference<net.minecraft.server.Chunk> weakChunk;
+@@ -320,4 +327,69 @@ public class CraftChunk implements Chunk {
+     static {
+         Arrays.fill(emptySkyLight, (byte) 0xFF);
+     }
++
++    // MineHQ start - chunk snapshot api
++    @Override
++    public net.frozenorb.chunksnapshot.ChunkSnapshot takeSnapshot() {
++        net.minecraft.server.Chunk handle = getHandle();
++        net.frozenorb.chunksnapshot.CraftChunkSnapshot snap = new net.frozenorb.chunksnapshot.CraftChunkSnapshot();
++
++        // save chunk sections to snapshot
++        for (int i = 0; i < 16; i++) {
++            if (handle.getSections()[i] != null) {
++                snap.getSections()[i] = handle.getSections()[i].createSnapshot();
++            }
++        }
++
++        // save tile entities to snapshot
++        for (Map.Entry<ChunkPosition, TileEntity> entry : handle.tileEntities.entrySet()) {
++            NBTTagCompound nbt = new NBTTagCompound();
++            entry.getValue().b(nbt); // writeToNBT
++            snap.getTileEntities().add(nbt);
++        }
++        return snap;
++    }
++
++    @Override
++    public void restoreSnapshot(net.frozenorb.chunksnapshot.ChunkSnapshot snapshot) {
++        net.frozenorb.chunksnapshot.CraftChunkSnapshot snap = (net.frozenorb.chunksnapshot.CraftChunkSnapshot) snapshot;
++        net.minecraft.server.Chunk handle = getHandle();
++
++        // add chunk sections from snapshot
++        for (int i = 0; i < 16; i++) {
++            if (snap.getSections()[i] == null) {
++                handle.getSections()[i] = null;
++            } else {
++                handle.getSections()[i] = new ChunkSection(i << 4, !worldServer.worldProvider.g);
++                handle.getSections()[i].restoreSnapshot(snap.getSections()[i]);
++            }
++        }
++
++        // clear tile entities currently in the chunk
++        for (TileEntity tileEntity : handle.tileEntities.values()) {
++            if (tileEntity instanceof IInventory) {
++                for (HumanEntity h : new ArrayList<HumanEntity>(((IInventory) tileEntity).getViewers())) {
++                    if (h instanceof CraftHumanEntity) {
++                        ((CraftHumanEntity) h).getHandle().closeInventory();
++                    }
++                }
++            }
++            worldServer.a(tileEntity);
++        }
++        handle.tileEntities.clear();
++
++        // add tile entities from snapshot
++        for (NBTTagCompound nbt : snap.getTileEntities()) {
++            // deserialize nbt to new tile entity instance
++            TileEntity tileEntity = TileEntity.c(nbt);
++            // move the tile entity into this chunk's space
++            tileEntity.x = (tileEntity.x & 15) | handle.locX << 4;
++            tileEntity.z = (tileEntity.z & 15) | handle.locZ << 4;
++            // add it
++            handle.a(tileEntity);
++        }
++        handle.n = true; // needs saving flag
++        worldServer.getPlayerChunkMap().resend(x, z);
++    }
++    // MineHQ end
+ }
+-- 
+2.13.3
+

@@ -1,0 +1,16 @@
+{
+  "name": "End",
+  "capLocation": {
+    "x": 203.63085801070682,
+    "y": 72.0,
+    "z": -35.49792764017163
+  },
+  "world": "world_the_end",
+  "capDistance": 3,
+  "capTime": 480,
+  "hidden": false,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

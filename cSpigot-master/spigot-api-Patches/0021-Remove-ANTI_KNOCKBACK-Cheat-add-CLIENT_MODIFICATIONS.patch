@@ -1,0 +1,25 @@
+From 8dcf92d737fa4549bf97e009a3ce701fe99c0ce6 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sat, 19 Nov 2016 19:35:23 -0200
+Subject: [PATCH] Remove ANTI_KNOCKBACK Cheat, add CLIENT_MODIFICATIONS
+
+
+diff --git a/src/main/java/org/bukkit/event/player/GuardianEvent.java b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+index 629d6868..0a772743 100644
+--- a/src/main/java/org/bukkit/event/player/GuardianEvent.java
++++ b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+@@ -40,10 +40,10 @@ public class GuardianEvent extends PlayerEvent {
+         CRITICALS,
+         NO_FALL,
+         TIMER,
+-        ANTI_KNOCKBACK,
+         PHASE,
+         FAST_USE,
+         REGENERATION,
++        CLIENT_MODIFICATIONS,
+ 
+         GENERAL, // Used for wrongly formed packets and other stuff
+ 
+-- 
+2.11.0.windows.3
+

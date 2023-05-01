@@ -1,0 +1,50 @@
+From 0be9a77a3e221deb3eba709fe81509cf8898bbf5 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Thu, 17 Aug 2017 16:06:30 +1000
+Subject: [PATCH] Handle book editting better
+
+Fixes exploits where any meta could be added to book upon signing, for
+example any enchant with any level
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index a597e8fd5..c0be166ee 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -2559,7 +2559,14 @@ public class PlayerConnection implements PacketPlayInListener {
+                     }
+ 
+                     if (itemstack.getItem() == Items.BOOK_AND_QUILL && itemstack.getItem() == itemstack1.getItem()) {
+-                        CraftEventFactory.handleEditBookEvent(player, itemstack); // CraftBukkit
++                        // MineHQ start - handle book editting better
++                        ItemStack newBook = itemstack1.cloneItemStack();
++                        if (!newBook.hasTag()) {
++                            newBook.setTag(new NBTTagCompound());
++                        }
++                        newBook.tag.set("pages", itemstack.getTag().getList("pages", 8));
++                        CraftEventFactory.handleEditBookEvent(player, newBook); // CraftBukkit
++                        // MineHQ end
+                     }
+ 
+                     return;
+@@ -2591,7 +2598,17 @@ public class PlayerConnection implements PacketPlayInListener {
+                     }
+ 
+                     if (itemstack.getItem() == Items.WRITTEN_BOOK && itemstack1.getItem() == Items.BOOK_AND_QUILL) {
+-                        CraftEventFactory.handleEditBookEvent(player, itemstack); // CraftBukkit
++                        // MineHQ start - handle book editting better
++                        ItemStack newBook = itemstack1.cloneItemStack();
++                        if (!newBook.hasTag()) {
++                            newBook.setTag(new NBTTagCompound());
++                        }
++                        newBook.tag.set("author", new NBTTagString(this.player.getName()));
++                        newBook.tag.set("title", new NBTTagString(itemstack.getTag().getString("title")));
++                        newBook.tag.set("pages", itemstack.getTag().getList("pages", 8));
++                        newBook.setItem(Items.WRITTEN_BOOK);
++                        CraftEventFactory.handleEditBookEvent(player, newBook); // CraftBukkit
++                        // MineHQ end
+                     }
+ 
+                     return;
+-- 
+2.13.3
+

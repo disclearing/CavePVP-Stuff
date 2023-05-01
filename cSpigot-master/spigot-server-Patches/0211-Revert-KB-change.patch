@@ -1,0 +1,51 @@
+From a5f5c6e9a32ec3296214edd7a46f71069896faaf Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sat, 2 Sep 2017 10:38:26 -0400
+Subject: [PATCH] Revert KB change
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index d5cf8714a..853a1388b 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -959,8 +959,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+ 
+                     if (flag2) {
+                         if (i > 0) {
+-                            double kb = entity instanceof EntityLiving ? 1.0 - ((EntityLiving) entity).knockbackReduction : 1.0;
+-                            entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F * kb), 0.1D * kb, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F * kb));
++                            entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F));
+                             this.motX *= 0.6D;
+                             this.motZ *= 0.6D;
+                             this.setSprinting(false);
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index d9b6967aa..2e04409d5 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -880,8 +880,8 @@ public abstract class EntityLiving extends Entity {
+             this.motX -= d0 / (double) f1 * (double) f2;
+             this.motY += (double) f2;
+             this.motZ -= d1 / (double) f1 * (double) f2;
+-            if (this.motY > 0.4000000059604645D * (1d - knockbackReduction)) {
+-                this.motY = 0.4000000059604645D * (1d - knockbackReduction);
++            if (this.motY > 0.4000000059604645D) {
++                this.motY = 0.4000000059604645D;
+             }
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 9eba5fa6e..a7629a35c 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -126,7 +126,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         this.maxHealthCache = this.getMaxHealth();
+         // CraftBukkit end
+ 
+-        this.knockbackReduction = 0.1D; // Kohi
++        knockbackReduction = 0.2D; // Kohi
+     }
+ 
+     public void a(NBTTagCompound nbttagcompound) {
+-- 
+2.13.3
+

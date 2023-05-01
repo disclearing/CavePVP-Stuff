@@ -1,0 +1,28 @@
+From b155c748b4a313eb5863da52ce9f499d3e5c87e1 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:30:19 -0400
+Subject: [PATCH] Allow end portals to be placed anywhere
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockEnderPortal.java b/src/main/java/net/minecraft/server/BlockEnderPortal.java
+index 0b24c153d..cf22c4d39 100644
+--- a/src/main/java/net/minecraft/server/BlockEnderPortal.java
++++ b/src/main/java/net/minecraft/server/BlockEnderPortal.java
+@@ -52,14 +52,6 @@ public class BlockEnderPortal extends BlockContainer {
+         return -1;
+     }
+ 
+-    public void onPlace(World world, int i, int j, int k) {
+-        if (!a) {
+-            if (world.worldProvider.dimension != 0) {
+-                world.setAir(i, j, k);
+-            }
+-        }
+-    }
+-
+     public MaterialMapColor f(int i) {
+         return MaterialMapColor.J;
+     }
+-- 
+2.13.3
+

@@ -1,0 +1,62 @@
+From 5d83e6f2c92dfc32cb131de38519ac87bacdd1bf Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Mon, 1 May 2017 22:46:41 -0300
+Subject: [PATCH] Absorption and diff-only PlayerHealthChangeEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index dc06cbd7a..dbb0b5479 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -9,8 +9,10 @@ import net.minecraft.util.com.google.common.base.Charsets;
+ import net.minecraft.util.com.mojang.authlib.GameProfile;
+ 
+ // CraftBukkit start
++import org.bukkit.Bukkit;
+ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+ import org.bukkit.craftbukkit.entity.CraftItem;
++import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.craftbukkit.inventory.CraftItemStack;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.entity.EntityCombustByEntityEvent;
+@@ -1635,7 +1637,15 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+             f = 0.0F;
+         }
+ 
++        float previous = getAbsorptionHearts(); // MineHQ
++
+         this.getDataWatcher().watch(17, Float.valueOf(f));
++
++        // MineHQ start
++        if (previous != f) {
++            Bukkit.getPluginManager().callEvent(new PlayerHealthChangeEvent(((CraftPlayer) getBukkitEntity()), getHealth(), getHealth()));
++        }
++        // MineHQ end
+     }
+ 
+     public float getAbsorptionHearts() {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index a32bedb59..389677151 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1308,11 +1308,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     }
+ 
+     public void setRealHealth(double health) {
+-        double previous = this.health;
++        double previous = this.health; // MineHQ
+ 
+         this.health = health;
+ 
+-        Bukkit.getPluginManager().callEvent(new PlayerHealthChangeEvent(this, previous, health));
++        // MineHQ start
++        if (previous != health) {
++            Bukkit.getPluginManager().callEvent(new PlayerHealthChangeEvent(this, previous, health));
++        }
++        // MineHQ end
+     }
+ 
+     public void updateScaledHealth() {
+-- 
+2.13.3
+

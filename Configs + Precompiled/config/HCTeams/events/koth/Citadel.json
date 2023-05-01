@@ -1,0 +1,16 @@
+{
+  "name": "Citadel",
+  "capLocation": {
+    "x": -197.71400831436935,
+    "y": 32.0,
+    "z": -499.9347015444014
+  },
+  "world": "world_nether",
+  "capDistance": 3,
+  "capTime": 720,
+  "hidden": false,
+  "mini": false,
+  "active": true,
+  "koth": true,
+  "type": "KOTH"
+}

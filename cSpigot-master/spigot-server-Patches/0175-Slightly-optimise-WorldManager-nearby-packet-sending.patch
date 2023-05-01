@@ -1,0 +1,28 @@
+From 6c1d0f82652e43241e3ca8754a1bb3143fbac613 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 30 Jun 2017 11:40:04 +0100
+Subject: [PATCH] Slightly optimise WorldManager nearby packet sending
+
+
+diff --git a/src/main/java/net/minecraft/server/WorldManager.java b/src/main/java/net/minecraft/server/WorldManager.java
+index b3499024e..65a74a1eb 100644
+--- a/src/main/java/net/minecraft/server/WorldManager.java
++++ b/src/main/java/net/minecraft/server/WorldManager.java
+@@ -52,12 +52,12 @@ public class WorldManager implements IWorldAccess {
+     }
+ 
+     public void b(int i, int j, int k, int l, int i1) {
+-        Iterator iterator = this.server.getPlayerList().players.iterator();
++        Iterator iterator = this.world.players.iterator(); // MineHQ
+ 
+         while (iterator.hasNext()) {
+             EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+ 
+-            if (entityplayer != null && entityplayer.world == this.world && entityplayer.getId() != i) {
++            if (entityplayer != null && entityplayer.getId() != i) { // MineHQ
+                 double d0 = (double) j - entityplayer.locX;
+                 double d1 = (double) k - entityplayer.locY;
+                 double d2 = (double) l - entityplayer.locZ;
+-- 
+2.13.3
+

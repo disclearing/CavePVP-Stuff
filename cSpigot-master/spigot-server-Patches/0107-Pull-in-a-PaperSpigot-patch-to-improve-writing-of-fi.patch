@@ -1,0 +1,50 @@
+From b692fd470ae7f59ba361a0d0eea4bf4c73b6b344 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Mon, 16 Nov 2015 23:22:40 +0100
+Subject: [PATCH] Pull in a PaperSpigot patch to improve writing of files in
+ RegionFile
+
+
+diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
+index f44c9e8dc..3a1bd5b8f 100644
+--- a/src/main/java/net/minecraft/server/RegionFile.java
++++ b/src/main/java/net/minecraft/server/RegionFile.java
+@@ -14,7 +14,7 @@ import java.util.zip.InflaterInputStream;
+ 
+ public class RegionFile {
+ 
+-    private static final byte[] a = new byte[4096];
++    private static final byte[] a = new byte[4096]; // Spigot - note: if this ever changes to not be 4096 bytes, update constructor! // PAIL: empty 4k block
+     private final File b;
+     private RandomAccessFile c;
+     private final int[] d = new int[1024];
+@@ -55,13 +55,10 @@ public class RegionFile {
+             int i;
+ 
+             if (this.c.length() < 4096L) {
+-                for (i = 0; i < 1024; ++i) {
+-                    this.c.writeInt(0);
+-                }
+-
+-                for (i = 0; i < 1024; ++i) {
+-                    this.c.writeInt(0);
+-                }
++                // Spigot start - more effecient chunk zero'ing
++                this.c.write(RegionFile.a);
++                this.c.write(RegionFile.a);
++                // Spigot end
+ 
+                 this.g += 8192;
+             }
+@@ -203,7 +200,7 @@ public class RegionFile {
+     }
+ 
+     public DataOutputStream b(int i, int j) {
+-        return this.d(i, j) ? null : new DataOutputStream(new DeflaterOutputStream(new ChunkBuffer(this, i, j)));
++        return this.d(i, j) ? null : new DataOutputStream(new java.io.BufferedOutputStream(new DeflaterOutputStream(new ChunkBuffer(this, i, j)))); // Spigot - use a BufferedOutputStream to greatly improve file write performance
+     }
+ 
+     protected synchronized void a(int i, int j, byte[] abyte, int k) {
+-- 
+2.13.3
+

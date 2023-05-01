@@ -1,0 +1,41 @@
+From 5963000a8b271b506a532ce3c4e5785fc92bfcc0 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 13 Nov 2016 10:48:09 -0200
+Subject: [PATCH] Add PlayerAttackEvent
+
+
+diff --git a/src/main/java/org/bukkit/event/player/PlayerAttackEvent.java b/src/main/java/org/bukkit/event/player/PlayerAttackEvent.java
+new file mode 100644
+index 00000000..79a8d56a
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/player/PlayerAttackEvent.java
+@@ -0,0 +1,26 @@
++package org.bukkit.event.player;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++
++import lombok.Getter;
++
++public class PlayerAttackEvent extends PlayerEvent {
++
++    @Getter private static HandlerList handlerList = new HandlerList();
++
++    @Getter private final Entity target;
++
++    public PlayerAttackEvent(Player player, Entity target) {
++        super(player);
++
++        this.target = target;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlerList;
++    }
++
++}
+-- 
+2.11.0.windows.3
+

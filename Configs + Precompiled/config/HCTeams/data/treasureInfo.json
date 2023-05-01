@@ -1,0 +1,491 @@
+{
+  "chests": [],
+  "loot": [
+    {
+      "type": "EMERALD_BLOCK",
+      "amount": 32,
+      "data": 0
+    },
+    {
+      "type": "DIAMOND_BLOCK",
+      "amount": 32,
+      "data": 0
+    },
+    {
+      "type": "IRON_BLOCK",
+      "amount": 32,
+      "data": 0
+    },
+    {
+      "type": "GOLD_BLOCK",
+      "amount": 32,
+      "data": 0
+    },
+    {
+      "type": "DIAMOND_HOE",
+      "amount": 1,
+      "data": 0,
+      "meta": {
+        "displayName": "§cCrowbar",
+        "lore": [
+          "",
+          "§7Can Break:",
+          "§f - §bEnd Portals: §e{§96§e}",
+          "§f - §bSpawners: §e{§91§e}"
+        ]
+      }
+    },
+    {
+      "type": "EGG",
+      "amount": 8,
+      "data": 0,
+      "meta": {
+        "displayName": "§d§lEggport",
+        "lore": [
+          "",
+          "§6❙ §fSwitch places with your",
+          "§6❙ §fenemy that are within §c§l15 §fblocks!",
+          "",
+          "§fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!"
+        ]
+      }
+    },
+    {
+      "type": "BLAZE_ROD",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lAnti-Blockup",
+        "lore": [
+          "",
+          "§6❙ §fWhen you hit a player with this",
+          "§6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.",
+          "",
+          "§fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!"
+        ]
+      }
+    },
+    {
+      "type": "PAPER",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§a§lMed Kit",
+        "lore": [
+          "",
+          "§6❙ §fRight Click to receive Resistance 3,",
+          "§6❙ §fRegeneration 3, and 4 Absorption",
+          "§6❙ §fHearts for §e§l5 seconds§f!",
+          "",
+          "§fCan be found in the §e§ki§6§lHalloween Crate§e§ki§f!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§3§lInvisibility",
+        "lore": [
+          "",
+          "§6❙ §fWhen you right click this item",
+          "§6❙ §fyour armor will no longer be visible.",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "DIAMOND_SWORD",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DAMAGE_ALL",
+          "level": 2
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 3
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lTreasure §7Sword"
+      }
+    },
+    {
+      "type": "DIAMOND_HELMET",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 2
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 3
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lTreasure §7Helmet"
+      }
+    },
+    {
+      "type": "DIAMOND_CHESTPLATE",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 2
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 3
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lTreasure §7Chestplate"
+      }
+    },
+    {
+      "type": "DIAMOND_LEGGINGS",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 2
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 3
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lTreasure §7Leggings"
+      }
+    },
+    {
+      "type": "DIAMOND_BOOTS",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 2
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 3
+        },
+        {
+          "enchantment": "PROTECTION_FALL",
+          "level": 4
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lTreasure §7Boots"
+      }
+    },
+    {
+      "type": "GOLDEN_APPLE",
+      "amount": 1,
+      "data": 1
+    },
+    {
+      "type": "GOLDEN_APPLE",
+      "amount": 16,
+      "data": 0
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 1,
+      "data": 14,
+      "meta": {
+        "displayName": "§6§lPortable Bard",
+        "lore": [
+          "",
+          "§6❙ §fReceive §c§l5 §fportable bard effects!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "MONSTER_EGG",
+      "amount": 3,
+      "data": 66,
+      "meta": {
+        "displayName": "§5§lWitch Effect",
+        "lore": [
+          "",
+          "§6❙ §fSpawn a witch that give you passive",
+          "§6❙ §fbard effects: strength, regeneration,",
+          "§6❙ §fand resistance.",
+          "",
+          "§fCan be found in the §d§lPartner Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "NETHER_STALK",
+      "amount": 32,
+      "data": 0
+    },
+    {
+      "type": "SPECKLED_MELON",
+      "amount": 16,
+      "data": 0
+    },
+    {
+      "type": "GLOWSTONE_DUST",
+      "amount": 8,
+      "data": 0
+    },
+    {
+      "type": "SULPHUR",
+      "amount": 8,
+      "data": 0
+    },
+    {
+      "type": "SUGAR",
+      "amount": 8,
+      "data": 0
+    },
+    {
+      "type": "FERMENTED_SPIDER_EYE",
+      "amount": 32,
+      "data": 0
+    },
+    {
+      "type": "TRIPWIRE_HOOK",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§e§ki§6§l Halloween Keys §e§ki",
+        "lore": [
+          "",
+          "§7Right click the §6§lHalloween Crate §7to obtain rewards"
+        ]
+      }
+    },
+    {
+      "type": "TRIPWIRE_HOOK",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§5§lLegendary Key",
+        "lore": [
+          "",
+          "§7Right click the §5Legendary Crate §7to obtain rewards!"
+        ]
+      }
+    },
+    {
+      "type": "BEACON",
+      "amount": 1,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lReinforce Lootbox",
+        "lore": [
+          "§7Unlocked at §fstore.cavepvp.org",
+          "",
+          "§c§lEND REWARDS",
+          "§8┃ §4§lLEGENDARY §4Cave §7Rank",
+          "§8┃ §4§lLEGENDARY §aSpring §7Rank",
+          "§8┃ §4§lLEGENDARY §dRavine §7Rank",
+          "§8┃ §4§lLEGENDARY §2$§a50 §7Buycraft Voucher",
+          "§8┃ §4§lLEGENDARY §2$§a25 §7Buycraft Voucher",
+          "§8┃ §4§lLEGENDARY §ePremium Battle Pass",
+          "§8┃ §5§lRARE §77d §e§lVIP §7Subscription",
+          "§8┃ §5§lRARE §72x §c§lPerk §7Keys",
+          "§8┃ §5§lRARE §2$§a10 §7Buycraft Voucher",
+          "§8┃ §d§lUNCOMMON §73x §b§lAirdrops",
+          "§8┃ §a§lCOMMON §7Random Clickable Kit",
+          "§8┃ §a§lCOMMON §56x §7End Portal Frames",
+          "§8┃ §a§lCOMMON §616x §7God Apples",
+          "§8┃ §a§lCOMMON §e64x §7Golden Apples",
+          "",
+          "§c§lREWARDS",
+          "§8┃ §c§lRARE §cFire §7Sword",
+          "§8┃ §d§lUNCOMMON §bDiamond §7Helmet",
+          "§8┃ §d§lUNCOMMON §bDiamond §7Chestplate",
+          "§8┃ §d§lUNCOMMON §bDiamond §7Leggings",
+          "§8┃ §d§lUNCOMMON §bDiamond §7Boots",
+          "§8┃ §d§lUNCOMMON §bDiamond §7Looting Sword",
+          "§8┃ §a§lCOMMON §6Gold §7Helmet",
+          "§8┃ §a§lCOMMON §6Gold §7Chestplate",
+          "§8┃ §a§lCOMMON §6Gold §7Leggings",
+          "§8┃ §a§lCOMMON §6Gold §7Boots",
+          "§8┃ §a§lCOMMON §dLeather §7Helmet",
+          "§8┃ §a§lCOMMON §dLeather §7Chestplate",
+          "§8┃ §a§lCOMMON §dLeather §7Leggings",
+          "§8┃ §a§lCOMMON §dLeather §7Boots"
+        ]
+      }
+    },
+    {
+      "type": "ENDER_CHEST",
+      "amount": 1,
+      "data": 0,
+      "meta": {
+        "displayName": "§e§ki§6§l Fall Lootbox §e§ki",
+        "lore": [
+          "§7Unlocked at §fstore.cavepvp.org",
+          "",
+          "§6§lFINAL REWARDS",
+          " §7➡ §4Cave Rank",
+          " §7➡ §6Spooky Rank",
+          " §7➡ §6Premium Battle Pass",
+          " §7➡ §e§lVIP Subscription",
+          " §7➡ §6§lHalloween Kit",
+          " §7➡ §2$§a10 Buycraft Voucher",
+          " §7➡ §2$§a5 Buycraft Voucher",
+          " §7➡ §a§l2x Perk Keys",
+          " §7➡ §b§l3x Airdrops",
+          " §7➡ §6§l5x Halloween Keys",
+          " §7➡ §cRandom Clickable Kit",
+          "",
+          "§6§lNORMAL REWARDS",
+          " §7➡ §d16x Eggports",
+          " §7➡ §68x Anti-Blockup",
+          " §7➡ §a8x Med Kit",
+          " §7➡ §68x Midas Touch",
+          " §7➡ §cCrowbar",
+          " §7➡ §6§lGod Apple",
+          " §7➡ §632x Golden Apple",
+          " §7➡ §4OP Bow",
+          " §7➡ §bDiamond Sword",
+          " §7➡ §bDiamond Helmet",
+          " §7➡ §bDiamond Chestplate",
+          " §7➡ §bDiamond Leggings",
+          " §7➡ §bDiamond Boots",
+          " §7➡ §bDiamond Pickaxe",
+          " §7➡ §d16x Random Valuable Blocks",
+          " §7➡ §832x Gun Powder",
+          " §7➡ §e32x Glowstone Blocks",
+          " §7➡ §432x Nether Wart",
+          " §7➡ §c32x Glistering Melons"
+        ]
+      }
+    },
+    {
+      "type": "DROPPER",
+      "amount": 1,
+      "data": 0,
+      "meta": {
+        "displayName": "§b§lAir Drop",
+        "lore": [
+          "§7Obtainable at §fstore.cavepvp.org§7.",
+          "",
+          "§ePlace this down to designate a location for the drop!"
+        ]
+      }
+    },
+    {
+      "type": "STICK",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§3§lSpin Bot",
+        "lore": [
+          "",
+          "§6❙ §fHit a player §c§l3 times §fand every",
+          "§6❙ §fhit for §e§l10 seconds §fhas a chance",
+          "§6❙ §fof rotating their head",
+          "",
+          "§fCan be found in the §d§lPartner Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "EXPLOSIVE_MINECART",
+      "amount": 1,
+      "data": 0,
+      "meta": {
+        "displayName": "§4§lTNT Minecart",
+        "lore": [
+          "",
+          "§6❙ §fRight Click to spawn a TNT Minecart",
+          "§6❙ §c§l50 blocks §fabove your head!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "WATCH",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lTime Warp",
+        "lore": [
+          "",
+          "§6❙ §fTravel back to where",
+          "§6❙ §fyou last threw a pearl!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "SNOW_BALL",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§4§lBall Of Rage",
+        "lore": [
+          "",
+          "§6❙ §fThrow to create a cloud of effects",
+          "§6❙ §fwhere all teammates within 5 block",
+          "§6❙ §fradius will be given positive effects.",
+          "",
+          "§fCan be found in the §4§lCave Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "NETHER_STAR",
+      "amount": 1,
+      "data": 0,
+      "meta": {
+        "displayName": "§b§lNinja Star",
+        "lore": [
+          "",
+          "§6❙ §fTeleport to the last person that",
+          "§6❙ §fhit you within the last §e§l30 seconds§f!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "GOLD_INGOT",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lMidas Touch",
+        "lore": [
+          "",
+          "§6❙ §fClick to activate and for §e§l15 seconds",
+          "§6❙ §fa 3x3 of gold blocks appear under you.",
+          "§6❙ §fYou cannot break/place/interact with.",
+          "§6❙ §fblocks on top of these gold blocks.",
+          "",
+          "§fCan be found in the §6§lSummer Lootbox§f!"
+        ]
+      }
+    }
+  ],
+  "centralChest": {
+    "world": "world_nether",
+    "x": -70.0,
+    "y": 39.0,
+    "z": 641.0,
+    "yaw": 0.0,
+    "pitch": 0.0
+  }
+}

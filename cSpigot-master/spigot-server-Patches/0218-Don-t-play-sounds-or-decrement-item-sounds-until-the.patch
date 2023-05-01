@@ -1,0 +1,311 @@
+From ec86bf02c5cb2ac8e0932dc68e583ff8e62e338e Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Thu, 15 Feb 2018 21:28:50 +0000
+Subject: [PATCH] Don't play sounds or decrement item sounds until the event
+ passed, Netty change & minor Guardian update
+
+
+diff --git a/pom.xml b/pom.xml
+index 79d0a575d..1c1e9ebf5 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -111,7 +111,7 @@
+     <dependency>
+       <groupId>io.netty</groupId>
+       <artifactId>netty-all</artifactId>
+-      <version>4.0.28.Final</version>
++      <version>4.0.18.Final</version>
+     </dependency>
+     <dependency>
+       <groupId>it.unimi.dsi</groupId>
+diff --git a/src/main/java/net/minecraft/server/DispenseBehaviorFireball.java b/src/main/java/net/minecraft/server/DispenseBehaviorFireball.java
+index 9fe2a8b18..8ba40851c 100644
+--- a/src/main/java/net/minecraft/server/DispenseBehaviorFireball.java
++++ b/src/main/java/net/minecraft/server/DispenseBehaviorFireball.java
+@@ -52,7 +52,12 @@ final class DispenseBehaviorFireball extends DispenseBehaviorItem {
+         EntitySmallFireball entitysmallfireball = new EntitySmallFireball(world, d0, d1, d2, event.getVelocity().getX(), event.getVelocity().getY(), event.getVelocity().getZ());
+         entitysmallfireball.projectileSource = new org.bukkit.craftbukkit.projectiles.CraftBlockProjectileSource((TileEntityDispenser) isourceblock.getTileEntity());
+ 
+-        world.addEntity(entitysmallfireball);
++        // Velt start
++        if (!world.addEntity(entitysmallfireball)) {
++            itemstack.count++;
++            return itemstack;
++        }
++        // Velt end
+         // itemstack.a(1); // Handled during event processing
+         // CraftBukkit end
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index a7629a35c..52d27240f 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -333,7 +333,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+                 this.playerConnection.sendPacket(new PacketPlayOutExperience(this.exp, this.expTotal, this.expLevel));
+             }
+ 
+-            if (this.ticksLived % 20 * 5 == 0 && !this.getStatisticManager().hasAchievement(AchievementList.L)) {
++            if (false && this.ticksLived % 20 * 5 == 0 && !this.getStatisticManager().hasAchievement(AchievementList.L)) { // we don't care about this
+                 this.j();
+             }
+ 
+@@ -995,6 +995,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+ 
+     public void a(Statistic statistic, int i) {
++        if (true) return; // we don't care about statistics
+         if (statistic != null) {
+             this.bO.b(this, statistic, i);
+             Iterator iterator = this.getScoreboard().getObjectivesForCriteria(statistic.k()).iterator();
+diff --git a/src/main/java/net/minecraft/server/ItemBow.java b/src/main/java/net/minecraft/server/ItemBow.java
+index a1bf31af4..ce4d0c85a 100644
+--- a/src/main/java/net/minecraft/server/ItemBow.java
++++ b/src/main/java/net/minecraft/server/ItemBow.java
+@@ -65,7 +65,11 @@ public class ItemBow extends Item {
+             }
+ 
+             if (event.getProjectile() == entityarrow.getBukkitEntity()) {
+-                world.addEntity(entityarrow);
++                // Velt start
++                if (!world.addEntity(entityarrow)) {
++                    return;
++                }
++                // Velt end
+             }
+             // CraftBukkit end
+ 
+diff --git a/src/main/java/net/minecraft/server/ItemEgg.java b/src/main/java/net/minecraft/server/ItemEgg.java
+index b74c8fe65..8e3ef1177 100644
+--- a/src/main/java/net/minecraft/server/ItemEgg.java
++++ b/src/main/java/net/minecraft/server/ItemEgg.java
+@@ -8,14 +8,15 @@ public class ItemEgg extends Item {
+     }
+ 
+     public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman) {
+-        if (!entityhuman.abilities.canInstantlyBuild) {
+-            --itemstack.count;
+-        }
++        // Velt start
++        if (!world.isStatic && world.addEntity(new EntityEgg(world, entityhuman))) {
++            if (!entityhuman.abilities.canInstantlyBuild) {
++                --itemstack.count;
++            }
+ 
+-        world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-        if (!world.isStatic) {
+-            world.addEntity(new EntityEgg(world, entityhuman));
++            world.makeSound(entityhuman, "random.bow", 0.5f, 0.4f / (ItemEgg.g.nextFloat() * 0.4f + 0.8f));
+         }
++        // Velt end
+ 
+         return itemstack;
+     }
+diff --git a/src/main/java/net/minecraft/server/ItemEnderEye.java b/src/main/java/net/minecraft/server/ItemEnderEye.java
+index 2c0a8d6cc..addfda0e5 100644
+--- a/src/main/java/net/minecraft/server/ItemEnderEye.java
++++ b/src/main/java/net/minecraft/server/ItemEnderEye.java
+@@ -120,12 +120,15 @@ public class ItemEnderEye extends Item {
+                     EntityEnderSignal entityendersignal = new EntityEnderSignal(world, entityhuman.locX, entityhuman.locY + 1.62D - (double) entityhuman.height, entityhuman.locZ);
+ 
+                     entityendersignal.a((double) chunkposition.x, chunkposition.y, (double) chunkposition.z);
+-                    world.addEntity(entityendersignal);
+-                    world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-                    world.a((EntityHuman) null, 1002, (int) entityhuman.locX, (int) entityhuman.locY, (int) entityhuman.locZ, 0);
+-                    if (!entityhuman.abilities.canInstantlyBuild) {
+-                        --itemstack.count;
++                    // Velt start
++                    if (world.addEntity(entityendersignal)) {
++                        world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
++                        world.a((EntityHuman) null, 1002, (int) entityhuman.locX, (int) entityhuman.locY, (int) entityhuman.locZ, 0);
++                        if (!entityhuman.abilities.canInstantlyBuild) {
++                            --itemstack.count;
++                        }
+                     }
++                    // Velt end
+                 }
+             }
+ 
+diff --git a/src/main/java/net/minecraft/server/ItemEnderPearl.java b/src/main/java/net/minecraft/server/ItemEnderPearl.java
+index 2fe9c3c6c..a71f1e83d 100644
+--- a/src/main/java/net/minecraft/server/ItemEnderPearl.java
++++ b/src/main/java/net/minecraft/server/ItemEnderPearl.java
+@@ -11,11 +11,13 @@ public class ItemEnderPearl extends Item {
+         if (entityhuman.abilities.canInstantlyBuild) {
+             return itemstack;
+         } else {
+-            --itemstack.count;
+-            world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-            if (!world.isStatic) {
+-                world.addEntity(new EntityEnderPearl(world, entityhuman));
++
++            // Velt start
++            if (!world.isStatic && world.addEntity(new EntityEnderPearl(world, entityhuman))) {
++                --itemstack.count;
++                world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+             }
++            // Velt end
+ 
+             return itemstack;
+         }
+diff --git a/src/main/java/net/minecraft/server/ItemExpBottle.java b/src/main/java/net/minecraft/server/ItemExpBottle.java
+index a7eba06db..07abd6907 100644
+--- a/src/main/java/net/minecraft/server/ItemExpBottle.java
++++ b/src/main/java/net/minecraft/server/ItemExpBottle.java
+@@ -7,14 +7,16 @@ public class ItemExpBottle extends Item {
+     }
+ 
+     public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman) {
+-        if (!entityhuman.abilities.canInstantlyBuild) {
+-            --itemstack.count;
+-        }
+ 
+-        world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-        if (!world.isStatic) {
+-            world.addEntity(new EntityThrownExpBottle(world, entityhuman));
++        // Velt start
++        if (!world.isStatic && world.addEntity(new EntityThrownExpBottle(world, entityhuman))) {
++            if (!entityhuman.abilities.canInstantlyBuild) {
++                --itemstack.count;
++            }
++
++            world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+         }
++        // Velt end
+ 
+         return itemstack;
+     }
+diff --git a/src/main/java/net/minecraft/server/ItemFishingRod.java b/src/main/java/net/minecraft/server/ItemFishingRod.java
+index 9ededf387..ec13c93d7 100644
+--- a/src/main/java/net/minecraft/server/ItemFishingRod.java
++++ b/src/main/java/net/minecraft/server/ItemFishingRod.java
+@@ -27,10 +27,12 @@ public class ItemFishingRod extends Item {
+                 return itemstack;
+             }
+             // CraftBukkit end
+-            world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-            if (!world.isStatic) {
+-                world.addEntity(hook); // CraftBukkit - moved creation up
++
++            // Velt start
++            if (!world.isStatic && world.addEntity(hook)) {
++                world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+             }
++            // Velt end
+ 
+             entityhuman.ba();
+         }
+diff --git a/src/main/java/net/minecraft/server/ItemPotion.java b/src/main/java/net/minecraft/server/ItemPotion.java
+index 120bf1ce3..2777f84bd 100644
+--- a/src/main/java/net/minecraft/server/ItemPotion.java
++++ b/src/main/java/net/minecraft/server/ItemPotion.java
+@@ -97,14 +97,15 @@ public class ItemPotion extends Item {
+ 
+     public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman) {
+         if (g(itemstack.getData())) {
+-            if (!entityhuman.abilities.canInstantlyBuild) {
+-                --itemstack.count;
+-            }
++            // Velt start
++            if (!world.isStatic && world.addEntity(new EntityPotion(world, entityhuman, itemstack))) {
++                if (!entityhuman.abilities.canInstantlyBuild) {
++                    --itemstack.count;
++                }
+ 
+-            world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-            if (!world.isStatic) {
+-                world.addEntity(new EntityPotion(world, entityhuman, itemstack));
++                world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+             }
++            // Velt end
+ 
+             return itemstack;
+         } else {
+diff --git a/src/main/java/net/minecraft/server/ItemSnowball.java b/src/main/java/net/minecraft/server/ItemSnowball.java
+index fb5e8536d..4ad6df21d 100644
+--- a/src/main/java/net/minecraft/server/ItemSnowball.java
++++ b/src/main/java/net/minecraft/server/ItemSnowball.java
+@@ -8,14 +8,15 @@ public class ItemSnowball extends Item {
+     }
+ 
+     public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman) {
+-        if (!entityhuman.abilities.canInstantlyBuild) {
+-            --itemstack.count;
+-        }
++        // Velt start
++        if (!world.isStatic && world.addEntity(new EntitySnowball(world, entityhuman))) {
++            if (!entityhuman.abilities.canInstantlyBuild) {
++                --itemstack.count;
++            }
+ 
+-        world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+-        if (!world.isStatic) {
+-            world.addEntity(new EntitySnowball(world, entityhuman));
++            world.makeSound(entityhuman, "random.bow", 0.5F, 0.4F / (g.nextFloat() * 0.4F + 0.8F));
+         }
++        // Velt end
+ 
+         return itemstack;
+     }
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index d39cfc256..9a2443b58 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -205,7 +205,8 @@ public class PlayerConnection implements PacketPlayInListener {
+             Block.getById(44),
+             Block.getById(154),
+             Block.getById(88),
+-            Block.getById(78)
++            Block.getById(78),
++            Block.getById(126)
+             );
+     // Alfie end
+ 
+@@ -919,11 +920,6 @@ public class PlayerConnection implements PacketPlayInListener {
+                             }
+                         }
+ 
+-                        // this might perform horribly
+-                        if (this.player.world.boundingBoxContainsMaterials(this.player.boundingBox, glitchBlocks)) {
+-                            horizontalSpeed *= 5.0D;
+-                        }
+-
+                         if ((Bukkit.shouldGuardianAct()) && (!teleport)) {
+                             double speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
+ 
+@@ -958,16 +954,26 @@ public class PlayerConnection implements PacketPlayInListener {
+                                             );
+                                         }
+                                     } else {
+-                                        lastJumpEffectTime = System.currentTimeMillis();
++                                        if (this.player.getEffect(MobEffectList.JUMP) != null) lastJumpEffectTime = System.currentTimeMillis(); // don't let those people fly
+                                     }
+                                 } else if ((speedup > 1.5D) && ((this.speedTypeDAmount += 20) > 90)) {
+-                                    this.speedTypeDAmount = 0;
+ 
+-                                    String message = String.format("%s is speeding (Module A) [%d%%] at %.1f %.1f %.1f", this.player.getName(), (int) (100.0D * speedup), d1, d2, d3);
+-                                    Bukkit.getPluginManager().callEvent(
+-                                            new GuardianEvent(getPlayer(), GuardianEvent.Cheat.SPEED_HACKS, "A", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), d1, d2, d3))
+-                                            .addData("speedup", String.format("%d%%", (int) (100.0D * speedup)))
+-                                    );
++                                    // should be slightly better coming from here
++                                    if (this.player.world.boundingBoxContainsMaterials(this.player.boundingBox.grow(0.5, 1.0, 0.5), glitchBlocks)) {
++                                        horizontalSpeed *= 5.0D;
++                                        speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
++                                    }
++                                    
++                                    // double check but I don't like doing the bounding box contain for no reason
++                                    if (speedup > 1.5D) {
++                                        this.speedTypeDAmount = 0;
++
++                                        String message = String.format("%s is speeding (Module A) [%d%%] at %.1f %.1f %.1f", this.player.getName(), (int) (100.0D * speedup), d1, d2, d3);
++                                        Bukkit.getPluginManager().callEvent(
++                                                new GuardianEvent(getPlayer(), GuardianEvent.Cheat.SPEED_HACKS, "A", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), d1, d2, d3))
++                                                .addData("speedup", String.format("%d%%", (int) (100.0D * speedup)))
++                                        );
++                                    }
+                                 }
+                             }
+                         }
+-- 
+2.15.2 (Apple Git-101.1)
+

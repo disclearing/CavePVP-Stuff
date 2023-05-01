@@ -1,0 +1,76 @@
+From 7f88d273f7f6d235a77a2223e68d795c62cadf33 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 13 Nov 2016 10:48:09 -0200
+Subject: [PATCH] Add methods for managing Guardian inside of the Server
+ interface and the Bukkit class.
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index b85a699f..f2ee0fc9 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -738,6 +738,29 @@ public final class Bukkit {
+         return server.getIdleTimeout();
+     }
+ 
++    // Guardian start
++    /**
++     * @see Server#isGuardianEnabled()
++     */
++    public static boolean isGuardianEnabled() {
++        return server.isGuardianEnabled();
++    }
++
++    /**
++     * @see Server#setGuardianEnabled(boolean)
++     */
++    public static void setGuardianEnabled(boolean enabled) {
++        server.setGuardianEnabled(enabled);
++    }
++
++    /**
++     * @see Server#shouldGuardianAct()
++     */
++    public static boolean shouldGuardianAct() {
++        return server.shouldGuardianAct();
++    }
++    // Guardian end
++
+     /**
+      * @see Server#getUnsafe()
+      */
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 86d88546..70e134aa 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -902,6 +902,27 @@ public interface Server extends PluginMessageRecipient {
+      */
+     public int getIdleTimeout();
+ 
++    // Guardian start
++
++    /**
++     * @return Whether Guardian is enabled or not.
++     */
++    public boolean isGuardianEnabled();
++
++    /**
++     * Set whether Guardian is enabled or not.
++     *
++     * @param enabled - The new state to set to
++     */
++    public void setGuardianEnabled(boolean enabled);
++
++    /**
++     * @return Whether Guardian should do checks in the server's
++     * current conditions or not.
++     */
++    public boolean shouldGuardianAct();
++    // Guardian end
++
+     /**
+      * @see UnsafeValues
+      */
+-- 
+2.11.0.windows.3
+

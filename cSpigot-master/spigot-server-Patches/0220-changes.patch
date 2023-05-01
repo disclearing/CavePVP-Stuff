@@ -1,0 +1,1162 @@
+From 2da0e1b8250f08a25e6d5746512131d51ab399ea Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 6 Jul 2018 22:15:27 -0500
+Subject: [PATCH] changes
+
+
+diff --git a/src/main/java/net/frozenorb/PlayerMap.java b/src/main/java/net/frozenorb/PlayerMap.java
+index c0d3194b6..284e532b4 100644
+--- a/src/main/java/net/frozenorb/PlayerMap.java
++++ b/src/main/java/net/frozenorb/PlayerMap.java
+@@ -1,11 +1,13 @@
+ package net.frozenorb;
+ 
+ import java.util.ArrayList;
++import java.util.Collections;
+ import java.util.List;
+ import java.util.function.Consumer;
+ 
+ import com.google.common.base.Function;
+ import com.google.common.base.Predicate;
++import com.google.common.collect.Lists;
+ 
+ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+ import net.minecraft.server.EntityHuman;
+@@ -157,6 +159,29 @@ public class PlayerMap {
+ 
+         return bestPlayer;
+     }
++
++    public List<EntityPlayer> getNearbyPlayersIgnoreHeight(double x, double y, double z, double distance) {
++        List<EntityPlayer> toReturn = null;
++        
++        for (int chunkX = MathHelper.floor(x - distance) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + distance) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - distance) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + distance) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        if (player != null && !player.dead && Math.abs(player.locX - x) <= distance && Math.abs(player.locZ - z) <= distance) {
++                            if (toReturn == null) {
++                                toReturn = Lists.newArrayList();
++                            }
++
++                            toReturn.add(player);
++                        }
++                    }
++                }
++            }
++        }
++        
++        return toReturn == null ? Collections.emptyList() : toReturn;
++    }
+     
+     public EntityPlayer getNearestAttackablePlayer(double x, double y, double z, double maxXZ, double maxY, Function<EntityHuman, Double> visibility) {
+         return getNearestAttackablePlayer(x, y, z, maxXZ, maxY, visibility, null);
+diff --git a/src/main/java/net/frozenorb/util/BlockUtil.java b/src/main/java/net/frozenorb/util/BlockUtil.java
+new file mode 100644
+index 000000000..7553fc6fe
+--- /dev/null
++++ b/src/main/java/net/frozenorb/util/BlockUtil.java
+@@ -0,0 +1,244 @@
++package net.frozenorb.util;
++
++import java.util.HashSet;
++import java.util.Set;
++
++import org.bukkit.Location;
++import org.bukkit.World;
++
++public class BlockUtil {
++    private static Set<Byte> blockSolidPassSet;
++    private static Set<Byte> blockStairsSet;
++    private static Set<Byte> blockLiquidsSet;
++    private static Set<Byte> blockWebsSet;
++    private static Set<Byte> blockIceSet;
++    
++    @SuppressWarnings("deprecation")
++    public static boolean isOnGround(final Location location, final int down) {
++        final double posX = location.getX();
++        final double posZ = location.getZ();
++        final double fracX = (posX % 1.0 > 0.0) ? Math.abs(posX % 1.0) : (1.0 - Math.abs(posX % 1.0));
++        final double fracZ = (posZ % 1.0 > 0.0) ? Math.abs(posZ % 1.0) : (1.0 - Math.abs(posZ % 1.0));
++        final int blockX = location.getBlockX();
++        final int blockY = location.getBlockY() - down;
++        final int blockZ = location.getBlockZ();
++        final World world = location.getWorld();
++        if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ).getTypeId())) {
++            return true;
++        }
++        if (fracX < 0.3) {
++            if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ).getTypeId())) {
++                return true;
++            }
++            if (fracZ < 0.3) {
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++            } else if (fracZ > 0.7) {
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++            }
++        } else if (fracX > 0.7) {
++            if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ).getTypeId())) {
++                return true;
++            }
++            if (fracZ < 0.3) {
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++            } else if (fracZ > 0.7) {
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++            }
++        } else if (fracZ < 0.3) {
++            if (!BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ - 1).getTypeId())) {
++                return true;
++            }
++        } else if (fracZ > 0.7 && !BlockUtil.blockSolidPassSet.contains((byte) world.getBlockAt(blockX, blockY, blockZ + 1).getTypeId())) {
++            return true;
++        }
++        return false;
++    }
++    
++    public static boolean isOnStairs(final Location location, final int down) {
++        return isUnderBlock(location, BlockUtil.blockStairsSet, down);
++    }
++    
++    @SuppressWarnings("deprecation")
++    private static boolean isUnderBlock(final Location location, final Set<Byte> itemIDs, final int down) {
++        final double posX = location.getX();
++        final double posZ = location.getZ();
++        final double fracX = (posX % 1.0 > 0.0) ? Math.abs(posX % 1.0) : (1.0 - Math.abs(posX % 1.0));
++        final double fracZ = (posZ % 1.0 > 0.0) ? Math.abs(posZ % 1.0) : (1.0 - Math.abs(posZ % 1.0));
++        final int blockX = location.getBlockX();
++        final int blockY = location.getBlockY() - down;
++        final int blockZ = location.getBlockZ();
++        final World world = location.getWorld();
++        if (itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ).getTypeId())) {
++            return true;
++        }
++        if (fracX < 0.3) {
++            if (itemIDs.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ).getTypeId())) {
++                return true;
++            }
++            if (fracZ < 0.3) {
++                if (itemIDs.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++            } else if (fracZ > 0.7) {
++                if (itemIDs.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++            }
++        } else if (fracX > 0.7) {
++            if (itemIDs.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ).getTypeId())) {
++                return true;
++            }
++            if (fracZ < 0.3) {
++                if (itemIDs.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ - 1).getTypeId())) {
++                    return true;
++                }
++            } else if (fracZ > 0.7) {
++                if (itemIDs.contains((byte) world.getBlockAt(blockX - 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++                if (itemIDs.contains((byte) world.getBlockAt(blockX + 1, blockY, blockZ + 1).getTypeId())) {
++                    return true;
++                }
++            }
++        } else if (fracZ < 0.3) {
++            if (itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ - 1).getTypeId())) {
++                return true;
++            }
++        } else if (fracZ > 0.7 && itemIDs.contains((byte) world.getBlockAt(blockX, blockY, blockZ + 1).getTypeId())) {
++            return true;
++        }
++        return false;
++    }
++    
++    public static boolean isOnLiquid(final Location location, final int down) {
++        return isUnderBlock(location, BlockUtil.blockLiquidsSet, down);
++    }
++    
++    public static boolean isOnWeb(final Location location, final int down) {
++        return isUnderBlock(location, BlockUtil.blockWebsSet, down);
++    }
++    
++    public static boolean isOnIce(final Location location, final int down) {
++        return isUnderBlock(location, BlockUtil.blockIceSet, down);
++    }
++    
++    static {
++        BlockUtil.blockSolidPassSet = new HashSet<Byte>();
++        BlockUtil.blockStairsSet = new HashSet<Byte>();
++        BlockUtil.blockLiquidsSet = new HashSet<Byte>();
++        BlockUtil.blockWebsSet = new HashSet<Byte>();
++        BlockUtil.blockIceSet = new HashSet<Byte>();
++        BlockUtil.blockSolidPassSet.add((byte) 0);
++        BlockUtil.blockSolidPassSet.add((byte) 6);
++        BlockUtil.blockSolidPassSet.add((byte) 8);
++        BlockUtil.blockSolidPassSet.add((byte) 9);
++        BlockUtil.blockSolidPassSet.add((byte) 10);
++        BlockUtil.blockSolidPassSet.add((byte) 11);
++        BlockUtil.blockSolidPassSet.add((byte) 27);
++        BlockUtil.blockSolidPassSet.add((byte) 28);
++        BlockUtil.blockSolidPassSet.add((byte) 30);
++        BlockUtil.blockSolidPassSet.add((byte) 31);
++        BlockUtil.blockSolidPassSet.add((byte) 32);
++        BlockUtil.blockSolidPassSet.add((byte) 37);
++        BlockUtil.blockSolidPassSet.add((byte) 38);
++        BlockUtil.blockSolidPassSet.add((byte) 39);
++        BlockUtil.blockSolidPassSet.add((byte) 40);
++        BlockUtil.blockSolidPassSet.add((byte) 50);
++        BlockUtil.blockSolidPassSet.add((byte) 51);
++        BlockUtil.blockSolidPassSet.add((byte) 55);
++        BlockUtil.blockSolidPassSet.add((byte) 59);
++        BlockUtil.blockSolidPassSet.add((byte) 63);
++        BlockUtil.blockSolidPassSet.add((byte) 66);
++        BlockUtil.blockSolidPassSet.add((byte) 68);
++        BlockUtil.blockSolidPassSet.add((byte) 69);
++        BlockUtil.blockSolidPassSet.add((byte) 70);
++        BlockUtil.blockSolidPassSet.add((byte) 72);
++        BlockUtil.blockSolidPassSet.add((byte) 75);
++        BlockUtil.blockSolidPassSet.add((byte) 76);
++        BlockUtil.blockSolidPassSet.add((byte) 77);
++        BlockUtil.blockSolidPassSet.add((byte) 78);
++        BlockUtil.blockSolidPassSet.add((byte) 83);
++        BlockUtil.blockSolidPassSet.add((byte) 90);
++        BlockUtil.blockSolidPassSet.add((byte) 104);
++        BlockUtil.blockSolidPassSet.add((byte) 105);
++        BlockUtil.blockSolidPassSet.add((byte) 115);
++        BlockUtil.blockSolidPassSet.add((byte) 119);
++        BlockUtil.blockSolidPassSet.add((byte) (-124));
++        BlockUtil.blockSolidPassSet.add((byte) (-113));
++        BlockUtil.blockSolidPassSet.add((byte) (-81));
++        BlockUtil.blockStairsSet.add((byte) 53);
++        BlockUtil.blockStairsSet.add((byte) 67);
++        BlockUtil.blockStairsSet.add((byte) 108);
++        BlockUtil.blockStairsSet.add((byte) 109);
++        BlockUtil.blockStairsSet.add((byte) 114);
++        BlockUtil.blockStairsSet.add((byte) (-128));
++        BlockUtil.blockStairsSet.add((byte) (-122));
++        BlockUtil.blockStairsSet.add((byte) (-121));
++        BlockUtil.blockStairsSet.add((byte) (-120));
++        BlockUtil.blockStairsSet.add((byte) (-100));
++        BlockUtil.blockStairsSet.add((byte) (-93));
++        BlockUtil.blockStairsSet.add((byte) (-92));
++        BlockUtil.blockStairsSet.add((byte) 126);
++        BlockUtil.blockStairsSet.add((byte) (-76));
++        BlockUtil.blockLiquidsSet.add((byte) 8);
++        BlockUtil.blockLiquidsSet.add((byte) 9);
++        BlockUtil.blockLiquidsSet.add((byte) 10);
++        BlockUtil.blockLiquidsSet.add((byte) 11);
++        BlockUtil.blockWebsSet.add((byte) 30);
++        BlockUtil.blockIceSet.add((byte) 79);
++        BlockUtil.blockIceSet.add((byte) (-82));
++    }
++}
+diff --git a/src/main/java/net/frozenorb/util/ChunkFlatMap.java b/src/main/java/net/frozenorb/util/ChunkFlatMap.java
+deleted file mode 100644
+index 6d937ec68..000000000
+--- a/src/main/java/net/frozenorb/util/ChunkFlatMap.java
++++ /dev/null
+@@ -1,28 +0,0 @@
+-package net.frozenorb.util;
+-
+-import net.minecraft.server.Chunk;
+-
+-public class ChunkFlatMap extends FlatMap<Chunk> {
+-
+-    private Chunk lastChunk;
+-
+-    @Override
+-    public Chunk get(int x, int z) {
+-        Chunk last = lastChunk; // have to do this to be somewhat thread-safe-ish
+-
+-        if (last != null && last.locX == x && last.locZ == z) {
+-            return last;
+-        }
+-
+-        return lastChunk = super.get(x, z);
+-    }
+-
+-    @Override
+-    public void remove(int x, int z) {
+-        if (lastChunk != null && lastChunk.locX == x && lastChunk.locZ == z) {
+-            lastChunk = null; // we don't really care for thread safety here, we'd just lose a few cache hits
+-        }
+-
+-        super.remove(x, z);
+-    }
+-}
+diff --git a/src/main/java/net/frozenorb/util/CoordinateChunkHybridMap.java b/src/main/java/net/frozenorb/util/CoordinateChunkHybridMap.java
+deleted file mode 100644
+index bd912d30b..000000000
+--- a/src/main/java/net/frozenorb/util/CoordinateChunkHybridMap.java
++++ /dev/null
+@@ -1,10 +0,0 @@
+-package net.frozenorb.util;
+-
+-import net.minecraft.server.Chunk;
+-
+-public class CoordinateChunkHybridMap extends CoordinateObjectHybridMap<Chunk> {
+-
+-    public CoordinateChunkHybridMap() {
+-        flatMap = new ChunkFlatMap();
+-    }
+-}
+diff --git a/src/main/java/net/frozenorb/util/CoordinateObjectHybridMap.java b/src/main/java/net/frozenorb/util/CoordinateObjectHybridMap.java
+deleted file mode 100644
+index ac015051c..000000000
+--- a/src/main/java/net/frozenorb/util/CoordinateObjectHybridMap.java
++++ /dev/null
+@@ -1,56 +0,0 @@
+-package net.frozenorb.util;
+-
+-import java.util.Collection;
+-import java.util.Collections;
+-
+-import org.bukkit.craftbukkit.util.LongHash;
+-
+-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+-
+-public class CoordinateObjectHybridMap<T> {
+-
+-    private Long2ObjectOpenHashMap<T> backingMap = new Long2ObjectOpenHashMap<T>();
+-    private Collection<T> values = Collections.unmodifiableCollection(backingMap.values()); // values() is uncached and is simply a view, so we can cache it and make it externally unmodifiable
+-
+-    protected FlatMap<T> flatMap;
+-
+-    public CoordinateObjectHybridMap() {
+-        this.flatMap = new FlatMap<T>();
+-    }
+-
+-    public boolean contains(int x, int z) {
+-        return get(x, z) != null;
+-    }
+-
+-    public T get(int x, int z) {
+-        if (x * x < FlatMap.HALF_DIAMETER_SQUARED && z * z < FlatMap.HALF_DIAMETER_SQUARED) {
+-            return flatMap.get(x, z);
+-        }
+-
+-        return backingMap.get(LongHash.toLong(x, z));
+-    }
+-
+-    public void remove(int x, int z) {
+-        if (x * x < FlatMap.HALF_DIAMETER_SQUARED && z * z < FlatMap.HALF_DIAMETER_SQUARED) {
+-            flatMap.put(x, z, null);
+-        }
+-
+-        backingMap.remove(LongHash.toLong(x, z));
+-    }
+-
+-    public void put(int x, int z, T value) {
+-        if (x * x < FlatMap.HALF_DIAMETER_SQUARED && z * z < FlatMap.HALF_DIAMETER_SQUARED) {
+-            flatMap.put(x, z, value);
+-        }
+-
+-        backingMap.put(LongHash.toLong(x, z), value);
+-    }
+-
+-    public int size() {
+-        return backingMap.size();
+-    }
+-
+-    public Collection<T> values() {
+-        return values;
+-    }
+-}
+diff --git a/src/main/java/net/frozenorb/util/FlatMap.java b/src/main/java/net/frozenorb/util/FlatMap.java
+deleted file mode 100644
+index 6a5c36fa2..000000000
+--- a/src/main/java/net/frozenorb/util/FlatMap.java
++++ /dev/null
+@@ -1,30 +0,0 @@
+-package net.frozenorb.util;
+-
+-public class FlatMap<V> {
+-
+-    private static final int DIAMETER = 4096;
+-    private static final int HALF_DIAMETER = DIAMETER / 2;
+-    private final Object[] flatLookup;
+-
+-    public static final int HALF_DIAMETER_SQUARED = HALF_DIAMETER * HALF_DIAMETER;
+-
+-    public FlatMap() {
+-        this.flatLookup = new Object[DIAMETER * DIAMETER];
+-    }
+-
+-    public void put(final int msw, final int lsw, final V value) {
+-        this.flatLookup[(msw + HALF_DIAMETER) * DIAMETER + (lsw + HALF_DIAMETER)] = value;
+-    }
+-
+-    public void remove(final int msw, final int lsw) {
+-        this.put(msw, lsw, null);
+-    }
+-
+-    public boolean contains(final int msw, final int lsw) {
+-        return this.get(msw, lsw) != null;
+-    }
+-
+-    public V get(final int msw, final int lsw) {
+-        return (V) this.flatLookup[(msw + HALF_DIAMETER) * DIAMETER + (lsw + HALF_DIAMETER)];
+-    }
+-}
+diff --git a/src/main/java/net/minecraft/server/BlockLever.java b/src/main/java/net/minecraft/server/BlockLever.java
+index e00cea3d0..5885d5f68 100644
+--- a/src/main/java/net/minecraft/server/BlockLever.java
++++ b/src/main/java/net/minecraft/server/BlockLever.java
+@@ -1,6 +1,7 @@
+ package net.minecraft.server;
+ 
+ import org.bukkit.event.block.BlockRedstoneEvent; // CraftBukkit
++import org.spigotmc.SpigotConfig;
+ 
+ public class BlockLever extends Block {
+ 
+@@ -165,6 +166,11 @@ public class BlockLever extends Block {
+     }
+ 
+     public void updateShape(IBlockAccess iblockaccess, int i, int j, int k) {
++        if (SpigotConfig.pearlThroughGatesAndTripwire) {
++            this.a(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
++            return;
++        }
++        
+         int l = iblockaccess.getData(i, j, k) & 7;
+         float f = 0.1875F;
+ 
+diff --git a/src/main/java/net/minecraft/server/BlockSoil.java b/src/main/java/net/minecraft/server/BlockSoil.java
+index b234a5378..4db09b6b8 100644
+--- a/src/main/java/net/minecraft/server/BlockSoil.java
++++ b/src/main/java/net/minecraft/server/BlockSoil.java
+@@ -20,6 +20,7 @@ public class BlockSoil extends Block {
+         return AxisAlignedBB.a((double) (i + 0), (double) (j + 0), (double) (k + 0), (double) (i + 1), (double) (j + 1), (double) (k + 1));
+     }
+ 
++
+     public boolean c() {
+         return false;
+     }
+diff --git a/src/main/java/net/minecraft/server/BlockWeb.java b/src/main/java/net/minecraft/server/BlockWeb.java
+new file mode 100644
+index 000000000..ab885738b
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/BlockWeb.java
+@@ -0,0 +1,40 @@
++package net.minecraft.server;
++
++import java.util.Random;
++
++public class BlockWeb extends Block {
++
++    public BlockWeb() {
++        super(Material.WEB);
++        this.a(CreativeModeTab.c);
++        this.a(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F); // Velt
++    }
++
++    public void a(World world, int i, int j, int k, Entity entity) {
++        entity.as();
++    }
++
++    public boolean c() {
++        return false;
++    }
++
++    public AxisAlignedBB a(World world, int i, int j, int k) {
++        return null;
++    }
++
++    public int b() {
++        return 1;
++    }
++
++    public boolean d() {
++        return false;
++    }
++
++    public Item getDropType(int i, Random random, int j) {
++        return Items.STRING;
++    }
++
++    protected boolean E() {
++        return true;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 1ffef2420..4a20d7e2d 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -14,8 +14,7 @@ import org.bukkit.craftbukkit.util.LongHashSet;
+ import org.bukkit.event.world.ChunkUnloadEvent;
+ // CraftBukkit end
+ 
+-import net.frozenorb.util.CoordinateChunkHybridMap;
+-import net.frozenorb.util.CoordinateObjectHybridMap;
++import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+ 
+ public class ChunkProviderServer implements IChunkProvider {
+ 
+@@ -27,7 +26,7 @@ public class ChunkProviderServer implements IChunkProvider {
+     private IChunkLoader f;
+     public boolean forceChunkLoad = false; // true -> false
+     //public LongObjectHashMap<Chunk> chunks = new LongObjectHashMap<Chunk>();
+-    public CoordinateObjectHybridMap<Chunk> chunks = new CoordinateChunkHybridMap(); // MineHQ
++    public Long2ObjectOpenHashMap<Chunk> chunks = new Long2ObjectOpenHashMap<>(); // MineHQ
+     public WorldServer world;
+     // CraftBukkit end
+ 
+@@ -43,7 +42,7 @@ public class ChunkProviderServer implements IChunkProvider {
+     }
+ 
+     public boolean isChunkLoaded(int i, int j) {
+-        return this.chunks.contains(i, j); // CraftBukkit // MineHQ
++        return this.chunks.containsKey(LongHash.toLong(i, j)); // CraftBukkit // MineHQ
+     }
+ 
+     // CraftBukkit start - Change return type to Collection and return the values of our chunk map
+@@ -62,7 +61,7 @@ public class ChunkProviderServer implements IChunkProvider {
+         if (!checked && this.world.getPlayerChunkMap().isChunkInUse(i, j)) return;
+     // MineHQ end
+         // PaperSpigot start - Asynchronous lighting updates
+-        Chunk chunk = this.chunks.get(i, j); // MineHQ
++        Chunk chunk = this.chunks.get(LongHash.toLong(i, j)); // MineHQ
+         if (chunk != null && chunk.world.paperSpigotConfig.useAsyncLighting && (chunk.pendingLightUpdates.get() > 0 || chunk.world.getTime() - chunk.lightUpdateTime < 20)) {
+             return;
+         }
+@@ -120,7 +119,7 @@ public class ChunkProviderServer implements IChunkProvider {
+ 
+     // CraftBukkit start - Add async variant, provide compatibility
+     public Chunk getChunkIfLoaded(int x, int z) {
+-        return this.chunks.get(x, z); // MineHQ
++        return this.chunks.get(LongHash.toLong(x, z)); // MineHQ
+     }
+ 
+     public Chunk getChunkAt(int i, int j) {
+@@ -129,7 +128,7 @@ public class ChunkProviderServer implements IChunkProvider {
+ 
+     public Chunk getChunkAt(int i, int j, Runnable runnable) {
+         this.unloadQueue.remove(i, j);
+-        Chunk chunk = this.chunks.get(i, j); // MineHQ
++        Chunk chunk = this.chunks.get(LongHash.toLong(i, j)); // MineHQ
+         ChunkRegionLoader loader = null;
+ 
+         if (this.f instanceof ChunkRegionLoader) {
+@@ -158,7 +157,7 @@ public class ChunkProviderServer implements IChunkProvider {
+ 
+     public Chunk originalGetChunkAt(int i, int j) {
+         this.unloadQueue.remove(i, j);
+-        Chunk chunk = (Chunk) this.chunks.get(i, j); // MineHQ
++        Chunk chunk = (Chunk) this.chunks.get(LongHash.toLong(i, j)); // MineHQ
+         boolean newChunk = false;
+ 
+         if (chunk == null) {
+@@ -183,7 +182,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                 newChunk = true; // CraftBukkit
+             }
+ 
+-            this.chunks.put(i, j, chunk); // CraftBukkit // MineHQ
++            this.chunks.put(LongHash.toLong(i, j), chunk); // CraftBukkit // MineHQ
+             chunk.addEntities();
+ 
+             // CraftBukkit start
+@@ -221,7 +220,7 @@ public class ChunkProviderServer implements IChunkProvider {
+ 
+     public Chunk getOrCreateChunk(int i, int j) {
+         // CraftBukkit start
+-        Chunk chunk = (Chunk) this.chunks.get(i, j); // MineHQ
++        Chunk chunk = (Chunk) this.chunks.get(LongHash.toLong(i, j)); // MineHQ
+ 
+         chunk = chunk == null ? (!this.world.isLoading && !this.forceChunkLoad ? this.emptyChunk : this.getChunkAt(i, j)) : chunk;
+         if (chunk == this.emptyChunk) return chunk;
+@@ -381,7 +380,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                 int locX = LongHash.msw(chunkcoordinates);
+                 int locZ = LongHash.lsw(chunkcoordinates);
+                 nanoStart = System.nanoTime();
+-                Chunk chunk = this.chunks.get(locX, locZ);
++                Chunk chunk = this.chunks.get(LongHash.toLong(locX, locZ));
+                 chunksGet += System.nanoTime() - nanoStart;
+                 // MineHQ end
+                 if (chunk == null) continue;
+diff --git a/src/main/java/net/minecraft/server/Container.java b/src/main/java/net/minecraft/server/Container.java
+index 5cc23bab0..da16a482f 100644
+--- a/src/main/java/net/minecraft/server/Container.java
++++ b/src/main/java/net/minecraft/server/Container.java
+@@ -61,7 +61,7 @@ public abstract class Container {
+     }
+ 
+     public List a() {
+-        ArrayList arraylist = new ArrayList();
++        ArrayList arraylist = new ArrayList(this.c.size()); // Velt
+ 
+         for (int i = 0; i < this.c.size(); ++i) {
+             arraylist.add(((Slot) this.c.get(i)).getItem());
+@@ -75,7 +75,7 @@ public abstract class Container {
+             ItemStack itemstack = ((Slot) this.c.get(i)).getItem();
+             ItemStack itemstack1 = (ItemStack) this.b.get(i);
+ 
+-            if (!ItemStack.fastMatches(itemstack1, itemstack) || (tickCount % 5 == 0 && !ItemStack.matches(itemstack1, itemstack))) { // Spigot
++            if (!ItemStack.fastMatches(itemstack1, itemstack) || (tickCount % 20 == 0 && !ItemStack.matches(itemstack1, itemstack))) { // Spigot
+                 itemstack1 = itemstack == null ? null : itemstack.cloneItemStack();
+                 this.b.set(i, itemstack1);
+ 
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index f93b00778..625358293 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -7,6 +7,7 @@ import java.net.Proxy;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
++import java.util.Queue;
+ import java.util.Random;
+ import java.util.concurrent.Callable;
+ import java.util.concurrent.TimeUnit; // PaperSpigot
+@@ -23,10 +24,12 @@ import org.bukkit.craftbukkit.SpigotTimings; // Spigot
+ import org.bukkit.event.server.ServerCommandEvent;
+ // CraftBukkit end
+ 
++import net.minecraft.util.com.google.common.collect.Queues;
++
+ public class DedicatedServer extends MinecraftServer implements IMinecraftServer {
+ 
+     private static final Logger i = LogManager.getLogger();
+-    private final List j = Collections.synchronizedList(new ArrayList());
++    private final Queue<ServerCommand> commandsQueue = Queues.newConcurrentLinkedQueue();
+     private RemoteStatusListener k;
+     private RemoteControlListener l;
+     public PropertyManager propertyManager; // CraftBukkit - private -> public
+@@ -302,23 +305,26 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+     }
+ 
+     public void issueCommand(String s, ICommandListener icommandlistener) {
+-        this.j.add(new ServerCommand(s, icommandlistener));
++        this.commandsQueue.add(new ServerCommand(s, icommandlistener));
+     }
+ 
+     public void aB() {
+         SpigotTimings.serverCommandTimer.startTiming(); // Spigot
+-        while (!this.j.isEmpty()) {
+-            ServerCommand servercommand = (ServerCommand) this.j.remove(0);
+ 
++        // Velt start - better server command queue
++        ServerCommand queuedCommand;
++        while ((queuedCommand = this.commandsQueue.poll()) != null) {
+             // CraftBukkit start - ServerCommand for preprocessing
+-            ServerCommandEvent event = new ServerCommandEvent(this.console, servercommand.command);
++            ServerCommandEvent event = new ServerCommandEvent(this.console, queuedCommand.command);
+             this.server.getPluginManager().callEvent(event);
+-            servercommand = new ServerCommand(event.getCommand(), servercommand.source);
++            queuedCommand = new ServerCommand(event.getCommand(), queuedCommand.source);
+ 
+             // this.getCommandHandler().a(servercommand.source, servercommand.command); // Called in dispatchServerCommand
+-            this.server.dispatchServerCommand(this.console, servercommand);
++            this.server.dispatchServerCommand(this.console, queuedCommand);
+             // CraftBukkit end
+         }
++        // Velt end
++        
+         SpigotTimings.serverCommandTimer.stopTiming(); // Spigot
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 4430227b9..b6183f057 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -174,7 +174,7 @@ public abstract class EntityLiving extends Entity {
+ 
+         boolean flag = this instanceof EntityHuman && ((EntityHuman) this).abilities.isInvulnerable;
+ 
+-        if (this.isAlive() && this.inWater) {
++        if (this.isAlive() && this.inWater && this.a(Material.WATER)) {
+             if (!this.aE() && !flag && !this.hasEffect(MobEffectList.WATER_BREATHING.id)) {
+                 this.setAirTicks(this.j(this.getAirTicks()));
+                 if (this.getAirTicks() == -20) {
+diff --git a/src/main/java/net/minecraft/server/EntityPainting.java b/src/main/java/net/minecraft/server/EntityPainting.java
+index 2c3a233db..77ba1f7b7 100644
+--- a/src/main/java/net/minecraft/server/EntityPainting.java
++++ b/src/main/java/net/minecraft/server/EntityPainting.java
+@@ -13,8 +13,8 @@ public class EntityPainting extends EntityHanging {
+ 
+     public EntityPainting(World world, int i, int j, int k, int l) {
+         super(world, i, j, k, l);
+-        ArrayList arraylist = new ArrayList();
+         EnumArt[] aenumart = EnumArt.values();
++        ArrayList arraylist = new ArrayList(aenumart.length);
+         int i1 = aenumart.length;
+ 
+         for (int j1 = 0; j1 < i1; ++j1) {
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 5a36be196..5bd9ca430 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.server;
+ 
++import net.frozenorb.util.BlockUtil;
+ import net.minecraft.util.com.google.common.base.Charsets;
+ import net.minecraft.util.com.google.common.collect.Lists;
+ import net.minecraft.util.io.netty.buffer.Unpooled;
+@@ -25,12 +26,16 @@ import org.bukkit.event.block.SignChangeEvent;
+ import org.bukkit.event.inventory.*;
+ import org.bukkit.event.inventory.InventoryType.SlotType;
+ import org.bukkit.event.player.*;
++import org.bukkit.event.player.GuardianEvent.DisplayLevel;
+ import org.bukkit.inventory.CraftingInventory;
+ import org.bukkit.inventory.InventoryView;
++import org.bukkit.potion.PotionEffect;
++import org.bukkit.potion.PotionEffectType;
+ import org.bukkit.util.NumberConversions;
+ import org.github.paperspigot.PaperSpigotConfig;
+ import org.spigotmc.SpigotConfig;
+ 
++import com.google.common.collect.Collections2;
+ import com.google.common.collect.Sets;
+ 
+ import java.io.ByteArrayInputStream;
+@@ -196,6 +201,12 @@ public class PlayerConnection implements PacketPlayInListener {
+     private int flyModuleGAmount;
+     private int fastFallModuleGAmount;
+     // Guardian end
++    
++    // AGC start
++    private int legalMovements = 0;
++    private int illegalMovements = 0;
++    private int suspiciousHeightMovements = 0;
++    // AGC end
+ 
+     // Alfie start
+     private static Set<Block> glitchBlocks = Sets.newHashSet(Block.getById(13), 
+@@ -472,6 +483,86 @@ public class PlayerConnection implements PacketPlayInListener {
+             double delta = Math.pow(this.lastPosX - to.getX(), 2) + Math.pow(this.lastPosY - to.getY(), 2) + Math.pow(this.lastPosZ - to.getZ(), 2);
+             float deltaAngle = Math.abs(this.lastYaw - to.getYaw()) + Math.abs(this.lastPitch - to.getPitch());
+ 
++            // AGC start
++            if (packetplayinflying.hasPos && delta > 0.0 && this.checkMovement && !this.player.dead) {
++                if (!player.getAllowFlight() && !player.isInsideVehicle() && this.player.lastDamageByPlayerTime + 100 < MinecraftServer.currentTick && this.lastVelocitySentTick + 100 < MinecraftServer.currentTick) {
++                    final double offsetHSquared = Math.pow(to.getX() - from.getX(), 2) + Math.pow(to.getZ() - from.getZ(), 2);
++                    int speed = 0;
++                    for (final PotionEffect effect : this.player.getBukkitEntity().getActivePotionEffects()) {
++                        if (effect.getType().equals(PotionEffectType.SPEED)) {
++                            speed = effect.getAmplifier() + 1;
++                            break;
++                        }
++                    }
++
++                    double limit;
++                    if (BlockUtil.isOnGround(to, 0) || BlockUtil.isOnGround(to, 1)) {
++                        limit = 0.34;
++                        if (BlockUtil.isOnStairs(to, 0) || BlockUtil.isOnStairs(to, 1)) {
++                            limit = 0.45;
++                        } else if (BlockUtil.isOnIce(to, 0) || BlockUtil.isOnIce(to, 1)) {
++                            if (BlockUtil.isOnGround(to, -2)) {
++                                limit = 1.3;
++                            } else {
++                                limit = 0.65;
++                            }
++                        } else if (BlockUtil.isOnGround(to, -2)) {
++                            limit = 0.7;
++                        }
++                        limit += ((player.getWalkSpeed() > 0.2f) ? (player.getWalkSpeed() * 10.0f * 0.33f) : 0.0f);
++                        limit += 0.06 * speed;
++                    } else {
++                        limit = 0.36;
++                        if (BlockUtil.isOnStairs(to, 0) || BlockUtil.isOnStairs(to, 1)) {
++                            limit = 0.45;
++                        } else if (BlockUtil.isOnIce(to, 0) || BlockUtil.isOnIce(to, 1)) {
++                            if (BlockUtil.isOnGround(to, -2)) {
++                                limit = 1.3;
++                            } else {
++                                limit = 0.65;
++                            }
++                        } else if (BlockUtil.isOnGround(to, -2)) {
++                            limit = 0.7;
++                        }
++
++                        limit += ((player.getWalkSpeed() > 0.2f) ? (player.getWalkSpeed() * 10.0f * 0.33f) : 0.0f);
++                        limit += 0.02 * speed;
++                    } if (offsetHSquared > Math.pow(limit, 2)) {
++                        ++this.illegalMovements;
++                    } else {
++                        ++this.legalMovements;
++                    }
++
++                    final int total = this.illegalMovements + this.legalMovements;
++                    if (total >= 20) {
++                        final double percentage = this.illegalMovements / 20.0 * 100.0;
++                        if (percentage >= 45.0) {
++                            String message = String.format("%s is flying at %.1f %.1f %.1f. [%d%%]", this.player.getName(), to.getX(), to.getY(), to.getZ(), (int) percentage);
++                            Bukkit.getPluginManager().callEvent(new GuardianEvent(player, GuardianEvent.Cheat.FLY_HACKS, "E", DisplayLevel.HIGH, message, to));
++                        }
++
++                        this.illegalMovements = 0;
++                        this.legalMovements = 0;
++                    }
++                }
++
++                if (!player.getAllowFlight() && this.player.vehicle == null && !this.player.inWater && !BlockUtil.isOnGround(to, 0) && !BlockUtil.isOnGround(to, 1)) {
++                    if ((from.getX() != to.getX() || from.getZ() != to.getZ()) && to.getY() == from.getY()) {
++                        if (10 <= ++this.suspiciousHeightMovements) {
++                            final double offsetH = Math.hypot(from.getX() - to.getX(), from.getZ() - to.getZ());
++                            String message = String.format("%s failed Fly Check G. H %.2f. VL %s.", this.player.getName(), offsetH, this.suspiciousHeightMovements);
++                            Bukkit.getPluginManager().callEvent(new GuardianEvent(player, GuardianEvent.Cheat.FLY_HACKS, "G", DisplayLevel.HIGH, message, to));
++                            this.suspiciousHeightMovements = 0;
++                        }
++                    } else {
++                        this.suspiciousHeightMovements = 0;
++                    }
++                } else {
++                    this.suspiciousHeightMovements = 0;
++                }
++            }
++            // AGC end
++            
+             // Guardian start
+             float f4 = 0.0625F;
+             AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().grow(f4, f4, f4).a(0.0D, -0.55D, 0.0D);
+@@ -1820,26 +1911,30 @@ public class PlayerConnection implements PacketPlayInListener {
+         this.player.v();
+         if (packetplayinarmanimation.d() == 1) {
+             // CraftBukkit start - Raytrace to look for 'rogue armswings'
+-            float f = 1.0F;
+-            float f1 = this.player.lastPitch + (this.player.pitch - this.player.lastPitch) * f;
+-            float f2 = this.player.lastYaw + (this.player.yaw - this.player.lastYaw) * f;
+-            double d0 = this.player.lastX + (this.player.locX - this.player.lastX) * (double) f;
+-            double d1 = this.player.lastY + (this.player.locY - this.player.lastY) * (double) f + 1.62D - (double) this.player.height;
+-            double d2 = this.player.lastZ + (this.player.locZ - this.player.lastZ) * (double) f;
+-            Vec3D vec3d = Vec3D.a(d0, d1, d2);
+-
+-            float f3 = MathHelper.cos(-f2 * 0.017453292F - 3.1415927F);
+-            float f4 = MathHelper.sin(-f2 * 0.017453292F - 3.1415927F);
+-            float f5 = -MathHelper.cos(-f1 * 0.017453292F);
+-            float f6 = MathHelper.sin(-f1 * 0.017453292F);
+-            float f7 = f4 * f5;
+-            float f8 = f3 * f5;
+-            double d3 = player.playerInteractManager.getGameMode() == EnumGamemode.CREATIVE ? 5.0D : 4.5D; // Spigot
+-            Vec3D vec3d1 = vec3d.add((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
+-            MovingObjectPosition movingobjectposition = this.player.world.rayTrace(vec3d, vec3d1, false);
+-
+-            if (movingobjectposition == null || movingobjectposition.type != EnumMovingObjectType.BLOCK) {
+-                CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_AIR, this.player.inventory.getItemInHand());
++
++            // we only ever use this event when players are sneaking so why raytrace for no reason
++            if (this.player.isSneaking()) {
++                float f = 1.0F;
++                float f1 = this.player.lastPitch + (this.player.pitch - this.player.lastPitch) * f;
++                float f2 = this.player.lastYaw + (this.player.yaw - this.player.lastYaw) * f;
++                double d0 = this.player.lastX + (this.player.locX - this.player.lastX) * (double) f;
++                double d1 = this.player.lastY + (this.player.locY - this.player.lastY) * (double) f + 1.62D - (double) this.player.height;
++                double d2 = this.player.lastZ + (this.player.locZ - this.player.lastZ) * (double) f;
++                Vec3D vec3d = Vec3D.a(d0, d1, d2);
++
++                float f3 = MathHelper.cos(-f2 * 0.017453292F - 3.1415927F);
++                float f4 = MathHelper.sin(-f2 * 0.017453292F - 3.1415927F);
++                float f5 = -MathHelper.cos(-f1 * 0.017453292F);
++                float f6 = MathHelper.sin(-f1 * 0.017453292F);
++                float f7 = f4 * f5;
++                float f8 = f3 * f5;
++                double d3 = player.playerInteractManager.getGameMode() == EnumGamemode.CREATIVE ? 5.0D : 4.5D; // Spigot
++                Vec3D vec3d1 = vec3d.add((double) f7 * d3, (double) f6 * d3, (double) f8 * d3);
++                MovingObjectPosition movingobjectposition = this.player.world.rayTrace(vec3d, vec3d1, false);
++
++                if (movingobjectposition == null || movingobjectposition.type != EnumMovingObjectType.BLOCK) {
++                    CraftEventFactory.callPlayerInteractEvent(this.player, Action.LEFT_CLICK_AIR, this.player.inventory.getItemInHand());
++                }
+             }
+ 
+             // Arm swing animation
+@@ -2331,7 +2426,7 @@ public class PlayerConnection implements PacketPlayInListener {
+                 this.n.a(this.player.activeContainer.windowId, Short.valueOf(packetplayinwindowclick.f()));
+                 this.player.playerConnection.sendPacket(new PacketPlayOutTransaction(packetplayinwindowclick.c(), packetplayinwindowclick.f(), false));
+                 this.player.activeContainer.a(this.player, false);
+-                ArrayList arraylist = new ArrayList();
++                ArrayList arraylist = new ArrayList(this.player.activeContainer.c.size()); // Velt
+ 
+                 for (int i = 0; i < this.player.activeContainer.c.size(); ++i) {
+                     arraylist.add(((Slot) this.player.activeContainer.c.get(i)).getItem());
+diff --git a/src/main/java/net/minecraft/server/TileEntityBeacon.java b/src/main/java/net/minecraft/server/TileEntityBeacon.java
+index 198f9087f..570b72432 100644
+--- a/src/main/java/net/minecraft/server/TileEntityBeacon.java
++++ b/src/main/java/net/minecraft/server/TileEntityBeacon.java
+@@ -59,12 +59,9 @@ public class TileEntityBeacon extends TileEntity implements IInventory {
+             if (this.l >= 4 && this.m == this.n) {
+                 b0 = 1;
+             }
+-
+-            AxisAlignedBB axisalignedbb = AxisAlignedBB.a((double) this.x, (double) this.y, (double) this.z, (double) (this.x + 1), (double) (this.y + 1), (double) (this.z + 1)).grow(d0, d0, d0);
+-
+-            axisalignedbb.e = (double) this.world.getHeight();
+-            List list = this.world.a(EntityHuman.class, axisalignedbb);
+-            Iterator iterator = list.iterator();
++            
++            List<EntityPlayer> list = world.playerMap.getNearbyPlayersIgnoreHeight(this.x, this.y, this.z, d0);
++            Iterator<EntityPlayer> iterator = list.iterator();
+ 
+             EntityHuman entityhuman;
+ 
+@@ -123,16 +120,6 @@ public class TileEntityBeacon extends TileEntity implements IInventory {
+                 this.k = false;
+             }
+         }
+-
+-        if (!this.world.isStatic && this.l == 4 && i < this.l) {
+-            Iterator iterator = this.world.a(EntityHuman.class, AxisAlignedBB.a((double) this.x, (double) this.y, (double) this.z, (double) this.x, (double) (this.y - 4), (double) this.z).grow(10.0D, 5.0D, 10.0D)).iterator();
+-
+-            while (iterator.hasNext()) {
+-                EntityHuman entityhuman = (EntityHuman) iterator.next();
+-
+-                entityhuman.a((Statistic) AchievementList.K);
+-            }
+-        }
+     }
+ 
+     public int j() {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 539d86b49..f5f48a8ff 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -290,7 +290,7 @@ public class CraftWorld implements World {
+         }
+ 
+         world.chunkProviderServer.unloadQueue.remove(x, z);
+-        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(x, z); // MineHQ
++        net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z)); // MineHQ
+ 
+         if (chunk == null) {
+             world.timings.syncChunkLoadTimer.startTiming(); // Spigot
+@@ -304,7 +304,7 @@ public class CraftWorld implements World {
+ 
+     private void chunkLoadPostProcess(net.minecraft.server.Chunk chunk, int x, int z) {
+         if (chunk != null) {
+-            world.chunkProviderServer.chunks.put(x, z, chunk); // MineHQ
++            world.chunkProviderServer.chunks.put(LongHash.toLong(x, z), chunk); // MineHQ
+ 
+             chunk.addEntities();
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOProvider.java b/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOProvider.java
+index 8c6f2a221..5de79d4bb 100644
+--- a/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOProvider.java
++++ b/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOProvider.java
+@@ -36,7 +36,7 @@ class ChunkIOProvider implements AsynchronousExecutor.CallBackProvider<QueuedChu
+ 
+         queuedChunk.loader.loadEntities(chunk, queuedChunk.compound.getCompound("Level"), queuedChunk.world);
+         chunk.lastSaved = queuedChunk.provider.world.getTime();
+-        queuedChunk.provider.chunks.put(queuedChunk.x, queuedChunk.z, chunk); // MineHQ
++        queuedChunk.provider.chunks.put(LongHash.toLong(queuedChunk.x, queuedChunk.z), chunk); // MineHQ
+         chunk.addEntities();
+ 
+         if (queuedChunk.provider.chunkProvider != null) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index c502e9d87..a9e222b29 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -24,6 +24,7 @@ import org.bukkit.event.inventory.InventoryType;
+ import org.bukkit.inventory.Inventory;
+ import org.bukkit.inventory.InventoryHolder;
+ import org.bukkit.inventory.ItemStack;
++import org.bukkit.Bukkit;
+ import org.bukkit.Material;
+ 
+ public class CraftInventory implements Inventory {
+@@ -78,7 +79,15 @@ public class CraftInventory implements Inventory {
+         }
+     }
+ 
+-    public void setItem(int index, ItemStack item) {
++    public void setItem(int index, ItemStack item) {    
++        
++        ItemStack oldItem = getItem(index);
++        
++        if (oldItem != null) {
++            Bukkit.getLogger().info("Removing item " + oldItem.getType().toString() + ", setting to: " + (item == null ? "null" : item.getType().toString()));
++            new Throwable().printStackTrace();
++        }
++        
+         getInventory().setItem(index, ((item == null || item.getTypeId() == 0) ? null : CraftItemStack.asNMSCopy(item)));
+     }
+ 
+@@ -333,6 +342,11 @@ public class CraftInventory implements Inventory {
+         Validate.notNull(items, "Items cannot be null");
+         HashMap<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
+ 
++        for (ItemStack item : items) {
++            Bukkit.getLogger().info("Removing item " + item.getType().toString() + ".");
++            new Throwable().printStackTrace();
++        }
++        
+         // TODO: optimization
+ 
+         for (int i = 0; i < items.length; i++) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+index de0ecb496..b7cf36b44 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+@@ -3,6 +3,7 @@ package org.bukkit.craftbukkit.inventory;
+ import java.util.HashMap;
+ 
+ import org.apache.commons.lang.Validate;
++import org.bukkit.Bukkit;
+ import org.bukkit.Material;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.entity.HumanEntity;
+@@ -194,6 +195,14 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+     @Override
+     public HashMap<Integer, ItemStack> removeItem(ItemStack... items) {
+         HashMap<Integer, ItemStack> leftover = super.removeItem(items);
++        
++        for (ItemStack item : items) {
++            if (item != null) {
++                Bukkit.getLogger().info("Removing item " + item.getType().toString() + ".");
++                new Throwable().printStackTrace();
++            }
++        }
++        
+         this.updatePlayerInventory();
+         return leftover;
+     }
+@@ -201,6 +210,12 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+     @Override
+     public void remove(ItemStack item) {
+         super.remove(item);
++        
++        if (item != null) {
++            Bukkit.getLogger().info("Removing item " + item.getType().toString() + ".");
++            new Throwable().printStackTrace();
++        }
++        
+         this.updatePlayerInventory();
+     }
+ 
+diff --git a/src/main/java/org/spigotmc/CachedMojangAPIConnection.java b/src/main/java/org/spigotmc/CachedMojangAPIConnection.java
+index 42edebabd..b58371989 100644
+--- a/src/main/java/org/spigotmc/CachedMojangAPIConnection.java
++++ b/src/main/java/org/spigotmc/CachedMojangAPIConnection.java
+@@ -30,7 +30,7 @@ public class CachedMojangAPIConnection extends HttpURLConnection
+ 
+     private static final Cache<String, String> cache = CacheBuilder.newBuilder()
+             .maximumSize( 10000 )
+-            .expireAfterAccess( 1, TimeUnit.HOURS )
++            .expireAfterAccess( 30, TimeUnit.MINUTES )
+             .build();
+ 
+     public CachedMojangAPIConnection(CachedStreamHandlerFactory.CachedStreamHandler cachedStreamHandler, URL url, Proxy proxy)
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 7586a0aae..f76784188 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -208,7 +208,7 @@ public class SpigotConfig
+         outdatedServerMessage = transform( getString( "messages.outdated-server", outdatedServerMessage ) );
+     }
+ 
+-    public static int timeoutTime = 60;
++    public static int timeoutTime = 10;
+     public static boolean restartOnCrash = true;
+     public static String restartScript = "./start.sh";
+     public static String restartMessage;
+@@ -244,12 +244,10 @@ public class SpigotConfig
+         lateBind = getBoolean( "settings.late-bind", false );
+     }
+ 
+-    public static boolean disableStatSaving;
++    public static boolean disableStatSaving = true;
+     public static TObjectIntHashMap<String> forcedStats = new TObjectIntHashMap<String>();
+     private static void stats()
+     {
+-        disableStatSaving = getBoolean( "stats.disable-saving", false );
+-
+         if ( !config.contains( "stats.forced-stats" ) ) {
+             config.createSection( "stats.forced-stats" );
+         }
+@@ -265,9 +263,7 @@ public class SpigotConfig
+ 
+         if ( disableStatSaving && section.getInt( "achievement.openInventory", 0 ) < 1 )
+         {
+-            Bukkit.getLogger().warning( "*** WARNING *** stats.disable-saving is true but stats.forced-stats.achievement.openInventory" +
+-                    " isn't set to 1. Disabling stat saving without forcing the achievement may cause it to get stuck on the player's " +
+-                    "screen." );
++            forcedStats.put("achievement.openInventory", 1);
+         }
+     }
+ 
+diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
+index 94a3d4237..0a588ac6b 100644
+--- a/src/main/java/org/spigotmc/WatchdogThread.java
++++ b/src/main/java/org/spigotmc/WatchdogThread.java
+@@ -80,16 +80,19 @@ public class WatchdogThread extends Thread
+                 }
+                 log.log( Level.SEVERE, "------------------------------" );
+ 
+-                if ( restart )
+-                {
+-                    RestartCommand.restart();
+-                }
++                /* 
++                 * Let's try and interrupt the main thread
++                 * 
++                 * */
++                
++                MinecraftServer.getServer().primaryThread.interrupt();
++                
+                 break;
+             }
+ 
+             try
+             {
+-                sleep( 10000 );
++                sleep( 1000 );
+             } catch ( InterruptedException ex )
+             {
+                 interrupt();
+-- 
+2.15.2 (Apple Git-101.1)
+

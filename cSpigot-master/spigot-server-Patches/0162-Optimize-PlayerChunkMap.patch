@@ -1,0 +1,105 @@
+From d4027e28f7f5474a1baebaedd33a1f89c164bcb5 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Tue, 26 Jan 2016 14:45:56 +1100
+Subject: [PATCH] Optimize PlayerChunkMap
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerChunk.java b/src/main/java/net/minecraft/server/PlayerChunk.java
+index 07b9d354d..8436562d6 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunk.java
++++ b/src/main/java/net/minecraft/server/PlayerChunk.java
+@@ -75,7 +75,7 @@ class PlayerChunk {
+                     ChunkIOExecutor.dropQueuedChunkLoad(this.playerChunkMap.a(), this.location.x, this.location.z, this.loadedRunnable);
+                     long i = (long) this.location.x + 2147483647L | (long) this.location.z + 2147483647L << 32;
+                     PlayerChunkMap.b(this.playerChunkMap).remove(i);
+-                    PlayerChunkMap.c(this.playerChunkMap).remove(this);
++                    // PlayerChunkMap.c(this.playerChunkMap).remove(this); Kohi
+                 }
+ 
+                 return;
+@@ -96,7 +96,7 @@ class PlayerChunk {
+ 
+                 this.a(chunk);
+                 PlayerChunkMap.b(this.playerChunkMap).remove(i);
+-                PlayerChunkMap.c(this.playerChunkMap).remove(this);
++                // PlayerChunkMap.c(this.playerChunkMap).remove(this); Kohi
+                 if (this.dirtyCount > 0) {
+                     PlayerChunkMap.d(this.playerChunkMap).remove(this);
+                 }
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index ffac105db..219d10500 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -19,8 +19,8 @@ public class PlayerChunkMap {
+     private final WorldServer world;
+     private final List managedPlayers = new ArrayList();
+     private final LongHashMap d = new LongHashMap();
+-    private final Queue e = new java.util.concurrent.ConcurrentLinkedQueue(); // CraftBukkit ArrayList -> ConcurrentLinkedQueue
+-    private final Queue f = new java.util.concurrent.ConcurrentLinkedQueue(); // CraftBukkit ArrayList -> ConcurrentLinkedQueue
++    private final List e = new ArrayList(); // Kohi - use arraylist as in vanilla
++    // private final Queue f = new java.util.concurrent.ConcurrentLinkedQueue(); // Kohi - this is pointless
+     private int g;
+     private long h;
+     private final int[][] i = new int[][] { { 1, 0}, { 0, 1}, { -1, 0}, { 0, -1}};
+@@ -38,8 +38,8 @@ public class PlayerChunkMap {
+     public void flush() {
+         long i = this.world.getTime();
+         int j;
+-        PlayerChunk playerchunk;
+ 
++        /* Kohi - removed PlayerChunkMap.f
+         if (i - this.h > 8000L) {
+             this.h = i;
+ 
+@@ -60,8 +60,15 @@ public class PlayerChunkMap {
+                 // CraftBukkit end
+             }
+         }
++        */
+ 
+-        // this.e.clear(); // CraftBukkit - Removals are already covered
++        // Kohi - we changed this back to arraylist
++        for (Object o : this.e) {
++            PlayerChunk playerchunk = (PlayerChunk) o;
++            playerchunk.b();
++        }
++
++        this.e.clear();
+         if (this.managedPlayers.isEmpty()) {
+             if (!wasNotEmpty) return; // CraftBukkit - Only do unload when we go from non-empty to empty
+             WorldProvider worldprovider = this.world.worldProvider;
+@@ -90,7 +97,7 @@ public class PlayerChunkMap {
+         if (playerchunk == null && flag) {
+             playerchunk = new PlayerChunk(this, i, j);
+             this.d.put(k, playerchunk);
+-            this.f.add(playerchunk);
++            // this.f.add(playerchunk); Kohi
+         }
+ 
+         return playerchunk;
+@@ -106,6 +113,7 @@ public class PlayerChunkMap {
+     // CraftBukkit end
+ 
+     public void flagDirty(int i, int j, int k) {
++        org.spigotmc.AsyncCatcher.catchOp("PlayerChunkMap.flagDirty");
+         int l = i >> 4;
+         int i1 = k >> 4;
+         PlayerChunk playerchunk = this.a(l, i1, false);
+@@ -328,11 +336,13 @@ public class PlayerChunkMap {
+         return playerchunkmap.d;
+     }
+ 
++    /* Kohi
+     static Queue c(PlayerChunkMap playermanager) { // CraftBukkit List -> Queue
+         return playermanager.f;
+     }
++    */
+ 
+-    static Queue d(PlayerChunkMap playermanager) { // CraftBukkit List -> Queue
++    static List d(PlayerChunkMap playermanager) { // Kohi - List
+         return playermanager.e;
+     }
+ 
+-- 
+2.13.3
+

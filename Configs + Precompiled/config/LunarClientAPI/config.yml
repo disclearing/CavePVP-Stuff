@@ -1,0 +1,4 @@
+SERVER_NAME: cavepvp.com
+restrict: false
+kick-message: '&cYou must use Lunar Client to connect to this server.'
+authenticate: " \n&aYou have connected to the server with &lLunar Client&a.\n "

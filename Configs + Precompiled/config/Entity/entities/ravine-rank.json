@@ -1,0 +1,70 @@
+{
+    "type": "NPC",
+    "name": "ravine-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 56.5,
+        "y": 69.0,
+        "z": -2.5,
+        "yaw": 89.714615,
+        "pitch": -0.48428106
+    },
+    "commands": [
+        "viewproduct lifetime-ravine"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_ravine-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 56.5,
+            "y": 71.0,
+            "z": -2.5,
+            "yaw": 89.714615,
+            "pitch": -0.48428106
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&d&lRavine Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 56.5,
+                    "y": 71.0,
+                    "z": -2.5,
+                    "yaw": 89.714615,
+                    "pitch": -0.48428106
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 56.5,
+                    "y": 70.77,
+                    "z": -2.5,
+                    "yaw": 89.714615,
+                    "pitch": -0.48428106
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "RulfhJrT6VpUoBeqWUq8J+mlKmRLAudUtctK+6YFeMlZSeGlOZbjXhf1+yZwLBSBk25R3gwIJ8WWPO1gzJOqF6px28KOm61IOcVmGb7m+9nFcpcqHLOoAlOo3zaLl+c0X0oKy6mhQUuyg7Cd38IqdQPT4UpV6S8nyH7Gl9TsvP+ywgYWlEo92JdBEdQh44S0l2KeAembwiyBKuwCr+te5ggg6AT/D+uQojGpE4vJeIyBYbyFc+tcenhitI2NedbEjfn04UBvyf91BDdy1O+poGPUwmPbChbGpQ41kXsevZWxikTphBWJUH7PyU7/PvPOvnAFRYxtte4nr3v3FVEi72AIScsk8MpOdmDbdcXXYk6kj1wi5q53Zj0qZsNyRq88457wdMVxC4j1JUVaVQM3ygu2b9rpIx+5upwQSe7n7gyN6SpLrUCIMZISvkimcDpopyx200ZPZkRGXihxipRhpw4sjHE1rtQkSOB7zlJliD7Q+f45hlN7vfFN0orGDxCd6oxt/ZrJ2WyW6C96XJVUyIUSBzmlodbHHzHYuZWzEK1sD/9f3o/IDM0u00crTdgNivIid93yvBCqJTdAP1tHvKR6FtlHUbEECbtIVIWyMcRqlXpa3zzio/V+/bwjClyJJqZ+/+mxfGCndFwgjiqY3LCYby+8/2gwiBIukInbLDY=",
+    "skinUsername": "sayeu",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNTI4NjMwMSwKICAicHJvZmlsZUlkIiA6ICIzNDcyMmYxYWQ2MTU0NjZhYTc5NzljNWVhOWQwZmNiNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJzYXlldSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS84NDFmOGRlYzlkMWY0MGM3YjdlM2E1Y2M0NDYwNmUyZjlhZjY1ODExNWE1MDk4NGUyOGQ3NjllZDAzMGRlNzk2IgogICAgfSwKICAgICJDQVBFIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8yMzQwYzBlMDNkZDI0YTExYjE1YThiMzNjMmE3ZTllMzJhYmIyMDUxYjI0ODFkMGJhN2RlZmQ2MzVjYTdhOTMzIgogICAgfQogIH0KfQ==",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

@@ -1,0 +1,82 @@
+{
+    "type": "NPC",
+    "name": "FreeKits",
+    "location": {
+        "world": "Spawn",
+        "x": 6.5,
+        "y": 70.0,
+        "z": -5.5,
+        "yaw": 142.52457,
+        "pitch": -0.0
+    },
+    "commands": [
+        "freekits"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_FreeKits_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 6.5,
+            "y": 72.095,
+            "z": -5.5,
+            "yaw": 142.52457,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&4&lFree Kits",
+                "location": {
+                    "world": "Spawn",
+                    "x": 6.5,
+                    "y": 72.325,
+                    "z": -5.5,
+                    "yaw": 142.52457,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&7Claim 4 free kits!",
+                "location": {
+                    "world": "Spawn",
+                    "x": 6.5,
+                    "y": 72.095,
+                    "z": -5.5,
+                    "yaw": 142.52457,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&o/freekits",
+                "location": {
+                    "world": "Spawn",
+                    "x": 6.5,
+                    "y": 71.865,
+                    "z": -5.5,
+                    "yaw": 142.52457,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "JdJ3KKtNySIJG8YdIR9BRcWDafImEBIjxvoXY4y6XFf4YwLQaLMuBRqetQw7aps2ekoYdaeWOizvVLmNTIbjcxrvAPIbb5raFAx67vpZztobepZTYOrIu8Jdsq0w/8z/adLwwreUHBXNFO47NUGW3yWTH2f86k/DxVHQbTC51pDL9DqV4WZdHNS/KWg4ecn4d1Pbv5XFuB/6G0qYL8VoMXPXbfitL4R4nVNBD7058x6j99pDlB7Civa/GnBvJcE6EKW0uC74hIkFOS8Z+w5SWAJItFhNyDJrfe1B1iOevpOXYHWBK5r68Ewjf0Xn4XLARwuTr7O95J5KuTzhgV/xE6icjEPjuTL7QTgADKlAjNp1D1mSojLj5GaRt4QgxpH1z0D1URvgNnkQcIN0LwaF8Mu5Opi7YDiF358bPBvsNAF7vzj1v2h2hv/Sg2UBvsx3ACfKiEVYLgdL9xqniYaGzUxxuAP1K2GLs3mm8xofriVNMflTd0xoyejMEmhq0rE3WzXK6XAgMo7JYwTLqbCu0F3RRuzu1bOOkmyw6LVkWZq+sZqMIL/J0cibKq/TsD824QdA0W6ePJwx0KjiUCSKMmKx43vhz9F3klf72KcC/lG7BtRx13Quj5vvHaVy+6XT8BebTZiZL3ZGRJ+P1gDzhSDHNTWmlVnPiE8XSaCbC48=",
+    "skinUsername": "CrustyDawg",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY2NTk1Mzc0NDA1NywKICAicHJvZmlsZUlkIiA6ICI0MjcyMzM3ZDEzMWE0ZDc2ODFiMGJhZTYwMDYzMTU5YiIsCiAgInByb2ZpbGVOYW1lIiA6ICJDcnVzdHlEYXdnIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y2ZmJhODU2OGRmODc1Yjc5N2U5MWY1ZDYzZWQ5MzJhODM0NmRlNmU1ZDg1ZWU4ZTdkNjYyYTQ4YzUzYWUyYzgiCiAgICB9CiAgfQp9",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

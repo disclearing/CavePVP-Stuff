@@ -1,0 +1,376 @@
+From 3ecbcd753309e60d0624a4fd2e489d98862db5b3 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Tue, 30 May 2017 15:05:51 -0300
+Subject: [PATCH] Implement disguises
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 141a378b5..e7246a0e8 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -1256,4 +1256,14 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         return (CraftPlayer) super.getBukkitEntity();
+     }
+     // CraftBukkit end
++
++    // MineHQ start - Disguises
++    public GameProfile getDisguiseProfile() {
++        if (getBukkitEntity().isDisguised()) {
++            return getBukkitEntity().disguisedProfile;
++        }
++
++        return getProfile();
++    }
++    // MineHQ end
+ }
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
+index 80857c936..c612c5fed 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
+@@ -26,7 +26,7 @@ public class PacketPlayOutNamedEntitySpawn extends Packet {
+ 
+     public PacketPlayOutNamedEntitySpawn(EntityHuman entityhuman) {
+         this.a = entityhuman.getId();
+-        this.b = entityhuman.getProfile();
++        this.b = ((EntityPlayer) entityhuman).getDisguiseProfile(); // MineHQ - disguises
+         this.c = MathHelper.floor(entityhuman.locX * 32.0D);
+         this.d = MathHelper.floor(entityhuman.locY * 32.0D);
+         this.e = MathHelper.floor(entityhuman.locZ * 32.0D);
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
+index 857806227..6be1272ea 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
+@@ -37,7 +37,7 @@ public class PacketPlayOutPlayerInfo extends Packet {
+         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
+         packet.action = ADD_PLAYER;
+         packet.username = player.listName;
+-        packet.player = player.getProfile();
++        packet.player = player.getDisguiseProfile(); // MineHQ - disguises
+         packet.ping = player.ping;
+         packet.gamemode = player.playerInteractManager.getGameMode().getId();
+         return packet;
+@@ -47,7 +47,7 @@ public class PacketPlayOutPlayerInfo extends Packet {
+         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
+         packet.action = UPDATE_LATENCY;
+         packet.username = player.listName;
+-        packet.player = player.getProfile();
++        packet.player = player.getDisguiseProfile(); // MineHQ - disguises
+         packet.ping = player.ping;
+         return packet;
+     }
+@@ -56,7 +56,7 @@ public class PacketPlayOutPlayerInfo extends Packet {
+         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
+         packet.action = UPDATE_GAMEMODE;
+         packet.username = player.listName;
+-        packet.player = player.getProfile();
++        packet.player = player.getDisguiseProfile(); // MineHQ - disguises
+         packet.gamemode = player.playerInteractManager.getGameMode().getId();
+         return packet;
+     }
+@@ -65,7 +65,7 @@ public class PacketPlayOutPlayerInfo extends Packet {
+         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
+         packet.action = UPDATE_DISPLAY_NAME;
+         packet.username = player.listName;
+-        packet.player = player.getProfile();
++        packet.player = player.getDisguiseProfile(); // MineHQ - disguises
+         return packet;
+     }
+ 
+@@ -73,7 +73,7 @@ public class PacketPlayOutPlayerInfo extends Packet {
+         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo();
+         packet.action = REMOVE_PLAYER;
+         packet.username = player.listName;
+-        packet.player = player.getProfile();
++        packet.player = player.getDisguiseProfile(); // MineHQ - disguises
+         return packet;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index c1da32963..9cef23157 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -3,13 +3,7 @@ package net.minecraft.server;
+ import java.io.File;
+ import java.net.SocketAddress;
+ import java.text.SimpleDateFormat;
+-import java.util.ArrayList;
+-import java.util.Collections;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.UUID;
++import java.util.*;
+ import java.util.Map.Entry;
+ 
+ import net.minecraft.util.com.google.common.base.Charsets;
+@@ -75,6 +69,31 @@ public abstract class PlayerList {
+             return super.remove(key instanceof String ? ((String)key).toLowerCase() : key);
+         }
+     };
++    // MineHQ start - Disguises
++    public final Map<String, EntityPlayer> disguisePlayerMap = new HashMap<String, EntityPlayer>() {
++        @Override
++        public EntityPlayer put(String key, EntityPlayer value) {
++            return super.put(key.toLowerCase(), value);
++        }
++
++        @Override
++        public EntityPlayer get(Object key) {
++            // put the .playerConnection check done in other places here
++            EntityPlayer player = super.get(key instanceof String ? ((String)key).toLowerCase() : key);
++            return (player != null && player.playerConnection != null) ? player : null;
++        }
++
++        @Override
++        public boolean containsKey(Object key) {
++            return get(key) != null;
++        }
++
++        @Override
++        public EntityPlayer remove(Object key) {
++            return super.remove(key instanceof String ? ((String)key).toLowerCase() : key);
++        }
++    };
++    // MineHQ end
+     public final Map<UUID, EntityPlayer> uuidMap = new java.util.HashMap<UUID, EntityPlayer>() {
+         @Override
+         public EntityPlayer get(Object key) {
+@@ -382,8 +401,13 @@ public abstract class PlayerList {
+         worldserver.kill(entityplayer);
+         worldserver.getPlayerChunkMap().removePlayer(entityplayer);
+         this.players.remove(entityplayer);
+-        this.uuidMap.remove(entityplayer.getUniqueID()); // PaperSpigot
+         this.playerMap.remove(entityplayer.getName()); // PaperSpigot
++        // MineHQ start - Disguises
++        if (entityplayer.getBukkitEntity().isDisguised()) {
++            this.disguisePlayerMap.remove(entityplayer.getBukkitEntity().getDisguisedName());
++        }
++        // MineHQ end
++        this.uuidMap.remove(entityplayer.getUniqueID()); // PaperSpigot
+         this.n.remove(entityplayer.getUniqueID());
+         ChunkIOExecutor.adjustPoolSize(this.getPlayerCount()); // CraftBukkit
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index a6da7852e..a3f72b1f2 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
+ import java.util.LinkedHashSet;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Map.Entry;
+ import java.util.Set;
+ import java.util.UUID;
+ import java.util.logging.Level;
+@@ -567,12 +568,29 @@ public final class CraftServer implements Server {
+     @Override
+     @Deprecated
+     public Player getPlayerExact(String name) {
+-        // PaperSpigot start - Improved player lookup, replace whole method
++        // MineHQ start - Take disguises into account, replace whole method.
++        Validate.notNull(name, "Name cannot be null");
++
++        // PaperSpigot's optimization start
+         EntityPlayer player = playerList.playerMap.get(name);
++        if (player != null) {
++            return player.getBukkitEntity();
++        }
++        // PaperSpigot's optimization end
++
++        player = playerList.disguisePlayerMap.get(name);
++
+         return player != null ? player.getBukkitEntity() : null;
+-        // PaperSpigot end
++        // MineHQ end
+     }
+ 
++    @Override
++    public Player getPlayerExactByDisguise(String name) {
++        EntityPlayer player = playerList.disguisePlayerMap.get(name);
++        return player != null ? player.getBukkitEntity() : null;
++    }
++    // MineHQ end
++
+     @Override
+     public Player getPlayer(UUID id) {
+         EntityPlayer player = playerList.uuidMap.get(id);
+@@ -1768,9 +1786,11 @@ public final class CraftServer implements Server {
+         PlayerChatTabCompleteEvent event = new PlayerChatTabCompleteEvent(player, message, completions);
+         String token = event.getLastToken();
+         for (Player p : getOnlinePlayers()) {
+-            if (player.canSee(p) && StringUtil.startsWithIgnoreCase(p.getName(), token)) {
+-                completions.add(p.getName());
++            // MineHQ start - Disguises: Use #getDisguisedName instead of #getName
++            if (player.canSee(p) && StringUtil.startsWithIgnoreCase(p.getDisguisedName(), token)) {
++                completions.add(p.getDisguisedName());
+             }
++            // MineHQ end
+         }
+         pluginManager.callEvent(event);
+ 
+@@ -1866,6 +1886,35 @@ public final class CraftServer implements Server {
+     }
+     // Guardian end
+ 
++    // MineHQ start
++    @Override
++    public Player getPlayerByDisguise(String name) {
++        Validate.notNull(name, "Name cannot be null");
++
++        Player found = getPlayerExactByDisguise(name);
++        if (found != null) {
++            return found;
++        }
++
++        String lowerName = name.toLowerCase();
++        int delta = Integer.MAX_VALUE;
++        for (Entry<String, EntityPlayer> entry : playerList.disguisePlayerMap.entrySet()) {
++            String disguisedName = entry.getKey();
++            EntityPlayer player = entry.getValue();
++            if (disguisedName.toLowerCase().startsWith(lowerName)) {
++                int curDelta = disguisedName.length() - lowerName.length();
++                if (curDelta < delta) {
++                    found = player.getBukkitEntity();
++                    delta = curDelta;
++                }
++                if (curDelta == 0) break;
++            }
++        }
++
++        return found;
++    }
++    // MineHQ end
++
+     @Deprecated
+     @Override
+     public UnsafeValues getUnsafe() {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 389677151..624ec598d 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -55,6 +55,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     private double health = 20;
+     private boolean scaledHealth = false;
+     private double healthScale = 20;
++    // MineHQ start - Disguises
++     private String disguisedName;
++     private String originalPlayerListName;
++     public GameProfile disguisedProfile;
++     // MineHQ end
+ 
+     public CraftPlayer(CraftServer server, EntityPlayer entity) {
+         super(server, entity);
+@@ -170,7 +175,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+ 
+     @Override
+     public String getDisplayName() {
+-        return getHandle().displayName;
++        return disguisedName != null ? disguisedName : getHandle().displayName; // MineHQ - Disguises
+     }
+ 
+     @Override
+@@ -178,6 +183,100 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         getHandle().displayName = name == null ? getName() : name;
+     }
+ 
++    // MineHQ start - Disguises
++    @Override
++    public String getDisguisedName() {
++        return disguisedName != null ? disguisedName : getName();
++    }
++
++    @Override
++    public boolean isDisguised() {
++        return disguisedName != null;
++    }
++
++    @Override
++    public void disguise(String name, String texture) {
++        Validate.isTrue(!isDisguised(), "Player is already disguised");
++        Validate.isTrue(!MinecraftServer.getServer().getPlayerList().disguisePlayerMap.containsKey(name), "Disguise name is already in use");
++
++        // we construct this here, before we actually make any changes to their profile and whatnot.
++        PacketPlayOutPlayerInfo removeTabPacket = PacketPlayOutPlayerInfo.removePlayer(getHandle());
++
++        disguisedName = name;
++        disguisedProfile = new GameProfile(getUniqueId(), disguisedName);
++        if (texture != null) {
++            // TODO: disguisedProfile.getProperties().put("texture", new Property("textures", texture, textureSignature));
++        }
++
++        originalPlayerListName = getPlayerListName();
++        setPlayerListName(disguisedName);
++
++        MinecraftServer.getServer().getPlayerList().disguisePlayerMap.put(disguisedName, getHandle());
++
++        PacketPlayOutPlayerInfo addThisTabPacket = PacketPlayOutPlayerInfo.addPlayer(getHandle());
++
++        for (Object playerObj : MinecraftServer.getServer().getPlayerList().players) {
++            EntityPlayer player = (EntityPlayer) playerObj;
++
++            if (player.playerConnection != null) {
++                player.playerConnection.sendPacket(removeTabPacket);
++                player.playerConnection.sendPacket(addThisTabPacket);
++            }
++        }
++
++        EntityTrackerEntry trackerEntry = (EntityTrackerEntry)((WorldServer)this.entity.world).getTracker().trackedEntities.get(getEntityId());
++
++        if (trackerEntry != null) {
++            PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(getEntityId());
++            PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(getHandle());
++
++            trackerEntry.broadcast(destroyPacket);
++            trackerEntry.broadcast(spawnPacket);
++        }
++    }
++
++    @Override
++    public void disguise(String name) {
++        disguise(name, null);
++    }
++
++    @Override
++    public void undisguise() {
++        Validate.isTrue(isDisguised(), "Player is not disguised");
++
++        PacketPlayOutPlayerInfo removeTabPacket = PacketPlayOutPlayerInfo.removePlayer(getHandle());
++
++        setPlayerListName(originalPlayerListName);
++
++        MinecraftServer.getServer().getPlayerList().disguisePlayerMap.remove(disguisedName);
++
++        disguisedName = null;
++        disguisedProfile = null;
++        originalPlayerListName = null;
++
++        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(getHandle());
++        PacketPlayOutPlayerInfo addThisTabPacket = PacketPlayOutPlayerInfo.addPlayer(getHandle());
++
++        for (Object playerObj : MinecraftServer.getServer().getPlayerList().players) {
++            EntityPlayer player = (EntityPlayer) playerObj;
++
++            if (player.playerConnection != null) {
++                player.playerConnection.sendPacket(removeTabPacket);
++                player.playerConnection.sendPacket(addThisTabPacket);
++            }
++        }
++
++        EntityTrackerEntry trackerEntry = (EntityTrackerEntry)((WorldServer)this.entity.world).getTracker().trackedEntities.get(getEntityId());
++
++        if (trackerEntry != null) {
++            PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(getEntityId());
++
++            trackerEntry.broadcast(destroyPacket);
++            trackerEntry.broadcast(spawnPacket);
++        }
++    }
++    // MineHQ end
++
+     @Override
+     public String getPlayerListName() {
+         return getHandle().listName;
+-- 
+2.15.2 (Apple Git-101.1)
+

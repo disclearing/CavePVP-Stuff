@@ -1,0 +1,8 @@
+name: Universe
+version: 1.0-SNAPSHOT
+main: cc.fyre.universe.Universe
+commands:
+  hub:
+    aliases: ["lobby"]
+  server:
+  universeenvironment:

@@ -1,0 +1,70 @@
+{
+    "type": "NPC",
+    "name": "Shop",
+    "location": {
+        "world": "Spawn",
+        "x": 19.5,
+        "y": 70.0,
+        "z": 24.5,
+        "yaw": 134.44087,
+        "pitch": -0.9341512
+    },
+    "commands": [
+        "shop"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_Shop_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 19.5,
+            "y": 72.095,
+            "z": 24.5,
+            "yaw": 134.44087,
+            "pitch": -0.9341512
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&a&lShop",
+                "location": {
+                    "world": "Spawn",
+                    "x": 19.5,
+                    "y": 72.095,
+                    "z": 24.5,
+                    "yaw": 134.44087,
+                    "pitch": -0.9341512
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&o/shop",
+                "location": {
+                    "world": "Spawn",
+                    "x": 19.5,
+                    "y": 71.865,
+                    "z": 24.5,
+                    "yaw": 134.44087,
+                    "pitch": -0.9341512
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "HESzvfiHe+/l2XuNFD2w/2FuzhulByq29oSZxpOqib04ErtsBN3EsMKpxNxfGshQ9FRxVkP6pcPd6yuHHfkLJu1h+IvbIQtIHZNN2CZ7cP3X+YkaDWkEt3iiYT04datEfqfY0mv5AxHD9AHnrpv38LyKYxzNp21iIpUqw89gatqGZH4MYOpC6iOhWksFjmSKR+FfD7wpA+/6S7UtuNqv97YPT/U24bwF3RfMfazdmnqE3F0OxPRakUcE3zFw54f/9UHoU4CzbsGt3tYTdbntZwc//UWT79Ej0T9u242shYiie4TgL9ai+8lycPyJBoFRr6b39LPho+rYVar0jb5mH2Dev8UM/Dji9/R4JS7XqURg/9ooOACGME4xDNqy5HmqNkNkGSHapWijn75uDXHehuwlLM/2S6N/DIPB8VrrV6J6yyCVuSpOhiXmYB290IDjg0vjfEG6I9ft9EGUp3iioibBVMvzoSIClolYxajwZRm6vPA57D3hjj4vMhuALD7kujMA9HT9yxNdDvgje00wb7gs9XDTSURq7OUY7j72Ktxona3oTNAcHJGut+eq8eFS3VYlZVTJf78awu9yo85ai0OqTXt2TlXW7VIuHtbkkUHY22vqr0H7ej92kv+KEoY0pXPleE9wGIXkA6+sZRU0YXwm9KkovNywNXsl/IeF2KI=",
+    "skinUsername": "tracklol",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY2NTk1Mzc4Mzc0NywKICAicHJvZmlsZUlkIiA6ICIzYmQ1MzA2ZjNlODM0YTM0YTNlNzUyMDdhMmM2ZTYwYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJ0cmFja2xvbCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9iMmE5M2I4MjZiMzc1ZGIyY2ZmOTljODBjMDhjYmZjMWFiY2IwMTA5MDYwZGYxZmFmYWNkZjAwM2VmMDBmMGQiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

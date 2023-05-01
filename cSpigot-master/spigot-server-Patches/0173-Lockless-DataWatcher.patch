@@ -1,0 +1,400 @@
+From 69dae3584017ec124f37b947a955c825dfe0499a Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 18 Jun 2017 23:50:48 +0100
+Subject: [PATCH] Lockless DataWatcher
+
+
+diff --git a/src/main/java/net/frozenorb/util/WrappedArrayMap.java b/src/main/java/net/frozenorb/util/WrappedArrayMap.java
+new file mode 100644
+index 000000000..e073f68d4
+--- /dev/null
++++ b/src/main/java/net/frozenorb/util/WrappedArrayMap.java
+@@ -0,0 +1,144 @@
++package net.frozenorb.util;
++
++import java.util.AbstractMap;
++import java.util.Collection;
++import java.util.HashSet;
++import java.util.Map;
++import java.util.Set;
++
++import com.google.common.base.Objects;
++
++import net.minecraft.server.ItemStack;
++import net.minecraft.server.WatchableObject;
++
++public class WrappedArrayMap implements Map<Integer, WatchableObject> {
++
++    private WatchableObject[] dataValues = new WatchableObject[23];
++
++    @Override
++    public int size() {
++        return dataValues.length;
++    }
++
++    @Override
++    public boolean isEmpty() {
++        for (int i = 0; i < dataValues.length; i++) {
++            if (dataValues[i] != null) return false;
++        }
++
++        return true;
++    }
++
++    public boolean containsKey(int i) {
++        return dataValues[i] != null;
++    }
++
++    @Override
++    public boolean containsKey(Object key) {
++        return key instanceof Integer && dataValues[(Integer) key] != null;
++    }
++
++    @Override
++    public boolean containsValue(Object value) {
++        for (int i = 0; i < dataValues.length; i++) {
++            if (Objects.equal(dataValues[i], value)) return true;
++        }
++
++        return false;
++    }
++
++    public WatchableObject get(int i) {
++        return dataValues[i];
++    }
++
++    @Override
++    public WatchableObject get(Object key) {
++        return key instanceof Integer ? dataValues[(Integer) key] : null;
++    }
++
++    public void put(int i, WatchableObject watchableObject) {
++        dataValues[i] = watchableObject;
++    }
++
++    @Override
++    public WatchableObject put(Integer key, WatchableObject value) {
++        int index = key.intValue();
++        WatchableObject old = dataValues[index];
++        dataValues[index] = value;
++        return old;
++    }
++
++    @Override
++    public WatchableObject remove(Object key) {
++        if (!(key instanceof Integer)) return null;
++
++        int index = ((Integer) key).intValue();
++        WatchableObject old = dataValues[index];
++        dataValues[index] = null;
++        return old;
++    }
++
++    @Override
++    public void putAll(Map m) {
++        for (Object object : m.entrySet()) {
++            if (!(object instanceof Entry)) continue;
++            Entry entry = (Entry) object;
++            Object key = entry.getKey();
++            Object value = entry.getValue();
++
++            if (!(key instanceof Integer) || (!(value instanceof WatchableObject))) continue;
++
++            put((Integer) key, (WatchableObject) value);
++        }
++    }
++
++    @Override
++    public void clear() {
++        this.dataValues = new WatchableObject[23];
++    }
++
++    @Override
++    public Set<Integer> keySet() {
++        Set<Integer> set = new HashSet<Integer>();
++        for (int i = 0; i < dataValues.length; i++) {
++            if (dataValues[i] != null) set.add(Integer.valueOf(i));
++        }
++
++        return set;
++    }
++
++    @Override
++    public Collection<WatchableObject> values() {
++        Set<WatchableObject> set = new HashSet<WatchableObject>();
++        for (int i = 0; i < dataValues.length; i++) {
++            if (dataValues[i] != null) set.add(dataValues[i]);
++        }
++
++        return set;
++    }
++
++    @Override
++    public Set<Entry<Integer, WatchableObject>> entrySet() {
++        Set<Entry<Integer, WatchableObject>> set = new HashSet<Entry<Integer, WatchableObject>>();
++        for (int i = 0; i < dataValues.length; i++) {
++            WatchableObject watchableObject = dataValues[i];
++            if (watchableObject != null) {
++                set.add(new AbstractMap.SimpleEntry<Integer, WatchableObject>(Integer.valueOf(i), watchableObject));
++            }
++        }
++
++        return set;
++    }
++
++    // Clone the WatchableObjects and deep clone ItemStacks if there are any
++    public WrappedArrayMap clone() {
++        WrappedArrayMap wrappedArrayMap = new WrappedArrayMap();
++        for (int i = 0; i < this.dataValues.length; i++) {
++            WatchableObject watchableObject = this.dataValues[i];
++            if (watchableObject != null) {
++                wrappedArrayMap.dataValues[i] = watchableObject.b() instanceof ItemStack ? new WatchableObject(watchableObject.c(), watchableObject.a(), ((ItemStack) watchableObject.b()).cloneItemStack()) : watchableObject.clone();
++            }
++        }
++        return wrappedArrayMap;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/DataWatcher.java b/src/main/java/net/minecraft/server/DataWatcher.java
+index 96e40ec00..9587080c3 100644
+--- a/src/main/java/net/minecraft/server/DataWatcher.java
++++ b/src/main/java/net/minecraft/server/DataWatcher.java
+@@ -1,13 +1,13 @@
+ package net.minecraft.server;
+ 
+ import java.util.ArrayList;
+-import java.util.HashMap;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.concurrent.locks.ReadWriteLock;
+ import java.util.concurrent.locks.ReentrantReadWriteLock;
+ 
++import net.frozenorb.util.WrappedArrayMap;
+ import net.minecraft.util.org.apache.commons.lang3.ObjectUtils;
+ import org.spigotmc.ProtocolData; // Spigot - protocol patch
+ 
+@@ -17,18 +17,27 @@ public class DataWatcher {
+     private boolean b = true;
+     // Spigot Start
+     private static final net.minecraft.util.gnu.trove.map.TObjectIntMap classToId = new net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap( 10, 0.5f, -1 );
+-    private final net.minecraft.util.gnu.trove.map.TIntObjectMap dataValues = new net.minecraft.util.gnu.trove.map.hash.TIntObjectHashMap( 10, 0.5f, -1 );
++    // private final net.minecraft.util.gnu.trove.map.TIntObjectMap dataValues = new net.minecraft.util.gnu.trove.map.hash.TIntObjectHashMap( 10, 0.5f, -1 ); // MineHQ
++    private final WrappedArrayMap dataValues; // MineHQ
+     // These exist as an attempt at backwards compatability for (broken) NMS plugins
+     private static final Map c = net.minecraft.util.gnu.trove.TDecorators.wrap( classToId );
+-    private final Map d = net.minecraft.util.gnu.trove.TDecorators.wrap( dataValues );
+     // Spigot End
+     private boolean e;
+-    private ReadWriteLock f = new ReentrantReadWriteLock();
++    // private ReadWriteLock f = new ReentrantReadWriteLock(); // MineHQ
+ 
+     public DataWatcher(Entity entity) {
+         this.a = entity;
++        this.dataValues = new WrappedArrayMap(); // MineHQ - lockless DataWatcher
+     }
+ 
++    // MineHQ start
++    public DataWatcher(DataWatcher dataWatcher) {
++        this.a = dataWatcher.a;
++        this.dataValues = dataWatcher.dataValues.clone();
++        this.e = dataWatcher.e;
++    }
++    // MineHQ end
++
+     public void a(int i, Object object) {
+         int integer = classToId.get(object.getClass()); // Spigot
+ 
+@@ -54,9 +63,9 @@ public class DataWatcher {
+         } else {
+             WatchableObject watchableobject = new WatchableObject(integer, i, object); // Spigot
+ 
+-            this.f.writeLock().lock();
++            // this.f.writeLock().lock(); // MineHQ
+             this.dataValues.put(i, watchableobject); // Spigot
+-            this.f.writeLock().unlock();
++            // this.f.writeLock().unlock(); // MineHQ
+             this.b = false;
+         }
+     }
+@@ -64,9 +73,9 @@ public class DataWatcher {
+     public void add(int i, int j) {
+         WatchableObject watchableobject = new WatchableObject(j, i, null);
+ 
+-        this.f.writeLock().lock();
++        // this.f.writeLock().lock(); // MineHQ
+         this.dataValues.put(i, watchableobject); // Spigot
+-        this.f.writeLock().unlock();
++        // this.f.writeLock().unlock(); // MineHQ
+         this.b = false;
+     }
+ 
+@@ -107,7 +116,7 @@ public class DataWatcher {
+     // Spigot end
+ 
+     private WatchableObject i(int i) {
+-        this.f.readLock().lock();
++        // this.f.readLock().lock(); // MineHQ
+ 
+         WatchableObject watchableobject;
+ 
+@@ -121,7 +130,7 @@ public class DataWatcher {
+             throw new ReportedException(crashreport);
+         }
+ 
+-        this.f.readLock().unlock();
++        // this.f.readLock().unlock(); // MineHQ
+         return watchableobject;
+     }
+ 
+@@ -169,34 +178,21 @@ public class DataWatcher {
+         ArrayList arraylist = null;
+ 
+         if (this.e) {
+-            this.f.readLock().lock();
+-            Iterator iterator = this.dataValues.valueCollection().iterator(); // Spigot
+-
+-            while (iterator.hasNext()) {
+-                WatchableObject watchableobject = (WatchableObject) iterator.next();
++            // MineHQ start
++            for (int i = 0; i < this.dataValues.size(); i++) {
++                WatchableObject watchableobject = this.dataValues.get(i);
+ 
+-                if (watchableobject.d()) {
++                if (watchableobject != null && watchableobject.d()) {
+                     watchableobject.a(false);
+                     if (arraylist == null) {
+                         arraylist = new ArrayList();
+                     }
+ 
+-                    // Spigot start - copy ItemStacks to prevent ConcurrentModificationExceptions
+-                    if ( watchableobject.b() instanceof ItemStack )
+-                    {
+-                        watchableobject = new WatchableObject(
+-                                watchableobject.c(),
+-                                watchableobject.a(),
+-                                ( (ItemStack) watchableobject.b() ).cloneItemStack()
+-                        );
+-                    }
+-                    // Spigot end
+-
+-                    arraylist.add(watchableobject);
++                    arraylist.add(watchableobject.b() instanceof ItemStack ? new WatchableObject(watchableobject.c(), watchableobject.a(), ((ItemStack) watchableobject.b()).cloneItemStack()) : watchableobject.clone());
+                 }
+             }
+ 
+-            this.f.readLock().unlock();
++            // MineHQ end
+         }
+ 
+         this.e = false;
+@@ -210,8 +206,8 @@ public class DataWatcher {
+ 
+     public void a(PacketDataSerializer packetdataserializer, int version) {
+     // Spigot end
+-        this.f.readLock().lock();
+-        Iterator iterator = this.dataValues.valueCollection().iterator(); // Spigot
++        // this.f.readLock().lock(); // MineHQ
++        Iterator iterator = this.dataValues.values().iterator(); // Spigot // MineHQ
+ 
+         while (iterator.hasNext()) {
+             WatchableObject watchableobject = (WatchableObject) iterator.next();
+@@ -219,33 +215,20 @@ public class DataWatcher {
+             a(packetdataserializer, watchableobject, version); // Spigot - protocol patch
+         }
+ 
+-        this.f.readLock().unlock();
++        // this.f.readLock().unlock(); // MineHQ
+         packetdataserializer.writeByte(127);
+     }
+-
+     public List c() {
+         ArrayList arraylist = new ArrayList(); // Spigot
+ 
+-        this.f.readLock().lock();
++        // MineHQ start
++        for (int i = 0; i < this.dataValues.size(); i++) {
++            WatchableObject watchableObject = this.dataValues.get(i);
++            if (watchableObject == null) continue;
+ 
+-        arraylist.addAll(this.dataValues.valueCollection()); // Spigot
+-        // Spigot start - copy ItemStacks to prevent ConcurrentModificationExceptions
+-        for ( int i = 0; i < arraylist.size(); i++ )
+-        {
+-            WatchableObject watchableobject = (WatchableObject) arraylist.get( i );
+-            if ( watchableobject.b() instanceof ItemStack )
+-            {
+-                watchableobject = new WatchableObject(
+-                        watchableobject.c(),
+-                        watchableobject.a(),
+-                        ( (ItemStack) watchableobject.b() ).cloneItemStack()
+-                );
+-                arraylist.set( i, watchableobject );
+-            }
++            arraylist.add(watchableObject.b() instanceof ItemStack ? new WatchableObject(watchableObject.c(), watchableObject.a(), ((ItemStack) watchableObject.b()).cloneItemStack()) : watchableObject.clone());
+         }
+-        // Spigot end
+-
+-        this.f.readLock().unlock();
++        // MineHQ end
+         return arraylist;
+     }
+ 
+@@ -378,6 +361,12 @@ public class DataWatcher {
+         this.e = false;
+     }
+ 
++    // MineHQ start
++    public DataWatcher clone() {
++        return new DataWatcher(this);
++    }
++    // MineHQ end
++
+     static {
+         // Spigot Start - remove valueOf
+         classToId.put(Byte.class, 0);
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
+index c612c5fed..c253fc88a 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutNamedEntitySpawn.java
+@@ -35,7 +35,7 @@ public class PacketPlayOutNamedEntitySpawn extends Packet {
+         ItemStack itemstack = entityhuman.inventory.getItemInHand();
+ 
+         this.h = itemstack == null ? 0 : Item.getId(itemstack.getItem());
+-        this.i = entityhuman.getDataWatcher();
++        this.i = entityhuman.getDataWatcher().clone(); // MineHQ
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException { // CraftBukkit - added throws
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java b/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java
+index 98b4d973a..76e180f13 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutSpawnEntityLiving.java
+@@ -61,7 +61,7 @@ public class PacketPlayOutSpawnEntityLiving extends Packet {
+         this.f = (int) (d1 * 8000.0D);
+         this.g = (int) (d2 * 8000.0D);
+         this.h = (int) (d3 * 8000.0D);
+-        this.l = entityliving.getDataWatcher();
++        this.l = entityliving.getDataWatcher().clone(); // MineHQ
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) {
+diff --git a/src/main/java/net/minecraft/server/WatchableObject.java b/src/main/java/net/minecraft/server/WatchableObject.java
+index 678aa912b..2811f21ea 100644
+--- a/src/main/java/net/minecraft/server/WatchableObject.java
++++ b/src/main/java/net/minecraft/server/WatchableObject.java
+@@ -41,4 +41,12 @@ public class WatchableObject {
+     static boolean a(WatchableObject watchableobject, boolean flag) {
+         return watchableobject.d = flag;
+     }
++
++    // MineHQ start
++    public WatchableObject clone() {
++        WatchableObject watchableObject = new WatchableObject(this.a, this.b, this.c);
++        watchableObject.a(this.d);
++        return watchableObject;
++    }
++    // MineHQ end
+ }
+-- 
+2.13.3
+

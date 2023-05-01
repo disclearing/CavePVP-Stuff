@@ -1,0 +1,16 @@
+{
+  "name": "Spring-Mini",
+  "capLocation": {
+    "x": 264.5,
+    "y": 50.0,
+    "z": -50.5
+  },
+  "world": "MiniKOTH3",
+  "capDistance": 3,
+  "capTime": 300,
+  "hidden": false,
+  "mini": true,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

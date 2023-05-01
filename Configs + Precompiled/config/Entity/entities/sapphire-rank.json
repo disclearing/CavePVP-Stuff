@@ -1,0 +1,70 @@
+{
+    "type": "NPC",
+    "name": "sapphire-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 51.491139493945866,
+        "y": 69.0,
+        "z": 8.412863992004295,
+        "yaw": 180.1745,
+        "pitch": 0.6321265
+    },
+    "commands": [
+        "viewproduct lifetime-sapphire"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_sapphire-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 51.491139493945866,
+            "y": 71.0,
+            "z": 8.412863992004295,
+            "yaw": 180.1745,
+            "pitch": 0.6321265
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&9&lSapphire Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 51.491139493945866,
+                    "y": 71.0,
+                    "z": 8.412863992004295,
+                    "yaw": 180.1745,
+                    "pitch": 0.6321265
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 51.491139493945866,
+                    "y": 70.77,
+                    "z": 8.412863992004295,
+                    "yaw": 180.1745,
+                    "pitch": 0.6321265
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "a8IGILzPfrwjc5M2sjFyFEpo8fNuLq5lE/GbHTNtXWeL2fvG1FewuH7YX1vRFnIcERN4/vTSN045a2gf4F+X1uM9cJThjYtYzjxpPchTikK02MnXOVW9uWz/L2oXgp1RytANOOpDI3FP3pOl+3/aB+20RjRvMs2lKuamXhAhq+bPUwqHhZAajxUH2dkgcxGBECOcPH/+e3m9CYgS2k+n7joMmyiiBHhcuOoj/YlYCDvqNAj9hpFedbexV6ZoQt07WGPzJR4hEETk8x94ZI/3CJRlaTuP5pRFR4hUt71eaSsA4sIFX9E2aF3OsSUGXpb3ELG+ewWdc/WdbQCjYkbtREw/khR0jIEIXs4L4jXFDDpoLvvzhvvw/8sgc9Fi0JM1tlFhrMhtA7oGSjN7wzXZvm5LNnJwx1Qxjrrov+jngGapb21doK4Y+12Fq0zseNzOXw5XA3vgdSC37aycZ2fVl43roBMs/Adc7fr1Yqwwwhzmh5oRSKHPPu7rrmuGKMOEeEgGUS74HaVVms97vgTcX5U05pF7bh1685MOGkWXnJVBjs8mncBRmYRqNTnCXO6MMMHsZbTNLY2lgaj51+QX0R5ZgnLIDykPzhxdk7PperGRfZsEzQq2iLTTMfx1C4JNbEJGIPCmueXHiU8GM0GHX81LZvuyc6sP1OY/KD4C+wc=",
+    "skinUsername": "baseboys",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNDk3OTU2MCwKICAicHJvZmlsZUlkIiA6ICI4MWFmYTNjYTBlM2M0Yzg5YTgzZmMyZTU1OWY0NzQ4NyIsCiAgInByb2ZpbGVOYW1lIiA6ICJCYXNlQm95cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hMDExMDc2OTU4NGM2MjQ5YTJkZTdkYjcxYTU4YTk3ODlhYWI4NTUzZDJjNWNiMGRiMTAzMzhjNTNkNmU2ODkiCiAgICB9CiAgfQp9",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

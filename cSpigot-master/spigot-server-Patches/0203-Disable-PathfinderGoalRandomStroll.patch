@@ -1,0 +1,55 @@
+From d9f49f2d9549c438efe55a763cc138b1a2bc0443 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sat, 12 Aug 2017 20:51:57 +1000
+Subject: [PATCH] Disable PathfinderGoalRandomStroll
+
+
+diff --git a/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java b/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java
+index c0c7580d4..cf03c8886 100644
+--- a/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java
++++ b/src/main/java/net/minecraft/server/PathfinderGoalRandomStroll.java
+@@ -15,22 +15,25 @@ public class PathfinderGoalRandomStroll extends PathfinderGoal {
+     }
+ 
+     public boolean a() {
+-        if (this.a.aN() >= 100) {
+-            return false;
+-        } else if (this.a.aI().nextInt(120) != 0) {
+-            return false;
+-        } else {
+-            Vec3D vec3d = RandomPositionGenerator.a(this.a, 10, 7);
+-
+-            if (vec3d == null) {
+-                return false;
+-            } else {
+-                this.b = vec3d.a;
+-                this.c = vec3d.b;
+-                this.d = vec3d.c;
+-                return true;
+-            }
+-        }
++        // MineHQ start - disable RandomStroll AI
++        //if (this.a.aN() >= 100) {
++        //    return false;
++        //} else if (this.a.aI().nextInt(120) != 0) {
++        //    return false;
++        //} else {
++        //    Vec3D vec3d = RandomPositionGenerator.a(this.a, 10, 7);
++        //
++        //    if (vec3d == null) {
++        //        return false;
++        //    } else {
++        //        this.b = vec3d.a;
++        //        this.c = vec3d.b;
++        //        this.d = vec3d.c;
++        //        return true;
++        //    }
++        //}
++        return false;
++        // MineHQ end
+     }
+ 
+     public boolean b() {
+-- 
+2.13.3
+

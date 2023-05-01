@@ -1,0 +1,32 @@
+From 23061c801661d14a8855f282563fc86f33c5c9dd Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 25 Jul 2017 21:31:08 +0100
+Subject: [PATCH] Don't force unload chunks inside the PlayerChunkMap
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index c9042a021..d11c1a4ee 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -69,6 +69,8 @@ public class PlayerChunkMap {
+         }
+ 
+         this.e.clear();
++        // MineHQ start - chunk GC handles this
++        /*
+         if (this.managedPlayers.isEmpty()) {
+             if (!wasNotEmpty) return; // CraftBukkit - Only do unload when we go from non-empty to empty
+             WorldProvider worldprovider = this.world.worldProvider;
+@@ -82,6 +84,9 @@ public class PlayerChunkMap {
+             wasNotEmpty = true;
+         }
+         // CraftBukkit end
++        */
++        // MineHQ end
++         
+     }
+ 
+     public boolean a(int i, int j) {
+-- 
+2.13.3
+

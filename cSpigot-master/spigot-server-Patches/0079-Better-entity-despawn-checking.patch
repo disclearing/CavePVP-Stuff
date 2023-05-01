@@ -1,0 +1,43 @@
+From b18bf7b9931b70d6d8e178201367cf716ae26cfe Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:40:55 -0400
+Subject: [PATCH] Better entity despawn checking
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
+index cbef9b604..e99156371 100644
+--- a/src/main/java/net/minecraft/server/EntityInsentient.java
++++ b/src/main/java/net/minecraft/server/EntityInsentient.java
+@@ -375,10 +375,17 @@ public abstract class EntityInsentient extends EntityLiving {
+         return true;
+     }
+ 
++    // Kohi start - check for despawn on inactive ticks
++    public void inactiveTick() {
++        super.inactiveTick();
++        this.w();
++    }
++    // Kohi end
++
+     protected void w() {
+         if (this.persistent) {
+             this.aU = 0;
+-        } else {
++        } else if (this.ticksLived % 50 == 0) { // Kohi - only check every 50 ticks
+             EntityHuman entityhuman = this.world.findNearbyPlayerWhoAffectsSpawning(this, -1.0D); // PaperSpigot
+ 
+             if (entityhuman != null) {
+@@ -391,7 +398,9 @@ public abstract class EntityInsentient extends EntityLiving {
+                     this.die();
+                 }
+ 
+-                if (this.aU > 600 && this.random.nextInt(800) == 0 && d3 > this.world.paperSpigotConfig.softDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // PaperSpigot - custom despawn distances
++                // Kohi - decrease random check to account for decreased interval
++                // MineHQ - decrease random check even more for performance
++                if (this.aU > 600 && this.random.nextInt(10) == 0 && d3 > this.world.paperSpigotConfig.softDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // PaperSpigot - custom despawn distances
+                     this.die();
+                 } else if (d3 < this.world.paperSpigotConfig.softDespawnDistance) { // PaperSpigot - custom despawn distances
+                     this.aU = 0;
+-- 
+2.13.3
+

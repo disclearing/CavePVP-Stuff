@@ -1,0 +1,22 @@
+From 6621cb5350934b041ac8dc9506c2ba67f4e57001 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Mon, 1 Feb 2016 08:06:55 +0100
+Subject: [PATCH] Special case item use on fences
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src/main/java/net/minecraft/server/PlayerInteractManager.java
+index 33b5fd87c..e5c87af6c 100644
+--- a/src/main/java/net/minecraft/server/PlayerInteractManager.java
++++ b/src/main/java/net/minecraft/server/PlayerInteractManager.java
+@@ -405,7 +405,7 @@ public class PlayerInteractManager {
+             }
+ 
+             // If we have 'true' and no explicit deny *or* an explicit allow -- run the item part of the hook
+-            if (itemstack != null && ((!result && event.useItemInHand() != Event.Result.DENY) || event.useItemInHand() == Event.Result.ALLOW)) {
++            if (itemstack != null && ((!result && event.useItemInHand() != Event.Result.DENY && !(block == Blocks.FENCE || block == Blocks.NETHER_FENCE)) || event.useItemInHand() == Event.Result.ALLOW)) { // Poweruser - special case fences
+                 this.useItem(entityhuman, world, itemstack);
+             }
+         }
+-- 
+2.13.3
+

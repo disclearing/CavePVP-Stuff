@@ -1,0 +1,5 @@
+name: ModSuite
+main: cc.fyre.modsuite.ModSuite
+author: Fyre Development Team
+version: 1.0-SNAPSHOT
+depends: ["Core"]

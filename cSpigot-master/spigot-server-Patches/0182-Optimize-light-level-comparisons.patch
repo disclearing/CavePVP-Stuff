@@ -1,0 +1,137 @@
+From 5c83f78ffb43284c23bed417ffff03bf548fd35b Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Wed, 5 Jul 2017 15:54:02 +0100
+Subject: [PATCH] Optimize light level comparisons
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockCrops.java b/src/main/java/net/minecraft/server/BlockCrops.java
+index fd28d854a..e377557ea 100644
+--- a/src/main/java/net/minecraft/server/BlockCrops.java
++++ b/src/main/java/net/minecraft/server/BlockCrops.java
+@@ -23,7 +23,7 @@ public class BlockCrops extends BlockPlant implements IBlockFragilePlantElement
+ 
+     public void a(World world, int i, int j, int k, Random random) {
+         super.a(world, i, j, k, random);
+-        if (world.getLightLevel(i, j + 1, k) >= 9) {
++        if (world.isLightLevel(i, j + 1, k, 9)) { // MineHQ
+             int l = world.getData(i, j, k);
+ 
+             if (l < 7) {
+diff --git a/src/main/java/net/minecraft/server/BlockSapling.java b/src/main/java/net/minecraft/server/BlockSapling.java
+index 825839555..9383e2ee6 100644
+--- a/src/main/java/net/minecraft/server/BlockSapling.java
++++ b/src/main/java/net/minecraft/server/BlockSapling.java
+@@ -27,7 +27,7 @@ public class BlockSapling extends BlockPlant implements IBlockFragilePlantElemen
+     public void a(World world, int i, int j, int k, Random random) {
+         if (!world.isStatic) {
+             super.a(world, i, j, k, random);
+-            if (world.getLightLevel(i, j + 1, k) >= 9 && (random.nextInt(Math.max(2, (int) ((world.growthOdds / world.spigotConfig.saplingModifier * 7) + 0.5F))) == 0)) { // Spigot
++            if (world.isLightLevel(i, j + 1, k, 9) && (random.nextInt(Math.max(2, (int) ((world.growthOdds / world.spigotConfig.saplingModifier * 7) + 0.5F))) == 0)) { // Spigot // MineHQ
+                 // CraftBukkit start
+                 world.captureTreeGeneration = true;
+                 // CraftBukkit end
+diff --git a/src/main/java/net/minecraft/server/BlockStem.java b/src/main/java/net/minecraft/server/BlockStem.java
+index b37b18789..3262f4d99 100644
+--- a/src/main/java/net/minecraft/server/BlockStem.java
++++ b/src/main/java/net/minecraft/server/BlockStem.java
+@@ -23,7 +23,7 @@ public class BlockStem extends BlockPlant implements IBlockFragilePlantElement {
+ 
+     public void a(World world, int i, int j, int k, Random random) {
+         super.a(world, i, j, k, random);
+-        if (world.getLightLevel(i, j + 1, k) >= 9) {
++        if (world.isLightLevel(i, j + 1, k, 9)) { // MineHQ
+             float f = this.n(world, i, j, k);
+ 
+             if (random.nextInt((int) (world.growthOdds / (this == Blocks.PUMPKIN_STEM? world.spigotConfig.pumpkinModifier : world.spigotConfig.melonModifier) * (25.0F / f)) + 1) == 0) { // Spigot
+diff --git a/src/main/java/net/minecraft/server/EntityMonster.java b/src/main/java/net/minecraft/server/EntityMonster.java
+index 84f87b484..df54f1424 100644
+--- a/src/main/java/net/minecraft/server/EntityMonster.java
++++ b/src/main/java/net/minecraft/server/EntityMonster.java
+@@ -153,17 +153,18 @@ public abstract class EntityMonster extends EntityCreature implements IMonster {
+         if (this.world.b(EnumSkyBlock.SKY, i, j, k) > this.random.nextInt(32)) {
+             return false;
+         } else {
+-            int l = this.world.getLightLevel(i, j, k);
+-
++            // int l = this.world.getLightLevel(i, j, k); // MineHQ
++            boolean passes; // MineHQ
+             if (this.world.P()) {
+                 int i1 = this.world.j;
+ 
+                 this.world.j = 10;
+-                l = this.world.getLightLevel(i, j, k);
++                // l = this.world.getLightLevel(i, j, k); // MineHQ
++                passes = !this.world.isLightLevel(i, j, k, this.random.nextInt(9)); // MineHQ
+                 this.world.j = i1;
+-            }
++            } else { passes = !this.world.isLightLevel(i, j, k, this.random.nextInt(9)); } // MineHQ
+ 
+-            return l <= this.random.nextInt(8);
++            return passes; // MineHQ
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityZombie.java b/src/main/java/net/minecraft/server/EntityZombie.java
+index f1debb624..3454a0544 100644
+--- a/src/main/java/net/minecraft/server/EntityZombie.java
++++ b/src/main/java/net/minecraft/server/EntityZombie.java
+@@ -187,7 +187,7 @@ public class EntityZombie extends EntityMonster {
+                     int j1 = j + MathHelper.nextInt(this.random, 7, 40) * MathHelper.nextInt(this.random, -1, 1);
+                     int k1 = k + MathHelper.nextInt(this.random, 7, 40) * MathHelper.nextInt(this.random, -1, 1);
+ 
+-                    if (World.a((IBlockAccess) this.world, i1, j1 - 1, k1) && this.world.getLightLevel(i1, j1, k1) < 10) {
++                    if (World.a((IBlockAccess) this.world, i1, j1 - 1, k1) && !this.world.isLightLevel(i1, j1, k1, 10)) { // MineHQ
+                         entityzombie.setPosition((double) i1, (double) j1, (double) k1);
+                         if (this.world.b(entityzombie.boundingBox) && this.world.getCubes(entityzombie, entityzombie.boundingBox).isEmpty() && !this.world.containsLiquid(entityzombie.boundingBox)) {
+                             this.world.addEntity(entityzombie, CreatureSpawnEvent.SpawnReason.REINFORCEMENTS); // CraftBukkit
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index fb7d17d59..6363e8fca 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -823,6 +823,43 @@ public abstract class World implements IBlockAccess {
+         }
+     }
+ 
++    // MineHQ start
++    public boolean isLightLevel(int i, int j, int k, int level) {
++        if (i >= -30000000 && k >= -30000000 && i < 30000000 && k < 30000000) {
++            if (this.getType(i, j, k).n()) {
++                if (this.b(i, j + 1, k, false) >= level) {
++                    return true;
++                }
++                if (this.b(i + 1, j, k, false) >= level) {
++                    return true;
++                }
++                if (this.b(i - 1, j, k, false) >= level) {
++                    return true;
++                }
++                if (this.b(i, j, k + 1, false) >= level) {
++                    return true;
++                }
++                if (this.b(i, j, k - 1, false) >= level) {
++                    return true;
++                }
++                return false;
++            } else {
++                if (j >= 256) {
++                    j = 255;
++                }
++
++                Chunk chunk = this.getChunkAt(i >> 4, k >> 4);
++
++                i &= 15;
++                k &= 15;
++                return chunk.b(i, j, k, this.j) >= level;
++            }
++        } else {
++            return true;
++        }
++    }
++    // MineHQ end
++
+     public int getHighestBlockYAt(int i, int j) {
+     // Poweruser start
+         return this.getHighestBlockYAt(i, j, false);
+-- 
+2.13.3
+

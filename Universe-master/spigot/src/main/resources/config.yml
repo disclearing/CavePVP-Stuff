@@ -1,0 +1,5 @@
+name: "Hub-01"
+group: "HUB"
+redis:
+  host: "localhost"
+  password: "ggMan"

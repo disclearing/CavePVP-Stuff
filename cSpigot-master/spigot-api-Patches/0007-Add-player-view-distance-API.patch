@@ -1,0 +1,40 @@
+From c715fe2bde4ce5a0eadec75c7f93771d06af4f98 Mon Sep 17 00:00:00 2001
+From: Byteflux <byte@byteflux.net>
+Date: Sun, 21 Jun 2015 18:28:59 -0700
+Subject: [PATCH] Add player view distance API
+
+
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index 988820a3..e452f203 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -1145,6 +1145,26 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+         {
+             throw new UnsupportedOperationException( "Not supported yet" );
+         }
++
++        /**
++         * Get the view distance for this player
++         *
++         * @return View distance
++         */
++        public int getViewDistance()
++        {
++            throw new UnsupportedOperationException( "Not supported yet" );
++        }
++
++        /**
++         * Set the view distance for this player
++         *
++         * @param viewDistance View distance
++         */
++        public void setViewDistance(int viewDistance)
++        {
++            throw new UnsupportedOperationException( "Not supported yet" );
++        }
+     }
+ 
+     Spigot spigot();
+-- 
+2.11.0.windows.3
+

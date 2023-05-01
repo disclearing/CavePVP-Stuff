@@ -1,0 +1,16 @@
+{
+  "name": "Desert",
+  "capLocation": {
+    "x": 499.5,
+    "y": 70.0,
+    "z": -499.5
+  },
+  "world": "world",
+  "capDistance": 4,
+  "capTime": 480,
+  "hidden": false,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

@@ -1,0 +1,171 @@
+From d4037a20ec4978edb8d87577d0c283881196ceb1 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 4 Jun 2016 06:38:58 +0200
+Subject: [PATCH] Add yaw and pitch to world spawn
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index 9cb56f5db..045fe5f66 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -76,7 +76,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+         this.height = 1.62F;
+         ChunkCoordinates chunkcoordinates = world.getSpawn();
+ 
+-        this.setPositionRotation((double) chunkcoordinates.x + 0.5D, (double) (chunkcoordinates.y + 1), (double) chunkcoordinates.z + 0.5D, 0.0F, 0.0F);
++        this.setPositionRotation((double) chunkcoordinates.x + 0.5D, (double) (chunkcoordinates.y + 1), (double) chunkcoordinates.z + 0.5D, world.getWorldData().getSpawnYaw(), world.getWorldData().getSpawnPitch()); // Poweruser
+         this.aZ = 180.0F;
+         this.maxFireTicks = 20;
+     }
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 61142a1e2..0401520fc 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -555,7 +555,8 @@ public abstract class PlayerList {
+             if (location == null) {
+                 cworld = (CraftWorld) this.server.server.getWorlds().get(0);
+                 chunkcoordinates = cworld.getHandle().getSpawn();
+-                location = new Location(cworld, chunkcoordinates.x + 0.5, chunkcoordinates.y, chunkcoordinates.z + 0.5);
++
++                location = new Location(cworld, chunkcoordinates.x + 0.5, chunkcoordinates.y, chunkcoordinates.z + 0.5, cworld.getHandle().getWorldData().getSpawnYaw(), cworld.getHandle().getWorldData().getSpawnPitch()); // Poweruser
+             }
+ 
+             Player respawnPlayer = this.cserver.getPlayer(entityplayer1);
+@@ -751,8 +752,10 @@ public abstract class PlayerList {
+             d0 = (double) chunkcoordinates.x;
+             y = (double) chunkcoordinates.y;
+             d1 = (double) chunkcoordinates.z;
+-            yaw = 90.0F;
+-            pitch = 0.0F;
++            // Poweruser start
++            yaw = worldserver1.getWorldData().getSpawnYaw();
++            pitch = worldserver1.getWorldData().getSpawnPitch();
++            // Poweruser end
+             /*
+             entity.setPositionRotation(d0, entity.locY, d1, 90.0F, 0.0F);
+             if (entity.isAlive()) {
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 54e304a7d..d8a7cfd6d 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -3090,6 +3090,12 @@ public abstract class World implements IBlockAccess {
+         this.worldData.setSpawn(i, j, k);
+     }
+ 
++    // Poweruser start
++    public void setSpawn(int i, int j, int k, float yaw, float pitch) {
++        this.worldData.setSpawn(i, j, k, yaw, pitch);
++    }
++    // Poweruser end
++
+     public boolean a(EntityHuman entityhuman, int i, int j, int k) {
+         return true;
+     }
+diff --git a/src/main/java/net/minecraft/server/WorldData.java b/src/main/java/net/minecraft/server/WorldData.java
+index 3036d3d31..76a73f355 100644
+--- a/src/main/java/net/minecraft/server/WorldData.java
++++ b/src/main/java/net/minecraft/server/WorldData.java
+@@ -10,6 +10,10 @@ public class WorldData {
+     private int spawnX;
+     private int spawnY;
+     private int spawnZ;
++    // Poweruser start
++    private float spawnYaw;
++    private float spawnPitch;
++    // Poweruser end
+     private long time;
+     private long dayTime;
+     private long lastPlayed;
+@@ -71,6 +75,10 @@ public class WorldData {
+         this.spawnX = nbttagcompound.getInt("SpawnX");
+         this.spawnY = nbttagcompound.getInt("SpawnY");
+         this.spawnZ = nbttagcompound.getInt("SpawnZ");
++        // Poweruser start
++        this.spawnYaw = nbttagcompound.getFloat("SpawnYaw");
++        this.spawnPitch = nbttagcompound.getFloat("SpawnPitch");
++        // Poweruser end
+         this.time = nbttagcompound.getLong("Time");
+         if (nbttagcompound.hasKeyOfType("DayTime", 99)) {
+             this.dayTime = nbttagcompound.getLong("DayTime");
+@@ -136,6 +144,10 @@ public class WorldData {
+         this.spawnX = worlddata.spawnX;
+         this.spawnY = worlddata.spawnY;
+         this.spawnZ = worlddata.spawnZ;
++        // Poweruser start
++        this.spawnYaw = worlddata.spawnYaw;
++        this.spawnPitch = worlddata.spawnPitch;
++        // Poweruser end
+         this.time = worlddata.time;
+         this.dayTime = worlddata.dayTime;
+         this.lastPlayed = worlddata.lastPlayed;
+@@ -178,6 +190,10 @@ public class WorldData {
+         nbttagcompound.setInt("SpawnX", this.spawnX);
+         nbttagcompound.setInt("SpawnY", this.spawnY);
+         nbttagcompound.setInt("SpawnZ", this.spawnZ);
++        // Poweruser start
++        nbttagcompound.setFloat("SpawnYaw", this.spawnYaw);
++        nbttagcompound.setFloat("SpawnPitch", this.spawnPitch);
++        // Poweruser end
+         nbttagcompound.setLong("Time", this.time);
+         nbttagcompound.setLong("DayTime", this.dayTime);
+         nbttagcompound.setLong("SizeOnDisk", this.sizeOnDisk);
+@@ -243,6 +259,22 @@ public class WorldData {
+         this.spawnZ = k;
+     }
+ 
++    // Poweruser start
++    public void setSpawn(int i, int j, int k, float yaw, float pitch) {
++        this.setSpawn(i, j, k);
++        this.spawnYaw = yaw;
++        this.spawnPitch = pitch;
++    }
++
++    public float getSpawnYaw() {
++        return this.spawnYaw;
++    }
++
++    public float getSpawnPitch() {
++        return this.spawnPitch;
++    }
++    // Poweruser end
++
+     public String getName() {
+         return this.name;
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index d95732b40..8f4a96fe6 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -98,10 +98,27 @@ public class CraftWorld implements World {
+     }
+ 
+     public Location getSpawnLocation() {
+-        ChunkCoordinates spawn = world.getSpawn();
+-        return new Location(this, spawn.x, spawn.y, spawn.z);
++    // Poweruser start
++        WorldData worlddata = world.getWorldData();
++        return new Location(this, worlddata.c(), worlddata.d(), worlddata.e(), worlddata.getSpawnYaw(), worlddata.getSpawnPitch());
+     }
+ 
++    public boolean setSpawnLocation(int x, int y, int z, float yaw, float pitch) {
++        try {
++            Location previousLocation = getSpawnLocation();
++            world.worldData.setSpawn(x, y, z, yaw, pitch);
++
++            // Notify anyone who's listening.
++            SpawnChangeEvent event = new SpawnChangeEvent(this, previousLocation);
++            server.getPluginManager().callEvent(event);
++
++            return true;
++        } catch (Exception e) {
++            return false;
++        }
++    }
++    // Poweruser end
++
+     public boolean setSpawnLocation(int x, int y, int z) {
+         try {
+             Location previousLocation = getSpawnLocation();
+-- 
+2.13.3
+

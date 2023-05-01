@@ -1,0 +1,22 @@
+From 25b92855990308cd74e6ac02d1288f86e4f67c17 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sun, 2 Apr 2017 01:47:11 +1100
+Subject: [PATCH] Start currentTick at 0
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 74d3632e1..e25a85ee4 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -107,7 +107,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     public org.bukkit.command.ConsoleCommandSender console;
+     public org.bukkit.command.RemoteConsoleCommandSender remoteConsole;
+     public ConsoleReader reader;
+-    public static int currentTick = (int) (System.currentTimeMillis() / 50);
++    public static int currentTick = 0;
+     public final Thread primaryThread;
+     public java.util.Queue<Runnable> processQueue = new java.util.concurrent.ConcurrentLinkedQueue<Runnable>();
+     public int autosavePeriod;
+-- 
+2.13.3
+

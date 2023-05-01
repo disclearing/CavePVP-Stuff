@@ -1,0 +1,44 @@
+From ddad3f123b9a2b3fd08c831c38f5f0d862384e28 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 8 Jul 2018 23:00:52 -0500
+Subject: [PATCH] POM updates for Hylist
+
+
+diff --git a/pom.xml b/pom.xml
+index b5286cad..7f049564 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1,17 +1,17 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+-    <artifactId>sourspigot-api</artifactId>
++    <artifactId>spigot-api</artifactId>
+     <version>1.7.10-R0.1-SNAPSHOT</version>
+-    <name>sourspigot-api</name>
+-    <url>https://frozenorb.net</url>
++    <name>spigot-api</name>
++    <url>https://hylist.net</url>
+ 
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     </properties>
+ 
+     <parent>
+-        <groupId>net.frozenorb</groupId>
+-        <artifactId>sourspigot-parent</artifactId>
++        <groupId>net.hylist</groupId>
++        <artifactId>spigot-parent</artifactId>
+         <version>dev-SNAPSHOT</version>
+         <relativePath>../pom.xml</relativePath>
+     </parent>
+@@ -132,6 +132,7 @@
+             <groupId>org.projectlombok</groupId>
+             <artifactId>lombok</artifactId>
+             <version>1.16.10</version>
++            <scope>compile</scope>
+         </dependency>
+ 
+         <!-- testing -->
+-- 
+2.17.2 (Apple Git-113)
+

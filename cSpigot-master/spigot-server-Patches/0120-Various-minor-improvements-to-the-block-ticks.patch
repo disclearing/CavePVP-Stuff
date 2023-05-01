@@ -1,0 +1,96 @@
+From 715e00e417c120e4af2fa6f2f330c5b988e5a027 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Fri, 4 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Various minor improvements to the block ticks
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockFire.java b/src/main/java/net/minecraft/server/BlockFire.java
+index 44994a14a..91c6d683a 100644
+--- a/src/main/java/net/minecraft/server/BlockFire.java
++++ b/src/main/java/net/minecraft/server/BlockFire.java
+@@ -75,11 +75,10 @@ public class BlockFire extends Block {
+ 
+     public void a(World world, int i, int j, int k, Random random) {
+         if (world.getGameRules().getBoolean("doFireTick")) {
+-            boolean flag = world.getType(i, j - 1, k) == Blocks.NETHERRACK;
+-
+-            if (world.worldProvider instanceof WorldProviderTheEnd && world.getType(i, j - 1, k) == Blocks.BEDROCK) {
+-                flag = true;
+-            }
++            // Poweruser start
++            Block blockBeneath = world.getType(i, j - 1, k);
++            boolean flag = blockBeneath == Blocks.NETHERRACK || (world.worldProvider instanceof WorldProviderTheEnd && blockBeneath == Blocks.BEDROCK);
++            // Poweruser end
+ 
+             if (!this.canPlace(world, i, j, k)) {
+                 fireExtinguished(world, i, j, k); // CraftBukkit - invalid place location
+@@ -178,11 +177,13 @@ public class BlockFire extends Block {
+     }
+ 
+     private void a(World world, int i, int j, int k, int l, Random random, int i1) {
+-        int j1 = this.b[Block.getId(world.getType(i, j, k))];
++        // Poweruser start
++        Block blockAtPos = world.getType(i, j, k);
++        int j1 = this.b[Block.getId(blockAtPos)];
+ 
+         if (random.nextInt(l) < j1) {
+-            boolean flag = world.getType(i, j, k) == Blocks.TNT;
+-
++            boolean flag = blockAtPos == Blocks.TNT;
++        // Poweruser end
+             // CraftBukkit start
+             org.bukkit.block.Block theBlock = world.getWorld().getBlockAt(i, j, k);
+ 
+diff --git a/src/main/java/net/minecraft/server/BlockGrass.java b/src/main/java/net/minecraft/server/BlockGrass.java
+index 7c00158a7..a2bd50594 100644
+--- a/src/main/java/net/minecraft/server/BlockGrass.java
++++ b/src/main/java/net/minecraft/server/BlockGrass.java
+@@ -25,7 +25,10 @@ public class BlockGrass extends Block implements IBlockFragilePlantElement {
+ 
+     public void a(World world, int i, int j, int k, Random random) {
+         if (!world.isStatic) {
+-            if (world.getLightLevel(i, j + 1, k) < 4 && world.getType(i, j + 1, k).k() > 2) {
++            // Poweruser start
++            int lightLevel = world.getLightLevel(i, j + 1, k);
++            if (lightLevel < 4 && world.getType(i, j + 1, k).k() > 2) {
++            // Poweruser end
+                 // CraftBukkit start
+                 org.bukkit.World bworld = world.getWorld();
+                 BlockState blockState = bworld.getBlockAt(i, j, k).getState();
+@@ -38,7 +41,7 @@ public class BlockGrass extends Block implements IBlockFragilePlantElement {
+                     blockState.update(true);
+                 }
+                 // CraftBukkit end
+-            } else if (world.getLightLevel(i, j + 1, k) >= 9) {
++            } else if (lightLevel >= 9) { // Poweruser
+                 int numGrowth = Math.min(4, Math.max(20, (int) (4 * 100F / world.growthOdds))); // Spigot
+                 for (int l = 0; l < numGrowth; ++l) { // Spigot
+                     int i1 = i + random.nextInt(3) - 1;
+diff --git a/src/main/java/net/minecraft/server/BlockMycel.java b/src/main/java/net/minecraft/server/BlockMycel.java
+index 2854bbca9..833dad211 100644
+--- a/src/main/java/net/minecraft/server/BlockMycel.java
++++ b/src/main/java/net/minecraft/server/BlockMycel.java
+@@ -19,7 +19,10 @@ public class BlockMycel extends Block {
+ 
+     public void a(World world, int i, int j, int k, Random random) {
+         if (!world.isStatic) {
+-            if (world.getLightLevel(i, j + 1, k) < 4 && world.getType(i, j + 1, k).k() > 2) {
++            // Poweruser start
++            int lightLevel = world.getLightLevel(i, j + 1, k);
++            if (lightLevel < 4 && world.getType(i, j + 1, k).k() > 2) {
++            // Poweruser end
+                 // CraftBukkit start
+                 org.bukkit.World bworld = world.getWorld();
+                 BlockState blockState = bworld.getBlockAt(i, j, k).getState();
+@@ -32,7 +35,7 @@ public class BlockMycel extends Block {
+                     blockState.update(true);
+                 }
+                 // CraftBukkit end
+-            } else if (world.getLightLevel(i, j + 1, k) >= 9) {
++            } else if (lightLevel >= 9) { // Poweruser
+                 int numGrowth = Math.min(4, Math.max(20, (int) (4 * 100F / world.growthOdds))); // Spigot
+                 for (int l = 0; l < numGrowth; ++l) { // Spigot
+                     int i1 = i + random.nextInt(3) - 1;
+-- 
+2.13.3
+

@@ -1,0 +1,10 @@
+network: "CAVEPVP"
+mongo:
+  host: "0.0.0.0"
+  port: 27017
+  database: "Neutron"
+server:
+  name: "Fasts"
+fancyName:
+  displayName: true
+  tabListName: false

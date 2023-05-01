@@ -1,0 +1,212 @@
+From e5adc1aba0783fcd48cd8d00aab33630edd3003e Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Fri, 29 Jan 2016 21:35:52 +0100
+Subject: [PATCH] Async saving of PersistentCollections
+
+
+diff --git a/src/main/java/net/frozenorb/NamePriorityThreadFactory.java b/src/main/java/net/frozenorb/NamePriorityThreadFactory.java
+new file mode 100644
+index 000000000..e0a6e76ed
+--- /dev/null
++++ b/src/main/java/net/frozenorb/NamePriorityThreadFactory.java
+@@ -0,0 +1,45 @@
++package net.frozenorb;
++
++import java.util.concurrent.Executors;
++import java.util.concurrent.ThreadFactory;
++
++public class NamePriorityThreadFactory implements ThreadFactory {
++    private int priority;
++    private int idCounter = 0;
++    private String name = "mSpigotThread";
++    private boolean isDaemon = false;
++
++    public NamePriorityThreadFactory(int priority) {
++        this.priority = Math.min(Math.max(priority, Thread.MIN_PRIORITY), Thread.MAX_PRIORITY);
++    }
++
++    public NamePriorityThreadFactory(int priority, boolean daemon) {
++        this(priority);
++        this.isDaemon = daemon;
++    }
++
++    public NamePriorityThreadFactory(int priority, String name) {
++        this(priority);
++        this.name = name;
++    }
++
++    public NamePriorityThreadFactory(int priority, String name, boolean daemon) {
++        this(priority, name);
++        this.isDaemon = daemon;
++    }
++
++    public NamePriorityThreadFactory(String name) {
++        this(Thread.NORM_PRIORITY);
++        this.name = name;
++    }
++
++    @Override
++    public Thread newThread(Runnable runnable) {
++        Thread thread = Executors.defaultThreadFactory().newThread(runnable);
++        thread.setPriority(this.priority);
++        thread.setName(this.name + "-" + String.valueOf(idCounter));
++        thread.setDaemon(this.isDaemon);
++        idCounter++;
++        return thread;
++    }
++}
+diff --git a/src/main/java/net/frozenorb/ThreadingManager.java b/src/main/java/net/frozenorb/ThreadingManager.java
+new file mode 100644
+index 000000000..f56e68e1b
+--- /dev/null
++++ b/src/main/java/net/frozenorb/ThreadingManager.java
+@@ -0,0 +1,75 @@
++package net.frozenorb;
++
++import java.io.File;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.OutputStream;
++import java.util.concurrent.Callable;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++import java.util.concurrent.TimeUnit;
++
++import net.minecraft.server.NBTCompressedStreamTools;
++import net.minecraft.server.NBTTagCompound;
++
++import org.apache.logging.log4j.LogManager;
++import org.apache.logging.log4j.Logger;
++
++public class ThreadingManager {
++
++    private final Logger log = LogManager.getLogger();
++    private ExecutorService nbtFileService = Executors.newSingleThreadExecutor(new NamePriorityThreadFactory(Thread.NORM_PRIORITY - 2, "mSpigot_NBTFileSaver"));
++    private static ThreadingManager instance;
++
++    public ThreadingManager() {
++        instance = this;
++    }
++
++    public void shutdown() {
++        this.nbtFileService.shutdown();
++        while(!this.nbtFileService.isTerminated()) {
++            try {
++                if(!this.nbtFileService.awaitTermination(3, TimeUnit.MINUTES)) {
++                    log.warn("mSpigot is still waiting for NBT Files to be saved.");
++                }
++            } catch(InterruptedException e) {}
++        }
++    }
++
++    public static void saveNBTFileStatic(NBTTagCompound compound, File file) {
++        instance.saveNBTFile(compound, file);
++    }
++
++    public void saveNBTFile(NBTTagCompound compound, File file) {
++        this.nbtFileService.execute(new NBTFileSaver(compound, file));
++    }
++
++    private class NBTFileSaver implements Runnable {
++
++        private NBTTagCompound compound;
++        private File file;
++
++        public NBTFileSaver(NBTTagCompound compound, File file) {
++            this.compound = compound;
++            this.file = file;
++        }
++
++        public void run() {
++            FileOutputStream fileoutputstream = null;
++            try {
++                fileoutputstream = new FileOutputStream(this.file);
++                NBTCompressedStreamTools.a(this.compound, (OutputStream) fileoutputstream);
++            } catch (Exception e) {
++                e.printStackTrace();
++            } finally {
++                if(fileoutputstream != null) {
++                    try {
++                        fileoutputstream.close();
++                    } catch (IOException e) {}
++                }
++            }
++            this.compound = null;
++            this.file = null;
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 8d377be19..e9fd62c85 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -43,6 +43,10 @@ import org.bukkit.event.server.RemoteServerCommandEvent;
+ import org.bukkit.event.world.WorldSaveEvent;
+ // CraftBukkit end
+ 
++// Poweruser start
++import net.frozenorb.ThreadingManager;
++// Poweruser end
++
+ public abstract class MinecraftServer implements ICommandListener, Runnable, IMojangStatistics {
+ 
+     private static final Logger i = LogManager.getLogger();
+@@ -119,6 +123,10 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     public int activeEntities;
+     // Kohi end
+ 
++    // Poweruser start
++    private ThreadingManager threadingManager;
++    // Poweruser end
++
+     public float lastTickTime = 0F; // MineHQ
+ 
+     public MinecraftServer(OptionSet options, Proxy proxy) { // CraftBukkit - signature file -> OptionSet
+@@ -126,6 +134,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+         this.X = new UserCache(this, a);
+         j = this;
+         this.d = proxy;
++        this.threadingManager = new ThreadingManager(); // Poweruser
+         // this.universe = file1; // CraftBukkit
+         // this.p = new ServerConnection(this); // Spigot
+         this.o = new CommandDispatcher();
+@@ -434,6 +443,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+                 this.X.c();
+             }
+             //Spigot end
++
++            this.threadingManager.shutdown(); // Poweruser
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PersistentCollection.java b/src/main/java/net/minecraft/server/PersistentCollection.java
+index e9469a53d..aea4c03e8 100644
+--- a/src/main/java/net/minecraft/server/PersistentCollection.java
++++ b/src/main/java/net/minecraft/server/PersistentCollection.java
+@@ -14,6 +14,8 @@ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
+ 
++import net.frozenorb.ThreadingManager; // Poweruser
++
+ public class PersistentCollection {
+ 
+     private IDataManager a;
+@@ -99,10 +101,14 @@ public class PersistentCollection {
+                     NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+ 
+                     nbttagcompound1.set("data", nbttagcompound);
++                    /* Poweruser start
+                     FileOutputStream fileoutputstream = new FileOutputStream(file1);
+ 
+                     NBTCompressedStreamTools.a(nbttagcompound1, (OutputStream) fileoutputstream);
+                     fileoutputstream.close();
++                    */
++                    ThreadingManager.saveNBTFileStatic((NBTTagCompound) nbttagcompound1.clone(), file1);
++                    // Poweruser end
+                 }
+             } catch (Exception exception) {
+                 exception.printStackTrace();
+-- 
+2.13.3
+

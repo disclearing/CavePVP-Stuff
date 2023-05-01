@@ -1,0 +1,51 @@
+From 9b03929385beeb7661b42e87c35566c4ec143a7a Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:21:56 -0400
+Subject: [PATCH] Optimize the entity tracker
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityTracker.java b/src/main/java/net/minecraft/server/EntityTracker.java
+index c0766d6d1..766cb1e93 100644
+--- a/src/main/java/net/minecraft/server/EntityTracker.java
++++ b/src/main/java/net/minecraft/server/EntityTracker.java
+@@ -1,9 +1,6 @@
+ package net.minecraft.server;
+ 
+-import java.util.ArrayList;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-import java.util.Set;
++import java.util.*;
+ import java.util.concurrent.Callable;
+ 
+ import org.apache.logging.log4j.LogManager;
+@@ -201,14 +198,19 @@ public class EntityTracker {
+     }
+ 
+     public void a(EntityPlayer entityplayer, Chunk chunk) {
+-        Iterator iterator = this.c.iterator();
+-
+-        while (iterator.hasNext()) {
+-            EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry) iterator.next();
+-
+-            if (entitytrackerentry.tracker != entityplayer && entitytrackerentry.tracker.ah == chunk.locX && entitytrackerentry.tracker.aj == chunk.locZ) {
+-                entitytrackerentry.updatePlayer(entityplayer);
++        // Kohi start - Optimized EntityTracker
++        for (List<Entity> slice : chunk.entitySlices) {
++            for (Entity entity : slice) {
++                if (entity != entityplayer) {
++                    EntityTrackerEntry entry = (EntityTrackerEntry) trackedEntities.get(entity.getId());
++
++                    if (entry != null) {
++                        entry.updatePlayer(entityplayer);
++                    }
++                }
+             }
+         }
++        // Kohi end
+     }
++
+ }
+-- 
+2.13.3
+

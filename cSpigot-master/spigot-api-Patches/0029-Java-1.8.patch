@@ -1,0 +1,24 @@
+From 01af6669f603b742aadfc350ae1eaf701701d418 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Wed, 19 Jul 2017 16:03:29 +0100
+Subject: [PATCH] Java 1.8
+
+
+diff --git a/pom.xml b/pom.xml
+index fbcbfc1..ac40505 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -23,8 +23,8 @@
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>2.3.2</version>
+                 <configuration>
+-                    <source>1.6</source>
+-                    <target>1.6</target>
++                    <source>1.8</source>
++                    <target>1.8</target>
+                 </configuration>
+             </plugin>
+             <plugin>
+-- 
+2.9.3 (Apple Git-75)
+

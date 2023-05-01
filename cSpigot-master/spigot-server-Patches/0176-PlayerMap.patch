@@ -1,0 +1,460 @@
+From 248e437a93ed04d745ec2fad3b13f48f82f1fd47 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 30 Jun 2017 17:14:11 +0100
+Subject: [PATCH] PlayerMap
+
+
+diff --git a/pom.xml b/pom.xml`
+index 703d3c852..f99923708 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -118,6 +118,11 @@
+       <artifactId>netty-all</artifactId>
+       <version>4.0.28.Final</version>
+     </dependency>
++    <dependency>
++      <groupId>it.unimi.dsi</groupId>
++      <artifactId>fastutil</artifactId>
++      <version>7.2.1</version>
++    </dependency>
+   </dependencies>
+ 
+   <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
+diff --git a/src/main/java/net/frozenorb/PlayerMap.java b/src/main/java/net/frozenorb/PlayerMap.java
+new file mode 100644
+index 000000000..c0d3194b6
+--- /dev/null
++++ b/src/main/java/net/frozenorb/PlayerMap.java
+@@ -0,0 +1,231 @@
++package net.frozenorb;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.function.Consumer;
++
++import com.google.common.base.Function;
++import com.google.common.base.Predicate;
++
++import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
++import net.minecraft.server.EntityHuman;
++import net.minecraft.server.EntityPlayer;
++import net.minecraft.server.MathHelper;
++import net.minecraft.server.Packet;
++
++public class PlayerMap {
++
++    private static final int CHUNK_BITS = 5;
++    private final Long2ObjectOpenHashMap<List<EntityPlayer>> map = new Long2ObjectOpenHashMap<List<EntityPlayer>>();
++
++    private static long xzToKey(long x, long z) {
++        return ((long) x << 32) + z - Integer.MIN_VALUE;
++    }
++
++    public void add(EntityPlayer player) {
++        int x = MathHelper.floor(player.locX) >> CHUNK_BITS;
++        int z = MathHelper.floor(player.locZ) >> CHUNK_BITS;
++        long key = xzToKey(x, z);
++        List<EntityPlayer> list = map.get(key);
++        if (list == null) {
++            list = new ArrayList<EntityPlayer>();
++            map.put(key, list);
++        }
++        list.add(player);
++        player.playerMapX = x;
++        player.playerMapZ = z;
++    }
++
++    public void move(EntityPlayer player) {
++        int x = MathHelper.floor(player.locX) >> CHUNK_BITS;
++        int z = MathHelper.floor(player.locZ) >> CHUNK_BITS;
++
++        // did we move?
++        if (x == player.playerMapX && z == player.playerMapZ) {
++            return;
++        }
++
++        // do remove
++        long key = xzToKey(player.playerMapX, player.playerMapZ);
++        List<EntityPlayer> list = map.get(key);
++        list.remove(player);
++        if (list.isEmpty()) {
++            map.remove(key);
++        }
++
++        // do add
++        key = xzToKey(x, z);
++        list = map.get(key);
++        if (list == null) {
++            list = new ArrayList<EntityPlayer>();
++            map.put(key, list);
++        }
++        list.add(player);
++        player.playerMapX = x;
++        player.playerMapZ = z;
++    }
++
++    public void remove(EntityPlayer player) {
++        long key = xzToKey(player.playerMapX, player.playerMapZ);
++        List<EntityPlayer> list = map.get(key);
++        if (list == null) {
++            // player has not yet been added to this playermap, this happens when teleporting to another world during PlayerJoinEvent
++            return;
++        }
++        list.remove(player);
++        if (list.isEmpty()) {
++            map.remove(key);
++        }
++    }
++
++    public void forEachNearby(double x, double y, double z, double distance, boolean useRadius, Consumer<EntityPlayer> function) {
++        for (int chunkX = MathHelper.floor(x - distance) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + distance) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - distance) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + distance) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        if (!useRadius || player.e(x, y, z) < distance * distance) {
++                            function.accept(player);
++                        }
++                    }
++                }
++            }
++        }
++    }
++
++    public EntityPlayer getNearestPlayer(double x, double y, double z, double distance) {
++        double bestDistanceSqrd = -1.0;
++        EntityPlayer bestPlayer = null;
++
++        for (int chunkX = MathHelper.floor(x - distance) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + distance) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - distance) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + distance) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        double playerDistSqrd = player.e(x, y, z);
++                        if (playerDistSqrd < distance * distance && (bestDistanceSqrd == -1.0 || playerDistSqrd < bestDistanceSqrd)) {
++                            bestDistanceSqrd = playerDistSqrd;
++                            bestPlayer = player;
++                        }
++                    }
++                }
++            }
++        }
++        return bestPlayer;
++    }
++
++    public boolean isPlayerNearby(double x, double y, double z, double distance, boolean respectSpawningApi) {
++        for (int chunkX = MathHelper.floor(x - distance) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + distance) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - distance) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + distance) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        if (player != null && !player.dead && (!respectSpawningApi || player.affectsSpawning)) {
++                            double playerDistSqrd = player.e(x, y, z);
++                            if (playerDistSqrd < distance * distance) {
++                                return true;
++                            }
++                        }
++                    }
++                }
++            }
++        }
++        return false;
++    }
++
++
++    public EntityPlayer getNearbyPlayer(double x, double y, double z, double distance, boolean respectSpawningApi) {
++        double bestDistanceSqrd = -1.0;
++        EntityPlayer bestPlayer = null;
++
++        for (int chunkX = MathHelper.floor(x - distance) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + distance) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - distance) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + distance) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        if (player != null && !player.dead && (!respectSpawningApi || player.affectsSpawning)) {
++                            double playerDistSqrd = player.e(x, y, z);
++                            if (playerDistSqrd < distance * distance && (bestDistanceSqrd == -1.0 || playerDistSqrd < bestDistanceSqrd)) {
++                                bestDistanceSqrd = playerDistSqrd;
++                                bestPlayer = player;
++                            }
++                        }
++                    }
++                }
++            }
++        }
++
++        return bestPlayer;
++    }
++    
++    public EntityPlayer getNearestAttackablePlayer(double x, double y, double z, double maxXZ, double maxY, Function<EntityHuman, Double> visibility) {
++        return getNearestAttackablePlayer(x, y, z, maxXZ, maxY, visibility, null);
++    }
++
++    public EntityPlayer getNearestAttackablePlayer(double x, double y, double z, double maxXZ, double maxY, Function<EntityHuman, Double> visibility, Predicate<EntityHuman> condition) {
++        double bestDistanceSqrd = -1.0;
++        EntityPlayer bestPlayer = null;
++
++        for (int chunkX = MathHelper.floor(x - maxXZ) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + maxXZ) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - maxXZ) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + maxXZ) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        if (!player.abilities.isInvulnerable && player.isAlive() && (condition == null || condition.apply(player))) {
++                            double dx = player.locX - x;
++                            double dz = player.locZ - z;
++                            double playerDistSqrd = dx * dx + dz * dz;
++                            double dy = Math.abs(player.locY - y);
++                            double distForPlayer = maxXZ;
++
++                            if (player.isSneaking()) {
++                                distForPlayer *= 0.8;
++                            }
++
++                            if (visibility != null) {
++                                Double v = visibility.apply(player);
++                                if (v != null) {
++                                    distForPlayer *= v;
++                                }
++                            }
++
++                            // mojang mistake squaring maxY?
++                            if ((maxY < 0.0 || dy < maxY * maxY) && playerDistSqrd < distForPlayer * distForPlayer && (bestDistanceSqrd == -1.0 || playerDistSqrd < bestDistanceSqrd)) {
++                                bestDistanceSqrd = playerDistSqrd;
++                                bestPlayer = player;
++                            }
++                        }
++                    }
++                }
++            }
++        }
++
++        return bestPlayer;
++    }
++
++    public void sendPacketNearby(EntityPlayer source, double x, double y, double z, double distance, Packet packet) {
++        for (int chunkX = MathHelper.floor(x - distance) >> CHUNK_BITS; chunkX <= MathHelper.floor(x + distance) >> CHUNK_BITS; chunkX++) {
++            for (int chunkZ = MathHelper.floor(z - distance) >> CHUNK_BITS; chunkZ <= MathHelper.floor(z + distance) >> CHUNK_BITS; chunkZ++) {
++                List<EntityPlayer> players = map.get(xzToKey(chunkX, chunkZ));
++                if (players != null) {
++                    for (EntityPlayer player : players) {
++                        // don't send self
++                        if (player == source) {
++                            continue;
++                        }
++
++                        // bukkit visibility api
++                        if (source != null && !player.getBukkitEntity().canSee(source.getBukkitEntity())) {
++                            continue;
++                        }
++
++                        double playerDistSqrd = player.e(x, y, z);
++                        if (playerDistSqrd < distance * distance) {
++                            player.playerConnection.sendPacket(packet);
++                        }
++                    }
++                }
++            }
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index e7246a0e8..597f8a7da 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -87,6 +87,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+     // Spigot end
+ 
++    // MineHQ start
++    public int playerMapX;
++    public int playerMapZ;
++    // MineHQ end
++
+     public EntityPlayer(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile, PlayerInteractManager playerinteractmanager) {
+         super(worldserver, gameprofile);
+         playerinteractmanager.player = this;
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 9cef23157..8a0e9ffce 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -377,6 +377,7 @@ public abstract class PlayerList {
+ 
+     public void d(EntityPlayer entityplayer) {
+         entityplayer.r().getPlayerChunkMap().movePlayer(entityplayer);
++        entityplayer.world.playerMap.move(entityplayer); // MineHQ
+     }
+ 
+     public String disconnect(EntityPlayer entityplayer) { // CraftBukkit - return string
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index fcf159713..fb7d17d59 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -29,6 +29,9 @@ import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+ import org.bukkit.craftbukkit.util.LongHashSet;
+ import org.bukkit.craftbukkit.SpigotTimings; // Spigot
+ import org.bukkit.generator.ChunkGenerator;
++
++import com.google.common.base.Function;
++
+ import org.bukkit.craftbukkit.CraftServer;
+ import org.bukkit.craftbukkit.CraftWorld;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+@@ -41,6 +44,7 @@ import org.bukkit.event.weather.ThunderChangeEvent;
+ 
+ // Poweruser start
+ import net.frozenorb.LightingUpdater;
++import net.frozenorb.PlayerMap;
+ import net.frozenorb.WeakChunkCache;
+ import net.frozenorb.ThreadingManager;
+ import net.frozenorb.ThreadingManager.TaskQueueWorker;
+@@ -193,6 +197,10 @@ public abstract class World implements IBlockAccess {
+     }
+     // Spigot end
+ 
++    // MineHQ start
++    public final PlayerMap playerMap = new PlayerMap();
++    // MineHQ end
++
+     public BiomeBase getBiome(int i, int j) {
+         if (this.isLoaded(i, 0, j)) {
+             Chunk chunk = this.getChunkAtWorldCoords(i, j);
+@@ -1219,6 +1227,7 @@ public abstract class World implements IBlockAccess {
+                 EntityHuman entityhuman = (EntityHuman) entity;
+ 
+                 this.players.add(entityhuman);
++                this.playerMap.add((EntityPlayer) entityhuman); // MineHQ 
+                 this.everyoneSleeping();
+                 this.b(entity);
+             }
+@@ -1258,6 +1267,7 @@ public abstract class World implements IBlockAccess {
+         entity.die();
+         if (entity instanceof EntityHuman) {
+             this.players.remove(entity);
++            this.playerMap.remove((EntityPlayer) entity); // MineHQ
+             // Spigot start
+             for ( Object o : worldMaps.c )
+             {
+@@ -1284,6 +1294,7 @@ public abstract class World implements IBlockAccess {
+         entity.die();
+         if (entity instanceof EntityHuman) {
+             this.players.remove(entity);
++            this.playerMap.remove((EntityPlayer) entity); // MineHQ
+             this.everyoneSleeping();
+         }
+         // Spigot start
+@@ -3023,6 +3034,11 @@ public abstract class World implements IBlockAccess {
+     }
+ 
+     public EntityHuman findNearbyPlayer(double d0, double d1, double d2, double d3) {
++        // MineHQ start
++        if (0 <= d3 && d3 <= 64) {
++            return this.playerMap.getNearestPlayer(d0, d1, d2, d3);
++        }
++        // MineHQ end
+         double d4 = -1.0D;
+         EntityHuman entityhuman = null;
+ 
+@@ -3048,7 +3064,32 @@ public abstract class World implements IBlockAccess {
+         return this.findNearbyVulnerablePlayer(entity.locX, entity.locY, entity.locZ, d0);
+     }
+ 
++    // MineHQ start
++    private static final Function<EntityHuman, Double> invisibilityFunction = new Function<EntityHuman, Double>() {
++        @Override
++        public Double apply(EntityHuman entityHuman) {
++
++            if (entityHuman.isInvisible()) {
++                float f = entityHuman.bE();
++
++                if (f < 0.1F) {
++                    f = 0.1F;
++                }
++
++                return (double) (0.7F * f);
++            }
++
++            return null;
++        }
++    };
++    // MineHQ end
++
+     public EntityHuman findNearbyVulnerablePlayer(double d0, double d1, double d2, double d3) {
++        // MineHQ start
++        if (0 <= d3 && d3 <= 64.0D) {
++            return this.playerMap.getNearestAttackablePlayer(d0, d1, d2, d3, d3, invisibilityFunction);
++        }
++        // MineHQ end
+         double d4 = -1.0D;
+         EntityHuman entityhuman = null;
+ 
+@@ -3094,6 +3135,11 @@ public abstract class World implements IBlockAccess {
+     }
+ 
+     public EntityHuman findNearbyPlayerWhoAffectsSpawning(double x, double y, double z, double radius) {
++        // MineHQ start
++        if (0 <= radius && radius <= 64.0) {
++            return this.playerMap.getNearbyPlayer(x, y, z, radius, true);
++        }
++        // MineHQ end
+         double nearestRadius = - 1.0D;
+         EntityHuman entityHuman = null;
+ 
+diff --git a/src/main/java/net/minecraft/server/WorldManager.java b/src/main/java/net/minecraft/server/WorldManager.java
+index 65a74a1eb..d72acf28e 100644
+--- a/src/main/java/net/minecraft/server/WorldManager.java
++++ b/src/main/java/net/minecraft/server/WorldManager.java
+@@ -24,12 +24,12 @@ public class WorldManager implements IWorldAccess {
+ 
+     public void a(String s, double d0, double d1, double d2, float f, float f1) {
+         // CraftBukkit - this.world.dimension
+-        this.server.getPlayerList().sendPacketNearby(d0, d1, d2, f > 1.0F ? (double) (16.0F * f) : 16.0D, this.world.dimension, new PacketPlayOutNamedSoundEffect(s, d0, d1, d2, f, f1));
++        this.world.playerMap.sendPacketNearby(null, d0, d1, d2, f > 1.0F ? (double) (16.0F * f) : 16.0D, new PacketPlayOutNamedSoundEffect(s, d0, d1, d2, f, f1));
+     }
+ 
+     public void a(EntityHuman entityhuman, String s, double d0, double d1, double d2, float f, float f1) {
+         // CraftBukkit - this.world.dimension
+-        this.server.getPlayerList().sendPacketNearby(entityhuman, d0, d1, d2, f > 1.0F ? (double) (16.0F * f) : 16.0D, this.world.dimension, new PacketPlayOutNamedSoundEffect(s, d0, d1, d2, f, f1));
++        this.world.playerMap.sendPacketNearby((EntityPlayer) entityhuman, d0, d1, d2, f > 1.0F ? (double) (16.0F * f) : 16.0D, new PacketPlayOutNamedSoundEffect(s, d0, d1, d2, f, f1)); // MineHQ
+     }
+ 
+     public void a(int i, int j, int k, int l, int i1, int j1) {}
+@@ -44,7 +44,7 @@ public class WorldManager implements IWorldAccess {
+ 
+     public void a(EntityHuman entityhuman, int i, int j, int k, int l, int i1) {
+         // CraftBukkit - this.world.dimension
+-        this.server.getPlayerList().sendPacketNearby(entityhuman, (double) j, (double) k, (double) l, 64.0D, this.world.dimension, new PacketPlayOutWorldEvent(i, j, k, l, i1, false));
++        this.world.playerMap.sendPacketNearby((EntityPlayer) entityhuman, (double) j, (double) k, (double) l, 64.0D, new PacketPlayOutWorldEvent(i, j, k, l, i1, false)); // MineHQ
+     }
+ 
+     public void a(int i, int j, int k, int l, int i1) {
+@@ -52,21 +52,11 @@ public class WorldManager implements IWorldAccess {
+     }
+ 
+     public void b(int i, int j, int k, int l, int i1) {
+-        Iterator iterator = this.world.players.iterator(); // MineHQ
+-
+-        while (iterator.hasNext()) {
+-            EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+-
+-            if (entityplayer != null && entityplayer.getId() != i) { // MineHQ
+-                double d0 = (double) j - entityplayer.locX;
+-                double d1 = (double) k - entityplayer.locY;
+-                double d2 = (double) l - entityplayer.locZ;
+-
+-                if (d0 * d0 + d1 * d1 + d2 * d2 < 1024.0D) {
+-                    entityplayer.playerConnection.sendPacket(new PacketPlayOutBlockBreakAnimation(i, j, k, l, i1));
+-                }
+-            }
+-        }
++        // MineHQ start - PlayerMap
++        Entity entity = this.world.getEntity(i);
++        EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;
++        this.world.playerMap.sendPacketNearby(player, j, k, l, 32.0D, new PacketPlayOutBlockBreakAnimation(i, j, k, l, i1));
++        // MineHQ end
+     }
+ 
+     public void b() {}
+-- 
+2.13.3
+

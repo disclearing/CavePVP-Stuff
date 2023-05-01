@@ -1,0 +1,281 @@
+From e2e0ae4d88124904f6f9a20deff050d6e7c27968 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 21 Jul 2017 23:11:15 +0100
+Subject: [PATCH] Use SpecialSource instead of Overmapped
+
+
+diff --git a/deprecation-mappings.at b/deprecation-mappings.at
+new file mode 100644
+index 000000000..3e8419568
+--- /dev/null
++++ b/deprecation-mappings.at
+@@ -0,0 +1,62 @@
++public+synthetic org/bukkit/Bukkit/getOnlinePlayers()[Lorg/bukkit/entity/Player;
++public+synthetic org/bukkit/Server/getOnlinePlayers()[Lorg/bukkit/entity/Player;
++
++public+synthetic org/bukkit/entity/Damageable/damage(I)V
++public+synthetic org/bukkit/entity/Damageable/damage(ILorg/bukkit/entity/Entity;)V
++public+synthetic org/bukkit/entity/Damageable/getHealth()I
++public+synthetic org/bukkit/entity/Damageable/getMaxHealth()I
++public+synthetic org/bukkit/entity/Damageable/setHealth(I)V
++public+synthetic org/bukkit/entity/Damageable/setMaxHealth(I)V
++
++public+synthetic org/bukkit/entity/LivingEntity/getLastDamage()I
++public+synthetic org/bukkit/entity/LivingEntity/setLastDamage(I)V
++
++public+synthetic org/bukkit/entity/Minecart/getDamage()I
++public+synthetic org/bukkit/entity/Minecart/setDamage(I)V
++
++public+synthetic org/bukkit/entity/Projectile/getShooter()Lorg/bukkit/entity/LivingEntity;
++public+synthetic org/bukkit/entity/Projectile/setShooter(Lorg/bukkit/entity/LivingEntity;)V
++
++public+synthetic org/bukkit/event/entity/EntityDamageEvent/getDamage()I
++public+synthetic org/bukkit/event/entity/EntityDamageEvent/setDamage(I)V
++
++public+synthetic org/bukkit/event/entity/EntityRegainHealthEvent/getAmount()I
++public+synthetic org/bukkit/event/entity/EntityRegainHealthEvent/setAmount(I)V
++
++public+synthetic org/bukkit/event/vehicle/VehicleDamageEvent/getDamage()I
++public+synthetic org/bukkit/event/vehicle/VehicleDamageEvent/setDamage(I)V
++
++# CraftBukkit
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/CraftServer/getOnlinePlayers()[Lorg/bukkit/entity/Player;
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftArrow/getShooter()Lorg/bukkit/entity/LivingEntity;
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftArrow/setShooter(Lorg/bukkit/entity/LivingEntity;)V
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftEnderDragonPart/damage(I)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftEnderDragonPart/damage(ILorg/bukkit/entity/Entity;)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftEnderDragonPart/getHealth()I
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftEnderDragonPart/getMaxHealth()I
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftEnderDragonPart/setHealth(I)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftEnderDragonPart/setMaxHealth(I)V
++
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftFireball/getShooter()Lorg/bukkit/entity/LivingEntity;
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftFireball/setShooter(Lorg/bukkit/entity/LivingEntity;)V
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftFish/getShooter()Lorg/bukkit/entity/LivingEntity;
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftFish/setShooter(Lorg/bukkit/entity/LivingEntity;)V
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/damage(I)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/damage(ILorg/bukkit/entity/Entity;)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/getHealth()I
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/getMaxHealth()I
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/setHealth(I)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/setMaxHealth(I)V
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/getLastDamage()I
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftLivingEntity/setLastDamage(I)V
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftMinecart/getDamage()I
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftMinecart/setDamage(I)V
++
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftProjectile/getShooter()Lorg/bukkit/entity/LivingEntity;
++public+synthetic org/bukkit/craftbukkit/v1_7_R4/entity/CraftProjectile/setShooter(Lorg/bukkit/entity/LivingEntity;)V
+diff --git a/deprecation-mappings.csrg b/deprecation-mappings.csrg
+new file mode 100644
+index 000000000..76354b5bb
+--- /dev/null
++++ b/deprecation-mappings.csrg
+@@ -0,0 +1,28 @@
++
++org/bukkit/Bukkit _INVALID_getOnlinePlayers ()[Lorg/bukkit/entity/Player; getOnlinePlayers
++org/bukkit/Server _INVALID_getOnlinePlayers ()[Lorg/bukkit/entity/Player; getOnlinePlayers
++
++org/bukkit/entity/Damageable _INVALID_damage (I)V damage
++org/bukkit/entity/Damageable _INVALID_damage (ILorg/bukkit/entity/Entity;)V damage
++org/bukkit/entity/Damageable _INVALID_getHealth ()I getHealth
++org/bukkit/entity/Damageable _INVALID_getMaxHealth ()I getMaxHealth
++org/bukkit/entity/Damageable _INVALID_setHealth (I)V setHealth
++org/bukkit/entity/Damageable _INVALID_setMaxHealth (I)V setMaxHealth
++
++org/bukkit/entity/LivingEntity _INVALID_getLastDamage ()I getLastDamage
++org/bukkit/entity/LivingEntity _INVALID_setLastDamage (I)V setLastDamage
++
++org/bukkit/entity/Minecart _INVALID_getDamage ()I getDamage
++org/bukkit/entity/Minecart _INVALID_setDamage (I)V setDamage
++
++org/bukkit/entity/Projectile _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity; getShooter
++org/bukkit/entity/Projectile _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V setShooter
++
++org/bukkit/event/entity/EntityDamageEvent _INVALID_getDamage ()I getDamage
++org/bukkit/event/entity/EntityDamageEvent _INVALID_setDamage (I)V setDamage
++
++org/bukkit/event/entity/EntityRegainHealthEvent _INVALID_getAmount ()I getAmount
++org/bukkit/event/entity/EntityRegainHealthEvent _INVALID_setAmount (I)V setAmount
++
++org/bukkit/event/vehicle/VehicleDamageEvent _INVALID_getDamage ()I getDamage
++org/bukkit/event/vehicle/VehicleDamageEvent _INVALID_setDamage (I)V setDamage
+diff --git a/maps.yml b/maps.yml
+deleted file mode 100644
+index 5384024cf..000000000
+--- a/maps.yml
++++ /dev/null
+@@ -1,46 +0,0 @@
+-members:
+-  "org/bukkit/entity/Damageable _INVALID_damage (I)V": damage
+-  "org/bukkit/entity/Damageable _INVALID_damage (ILorg/bukkit/entity/Entity;)V": damage
+-  "org/bukkit/entity/Damageable _INVALID_getHealth ()I": getHealth
+-  "org/bukkit/entity/Damageable _INVALID_setHealth (I)V": setHealth
+-  "org/bukkit/entity/Damageable _INVALID_getMaxHealth ()I": getMaxHealth
+-  "org/bukkit/entity/Damageable _INVALID_setMaxHealth (I)V": setMaxHealth
+-  "org/bukkit/entity/LivingEntity _INVALID_getLastDamage ()I": getLastDamage
+-  "org/bukkit/entity/LivingEntity _INVALID_setLastDamage (I)V": setLastDamage
+-  "org/bukkit/event/entity/EntityDamageEvent _INVALID_getDamage ()I": getDamage
+-  "org/bukkit/event/entity/EntityDamageEvent _INVALID_setDamage (I)V": setDamage
+-  "org/bukkit/event/vehicle/VehicleDamageEvent _INVALID_getDamage ()I": getDamage
+-  "org/bukkit/event/vehicle/VehicleDamageEvent _INVALID_setDamage (I)V": setDamage
+-  "org/bukkit/event/entity/EntityRegainHealthEvent _INVALID_getAmount ()I": getAmount
+-  "org/bukkit/event/entity/EntityRegainHealthEvent _INVALID_setAmount (I)V": setAmount
+-  "org/bukkit/entity/Minecart _INVALID_getDamage ()I": getDamage
+-  "org/bukkit/entity/Minecart _INVALID_setDamage (I)V": setDamage
+-  "org/bukkit/entity/Projectile _INVALID_getShooter ()Lorg/bukkit/entity/LivingEntity;": getShooter
+-  "org/bukkit/entity/Projectile _INVALID_setShooter (Lorg/bukkit/entity/LivingEntity;)V": setShooter
+-  "org/bukkit/Bukkit _INVALID_getOnlinePlayers ()[Lorg/bukkit/entity/Player;": getOnlinePlayers
+-  "org/bukkit/Server _INVALID_getOnlinePlayers ()[Lorg/bukkit/entity/Player;": getOnlinePlayers
+-flags:
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity getHealth ()I": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftEnderDragonPart getHealth ()I": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity getMaxHealth ()I": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftEnderDragonPart getMaxHealth ()I": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity setHealth (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftEnderDragonPart setHealth (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity setMaxHealth (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftEnderDragonPart setMaxHealth (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity damage (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftEnderDragonPart damage (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity damage (ILorg/bukkit/entity/Entity;)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftEnderDragonPart damage (ILorg/bukkit/entity/Entity;)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity getLastDamage ()I": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftLivingEntity setLastDamage (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftMinecart setDamage (I)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftMinecart getDamage ()I": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftProjectile getShooter ()Lorg/bukkit/entity/LivingEntity;": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftProjectile setShooter (Lorg/bukkit/entity/LivingEntity;)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftArrow getShooter ()Lorg/bukkit/entity/LivingEntity;": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftArrow setShooter (Lorg/bukkit/entity/LivingEntity;)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftFireball getShooter ()Lorg/bukkit/entity/LivingEntity;": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftFireball setShooter (Lorg/bukkit/entity/LivingEntity;)V": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftFish getShooter ()Lorg/bukkit/entity/LivingEntity;": 0x1001
+-  "org/bukkit/craftbukkit/v${minecraft_version}/entity/CraftFish setShooter (Lorg/bukkit/entity/LivingEntity;)V": 0x1001
+diff --git a/pom.xml b/pom.xml
+index f99923708..79d0a575d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -16,6 +16,8 @@
+     <minecraft_version>1_7_R4</minecraft_version>
+     <buildtag.prefix>git-Bukkit-</buildtag.prefix>
+     <buildtag.suffix></buildtag.suffix>
++    <maven.compiler.source>1.8</maven.compiler.source>
++    <maven.compiler.target>1.8</maven.compiler.target>
+   </properties>
+ 
+   <parent>
+@@ -25,17 +27,10 @@
+     <relativePath>../pom.xml</relativePath>
+   </parent>
+ 
+-  <repositories>
+-    <repository>
+-      <id>repobo-snap</id>
+-      <url>http://repo.bukkit.org/content/groups/public</url>
+-    </repository>
+-  </repositories>
+-
+   <pluginRepositories>
+     <pluginRepository>
+-      <id>bukkit-plugins</id>
+-      <url>http://repo.bukkit.org/content/groups/public</url>
++      <id>spigotmc-public</id>
++      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+     </pluginRepository>
+   </pluginRepositories>
+ 
+@@ -127,7 +122,7 @@
+ 
+   <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
+   <build>
+-    <defaultGoal>install</defaultGoal>
++    <defaultGoal>clean install</defaultGoal>
+     <plugins>
+       <plugin>
+         <groupId>net.md-5</groupId>
+@@ -269,11 +264,23 @@
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-compiler-plugin</artifactId>
+-        <version>2.3.2</version>
++        <version>3.1</version>
+         <configuration>
+           <source>1.8</source>
+           <target>1.8</target>
++          <!-- We use the Eclipse compiler as it doesn't need a JDK -->
++          <compilerId>eclipse</compilerId>
++          <!-- Source and target are ignored if this isn't true -->
++          <optimize>true</optimize>
+         </configuration>
++        <dependencies>
++          <!-- We need our custom version as it fixes some bugs on case sensitive file systems -->
++          <dependency>
++            <groupId>org.codehaus.plexus</groupId>
++            <artifactId>plexus-compiler-eclipse</artifactId>
++            <version>2.5.0-spigotmc</version>
++          </dependency>
++        </dependencies>
+       </plugin>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+@@ -288,44 +295,18 @@
+         </configuration>
+       </plugin>
+       <plugin>
+-        <artifactId>maven-resources-plugin</artifactId>
+-        <version>2.4.3</version>
+-        <executions>
+-          <execution>
+-            <id>maps-file</id>
+-            <phase>package</phase>
+-            <goals>
+-              <goal>copy-resources</goal>
+-            </goals>
+-            <configuration>
+-              <outputDirectory>${basedir}/target</outputDirectory>
+-              <resources>
+-                <resource>
+-                  <directory>${basedir}</directory>
+-                  <filtering>true</filtering>
+-                  <includes>
+-                    <include>maps.yml</include>
+-                  </includes>
+-                </resource>
+-              </resources>
+-            </configuration>
+-          </execution>
+-        </executions>
+-      </plugin>
+-      <plugin>
+-        <groupId>com.wolvereness</groupId>
+-        <artifactId>overmapped</artifactId>
+-        <version>0.0.2</version>
++        <groupId>net.md-5</groupId>
++        <artifactId>specialsource-maven-plugin</artifactId>
++        <version>1.2.1</version>
+         <executions>
+           <execution>
+             <phase>package</phase>
+             <goals>
+-              <goal>map</goal>
++              <goal>remap</goal>
+             </goals>
+             <configuration>
+-              <maps>${basedir}/target/maps.yml</maps>
+-              <input>${basedir}/target/${project.artifactId}-${project.version}.jar</input>
+-              <original>${basedir}/target/unmapped-${project.artifactId}-${project.version}.jar</original>
++              <srgIn>${project.basedir}/deprecation-mappings.csrg</srgIn>
++              <accessIn>${project.basedir}/deprecation-mappings.at</accessIn>
+             </configuration>
+           </execution>
+         </executions>
+-- 
+2.13.3
+

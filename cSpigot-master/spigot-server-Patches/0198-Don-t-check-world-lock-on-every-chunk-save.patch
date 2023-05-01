@@ -1,0 +1,48 @@
+From 0236ad107d4817e152e7eb5790d0160d1bd8f814 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 25 Jul 2017 19:22:20 +0100
+Subject: [PATCH] Don't check world lock on every chunk save
+
+
+diff --git a/src/main/java/net/minecraft/server/WorldNBTStorage.java b/src/main/java/net/minecraft/server/WorldNBTStorage.java
+index 93135a70c..78cfc444e 100644
+--- a/src/main/java/net/minecraft/server/WorldNBTStorage.java
++++ b/src/main/java/net/minecraft/server/WorldNBTStorage.java
+@@ -47,6 +47,14 @@ public class WorldNBTStorage implements IDataManager, IPlayerFileData {
+         }
+ 
+         this.h();
++
++        // MineHQ start - manually check lock on startup
++        try {
++            checkSession0();
++        } catch (Throwable t) {
++            org.spigotmc.SneakyThrow.sneaky(t);
++        }
++        // MineHQ end
+     }
+ 
+     private void h() {
+@@ -69,7 +77,10 @@ public class WorldNBTStorage implements IDataManager, IPlayerFileData {
+         return this.baseDir;
+     }
+ 
+-    public void checkSession() throws ExceptionWorldConflict { // CraftBukkit - throws ExceptionWorldConflict
++    public void checkSession() throws ExceptionWorldConflict {} // CraftBukkit - throws ExceptionWorldConflict // MineHQ - we can safely do so as the server will stop upon detecting a session conflict on startup
++
++    // MineHQ start - locally used checkSession
++    private void checkSession0() throws ExceptionWorldConflict {
+         try {
+             File file1 = new File(this.baseDir, "session.lock");
+             DataInputStream datainputstream = new DataInputStream(new FileInputStream(file1));
+@@ -85,6 +96,7 @@ public class WorldNBTStorage implements IDataManager, IPlayerFileData {
+             throw new ExceptionWorldConflict("Failed to check session lock for world located at " + this.baseDir + ", aborting. Stop the server and delete the session.lock in this world to prevent further issues."); // Spigot
+         }
+     }
++    // MineHQ end
+ 
+     public IChunkLoader createChunkLoader(WorldProvider worldprovider) {
+         throw new RuntimeException("Old Chunk Storage is no longer supported.");
+-- 
+2.13.3
+

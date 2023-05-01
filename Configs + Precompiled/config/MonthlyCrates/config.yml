@@ -1,0 +1,623 @@
+-messages:
+  prefix: '&4&lCavePvP &8┃&f '
+  no-perms: '%prefix%You don''t have permission to execute this command.'
+  config-reloaded: '%prefix%Config has successfully reloaded!'
+  invalid-usage: '%prefix%Incorrect usage.'
+  success-give: '%prefix%You have successfully given &4%amount%x &c%crate% &fMonthly
+    Crates to &c%player%&f!'
+  success-give-other: '%prefix%You have been given &4%amount%x &c2022 Mystery Boxes&f!'
+  created-item: '%prefix%You have added your hand item to the crate! To remove it,
+    go into the config and delete it.'
+  help-message:
+  - '&6/mcrate - show this message!'
+  - '&6/mcrate list - view the crate storage'
+  - '&6/mcrate reload - reload the config'
+  - '&6/mcrate giveall <crate> <amount> - give all players a monthly crate'
+  - '&6/mcrate give <player> <crate> <amount> - give a player a monthly crate'
+  - '&6/mcrate addItem <crateName> <type:(normal or final)> <chance> <giveItem:(if
+    false, command is used)> <command:(don''t put anything here if giveItem is true)>'
+  - '&6Permission needed to execute /mcrate: mcrates.storage'
+  - '&6Permission needed to execute other commands: mcrates.admin'
+storage-inv:
+  Name: '&8%crate#% Crates'
+  Size: 36
+crates:
+  Seasonal:
+    crate:
+      Material: ENDER_CHEST
+      Glow: false
+      ItemData: -1
+      Name: '&e&ki&6&ki&e&ki&6&l &nOCTOBER MYSTERY BOX&e &ki&6&ki&e&ki'
+      Lores:
+      - '&fPurchaseable at &estore.cavepvp.org'
+      - ''
+      - '&e<&m----&6&l ALL REWARDS &e&m----&e>'
+      - '&f* &4&lEXTREME &e&ki&6 Custom Rank &e&ki'
+      - '&f* &5&lULTIMATE &fCave Rank'
+      - '&f* &5&lULTIMATE &fHoliday Rank'
+      - '&f* &2&lCASH &2$&a100.00 &fStore Voucher'
+      - '&f* &2&lCASH &2$&a50.00 &fStore Voucher'
+      - '&f* &2&lCASH &2$&a25.00 &fStore Voucher'
+      - '&f* &2&lCASH &2$&a10.00 &fStore Voucher'
+      - '&f* &c&lRARE &f5x Air Drop'
+      - '&f* &c&lRARE &f10x Fall Lootboxes'
+      - '&f* &c&lRARE &f16x Owner Keys'
+      - '&f* &c&lRARE &f24x Partner Keys'
+      - '&f* &c&lRARE &f32x Halloween Keys'
+      - '&f* &c&lRARE &f5x Zeus Hammer'
+      - '&f* &c&lRARE &f3x Random Clickable Kits'
+      - ''
+      - '&e<&m----&6&l ALL REWARDS &e&m----&e>'
+      - '&f* &c&lRARE &f1x Air Drop'
+      - '&f* &c&lRARE &f3x Fall Lootboxes'
+      - '&f* &c&lRARE &f5x Halloween Keys'
+      - '&f* &c&lRARE &f10x Cave Keys'
+      - '&f* &c&lRARE &f16x Legendary Keys'
+      - '&f* &c&lRARE &fEvader Custom Enchant'
+      - '&f* &c&lRARE &fGuardian Angel Custom Enchant'
+      - '&f* &6&lUNCOMMON &fLazy Brewer'
+      - '&f* &6&lUNCOMMON &f5x Power Stone'
+      - '&f* &6&lUNCOMMON &f5x Reality Stone'
+      - '&f* &6&lUNCOMMON &f5x Soul Stone'
+      - '&f* &6&lUNCOMMON &f5x Mind Stone'
+      - '&f* &6&lUNCOMMON &f5x Time Stone'
+      - '&f* &6&lUNCOMMON &f1x September Helmet'
+      - '&f* &6&lUNCOMMON &f1x September Chestplate'
+      - '&f* &6&lUNCOMMON &f1x September Leggings'
+      - '&f* &6&lUNCOMMON &f1x September Boots'
+      - '&f* &6&lUNCOMMON &f1x September Sword'
+      - '&f* &6&lUNCOMMON &f1x September Pickaxe'
+      - '&f* &6&lUNCOMMON &f1x September Bow'
+      - '&f* &a&lCOMMON &f64x Random Valuables'
+      - '&f* &a&lCOMMON &f2x Crowbar'
+      - '&f* &a&lCOMMON &f6x GOD Apples'
+      - '&f* &a&lCOMMON &f32x Golden Apples'
+      - '&f* &a&lCOMMON &f128x Ender Pearl'
+    gui:
+      Name: '&8Crate: %name%'
+      not-redeemed:
+        Material: ENDER_CHEST
+        Glow: false
+        ItemData: -1
+        Amount: 1
+        Name: '&f&l???'
+        Lores:
+        - '&7Click to receive a random'
+        - '&7item from the crate.'
+      final-not-redeemable:
+        Material: STAINED_GLASS_PANE
+        PaneColor: RED
+        Glow: false
+        Amount: 1
+        Name: '&c&l???'
+        Lores:
+        - '&7You can''t open the final reward'
+        - '&7until you have redeemed all other rewards.'
+      animation:
+        Glow: false
+        ScrambleAnimationRunsPerItem: 10
+        FinalAnimationRuns: 6
+        animation-on-colors:
+        - BLUE
+        - LIME
+        - ORANGE
+        - MAGENTA
+        - PINK
+        - YELLOW
+        animation-off-color: BLACK
+    normal-rewards:
+      '0':
+        Material: EMERALD_BLOCK
+        Amount: 64
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&2&lEmerald Blocks'
+        Lores: []
+        Commands:
+        - give emeraldblock 64 %player%
+        Enchantments: []
+        Chance: 2.0
+      '1':
+        Material: DIAMOND_BLOCK
+        Amount: 64
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&b&lDiamond Blocks'
+        Lores: []
+        Commands:
+        - give diamondblock 64 %player%
+        Enchantments: []
+        Chance: 2.0
+      '2':
+        Material: GOLD_BLOCK
+        Amount: 64
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&lGold Blocks'
+        Lores: []
+        Commands:
+        - give goldblock 64 %player%
+        Enchantments: []
+        Chance: 2.0
+      '3':
+        Material: IRON_BLOCK
+        Amount: 64
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&7&lIron Blocks'
+        Lores: []
+        Commands:
+        - give ironblock 64 %player%
+        Enchantments: []
+        Chance: 2.0
+      '4':
+        Material: DIAMOND_HOE
+        Amount: 2
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&cCrowbar'
+        Lores: []
+        Commands:
+        - crowbar %player%
+        - crowbar %player%
+        Enchantments: []
+        Chance: 5.0
+      '5':
+        Material: GOLDEN_APPLE
+        Amount: 32
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l32x Golden Apples'
+        Lores: []
+        Commands:
+        - give 322:1 32 %player%
+        Enchantments: []
+        Chance: 5.0
+      '6':
+        Material: ENDER_PEARL
+        Amount: 64
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&5&l128x Ender Pearls'
+        Lores: []
+        Commands:
+        - give enderpearl 32 %player%
+        - give enderpearl 32 %player%
+        - give enderpearl 32 %player%
+        - give enderpearl 32 %player%
+        Enchantments: []
+        Chance: 5.0
+      '7':
+        Material: DIAMOND_HELMET
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Helmet'
+        Commands: []
+        Lores:
+        - '&cHellForged IV'
+        - '&cImplants V'
+        - '&cMermaid III'
+        - '&cRecover I'
+        - '&cFireResistance I'
+        - '&cGreed I'
+        Enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:3
+        Chance: 2.0
+      '8':
+        Material: DIAMOND_CHESTPLATE
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Chestplate'
+        Commands: []
+        Lores:
+        - '&cHellForged IV'
+        - '&cRecover I'
+        - '&cFireResistance I'
+        - '&cInvisibility I'
+        - '&cFury I'
+        Enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:3
+        Chance: 2.0
+      '9':
+        Material: DIAMOND_LEGGINGS
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Leggings'
+        Commands: []
+        Lores:
+        - '&cHellForged IV'
+        - '&cRecover I'
+        - '&cFireResistance I'
+        - '&cSwift I'
+        Enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:3
+        Chance: 2.0
+      '10':
+        Material: DIAMOND_BOOTS
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Boots'
+        Commands: []
+        Lores:
+        - '&cSpeed II'
+        - '&cHellForged IV'
+        - '&cRecover I'
+        - '&cFireResistance I'
+        Enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FALL:4
+        - DURABILITY:3
+        Chance: 2.0
+      '11':
+        Material: DIAMOND_SWORD
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Sword'
+        Commands: []
+        Lores: []
+        Enchantments:
+        - DAMAGE_ALL:2
+        - FIRE_ASPECT:2
+        - DURABILITY:3
+        Chance: 2.0
+      '12':
+        Material: DIAMOND_PICKAXE
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Pickaxe'
+        Commands: []
+        Lores: []
+        Enchantments:
+        - DIG_SPEED:6
+        - LOOT_BONUS_BLOCKS:5
+        - DURABILITY:5
+        Chance: 2.0
+      '13':
+        Material: BOW
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: true
+        Name: '&6&lSeptember Bow'
+        Commands: []
+        Lores: []
+        Enchantments:
+        - ARROW_DAMAGE:5
+        - ARROW_FIRE:1
+        - ARROW_INFINITE:1
+        - DURABILITY:3
+        Chance: 2.0
+      '14':
+        Material: BREWING_STAND_ITEM
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&a&lLazy Brewer'
+        Commands:
+        - ability lazybrewer 1 %player%
+        Lores: []
+        Enchantments: []
+        Chance: 0.0
+      '15':
+        Material: INK_SACK
+        Amount: 5
+        Glow: false
+        ItemData: 5
+        GiveItem: false
+        Name: '&5&l5x Power Stone'
+        Commands:
+        - ability powerstone 5 %player%
+        Lores: []
+        Enchantments: []
+        Chance: 2.5
+      '16':
+        Material: INK_SACK
+        Amount: 5
+        Glow: false
+        ItemData: 14
+        GiveItem: false
+        Name: '&6&l5x Mind Stone'
+        Commands:
+        - ability mindstone 5 %player%
+        Lores: []
+        Enchantments: []
+        Chance: 2.5
+      '17':
+        Material: GOLD_INGOT
+        Amount: 5
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l5x Soul Stone'
+        Commands:
+        - ability soulstone 5 %player%
+        Lores: []
+        Enchantments: []
+        Chance: 2.5
+      '18':
+        Material: REDSTONE
+        Amount: 5
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&c&l5x Reality Stone'
+        Commands:
+        - ability realitystone 5 %player%
+        Lores: []
+        Enchantments: []
+        Chance: 2.5
+      '19':
+        Material: EMERALD
+        Amount: 5
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&a&l5x Time Stone'
+        Commands:
+        - ability timestone 5 %player%
+        Lores: []
+        Enchantments: []
+        Chance: 2.5
+      '20':
+        Material: BOOK
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&d&l1x Evader Enchantment Book'
+        Lores: []
+        Commands:
+        - ce givebook %player% Evader 1
+        Enchantments: []
+        Chance: 1.0
+      '21':
+        Material: BOOK
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&d&l1x Guardian Angel Enchantment Book'
+        Lores: []
+        Commands:
+        - ce givebook %player% GuardianAngel 1
+        Enchantments: []
+        Chance: 1.0
+      '22':
+        Material: DROPPER
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&b&l1x Air Drop'
+        Lores: []
+        Commands:
+        - airdrops give %player% 1
+        Enchantments: []
+        Chance: 1.0
+      '23':
+        Material: ENDER_CHEST
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l3x Fall Lootbox'
+        Lores: []
+        Commands:
+        - crates give %player% Seasonal 3
+        Enchantments: []
+        Chance: 1.0
+      '24':
+        Material: TRIPWIRE_HOOK
+        Amount: 5
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l5x Halloween Keys'
+        Lores: []
+        Commands:
+        - cr givekey %player% Seasonal 5
+        Enchantments: []
+        Chance: 1.0
+      '25':
+        Material: TRIPWIRE_HOOK
+        Amount: 10
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&4&l10x Cave Keys'
+        Lores: []
+        Commands:
+        - cr givekey %player% Cave 10
+        Enchantments: []
+        Chance: 1.0
+      '26':
+        Material: TRIPWIRE_HOOK
+        Amount: 16
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&5&l16x Legendary Keys'
+        Lores: []
+        Commands:
+        - cr givekey %player% Legendary 16
+        Enchantments: []
+        Chance: 1.0
+    final-rewards:
+      '0':
+        Material: BOOK
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&c&l3x Random Clickable Kit'
+        Lores: []
+        Commands:
+        - randomclickablekit %player% 3
+        Enchantments: []
+        Chance: 5.0
+      '1':
+        Material: BLAZE_ROD
+        Amount: 5
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l5x Zeus Hammer'
+        Lores: []
+        Commands:
+        - ability zeushammer 5 %player%
+        Chance: 3.0
+      '2':
+        Material: DROPPER
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&b&l5x Air Drop'
+        Lores: []
+        Commands:
+        - airdrops give %player% 5
+        Enchantments: []
+        Chance: 2.0
+      '3':
+        Material: ENDER_CHEST
+        Amount: 10
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l10x Fall Lootbox'
+        Lores: []
+        Commands:
+        - crates give %player% Seasonal 10
+        Enchantments: []
+        Chance: 2.0
+      '4':
+        Material: TRIPWIRE_HOOK
+        Amount: 32
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&6&l32x Halloween Keys'
+        Lores: []
+        Commands:
+        - cr givekey %player% Seasonal 32
+        Enchantments: []
+        Chance: 2.0
+      '5':
+        Material: TRIPWIRE_HOOK
+        Amount: 16
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&4&l16x Owner Keys'
+        Lores: []
+        Commands:
+        - randomownerkeys %player% 16
+        Enchantments: []
+        Chance: 2.0
+      '6':
+        Material: TRIPWIRE_HOOK
+        Amount: 24
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&d&l24x Partner Keys'
+        Lores: []
+        Commands:
+        - cr givekey %player% Partner 24
+        Enchantments: []
+        Chance: 2.0
+      '7':
+        Material: STONE
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&4&l30-day Cave Rank'
+        Lores: []
+        Commands:
+        - vouchers addrank %player% Cave 30d &4&l30-day Cave Rank
+        - raw &f
+        - raw &4&lMystery Box
+        - raw &f%player% &chas just won &4&l30-day Cave Rank&c!
+        - raw &7Purchase Mystery Boxes on our store at &fstore.cavepvp.org&7!
+        - raw &f
+        Enchantments: []
+        Chance: 0.0
+      '8':
+        Material: COBBLESTONE
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&a&l40-day Spooky Rank'
+        Lores: []
+        Commands:
+        - vouchers addrank %player% Holiday 40d &6&l40-day Spooky Rank
+        - raw &f
+        - raw &4&lMystery Box
+        - raw &f%player% &chas just won &6&l40-day Spooky Rank&c!
+        - raw &7Purchase Mystery Boxes on our store at &fstore.cavepvp.org&7!
+        - raw &f
+        Enchantments: []
+        Chance: 0.0
+      '9':
+        Material: STONE
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&d&l50-day Ravine Rank'
+        Lores: []
+        Commands:
+        - vouchers addrank %player% Ravine 50d &d&l50-day Ravine Rank
+        - raw &f
+        - raw &4&lMystery Box
+        - raw &f%player% &chas just won &d&l50-day Ravine Rank&c!
+        - raw &7Purchase Mystery Boxes on our store at &fstore.cavepvp.org&7!
+        - raw &f
+        Enchantments: []
+        Chance: 0.0
+      '10':
+        Material: GOLD_BLOCK
+        Amount: 1
+        Glow: false
+        ItemData: -1
+        GiveItem: false
+        Name: '&e&l60-day VIP Status'
+        Lores: []
+        Commands:
+        - vouchers addrank %player% VIP 60d &e&l60-day VIP Status
+        - raw &f
+        - raw &4&lMystery Box
+        - raw &f%player% &chas just won &e&l60-day VIP Status&c!
+        - raw &7Purchase Mystery Boxes on our store at &fstore.cavepvp.org&7!
+        - raw &f
+        Enchantments: []
+        Chance: 0
+time:
+  ScrambleAnimationSpeedInTicks: 3
+  FinalAnimationSpeedInTicks: 3
+once-per-item: false

@@ -1,0 +1,29 @@
+From 182ad3bf1a2ce269651600856356e0e1ffe7864b Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Tue, 17 Nov 2015 02:45:39 +0100
+Subject: [PATCH] Pull in a PaperSpigot patch to prevent chunk creation while
+ unloading
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 1babd7979..d95732b40 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -196,7 +196,13 @@ public class CraftWorld implements World {
+             return false;
+         }
+ 
+-        net.minecraft.server.Chunk chunk = world.chunkProviderServer.getOrCreateChunk(x, z);
++        net.minecraft.server.Chunk chunk = world.chunkProviderServer.getChunkIfLoaded(x, z);
++        // PaperSpigot start - Don't create a chunk just to unload it
++        if (chunk == null) {
++            return false;
++        }
++        // PaperSpigot end
++
+         if (chunk.mustSave) {   // If chunk had previously been queued to save, must do save to avoid loss of that data
+             save = true;
+         }
+-- 
+2.13.3
+

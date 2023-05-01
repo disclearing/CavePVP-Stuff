@@ -1,0 +1,495 @@
+centralLocation:
+  ==: net.frozenorb.foxtrot.util.PersistableLocation
+  worldName: Spawn
+  x: -20.5
+  y: 71.0
+  z: 26.5
+  yaw: '249.30031'
+  pitch: '26.550003'
+displayName: '&4&lOmega Chest'
+slot: 11
+maxOpened: 4
+material: EYE_OF_ENDER
+location:
+  location_1:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -18.0
+    y: 71.0
+    z: 25.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_2:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -20.0
+    y: 71.0
+    z: 23.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_3:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -22.0
+    y: 71.0
+    z: 23.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_4:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -18.0
+    y: 71.0
+    z: 27.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_5:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -20.0
+    y: 71.0
+    z: 29.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_6:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -22.0
+    y: 71.0
+    z: 29.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_7:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -24.0
+    y: 71.0
+    z: 25.0
+    yaw: '0.0'
+    pitch: '0.0'
+  location_8:
+    ==: net.frozenorb.foxtrot.util.PersistableLocation
+    worldName: Spawn
+    x: -24.0
+    y: 71.0
+    z: 27.0
+    yaw: '0.0'
+    pitch: '0.0'
+players:
+  2a4c51af-3d63-404d-aac5-a3c601c3f46c: 0
+  f79e8218-6b86-49c0-9bab-9328ba5760f6: 0
+  196acdde-45bb-420c-bea0-c2e6244d908e: 1
+  f54e2116-df34-4970-b71b-7f5d3ed29dc0: 0
+  7e9a2e08-98fa-4a3a-a506-232a2bf88b6c: 0
+  4eae57e8-3948-48f5-87b0-edab39a95502: 0
+  581735a7-6a7e-438f-be7b-292ade9a1d66: 0
+  a75512f0-7af7-480a-ab8b-d7440f05b5bc: 0
+  74873c13-3394-4306-b92a-c0ed3cab6ea4: 0
+  4fd6b5dc-4ef4-4d09-b5fb-ab31b702d3cc: 0
+  d5c74946-be98-4c59-b5fc-198703a6cc8a: 0
+  10fcd790-cb4f-4a1b-b780-522e24ae62c0: 0
+  51916132-1ac0-4667-8e24-e487b7ad0dd3: 11
+  51eadbc2-33db-4410-b227-ef540e282f85: 2
+  dde9ed5b-a959-4efb-b0c5-049ab5d63804: 9
+  fec07ad5-3cd0-4147-90be-c4b8add7dfcd: 0
+  762a0eb8-3a2a-4c91-8624-8cb6dd568053: 2
+  c353fe06-5b90-4d5d-8e2b-802f19322050: 0
+  b8dec0a3-eec3-4c22-a10d-ac712f869019: 0
+  c244ace7-7d6c-4b48-8683-08ed5536ab00: 0
+rewards:
+  reward_9:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: RAW_FISH
+      damage: 2
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lFrenzy Network Booster
+    chance: 1.0
+    command: booster give Frenzy 1 {player}
+    giveItem: false
+    broadcast: true
+  reward_10:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 1
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§l60d Cave Rank
+    chance: 0.0
+    command: vouchers addrank {player} Cave 60d &4&l60d Cave Rank
+    giveItem: false
+    broadcast: true
+  reward_11:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 10
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §a§l30d §2§lSpring §a§lRank
+    chance: 0.0
+    command: vouchers addrank {player} Holiday 30d &c&l90d Spring Rank
+    giveItem: false
+    broadcast: true
+  reward_12:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EMERALD_BLOCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2§l$§a§l25 Buycraft Voucher
+    chance: 10.0
+    command: vouchers addamount {player} 25
+    giveItem: false
+    broadcast: true
+  reward_13:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EMERALD_BLOCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2§l$§a§l50 Voucher
+    chance: 0.0
+    command: vouchers addamount {player} 50
+    giveItem: false
+    broadcast: true
+  reward_14:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: TRIPWIRE_HOOK
+      amount: 16
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§l16x Random Owner Keys
+    chance: 5.0
+    command: randomownerkeys {player} 16
+    giveItem: false
+    broadcast: false
+  reward_15:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BOOK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§l3x Random Clickable Kit
+    chance: 5.0
+    command: randomclickablekit {player} 3
+    giveItem: false
+    broadcast: true
+  reward_16:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EGG
+      amount: 32
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §d§lEggport
+        lore:
+        - §7Switch places with your
+        - §7enemy that are within 15 blocks!
+        - ''
+        - §fCan be found in the §4§l3.0 Crate§f!
+    chance: 5.0
+    command: ability eggport 32 {player}
+    giveItem: false
+    broadcast: false
+  reward_17:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BLAZE_ROD
+      amount: 16
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lAnti-Blockup
+        lore:
+        - §7When you hit a player with this
+        - §73 times they may not block up for 15 seconds.
+        - ''
+        - §fCan be found in the §4§l3.0 Crate§f!
+    chance: 5.0
+    command: ability antiblockup 16 {player}
+    giveItem: false
+    broadcast: false
+  reward_18:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: PAPER
+      amount: 16
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §a§lMed Kit
+        lore:
+        - §7Right Click to receive Resistance 3,
+        - §7Regeneration 3, and 4 Absorption
+        - §7Hearts for 5 seconds!
+        - ''
+        - §fCan be found in the §4§l3.0 Crate§f!
+    chance: 5.0
+    command: ability medkit 16 {player}
+    giveItem: false
+    broadcast: false
+  reward_19:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: WORKBENCH
+      amount: 16
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§lCrafting Chaos
+        lore:
+        - §7Hit an enemy and for 10 seconds, every
+        - §7hit you deal has a 15% chance of
+        - §7putting them in a crafting table.
+        - ''
+        - §fCan be found in the §4§lQnA §fCrate!
+    chance: 5.0
+    command: ability craftingchaos 10 {player}
+    giveItem: false
+    broadcast: false
+  reward_20:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: NETHER_STAR
+      amount: 10
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lNinja Star
+        lore:
+        - §7Teleport to the last
+        - §7person who hit you within 30 seconds.
+        - ''
+        - §fCan be found in an §b§lAirdrop§f!
+    chance: 5.0
+    command: ability ninjastar 10 {player}
+    giveItem: false
+    broadcast: false
+  reward_21:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: TRIPWIRE_HOOK
+      amount: 20
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §d§lPartner Key
+        lore:
+        - §7Right click a §dPartner Crate §7to receive rewards!
+        enchants:
+          DURABILITY: 1
+    chance: 5.0
+    command: none
+    giveItem: true
+    broadcast: false
+  reward_22:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EMERALD_BLOCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §f§ki§a§l SOTW Bundle §f§ki
+    chance: 7.0
+    command: vouchers addbundles {player} SOTW §2§ki§a§l SOTW Bundle §2§ki
+    giveItem: false
+    broadcast: true
+  reward_23:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: REDSTONE_BLOCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §f§ki§6§l Fall Bundle §f§ki
+    chance: 2.5
+    command: vouchers addbundles {player} Seasonal §f§ki§6§l Fall Bundle §f§ki
+    giveItem: false
+    broadcast: true
+  reward_24:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §f§ki§4§l Supreme Fall Bundle §f§ki
+    chance: 0.0
+    command: vouchers addbundles {player} Supreme §f§ki§4§l Supreme Fall Bundle §f§ki
+    giveItem: false
+    broadcast: true
+  reward_25:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: ENDER_CHEST
+      amount: 3
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §e§ki§6§l Fall Lootbox §e§ki
+        lore:
+        - §7Unlocked at §fstore.cavepvp.org
+        - ''
+        - §4§lFINAL REWARDS
+        - ' §7➡ §4Cave Rank'
+        - ' §7➡ §6Summer Rank'
+        - ' §7➡ §6Premium Battle Pass'
+        - ' §7➡ §e§lVIP Subscription'
+        - ' §7➡ §6§lSummer Kit'
+        - ' §7➡ §2$§a10 Buycraft Voucher'
+        - ' §7➡ §2$§a5 Buycraft Voucher'
+        - ' §7➡ §a§l2x Perk Keys'
+        - ' §7➡ §b§l3x Airdrops'
+        - ' §7➡ §6§l5x Summer Keys'
+        - ' §7➡ §cRandom Clickable Kit'
+        - ''
+        - §4§lNORMAL REWARDS
+        - ' §7➡ §d16x Eggports'
+        - ' §7➡ §68x Anti-Blockup'
+        - ' §7➡ §a8x Med Kit'
+        - ' §7➡ §68x Midas Touch'
+        - ' §7➡ §cCrowbar'
+        - ' §7➡ §6§lGod Apple'
+        - ' §7➡ §632x Golden Apple'
+        - ' §7➡ §4OP Bow'
+        - ' §7➡ §bDiamond Sword'
+        - ' §7➡ §bDiamond Helmet'
+        - ' §7➡ §bDiamond Chestplate'
+        - ' §7➡ §bDiamond Leggings'
+        - ' §7➡ §bDiamond Boots'
+        - ' §7➡ §bDiamond Pickaxe'
+        - ' §7➡ §d16x Random Valuable Blocks'
+        - ' §7➡ §832x Gun Powder'
+        - ' §7➡ §e32x Glowstone Blocks'
+        - ' §7➡ §432x Nether Wart'
+        - ' §7➡ §c32x Glistering Melons'
+    chance: 5.0
+    command: crates give {player} Seasonal 5
+    giveItem: false
+    broadcast: false
+  reward_26:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DROPPER
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAir Drop
+        lore:
+        - §7Obtainable at §fstore.cavepvp.org§7.
+        - ''
+        - §ePlace this down to designate a location for the drop!
+    chance: 3.0
+    command: none
+    giveItem: true
+    broadcast: false
+  reward_27:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: CHEST
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§lSpider Man Armor Class
+        lore:
+        - ''
+        - '§cPerks:'
+        - §c❙ §f25% Fall Damage Reduction
+        - §c❙ §fPermanent Jump Boost II, Speed II, Fire Resistance I
+        - §c❙ §fSHIFT + Click to put the last player you hit in cobwebs!
+        - ''
+        - §aClick to redeem this armor set
+    chance: 2.5
+    command: none
+    giveItem: true
+    broadcast: false
+  reward_28:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: CHEST
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5§lTrapper Armor Class
+        lore:
+        - ''
+        - '§5Perks:'
+        - §5❙ §fTake 10% less damage
+        - §5❙ §fMed Kits and Portable Resistance last 25% longer
+        - §5❙ §fSHIFT + Click to put the last player you hit on Ability Item cooldown
+        - ''
+        - §aClick to redeem this armor set
+    chance: 2.5
+    command: none
+    giveItem: true
+    broadcast: false
+  reward_29:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: CHEST
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§lRaider Armor Class
+        lore:
+        - ''
+        - '§4Perks:'
+        - §4❙ §fDeal 5% more damage
+        - §4❙ §f10% Reduced Partner Item cooldown
+        - §4❙ §fSHIFT + Click to activate Midas Touch for 10 seconds
+        - ''
+        - §aClick to redeem this armor set
+    chance: 2.5
+    command: none
+    giveItem: true
+    broadcast: false
+  reward_30:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: CHEST
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§lPyromaniac Armor Class
+        lore:
+        - ''
+        - '§cPerks:'
+        - §c❙ §fSHIFT + Click to throw shockwaves
+        - §c❙ §f1% chance of putting them on Fire and giving them Wither I for 8 seconds.
+        - ''
+        - §aClick to redeem this armor set
+    chance: 2.5
+    command: none
+    giveItem: true
+    broadcast: false
+  reward_31:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: CHEST
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §a§lGrinder Armor Class
+        lore:
+        - ''
+        - '§aPerks:'
+        - §a❙ §f2x permanent XP multiplier
+        - ''
+        - §aClick to redeem this armor set
+    chance: 2.5
+    command: none
+    giveItem: true
+    broadcast: false

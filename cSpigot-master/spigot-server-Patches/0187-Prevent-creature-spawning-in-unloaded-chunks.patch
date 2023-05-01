@@ -1,0 +1,22 @@
+From cf2cdaa7d951c2a92e6586a5c6d5ad075b2bba10 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 9 Jul 2017 17:30:52 +0100
+Subject: [PATCH] Prevent creature spawning in unloaded chunks
+
+
+diff --git a/src/main/java/net/minecraft/server/SpawnerCreature.java b/src/main/java/net/minecraft/server/SpawnerCreature.java
+index 7b30362fd..19c331a0a 100644
+--- a/src/main/java/net/minecraft/server/SpawnerCreature.java
++++ b/src/main/java/net/minecraft/server/SpawnerCreature.java
+@@ -76,7 +76,7 @@ public final class SpawnerCreature {
+                         // CraftBukkit start - use LongHash and LongObjectHashMap
+                         long chunkCoords = LongHash.toLong(l + k, i1 + j);
+ 
+-                        if (!flag3) {
++                        if (!flag3 && worldserver.isChunkLoaded((i1 + l) >> 4, (k + j) >> 4)) { // MineHQ
+                             this.a.put(chunkCoords, false);
+                         } else if (!this.a.containsKey(chunkCoords)) {
+                             this.a.put(chunkCoords, true);
+-- 
+2.13.3
+

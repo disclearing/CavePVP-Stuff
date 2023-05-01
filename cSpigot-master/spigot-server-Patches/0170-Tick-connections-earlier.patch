@@ -1,0 +1,48 @@
+From 0a05b50739e7d2e43d6356ef849f356aa3d464e4 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 18 Jun 2017 04:15:55 +0100
+Subject: [PATCH] Tick connections earlier
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index e25a85ee4..24157a37a 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -680,6 +680,16 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+     }
+ 
+     public void v() {
++        // MineHQ start - tick connections earlier
++        // We tick the playerList here too so updated
++        // pings are sent out as soon as possible.
++        SpigotTimings.connectionTimer.startTiming(); // Spigot
++        this.ai().c();
++        SpigotTimings.connectionTimer.stopTiming(); // Spigot
++        SpigotTimings.playerListTimer.startTiming(); // Spigot
++        this.u.tick();
++        SpigotTimings.playerListTimer.stopTiming(); // Spigot
++        // MineHQ end
+         this.methodProfiler.a("levels");
+ 
+         SpigotTimings.schedulerTimer.startTiming(); // Spigot
+@@ -779,6 +789,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+         }
+ 
+         this.methodProfiler.c("connection");
++        // MineHQ start - move up
++        /*
+         SpigotTimings.connectionTimer.startTiming(); // Spigot
+         this.ai().c();
+         SpigotTimings.connectionTimer.stopTiming(); // Spigot
+@@ -786,6 +798,8 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+         SpigotTimings.playerListTimer.startTiming(); // Spigot
+         this.u.tick();
+         SpigotTimings.playerListTimer.stopTiming(); // Spigot
++        */
++        // MineHQ end
+         this.methodProfiler.c("tickables");
+ 
+         SpigotTimings.tickablesTimer.startTiming(); // Spigot
+-- 
+2.13.3
+

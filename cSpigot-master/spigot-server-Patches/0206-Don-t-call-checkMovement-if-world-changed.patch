@@ -1,0 +1,35 @@
+From 3aa8daf0c13a425744b48ea49f21c6ddddc3c6cf Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Fri, 25 Apr 2014 13:17:40 +1000
+Subject: [PATCH] Don't call checkMovement if world changed
+
+Fixes a bug where players travel to the end and lose a lot of hunger
+points due to them apparently having travelled a long distance
+
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index dbb0b5479..d5cf8714a 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -1328,6 +1328,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+         double d0 = this.locX;
+         double d1 = this.locY;
+         double d2 = this.locZ;
++        World world = this.world;
+ 
+         if (this.abilities.isFlying && this.vehicle == null) {
+             double d3 = this.motY;
+@@ -1341,7 +1342,10 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+             super.e(f, f1);
+         }
+ 
+-        this.checkMovement(this.locX - d0, this.locY - d1, this.locZ - d2);
++        // Kohi - don't check if world changed
++        if (this.world == world) {
++            this.checkMovement(this.locX - d0, this.locY - d1, this.locZ - d2);
++        }
+     }
+ 
+     public float bl() {
+-- 
+2.13.3
+

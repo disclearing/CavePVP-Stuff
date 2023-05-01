@@ -1,0 +1,263 @@
+[
+  {
+    "id": 33,
+    "location": {
+      "world": "Spawn",
+      "x": 20.5,
+      "y": 71.5,
+      "z": 29.5,
+      "yaw": 332.55054,
+      "pitch": 82.200035
+    },
+    "lines": [
+      "\u00265\u0026lLegendary Crate",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 34,
+    "location": {
+      "world": "Spawn",
+      "x": 0.5606243760630027,
+      "y": 71.22926145831116,
+      "z": 26.54973290485479,
+      "yaw": 1.102364,
+      "pitch": 0.4409499
+    },
+    "lines": [
+      "\u0026a\u0026lOverworld Portal",
+      "\u00267Jump through this water",
+      "§7to teleport to the real world!"
+    ]
+  },
+  {
+    "id": 7,
+    "location": {
+      "world": "world",
+      "x": -13.54843159742499,
+      "y": 173.5,
+      "z": -35.49425461701776,
+      "yaw": -3.4831543,
+      "pitch": 90.0
+    },
+    "lines": [
+      "\u00264\u0026lShop",
+      "\u00267Buy or Sell items",
+      "\u00267in our server shop",
+      "spacer",
+      "\u0026aShop is located down this pathway"
+    ]
+  },
+  {
+    "id": 15,
+    "location": {
+      "world": "Spawn",
+      "x": -26.5,
+      "y": 71.5,
+      "z": 6.5,
+      "yaw": 339.9001,
+      "pitch": 90.0
+    },
+    "lines": [
+      "\u0026c\u0026liMakeMcVids Crate",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 17,
+    "location": {
+      "world": "Spawn",
+      "x": 24.5,
+      "y": 71.5,
+      "z": 25.5,
+      "yaw": 276.30005,
+      "pitch": 90.0
+    },
+    "lines": [
+      "\u0026b\u0026lRare Crate",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 18,
+    "location": {
+      "world": "Spawn",
+      "x": -26.5,
+      "y": 71.5,
+      "z": -5.5,
+      "yaw": 184.37273,
+      "pitch": -12.89995
+    },
+    "lines": [
+      "\u00263\u0026lHeaded Crate",
+      "\u0026f\u0026ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 19,
+    "location": {
+      "world": "Spawn",
+      "x": -22.5,
+      "y": 71.50000000476837,
+      "z": 18.5,
+      "yaw": 271.3973,
+      "pitch": -4.3181725
+    },
+    "lines": [
+      "\u00264\u0026lKOTH Crate",
+      "§f§o/koth schedule"
+    ]
+  },
+  {
+    "id": 20,
+    "location": {
+      "world": "Spawn",
+      "x": 23.5,
+      "y": 71.6,
+      "z": 28.5,
+      "yaw": 308.82962,
+      "pitch": 5.3999906
+    },
+    "lines": [
+      "\u00264\u0026lCave Crate",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 21,
+    "location": {
+      "world": "Spawn",
+      "x": -20.5,
+      "y": 71.5,
+      "z": 0.5,
+      "yaw": -59.868927,
+      "pitch": 14.699806
+    },
+    "lines": [
+      "\u0026d\u0026lPartner Crate",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 22,
+    "location": {
+      "world": "Spawn",
+      "x": 8.5,
+      "y": 71.5,
+      "z": 28.5,
+      "yaw": 353.52948,
+      "pitch": 10.199877
+    },
+    "lines": [
+      "\u00266\u0026lFall Lootbox",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 23,
+    "location": {
+      "world": "Spawn",
+      "x": -20.5,
+      "y": 71.4,
+      "z": 26.5,
+      "yaw": 0.0,
+      "pitch": 0.0
+    },
+    "lines": [
+      "§f§ki§4§l TREASURE CHESTS §f§ki",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 24,
+    "location": {
+      "world": "world",
+      "x": 29.872337345898167,
+      "y": 266.6330486813818,
+      "z": 4.984532815440751,
+      "yaw": 74.63651,
+      "pitch": 42.53624
+    },
+    "lines": [
+      "\u0026c\u0026lCentral Chest"
+    ]
+  },
+  {
+    "id": 25,
+    "location": {
+      "world": "Spawn",
+      "x": 4.5,
+      "y": 71.6,
+      "z": 28.5,
+      "yaw": 346.02966,
+      "pitch": 2.249848
+    },
+    "lines": [
+      "\u0026b\u0026lAirdrop",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 26,
+    "location": {
+      "world": "Spawn",
+      "x": -3.5,
+      "y": 71.45,
+      "z": 28.5,
+      "yaw": -27.470575,
+      "pitch": 3.2999787
+    },
+    "lines": [
+      "\u0026a\u0026lPerk Crate",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 27,
+    "location": {
+      "world": "world",
+      "x": -9.5,
+      "y": 71.00000000476837,
+      "z": 32.5,
+      "yaw": 10.947636,
+      "pitch": 50.999954
+    },
+    "lines": [
+      "\u00266\u0026lMini KOTH Zone",
+      "§f§oEnter the portal to compete",
+      "§f§oin Mini KOTHs for points and rewards!",
+      "§f",
+      "\u0026eType /minikoth for more information."
+    ]
+  },
+  {
+    "id": 28,
+    "location": {
+      "world": "Spawn",
+      "x": -7.5,
+      "y": 71.5,
+      "z": 28.5,
+      "yaw": -2.1206124,
+      "pitch": -21.59999
+    },
+    "lines": [
+      "\u0026e\u0026ki\u00266\u0026lHalloween Crate\u0026e\u0026ki",
+      "§f§ostore.cavepvp.org"
+    ]
+  },
+  {
+    "id": 29,
+    "location": {
+      "world": "world",
+      "x": -13.54843159742499,
+      "y": 173.5,
+      "z": -35.49425461701776,
+      "yaw": -3.4831543,
+      "pitch": 90.0
+    },
+    "lines": [
+      "\u0026c\u0026l❤ \u00264\u0026lCupid\u0027s \u0026f\u0026lMystery Box \u0026c\u0026l❤",
+      "§f§ostore.cavepvp.org"
+    ]
+  }
+]

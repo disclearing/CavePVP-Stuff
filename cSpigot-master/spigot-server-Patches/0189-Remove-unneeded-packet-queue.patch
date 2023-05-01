@@ -1,0 +1,66 @@
+From 22da8ad8f47c5d355cd2c4c981b53bcff5360fc5 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 14 Jul 2017 13:32:23 +0100
+Subject: [PATCH] Remove unneeded packet queue
+
+
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index 9d3903d15..eca2f330e 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -54,7 +54,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     public static final NetworkStatistics h = new NetworkStatistics();
+     private final boolean j;
+     private final Queue k = Queues.newConcurrentLinkedQueue();
+-    private final Queue l = Queues.newConcurrentLinkedQueue();
++    // private final Queue l = Queues.newConcurrentLinkedQueue(); // MineHQ
+     private Channel m;
+     // Spigot Start
+     public SocketAddress n;
+@@ -392,10 +392,10 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+     public void handle(Packet packet, GenericFutureListener... agenericfuturelistener) {
+         if (this.m != null && this.m.isOpen()) {
+-            this.i();
++            // this.i(); // MineHQ
+             this.b(packet, agenericfuturelistener);
+         } else {
+-            this.l.add(new QueuedPacket(packet, agenericfuturelistener));
++            // this.l.add(new QueuedPacket(packet, agenericfuturelistener)); // MineHQ
+         }
+     }
+ 
+@@ -421,6 +421,8 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         }
+     }
+ 
++    // MineHQ start - remove unneeded packet queue
++    /*
+     private void i() {
+         if (this.m != null && this.m.isOpen()) {
+             // PaperSpigot  start - Improve Network Manager packet handling
+@@ -431,9 +433,11 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+             // PaperSpigot end
+         }
+     }
++    */
++    // MineHQ end
+ 
+     public void a() {
+-        this.i();
++        // this.i(); // MineHQ
+         EnumProtocol enumprotocol = (EnumProtocol) this.m.attr(d).get();
+ 
+         if (this.p != enumprotocol) {
+@@ -723,7 +727,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         // Spigot Start
+         this.preparing = false;
+         this.k.clear(); // Spigot Update - 20140921a
+-        this.l.clear(); // Spigot Update - 20140921a
++        // this.l.clear(); // Spigot Update - 20140921a // MineHQ
+         // Spigot End
+         if (this.m.isOpen()) {
+             this.m.close();
+-- 
+2.13.3
+

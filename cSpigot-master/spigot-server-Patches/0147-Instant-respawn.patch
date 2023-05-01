@@ -1,0 +1,153 @@
+From 7d9d6341653c55fdb9f5db3c1587d802474b968b Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 5 Mar 2017 10:07:05 -0300
+Subject: [PATCH] Instant respawn
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index ae28a8053..123d19290 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -1,26 +1,20 @@
+ package net.minecraft.server;
+ 
+-import java.util.Collection;
+-import java.util.HashMap;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Random;
+-import java.util.UUID;
+-
+-// CraftBukkit start
+-import java.util.ArrayList;
+ import com.google.common.base.Function;
+-
+ import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.SpigotTimings;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.event.entity.EntityDamageEvent;
+ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+ import org.bukkit.event.entity.EntityRegainHealthEvent;
+-// CraftBukkit end
+-
+-import org.bukkit.craftbukkit.SpigotTimings; // Spigot
+ import org.bukkit.event.player.PlayerAttackEvent;
+ import org.spigotmc.ActivationRange;
++import org.spigotmc.SpigotConfig;
++
++import java.util.*;
++
++// CraftBukkit start
++// CraftBukkit end
+ 
+ public abstract class EntityLiving extends Entity {
+ 
+@@ -645,7 +639,13 @@ public abstract class EntityLiving extends Entity {
+                 player.setRealHealth(f);
+             }
+ 
+-            this.datawatcher.watch(6, Float.valueOf(player.getScaledHealth()));
++            // Griffin start - Instant respawn
++            // only send the update to anyone if the player has not died.
++            // if they do die, we handle all our stuff in EntityPlayer#die(DamageSource)
++            if (player.getHealth() != 0 || !SpigotConfig.instantRespawn) {
++                this.datawatcher.watch(6, Float.valueOf(player.getScaledHealth()));
++            }
++            // Griffin end - Instant respawn
+             return;
+         }
+         // CraftBukkit end
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index d331be67e..5c115c191 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -18,15 +18,19 @@ import org.apache.logging.log4j.Logger;
+ 
+ // CraftBukkit start
+ import org.bukkit.Bukkit;
++import org.bukkit.Location;
+ import org.bukkit.WeatherType;
+ import org.bukkit.craftbukkit.CraftWorld;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.craftbukkit.inventory.CraftItemStack;
++import org.bukkit.entity.Player;
+ import org.bukkit.event.inventory.InventoryType;
++import org.bukkit.event.player.PlayerRespawnEvent;
+ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+ // CraftBukkit end
+ import org.spigotmc.ProtocolData; // Spigot - protocol patch
++import org.spigotmc.SpigotConfig;
+ 
+ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+@@ -443,6 +447,50 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+         this.a(StatisticList.v, 1);
+         this.aW().g();
++
++        // Griffin start - Instant respawn
++        if (getBukkitEntity().isOnline() && SpigotConfig.instantRespawn) {
++            ChunkCoordinates chunkcoordinates = getBed();
++            ChunkCoordinates chunkcoordinates1;
++
++            Location location = null;
++
++            boolean isBedSpawn = false;
++            CraftWorld cworld = (CraftWorld) this.server.server.getWorld(spawnWorld);
++            if (cworld != null && chunkcoordinates != null) {
++                chunkcoordinates1 = EntityHuman.getBed(cworld.getHandle(), chunkcoordinates, isRespawnForced());
++                if (chunkcoordinates1 != null) {
++                    isBedSpawn = true;
++                    location = new Location(cworld, chunkcoordinates1.x + 0.5, chunkcoordinates1.y, chunkcoordinates1.z + 0.5);
++                } else {
++                    setRespawnPosition(null, true);
++                    playerConnection.sendPacket(new PacketPlayOutGameStateChange(0, 0));
++                }
++            }
++
++            if (location == null) {
++                cworld = (CraftWorld) this.server.server.getWorlds().get(0);
++                chunkcoordinates = cworld.getHandle().getSpawn();
++
++                location = new Location(cworld, chunkcoordinates.x + 0.5, chunkcoordinates.y, chunkcoordinates.z + 0.5, cworld.getHandle().getWorldData().getSpawnYaw(), cworld.getHandle().getWorldData().getSpawnPitch()); // Poweruser
++            }
++
++            Player respawnPlayer = getBukkitEntity();
++            PlayerRespawnEvent respawnEvent = new PlayerRespawnEvent(respawnPlayer, location, isBedSpawn);
++            Bukkit.getPluginManager().callEvent(respawnEvent);
++
++            if (playerConnection.isDisconnected()) {
++                return;
++            }
++
++            location = respawnEvent.getRespawnLocation();
++            reset();
++
++            getBukkitEntity().teleport(location);
++
++            dead = false;
++        }
++        // Griffin end - Instant respawn
+     }
+ 
+     public boolean damageEntity(DamageSource damagesource, float f) {
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 1b3d48e15..2b60f7825 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -467,6 +467,11 @@ public class SpigotConfig
+     private static void smeltingMultiplier() {
+         brewingMultiplier = getInt("settings.smeltingMultiplier", 1);
+     }
++
++    public static boolean instantRespawn;
++    private static void instantRespawn()  {
++        instantRespawn = getBoolean("settings.instantRespawn", false);
++    }
+     // Griffin end
+ 
+     // Guardian start
+-- 
+2.13.3
+

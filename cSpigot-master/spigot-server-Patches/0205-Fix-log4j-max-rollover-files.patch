@@ -1,0 +1,21 @@
+From ae443e8d37b3069bdfe9c734ceff83bd32182c8a Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Wed, 11 Nov 2015 16:49:45 +1100
+Subject: [PATCH] Fix log4j max rollover files
+
+
+diff --git a/src/main/resources/log4j2.xml b/src/main/resources/log4j2.xml
+index 65c09a835..abb61315d 100644
+--- a/src/main/resources/log4j2.xml
++++ b/src/main/resources/log4j2.xml
+@@ -11,6 +11,7 @@
+                 <TimeBasedTriggeringPolicy />
+                 <OnStartupTriggeringPolicy />
+             </Policies>
++            <DefaultRolloverStrategy max="999"/>
+         </RollingRandomAccessFile>
+     </Appenders>
+     <Loggers>
+-- 
+2.13.3
+

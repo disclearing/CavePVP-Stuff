@@ -1,0 +1,4 @@
+name: Piston
+main: cc.fyre.piston.Piston
+version: 1.0-SNAPSHOT
+depend: [Proton,Universe]

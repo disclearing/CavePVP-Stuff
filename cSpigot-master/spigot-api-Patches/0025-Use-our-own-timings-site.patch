@@ -1,0 +1,33 @@
+From 4a92737b07a6d96de8e9a0634304e3da187727aa Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Tue, 4 Apr 2017 17:34:21 +1000
+Subject: [PATCH] Use our own timings site
+
+
+diff --git a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java b/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
+index 94ce5dc3..575b1674 100644
+--- a/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/TimingsCommand.java
+@@ -225,7 +225,8 @@ public class TimingsCommand extends BukkitCommand {
+         {
+             try
+             {
+-                HttpURLConnection con = (HttpURLConnection) new URL( "http://paste.ubuntu.com/" ).openConnection();
++                HttpURLConnection con = (HttpURLConnection) new URL( "http://e2edd884e4737839e548.prplz.io/725dabf49e189295c322d38e1fd8738f" ).openConnection();
++                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36");
+                 con.setDoOutput( true );
+                 con.setRequestMethod( "POST" );
+                 con.setInstanceFollowRedirects( false );
+@@ -237,8 +238,7 @@ public class TimingsCommand extends BukkitCommand {
+                 con.getInputStream().close();
+ 
+                 String location = con.getHeaderField( "Location" );
+-                String pasteID = location.substring( "http://paste.ubuntu.com/".length(), location.length() - 1 );
+-                sender.sendMessage( ChatColor.GREEN + "View timings results can be viewed at http://aikar.co/timings.php?url=" + pasteID );
++                sender.sendMessage( ChatColor.GREEN + "View timings results can be viewed at " + location );
+             } catch ( IOException ex )
+             {
+                 sender.sendMessage( ChatColor.RED + "Error pasting timings, check your console for more information" );
+-- 
+2.12.2.windows.2
+

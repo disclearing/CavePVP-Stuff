@@ -1,0 +1,281 @@
+id: Seasonal
+displayName: §e§ki§6§l Fall Lootbox §e§ki
+material: ENDER_CHEST
+fireworkColor: 16711680
+lore:
+- §7Unlocked at §fstore.cavepvp.org
+- ''
+- §6§lFINAL REWARDS
+- ' &7➡ §4Cave Rank'
+- ' &7➡ §6Spooky Rank'
+- ' &7➡ §6Premium Battle Pass'
+- ' &7➡ §e§lVIP Subscription'
+- ' &7➡ §6§lHalloween Kit'
+- ' &7➡ §2$§a10 Buycraft Voucher'
+- ' &7➡ §2$§a5 Buycraft Voucher'
+- ' &7➡ §a§l2x Perk Keys'
+- ' &7➡ §b§l3x Airdrops'
+- ' &7➡ §6§l5x Halloween Keys'
+- ' &7➡ §cRandom Clickable Kit'
+- ''
+- §6§lNORMAL REWARDS
+- ' &7➡ §d16x Eggports'
+- ' &7➡ §68x Anti-Blockup'
+- ' &7➡ §a8x Med Kit'
+- ' &7➡ §68x Midas Touch'
+- ' &7➡ §cCrowbar'
+- ' &7➡ §6§lGod Apple'
+- ' &7➡ §632x Golden Apple'
+- ' &7➡ §4OP Bow'
+- ' &7➡ §bDiamond Sword'
+- ' &7➡ §bDiamond Helmet'
+- ' &7➡ §bDiamond Chestplate'
+- ' &7➡ §bDiamond Leggings'
+- ' &7➡ §bDiamond Boots'
+- ' &7➡ §bDiamond Pickaxe'
+- ' &7➡ §d16x Random Valuable Blocks'
+- ' &7➡ §832x Gun Powder'
+- ' &7➡ §e32x Glowstone Blocks'
+- ' &7➡ §432x Nether Wart'
+- ' &7➡ §c32x Glistering Melons'
+items:
+  DIAMOND_BLOCK_1:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  EMERALD_BLOCK_2:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EMERALD_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  GOLD_BLOCK_3:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLD_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  IRON_BLOCK_4:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: IRON_BLOCK
+      amount: 16
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  SPECKLED_MELON_5:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: SPECKLED_MELON
+      amount: 32
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  NETHER_STALK_6:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: NETHER_STALK
+      amount: 32
+    chance: 10.0
+    giveItem: true
+    broadcast: false
+  GLOWSTONE_DUST_7:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GLOWSTONE_DUST
+      amount: 32
+    chance: 5.0
+    giveItem: true
+    broadcast: false
+  SULPHUR_8:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: SULPHUR
+      amount: 32
+    chance: 5.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_HELMET_9:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_HELMET
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lFall §7┃ §fHelmet
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_CHESTPLATE_10:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_CHESTPLATE
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lFall §7┃ §fChestplate
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_LEGGINGS_11:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_LEGGINGS
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lFall §7┃ §fLeggings
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_BOOTS_12:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_BOOTS
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lFall §7┃ §fBoots
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 5
+          PROTECTION_FALL: 4
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  DIAMOND_SWORD_13:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_SWORD
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lFall §7┃ §fSword
+        enchants:
+          DAMAGE_ALL: 2
+          DURABILITY: 5
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  BOW_14:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BOW
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lFall §7┃ §fBow
+        enchants:
+          ARROW_DAMAGE: 5
+          DURABILITY: 5
+          ARROW_FIRE: 1
+          ARROW_INFINITE: 1
+    chance: 7.0
+    giveItem: true
+    broadcast: false
+  ENDER_PEARL_15:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: ENDER_PEARL
+      amount: 16
+    chance: 5.0
+    giveItem: true
+    broadcast: false
+  GOLDEN_APPLE_16:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      damage: 1
+    chance: 1.0
+    giveItem: true
+    broadcast: false
+  GOLDEN_APPLE_17:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      amount: 32
+    chance: 4.0
+    giveItem: true
+    broadcast: false
+  BEDROCK_18:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§l14-day Cave Rank
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addrank {player} Cave 14d {displayName}
+    giveItem: false
+    broadcast: false
+  BEDROCK_19:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a10 Buycraft Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addamount {player} 10
+    giveItem: false
+    broadcast: true
+  APPLE_20:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: APPLE
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lHalloween Candy
+        lore:
+        - ''
+        - §6❙ §fRight Click to receive Strength II,
+        - §6❙ §fRegeneration II, and Resistance III
+        - §6❙ §ffor §e§l8 seconds§f!
+        - ''
+        - §fCan be found in the §e§ki§6§lHalloween Lootbox§e§ki§f!
+    chance: 5.0
+    giveItem: true
+    broadcast: false
+  STICK_21:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: STICK
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §5§lBroom Stick
+        lore:
+        - ''
+        - §6❙ §fRight Click to receive Speed III,
+        - §6❙ §fJump Boost VI for §e§l10 seconds§f!
+        - ''
+        - §fCan be found in the §e§ki§6§lHalloween Lootbox§e§ki§f!
+    chance: 5.0
+    giveItem: true
+    broadcast: false

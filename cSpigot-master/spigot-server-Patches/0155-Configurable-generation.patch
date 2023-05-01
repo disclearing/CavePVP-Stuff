@@ -1,0 +1,826 @@
+From 068645a2ea95cdff723b466bf11724c1a9f1c1c1 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Thu, 6 Apr 2017 12:59:23 +1000
+Subject: [PATCH] Configurable generation
+
+
+diff --git a/src/main/java/net/frozenorb/generator/GenLayerRemoveSpawnRivers.java b/src/main/java/net/frozenorb/generator/GenLayerRemoveSpawnRivers.java
+new file mode 100644
+index 000000000..cbff12850
+--- /dev/null
++++ b/src/main/java/net/frozenorb/generator/GenLayerRemoveSpawnRivers.java
+@@ -0,0 +1,39 @@
++package net.frozenorb.generator;
++
++import net.minecraft.server.GenLayer;
++import net.minecraft.server.IntCache;
++import net.minecraft.server.World;
++
++public class GenLayerRemoveSpawnRivers extends GenLayer {
++
++    private final GenLayer parent;
++    private final World world;
++
++    public GenLayerRemoveSpawnRivers(GenLayer parent, World world) {
++        super(1);
++
++        this.parent = parent;
++        this.world = world;
++    }
++
++    @Override
++    public int[] a(int x, int z, int w, int h) {
++        int radiusSqrd = world.generatorConfig.spawnBiomeRadius * world.generatorConfig.spawnBiomeRadius;
++        int[] in = parent.a(x, z, w, h);
++        int[] out = IntCache.a(w * h);
++
++        for (int i = 0; i < w; i++) {
++            for (int j = 0; j < h; j++) {
++                int index = j * w + i;
++                int worldX = (x + i) << 2;
++                int worldZ = (z + j) << 2;
++                if (worldX * worldX + worldZ * worldZ < radiusSqrd) {
++                    out[index] = -1;
++                } else {
++                    out[index] = in[index];
++                }
++            }
++        }
++        return out;
++    }
++}
+diff --git a/src/main/java/net/frozenorb/generator/GenLayerSpawnBiome.java b/src/main/java/net/frozenorb/generator/GenLayerSpawnBiome.java
+new file mode 100644
+index 000000000..55516ce59
+--- /dev/null
++++ b/src/main/java/net/frozenorb/generator/GenLayerSpawnBiome.java
+@@ -0,0 +1,40 @@
++package net.frozenorb.generator;
++
++import net.minecraft.server.GenLayer;
++import net.minecraft.server.IntCache;
++import net.minecraft.server.World;
++
++public class GenLayerSpawnBiome extends GenLayer {
++
++    private final GenLayer parent;
++    private final int biomeSize;
++    private final World world;
++
++    public GenLayerSpawnBiome(GenLayer parent, int biomeSize, World world) {
++        super(1);
++        this.parent = parent;
++        this.biomeSize = biomeSize;
++        this.world = world;
++    }
++
++    @Override
++    public int[] a(int x, int z, int w, int h) {
++        int radiusSqrd = world.generatorConfig.spawnBiomeRadius * world.generatorConfig.spawnBiomeRadius;
++        int[] in = parent.a(x, z, w, h);
++        int[] out = IntCache.a(w * h);
++
++        for (int i = 0; i < w; i++) {
++            for (int j = 0; j < h; j++) {
++                int index = j * w + i;
++                int worldX = (x + i) << 2 << biomeSize;
++                int worldZ = (z + j) << 2 << biomeSize;
++                if (worldX * worldX + worldZ * worldZ < radiusSqrd) {
++                    out[index] = world.generatorConfig.spawnBiome.id;
++                } else {
++                    out[index] = in[index];
++                }
++            }
++        }
++        return out;
++    }
++}
+diff --git a/src/main/java/net/frozenorb/generator/GeneratorConfig.java b/src/main/java/net/frozenorb/generator/GeneratorConfig.java
+new file mode 100644
+index 000000000..cdf9703a7
+--- /dev/null
++++ b/src/main/java/net/frozenorb/generator/GeneratorConfig.java
+@@ -0,0 +1,168 @@
++package net.frozenorb.generator;
++
++import net.minecraft.server.BiomeBase;
++import org.bukkit.configuration.file.YamlConfiguration;
++
++import java.io.File;
++import java.io.IOException;
++
++public class GeneratorConfig {
++
++    private final String worldName;
++    private final File file;
++    private final YamlConfiguration conf;
++
++    public boolean oceans;
++
++    public boolean biomePlains;
++    public boolean biomeDesert;
++    public boolean biomeDesertHills;
++    public boolean biomeExtremeHills;
++    public boolean biomeExtremeHillsPlus;
++    public boolean biomeForest;
++    public boolean biomeForestHills;
++    public boolean biomeTaiga;
++    public boolean biomeTaigaHills;
++    public boolean biomeSwampland;
++    public boolean biomeIcePlains;
++    public boolean biomeIceMountains;
++    public boolean biomeMushroomIsland;
++    public boolean biomeJungle;
++    public boolean biomeJungleHills;
++    public boolean biomeBirchForest;
++    public boolean biomeBirchForestHills;
++    public boolean biomeRoofedForest;
++    public boolean biomeColdTaiga;
++    public boolean biomeColdTaigaHills;
++    public boolean biomeMegaTaiga;
++    public boolean biomeMegaTaigaHills;
++    public boolean biomeSavanna;
++    public boolean biomeSavannaPlateau;
++    public boolean biomeMesa;
++    public boolean biomeMesaPlateauF;
++    public boolean biomeMesaPlateau;
++
++    public BiomeBase spawnBiome;
++    public int spawnBiomeRadius;
++    public boolean spawnBiomeRivers;
++
++    public float cavesMultiplier;
++
++    public float coalMultiplier;
++    public int coalSize;
++    public boolean coalMustTouchAir;
++    public float ironMultiplier;
++    public int ironSize;
++    public boolean ironMustTouchAir;
++    public float goldMultiplier;
++    public int goldSize;
++    public boolean goldMustTouchAir;
++    public float redstoneMultiplier;
++    public int redstoneSize;
++    public boolean redstoneMustTouchAir;
++    public float diamondMultiplier;
++    public int diamondSize;
++    public boolean diamondMustTouchAir;
++    public float lapisMultiplier;
++    public int lapisSize;
++    public boolean lapisMustTouchAir;
++    public float sugarCaneMultiplier;
++
++    public GeneratorConfig(String worldName) {
++        this.worldName = worldName;
++        this.file = new File("config/generator", worldName + ".yml");
++        conf = YamlConfiguration.loadConfiguration(file);
++        conf.options().copyDefaults(true);
++
++        oceans = getBoolean("oceans", true);
++        biomePlains = getBoolean("biome.plains", true);
++        biomeDesert = getBoolean("biome.desert", true);
++        biomeDesertHills = getBoolean("biome.desert-hills", true);
++        biomeExtremeHills = getBoolean("biome.extreme-hills", true);
++        biomeExtremeHillsPlus = getBoolean("biome.extreme-hills-plus", true);
++        biomeForest = getBoolean("biome.forest", true);
++        biomeForestHills = getBoolean("biome.forest-hills", true);
++        biomeTaiga = getBoolean("biome.taiga", true);
++        biomeTaigaHills = getBoolean("biome.taiga-hills", true);
++        biomeSwampland = getBoolean("biome.swampland", true);
++        biomeIcePlains = getBoolean("biome.ice-plains", true);
++        biomeIceMountains = getBoolean("biome.ice-mountains", true);
++        biomeMushroomIsland = getBoolean("biome.mushroom-island", true);
++        biomeJungle = getBoolean("biome.jungle", true);
++        biomeJungleHills = getBoolean("biome.jungle-hills", true);
++        biomeBirchForest = getBoolean("biome.birch-forest", true);
++        biomeBirchForestHills = getBoolean("biome.birch-forest-hills", true);
++        biomeRoofedForest = getBoolean("biome.roofed-forest", true);
++        biomeColdTaiga = getBoolean("biome.cold-taiga", true);
++        biomeColdTaigaHills = getBoolean("biome.cold-taiga-hills", true);
++        biomeMegaTaiga = getBoolean("biome.mega-taiga", true);
++        biomeMegaTaigaHills = getBoolean("biome.mega-taiga-hills", true);
++        biomeSavanna = getBoolean("biome.savanna", true);
++        biomeSavannaPlateau = getBoolean("biome.savanna-plateau", true);
++        biomeMesa = getBoolean("biome.mesa", true);
++        biomeMesaPlateauF = getBoolean("biome.mesa-plateau-f", true);
++        biomeMesaPlateau = getBoolean("biome.mesa-plateau", true);
++
++        spawnBiome = getBiome(getString("spawn.biome", "plains"));
++        spawnBiomeRadius = getInt("spawn.radius", 0);
++        spawnBiomeRivers = getBoolean("spawn.rivers", false);
++
++        cavesMultiplier = (float) getDouble("caves.multiplier", 1.0);
++
++        coalMultiplier = (float) getDouble("ores.coal.multiplier", 1.0);
++        coalSize = getInt("ores.coal.size", 16);
++        coalMustTouchAir = getBoolean("ores.coal.must-touch-air", false);
++        ironMultiplier = (float) getDouble("ores.iron.multiplier", 1.0);
++        ironSize = getInt("ores.iron.size", 8);
++        ironMustTouchAir = getBoolean("ores.iron.must-touch-air", false);
++        goldMultiplier = (float) getDouble("ores.gold.multiplier", 1.0);
++        goldSize = getInt("ores.gold.size", 8);
++        goldMustTouchAir = getBoolean("ores.gold.must-touch-air", false);
++        redstoneMultiplier = (float) getDouble("ores.redstone.multiplier", 1.0);
++        redstoneSize = getInt("ores.redstone.size", 7);
++        redstoneMustTouchAir = getBoolean("ores.redstone.must-touch-air", false);
++        diamondMultiplier = (float) getDouble("ores.diamond.multiplier", 1.0);
++        diamondSize = getInt("ores.diamond.size", 7);
++        diamondMustTouchAir = getBoolean("ores.diamond.must-touch-air", false);
++        lapisMultiplier = (float) getDouble("ores.lapis.multiplier", 1.0);
++        lapisSize = getInt("ores.lapis.size", 6);
++        lapisMustTouchAir = getBoolean("ores.lapis.must-touch-air", false);
++
++        sugarCaneMultiplier = (float) getDouble("sugar-cane.multiplier", 1.0);
++
++        try {
++            conf.save(file);
++        } catch (IOException ex) {
++            ex.printStackTrace();
++        }
++    }
++
++    private boolean getBoolean(String path, boolean def) {
++        conf.addDefault(path, def);
++        return conf.getBoolean(path, def);
++    }
++
++    private String getString(String path, String def) {
++        conf.addDefault(path, def);
++        return conf.getString(path, def);
++    }
++
++    private int getInt(String path, int def) {
++        conf.addDefault(path, def);
++        return conf.getInt(path, def);
++    }
++
++    private double getDouble(String path, double def) {
++        conf.addDefault(path, def);
++        return conf.getDouble(path, def);
++    }
++
++    private BiomeBase getBiome(String name) {
++        for (BiomeBase biome : BiomeBase.getBiomes()) {
++            if (biome.af.equalsIgnoreCase(name)) {
++                return biome;
++            }
++        }
++        return BiomeBase.PLAINS;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/BiomeDecorator.java b/src/main/java/net/minecraft/server/BiomeDecorator.java
+index 064a125ad..3d634a192 100644
+--- a/src/main/java/net/minecraft/server/BiomeDecorator.java
++++ b/src/main/java/net/minecraft/server/BiomeDecorator.java
+@@ -45,12 +45,15 @@ public class BiomeDecorator {
+         this.g = new WorldGenSand(Blocks.GRAVEL, 6);
+         this.h = new WorldGenMinable(Blocks.DIRT, 32);
+         this.i = new WorldGenMinable(Blocks.GRAVEL, 32);
++        // MineHQ - move down so they can get world config
++        /*
+         this.j = new WorldGenMinable(Blocks.COAL_ORE, 16);
+         this.k = new WorldGenMinable(Blocks.IRON_ORE, 8);
+         this.l = new WorldGenMinable(Blocks.GOLD_ORE, 8);
+         this.m = new WorldGenMinable(Blocks.REDSTONE_ORE, 7);
+         this.n = new WorldGenMinable(Blocks.DIAMOND_ORE, 7);
+         this.o = new WorldGenMinable(Blocks.LAPIS_ORE, 6);
++        */
+         this.p = new WorldGenFlowers(Blocks.YELLOW_FLOWER);
+         this.q = new WorldGenFlowers(Blocks.BROWN_MUSHROOM);
+         this.r = new WorldGenFlowers(Blocks.RED_MUSHROOM);
+@@ -74,6 +77,14 @@ public class BiomeDecorator {
+             this.b = random;
+             this.c = i;
+             this.d = j;
++            // MineHQ Start
++            this.j = new WorldGenMinable(Blocks.COAL_ORE, world.generatorConfig.coalSize, world.generatorConfig.coalMustTouchAir);
++            this.k = new WorldGenMinable(Blocks.IRON_ORE, world.generatorConfig.ironSize, world.generatorConfig.ironMustTouchAir);
++            this.l = new WorldGenMinable(Blocks.GOLD_ORE, world.generatorConfig.goldSize, world.generatorConfig.goldMustTouchAir);
++            this.m = new WorldGenMinable(Blocks.REDSTONE_ORE, world.generatorConfig.redstoneSize, world.generatorConfig.redstoneMustTouchAir);
++            this.n = new WorldGenMinable(Blocks.DIAMOND_ORE, world.generatorConfig.diamondSize, world.generatorConfig.diamondMustTouchAir);
++            this.o = new WorldGenMinable(Blocks.LAPIS_ORE, world.generatorConfig.lapisSize, world.generatorConfig.lapisMustTouchAir);
++            // MineHQ end
+             this.a(biomebase);
+             this.a = null;
+             this.b = null;
+@@ -201,14 +212,14 @@ public class BiomeDecorator {
+             this.r.generate(this.a, this.b, j, l, k);
+         }
+ 
+-        for (j = 0; j < this.C; ++j) {
++        for (j = 0; j < this.C * this.a.generatorConfig.sugarCaneMultiplier; ++j) {
+             k = this.c + this.b.nextInt(16) + 8;
+             l = this.d + this.b.nextInt(16) + 8;
+             i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
+             this.t.generate(this.a, this.b, k, i1, l);
+         }
+ 
+-        for (j = 0; j < 10; ++j) {
++        for (j = 0; j < 10 * this.a.generatorConfig.sugarCaneMultiplier; ++j) {
+             k = this.c + this.b.nextInt(16) + 8;
+             l = this.d + this.b.nextInt(16) + 8;
+             i1 = this.b.nextInt(this.getHighestBlockYAt(k, l) * 2); // Spigot
+@@ -269,12 +280,13 @@ public class BiomeDecorator {
+     protected void a() {
+         this.a(20, this.h, 0, 256);
+         this.a(10, this.i, 0, 256);
+-        this.a(20, this.j, 0, 128);
+-        this.a(20, this.k, 0, 64);
+-        this.a(2, this.l, 0, 32);
+-        this.a(8, this.m, 0, 16);
+-        this.a(1, this.n, 0, 16);
+-        this.b(1, this.o, 16, 16);
++        net.frozenorb.generator.GeneratorConfig conf = this.a.generatorConfig;
++        if (conf.coalMultiplier > 0) this.a((int) (20 * conf.coalMultiplier + this.b.nextFloat()), this.j, 0, 128);
++        if (conf.ironMultiplier > 0) this.a((int) (20 * conf.ironMultiplier + this.b.nextFloat()), this.k, 0, 64);
++        if (conf.goldMultiplier > 0) this.a((int) (2 * conf.goldMultiplier + this.b.nextFloat()), this.l, 0, 32);
++        if (conf.redstoneMultiplier > 0) this.a((int) (8 * conf.redstoneMultiplier + this.b.nextFloat()), this.m, 0, 16);
++        if (conf.diamondMultiplier > 0) this.a((int) (1 * conf.diamondMultiplier + this.b.nextFloat()), this.n, 0, 16);
++        if (conf.lapisMultiplier > 0) this.b((int) (1 * conf.lapisMultiplier + this.b.nextFloat()), this.o, 16, 16);
+     }
+ 
+     // Spigot Start
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderGenerate.java b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
+index 251bf4852..6c41753db 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderGenerate.java
+@@ -150,7 +150,7 @@ public class ChunkProviderGenerate implements IChunkProvider {
+         this.z = this.n.getWorldChunkManager().getBiomeBlock(this.z, i * 16, j * 16, 16, 16);
+         this.a(i, j, ablock, abyte, this.z);
+         // PaperSpigot start
+-        if (this.n.paperSpigotConfig.generateCaves) this.t.a(this, this.n, i, j, ablock);
++        if (this.n.paperSpigotConfig.generateCaves && this.n.generatorConfig.cavesMultiplier > 0) this.t.a(this, this.n, i, j, ablock);
+         if (this.n.paperSpigotConfig.generateCanyon) this.y.a(this, this.n, i, j, ablock);
+         // PaperSpigot end
+         if (this.o) {
+diff --git a/src/main/java/net/minecraft/server/GenLayer.java b/src/main/java/net/minecraft/server/GenLayer.java
+index b15e0f608..7c74243f2 100644
+--- a/src/main/java/net/minecraft/server/GenLayer.java
++++ b/src/main/java/net/minecraft/server/GenLayer.java
+@@ -1,5 +1,8 @@
+ package net.minecraft.server;
+ 
++import net.frozenorb.generator.GenLayerRemoveSpawnRivers;
++import net.frozenorb.generator.GenLayerSpawnBiome;
++
+ import java.util.concurrent.Callable;
+ 
+ public abstract class GenLayer {
+@@ -9,9 +12,9 @@ public abstract class GenLayer {
+     private long d;
+     protected long b;
+ 
+-    public static GenLayer[] a(long i, WorldType worldtype) {
++    public static GenLayer[] a(long i, WorldType worldtype, World world) { // MineHQ - add world
+         boolean flag = false;
+-        LayerIsland layerisland = new LayerIsland(1L);
++        LayerIsland layerisland = new LayerIsland(1L, world); // MineHQ - add world
+         GenLayerZoomFuzzy genlayerzoomfuzzy = new GenLayerZoomFuzzy(2000L, layerisland);
+         GenLayerIsland genlayerisland = new GenLayerIsland(1L, genlayerzoomfuzzy);
+         GenLayerZoom genlayerzoom = new GenLayerZoom(2001L, genlayerisland);
+@@ -45,7 +48,7 @@ public abstract class GenLayer {
+ 
+         GenLayer genlayer1 = GenLayerZoom.b(1000L, genlayer, 0);
+         GenLayerCleaner genlayercleaner = new GenLayerCleaner(100L, genlayer1);
+-        Object object = new GenLayerBiome(200L, genlayer, worldtype);
++        Object object = new GenLayerBiome(200L, genlayer, worldtype, world); // MineHQ - add world
+ 
+         if (!flag) {
+             GenLayer genlayer2 = GenLayerZoom.b(1000L, (GenLayer) object, 2);
+@@ -54,14 +57,20 @@ public abstract class GenLayer {
+         }
+ 
+         GenLayer genlayer3 = GenLayerZoom.b(1000L, genlayercleaner, 2);
+-        GenLayerRegionHills genlayerregionhills = new GenLayerRegionHills(1000L, (GenLayer) object, genlayer3);
++        GenLayerRegionHills genlayerregionhills = new GenLayerRegionHills(1000L, (GenLayer) object, genlayer3, world); // MineHQ - add world
+ 
+         genlayer1 = GenLayerZoom.b(1000L, genlayercleaner, 2);
+         genlayer1 = GenLayerZoom.b(1000L, genlayer1, b0);
+-        GenLayerRiver genlayerriver = new GenLayerRiver(1L, genlayer1);
++        GenLayer genlayerriver = new GenLayerRiver(1L, genlayer1);
++        if (world.generatorConfig.spawnBiomeRadius > 0 && !world.generatorConfig.spawnBiomeRivers) {
++            genlayerriver = new GenLayerRemoveSpawnRivers(genlayerriver, world);
++        }
+         GenLayerSmooth genlayersmooth = new GenLayerSmooth(1000L, genlayerriver);
+ 
+         object = new GenLayerPlains(1001L, genlayerregionhills);
++        if (world.generatorConfig.spawnBiomeRadius > 0) {
++            object = new GenLayerSpawnBiome((GenLayer) object, b0, world);
++        }
+ 
+         for (int j = 0; j < b0; ++j) {
+             object = new GenLayerZoom((long) (1000 + j), (GenLayer) object);
+diff --git a/src/main/java/net/minecraft/server/GenLayerBiome.java b/src/main/java/net/minecraft/server/GenLayerBiome.java
+index 42fe8f1a1..6c078fa02 100644
+--- a/src/main/java/net/minecraft/server/GenLayerBiome.java
++++ b/src/main/java/net/minecraft/server/GenLayerBiome.java
+@@ -1,18 +1,84 @@
+ package net.minecraft.server;
+ 
++import java.util.ArrayList;
++import java.util.List;
++
+ public class GenLayerBiome extends GenLayer {
+ 
++    private final World world;
+     private BiomeBase[] c;
+     private BiomeBase[] d;
+     private BiomeBase[] e;
+     private BiomeBase[] f;
+ 
+-    public GenLayerBiome(long i, GenLayer genlayer, WorldType worldtype) {
++    public GenLayerBiome(long i, GenLayer genlayer, WorldType worldtype, World world) {
+         super(i);
+-        this.c = new BiomeBase[] { BiomeBase.DESERT, BiomeBase.DESERT, BiomeBase.DESERT, BiomeBase.SAVANNA, BiomeBase.SAVANNA, BiomeBase.PLAINS};
+-        this.d = new BiomeBase[] { BiomeBase.FOREST, BiomeBase.ROOFED_FOREST, BiomeBase.EXTREME_HILLS, BiomeBase.PLAINS, BiomeBase.BIRCH_FOREST, BiomeBase.SWAMPLAND};
+-        this.e = new BiomeBase[] { BiomeBase.FOREST, BiomeBase.EXTREME_HILLS, BiomeBase.TAIGA, BiomeBase.PLAINS};
+-        this.f = new BiomeBase[] { BiomeBase.ICE_PLAINS, BiomeBase.ICE_PLAINS, BiomeBase.ICE_PLAINS, BiomeBase.COLD_TAIGA};
++        this.world = world;
++        List<BiomeBase> list = new ArrayList<BiomeBase>();
++        //this.c = new BiomeBase[] { BiomeBase.DESERT, BiomeBase.DESERT, BiomeBase.DESERT, BiomeBase.SAVANNA, BiomeBase.SAVANNA, BiomeBase.PLAINS};
++        if (world.generatorConfig.biomeDesert) {
++            list.add(BiomeBase.DESERT);
++            list.add(BiomeBase.DESERT);
++            list.add(BiomeBase.DESERT);
++        }
++        if (world.generatorConfig.biomeSavanna) {
++            list.add(BiomeBase.SAVANNA);
++            list.add(BiomeBase.SAVANNA);
++        }
++        if (world.generatorConfig.biomePlains) {
++            list.add(BiomeBase.PLAINS);
++        }
++        this.c = list.toArray(new BiomeBase[list.size()]);
++        list.clear();
++        //this.d = new BiomeBase[] { BiomeBase.FOREST, BiomeBase.ROOFED_FOREST, BiomeBase.EXTREME_HILLS, BiomeBase.PLAINS, BiomeBase.BIRCH_FOREST, BiomeBase.SWAMPLAND};
++        if (world.generatorConfig.biomeForest) {
++            list.add(BiomeBase.FOREST);
++        }
++        if (world.generatorConfig.biomeRoofedForest) {
++            list.add(BiomeBase.ROOFED_FOREST);
++        }
++        if (world.generatorConfig.biomeExtremeHills) {
++            list.add(BiomeBase.EXTREME_HILLS);
++        }
++        if (world.generatorConfig.biomePlains) {
++            list.add(BiomeBase.PLAINS);
++        }
++        if (world.generatorConfig.biomeBirchForest) {
++            list.add(BiomeBase.BIRCH_FOREST);
++        }
++        if (world.generatorConfig.biomeSwampland) {
++            list.add(BiomeBase.SWAMPLAND);
++        }
++        if (list.isEmpty() && world.generatorConfig.biomeJungle) {
++            list.add(BiomeBase.JUNGLE);
++        }
++        this.d = list.toArray(new BiomeBase[list.size()]);
++        list.clear();
++        //this.e = new BiomeBase[] { BiomeBase.FOREST, BiomeBase.EXTREME_HILLS, BiomeBase.TAIGA, BiomeBase.PLAINS};
++        if (world.generatorConfig.biomeForest) {
++            list.add(BiomeBase.FOREST);
++        }
++        if (world.generatorConfig.biomeExtremeHills) {
++            list.add(BiomeBase.EXTREME_HILLS);
++        }
++        if (world.generatorConfig.biomeTaiga) {
++            list.add(BiomeBase.TAIGA);
++        }
++        if (world.generatorConfig.biomePlains) {
++            list.add(BiomeBase.PLAINS);
++        }
++        this.e = list.toArray(new BiomeBase[list.size()]);
++        list.clear();
++        //this.f = new BiomeBase[] { BiomeBase.ICE_PLAINS, BiomeBase.ICE_PLAINS, BiomeBase.ICE_PLAINS, BiomeBase.COLD_TAIGA};
++        if (world.generatorConfig.biomeIcePlains) {
++            list.add(BiomeBase.ICE_PLAINS);
++            list.add(BiomeBase.ICE_PLAINS);
++            list.add(BiomeBase.ICE_PLAINS);
++        }
++        if (world.generatorConfig.biomeColdTaiga) {
++            list.add(BiomeBase.COLD_TAIGA);
++        }
++        this.f = list.toArray(new BiomeBase[list.size()]);
+         this.a = genlayer;
+         if (worldtype == WorldType.NORMAL_1_1) {
+             this.c = new BiomeBase[] { BiomeBase.DESERT, BiomeBase.FOREST, BiomeBase.EXTREME_HILLS, BiomeBase.SWAMPLAND, BiomeBase.PLAINS, BiomeBase.TAIGA};
+@@ -35,29 +101,37 @@ public class GenLayerBiome extends GenLayer {
+                 } else if (k1 == BiomeBase.MUSHROOM_ISLAND.id) {
+                     aint1[j1 + i1 * k] = k1;
+                 } else if (k1 == 1) {
++                    BiomeBase[] biomes = this.firstNonEmpty(this.c, this.d, this.e, this.f);
+                     if (l1 > 0) {
+-                        if (this.a(3) == 0) {
++                        if (this.a(3) == 0 && this.world.generatorConfig.biomeMesaPlateau) {
+                             aint1[j1 + i1 * k] = BiomeBase.MESA_PLATEAU.id;
+-                        } else {
++                        } else if (this.world.generatorConfig.biomeMesaPlateauF) {
+                             aint1[j1 + i1 * k] = BiomeBase.MESA_PLATEAU_F.id;
++                        } else if (this.world.generatorConfig.biomeMesa) {
++                            aint1[j1 + i1 * k] = BiomeBase.MESA.id;
++                        } else {
++                            aint1[j1 + i1 * k] = biomes[this.a(biomes.length)].id;
+                         }
+                     } else {
+-                        aint1[j1 + i1 * k] = this.c[this.a(this.c.length)].id;
++                        aint1[j1 + i1 * k] = biomes[this.a(biomes.length)].id;
+                     }
+                 } else if (k1 == 2) {
+-                    if (l1 > 0) {
++                    BiomeBase[] biomes = this.firstNonEmpty(this.d, this.e, this.f, this.c);
++                    if (l1 > 0 && this.world.generatorConfig.biomeJungle) {
+                         aint1[j1 + i1 * k] = BiomeBase.JUNGLE.id;
+                     } else {
+-                        aint1[j1 + i1 * k] = this.d[this.a(this.d.length)].id;
++                        aint1[j1 + i1 * k] = biomes[this.a(biomes.length)].id;
+                     }
+                 } else if (k1 == 3) {
+-                    if (l1 > 0) {
++                    BiomeBase[] biomes = this.firstNonEmpty(this.e, this.f, this.c, this.d);
++                    if (l1 > 0 && this.world.generatorConfig.biomeMegaTaiga) {
+                         aint1[j1 + i1 * k] = BiomeBase.MEGA_TAIGA.id;
+                     } else {
+-                        aint1[j1 + i1 * k] = this.e[this.a(this.e.length)].id;
++                        aint1[j1 + i1 * k] = biomes[this.a(biomes.length)].id;
+                     }
+                 } else if (k1 == 4) {
+-                    aint1[j1 + i1 * k] = this.f[this.a(this.f.length)].id;
++                    BiomeBase[] biomes = this.firstNonEmpty(this.f, this.c, this.d, this.e);
++                    aint1[j1 + i1 * k] = biomes[this.a(biomes.length)].id;
+                 } else {
+                     aint1[j1 + i1 * k] = BiomeBase.MUSHROOM_ISLAND.id;
+                 }
+@@ -66,4 +140,13 @@ public class GenLayerBiome extends GenLayer {
+ 
+         return aint1;
+     }
++
++    private BiomeBase[] firstNonEmpty(BiomeBase[]... options) {
++        for (BiomeBase[] option : options) {
++            if (option.length > 0) {
++                return option;
++            }
++        }
++        return new BiomeBase[]{BiomeBase.PLAINS};
++    }
+ }
+diff --git a/src/main/java/net/minecraft/server/GenLayerRegionHills.java b/src/main/java/net/minecraft/server/GenLayerRegionHills.java
+index 7543f301b..ae53a8276 100644
+--- a/src/main/java/net/minecraft/server/GenLayerRegionHills.java
++++ b/src/main/java/net/minecraft/server/GenLayerRegionHills.java
+@@ -6,10 +6,12 @@ import org.apache.logging.log4j.Logger;
+ public class GenLayerRegionHills extends GenLayer {
+ 
+     private static final Logger c = LogManager.getLogger();
++    private final World world;
+     private GenLayer d;
+ 
+-    public GenLayerRegionHills(long i, GenLayer genlayer, GenLayer genlayer1) {
++    public GenLayerRegionHills(long i, GenLayer genlayer, GenLayer genlayer1, World world) {
+         super(i);
++        this.world = world;
+         this.a = genlayer;
+         this.d = genlayer1;
+     }
+@@ -42,43 +44,43 @@ public class GenLayerRegionHills extends GenLayer {
+                     int i2 = k1;
+                     int j2;
+ 
+-                    if (k1 == BiomeBase.DESERT.id) {
++                    if (k1 == BiomeBase.DESERT.id && this.world.generatorConfig.biomeDesertHills) {
+                         i2 = BiomeBase.DESERT_HILLS.id;
+-                    } else if (k1 == BiomeBase.FOREST.id) {
++                    } else if (k1 == BiomeBase.FOREST.id && this.world.generatorConfig.biomeForestHills) {
+                         i2 = BiomeBase.FOREST_HILLS.id;
+-                    } else if (k1 == BiomeBase.BIRCH_FOREST.id) {
++                    } else if (k1 == BiomeBase.BIRCH_FOREST.id && this.world.generatorConfig.biomeBirchForestHills) {
+                         i2 = BiomeBase.BIRCH_FOREST_HILLS.id;
+-                    } else if (k1 == BiomeBase.ROOFED_FOREST.id) {
++                    } else if (k1 == BiomeBase.ROOFED_FOREST.id && this.world.generatorConfig.biomePlains) {
+                         i2 = BiomeBase.PLAINS.id;
+-                    } else if (k1 == BiomeBase.TAIGA.id) {
++                    } else if (k1 == BiomeBase.TAIGA.id && this.world.generatorConfig.biomeTaigaHills) {
+                         i2 = BiomeBase.TAIGA_HILLS.id;
+-                    } else if (k1 == BiomeBase.MEGA_TAIGA.id) {
++                    } else if (k1 == BiomeBase.MEGA_TAIGA.id && this.world.generatorConfig.biomeMegaTaigaHills) {
+                         i2 = BiomeBase.MEGA_TAIGA_HILLS.id;
+-                    } else if (k1 == BiomeBase.COLD_TAIGA.id) {
++                    } else if (k1 == BiomeBase.COLD_TAIGA.id && this.world.generatorConfig.biomeColdTaigaHills) {
+                         i2 = BiomeBase.COLD_TAIGA_HILLS.id;
+                     } else if (k1 == BiomeBase.PLAINS.id) {
+-                        if (this.a(3) == 0) {
++                        if (this.a(3) == 0 && this.world.generatorConfig.biomeForestHills) {
+                             i2 = BiomeBase.FOREST_HILLS.id;
+-                        } else {
++                        } else if (this.world.generatorConfig.biomeForest) {
+                             i2 = BiomeBase.FOREST.id;
+                         }
+-                    } else if (k1 == BiomeBase.ICE_PLAINS.id) {
++                    } else if (k1 == BiomeBase.ICE_PLAINS.id && this.world.generatorConfig.biomeIceMountains) {
+                         i2 = BiomeBase.ICE_MOUNTAINS.id;
+-                    } else if (k1 == BiomeBase.JUNGLE.id) {
++                    } else if (k1 == BiomeBase.JUNGLE.id && this.world.generatorConfig.biomeJungleHills) {
+                         i2 = BiomeBase.JUNGLE_HILLS.id;
+                     } else if (k1 == BiomeBase.OCEAN.id) {
+                         i2 = BiomeBase.DEEP_OCEAN.id;
+-                    } else if (k1 == BiomeBase.EXTREME_HILLS.id) {
++                    } else if (k1 == BiomeBase.EXTREME_HILLS.id && this.world.generatorConfig.biomeExtremeHillsPlus) {
+                         i2 = BiomeBase.EXTREME_HILLS_PLUS.id;
+-                    } else if (k1 == BiomeBase.SAVANNA.id) {
++                    } else if (k1 == BiomeBase.SAVANNA.id && this.world.generatorConfig.biomeSavannaPlateau) {
+                         i2 = BiomeBase.SAVANNA_PLATEAU.id;
+-                    } else if (a(k1, BiomeBase.MESA_PLATEAU_F.id)) {
++                    } else if (a(k1, BiomeBase.MESA_PLATEAU_F.id) && this.world.generatorConfig.biomeMesa) {
+                         i2 = BiomeBase.MESA.id;
+                     } else if (k1 == BiomeBase.DEEP_OCEAN.id && this.a(3) == 0) {
+                         j2 = this.a(2);
+-                        if (j2 == 0) {
++                        if (j2 == 0 && this.world.generatorConfig.biomePlains) {
+                             i2 = BiomeBase.PLAINS.id;
+-                        } else {
++                        } else if (this.world.generatorConfig.biomeForest) {
+                             i2 = BiomeBase.FOREST.id;
+                         }
+                     }
+diff --git a/src/main/java/net/minecraft/server/LayerIsland.java b/src/main/java/net/minecraft/server/LayerIsland.java
+index 8a21033cc..ae7702d8a 100644
+--- a/src/main/java/net/minecraft/server/LayerIsland.java
++++ b/src/main/java/net/minecraft/server/LayerIsland.java
+@@ -1,14 +1,28 @@
+ package net.minecraft.server;
+ 
++import java.util.Arrays;
++
+ public class LayerIsland extends GenLayer {
+ 
+-    public LayerIsland(long i) {
++    // MineHQ start - add world
++    private final World world;
++
++    public LayerIsland(long i, World world) {
+         super(i);
++        this.world = world;
++        // MineHQ end
+     }
+ 
+     public int[] a(int i, int j, int k, int l) {
+         int[] aint = IntCache.a(k * l);
+ 
++        // MineHQ start - oceans option
++        if (!world.generatorConfig.oceans) {
++            Arrays.fill(aint, 1);
++            return aint;
++        }
++        // MineHQ end
++
+         for (int i1 = 0; i1 < l; ++i1) {
+             for (int j1 = 0; j1 < k; ++j1) {
+                 this.a((long) (i + j1), (long) (j + i1));
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index af1a4a741..9f0bf9207 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.Executors;
+ import java.util.HashMap;
+ import java.util.Map;
++
++import net.frozenorb.generator.GeneratorConfig;
+ import net.minecraft.util.com.google.common.util.concurrent.ThreadFactoryBuilder;
+ import org.bukkit.craftbukkit.CraftChunk;
+ // PaperSpigot end
+@@ -245,10 +247,13 @@ public abstract class World implements IBlockAccess {
+         return ((ChunkProviderServer) this.chunkProvider).getChunkIfLoaded(x, z);
+     }
+ 
++    public final net.frozenorb.generator.GeneratorConfig generatorConfig;// MineHQ
++
+     // Changed signature - added gen and env
+     public World(IDataManager idatamanager, String s, WorldSettings worldsettings, WorldProvider worldprovider, MethodProfiler methodprofiler, ChunkGenerator gen, org.bukkit.World.Environment env) {
+         this.spigotConfig = new org.spigotmc.SpigotWorldConfig( s ); // Spigot
+         this.paperSpigotConfig = new org.github.paperspigot.PaperSpigotWorldConfig( s ); // PaperSpigot
++        this.generatorConfig = new GeneratorConfig(s); // MineHQ
+         this.generator = gen;
+         this.world = new CraftWorld((WorldServer) this, gen, env);
+         this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit
+diff --git a/src/main/java/net/minecraft/server/WorldChunkManager.java b/src/main/java/net/minecraft/server/WorldChunkManager.java
+index 4b94d1cf6..2e29bd04e 100644
+--- a/src/main/java/net/minecraft/server/WorldChunkManager.java
++++ b/src/main/java/net/minecraft/server/WorldChunkManager.java
+@@ -23,16 +23,16 @@ public class WorldChunkManager {
+         this.f.add(BiomeBase.JUNGLE_HILLS);
+     }
+ 
+-    public WorldChunkManager(long i, WorldType worldtype) {
++    public WorldChunkManager(long i, WorldType worldtype, World world) { // MineHQ - add world
+         this();
+-        GenLayer[] agenlayer = GenLayer.a(i, worldtype);
++        GenLayer[] agenlayer = GenLayer.a(i, worldtype, world); // MineHQ - add world
+ 
+         this.c = agenlayer[0];
+         this.d = agenlayer[1];
+     }
+ 
+     public WorldChunkManager(World world) {
+-        this(world.getSeed(), world.getWorldData().getType());
++        this(world.getSeed(), world.getWorldData().getType(), world); // MineHQ - add world
+     }
+ 
+     public List a() {
+diff --git a/src/main/java/net/minecraft/server/WorldGenCaves.java b/src/main/java/net/minecraft/server/WorldGenCaves.java
+index 707938031..38077bf54 100644
+--- a/src/main/java/net/minecraft/server/WorldGenCaves.java
++++ b/src/main/java/net/minecraft/server/WorldGenCaves.java
+@@ -173,9 +173,9 @@ public class WorldGenCaves extends WorldGenBase {
+     }
+ 
+     protected void a(World world, int i, int j, int k, int l, Block[] ablock) {
+-        int i1 = this.b.nextInt(this.b.nextInt(this.b.nextInt(15) + 1) + 1);
++        int i1 = this.b.nextInt(this.b.nextInt(this.b.nextInt((int) (15 * world.generatorConfig.cavesMultiplier)) + 1) + 1);
+ 
+-        if (this.b.nextInt(7) != 0) {
++        if (this.b.nextFloat() > world.generatorConfig.cavesMultiplier / 7) {
+             i1 = 0;
+         }
+ 
+diff --git a/src/main/java/net/minecraft/server/WorldGenMinable.java b/src/main/java/net/minecraft/server/WorldGenMinable.java
+index 1d58f3e56..421941035 100644
+--- a/src/main/java/net/minecraft/server/WorldGenMinable.java
++++ b/src/main/java/net/minecraft/server/WorldGenMinable.java
+@@ -1,12 +1,15 @@
+ package net.minecraft.server;
+ 
++import java.util.HashSet;
+ import java.util.Random;
++import java.util.Set;
+ 
+ public class WorldGenMinable extends WorldGenerator {
+ 
+     private Block a;
+     private int b;
+     private Block c;
++    private boolean mustTouchAir; // MineHQ
+ 
+     public WorldGenMinable(Block block, int i) {
+         this(block, i, Blocks.STONE);
+@@ -18,6 +21,13 @@ public class WorldGenMinable extends WorldGenerator {
+         this.c = block1;
+     }
+ 
++    // MineHQ start
++    public WorldGenMinable(Block block, int size, boolean mustTouchAir) {
++        this(block, size, Blocks.STONE);
++        this.mustTouchAir = mustTouchAir;
++    }
++    // MineHQ end
++
+     public boolean generate(World world, Random random, int i, int j, int k) {
+         float f = random.nextFloat() * 3.1415927F;
+         double d0 = (double) ((float) (i + 8) + MathHelper.sin(f) * (float) this.b / 8.0F);
+@@ -27,6 +37,9 @@ public class WorldGenMinable extends WorldGenerator {
+         double d4 = (double) (j + random.nextInt(3) - 2);
+         double d5 = (double) (j + random.nextInt(3) - 2);
+ 
++        boolean touchedAir = false;
++        Set<ChunkPosition> blocks = mustTouchAir ? new HashSet<ChunkPosition>() : null;
++
+         for (int l = 0; l <= this.b; ++l) {
+             double d6 = d0 + (d1 - d0) * (double) l / (double) this.b;
+             double d7 = d4 + (d5 - d4) * (double) l / (double) this.b;
+@@ -53,7 +66,18 @@ public class WorldGenMinable extends WorldGenerator {
+                                 double d14 = ((double) i3 + 0.5D - d8) / (d10 / 2.0D);
+ 
+                                 if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && world.getType(k2, l2, i3) == this.c) {
+-                                    world.setTypeAndData(k2, l2, i3, this.a, 0, 2);
++                                    if (mustTouchAir) {
++                                        blocks.add(new ChunkPosition(k2, l2, i3));
++                                        touchedAir |=
++                                                world.getType(k2 + 1, l2, i3) == Blocks.AIR ||
++                                                world.getType(k2 - 1, l2, i3) == Blocks.AIR ||
++                                                world.getType(k2, l2 + 1, i3) == Blocks.AIR ||
++                                                world.getType(k2, l2 - 1, i3) == Blocks.AIR ||
++                                                world.getType(k2, l2, i3 + 1) == Blocks.AIR ||
++                                                world.getType(k2, l2, i3 - 1) == Blocks.AIR;
++                                    } else {
++                                        world.setTypeAndData(k2, l2, i3, this.a, 0, 2);
++                                    }
+                                 }
+                             }
+                         }
+@@ -62,6 +86,12 @@ public class WorldGenMinable extends WorldGenerator {
+             }
+         }
+ 
++        if (mustTouchAir && touchedAir) {
++            for (ChunkPosition block : blocks) {
++                world.setTypeAndData(block.x, block.y, block.z, this.a, 0, 2);
++            }
++        }
++
+         return true;
+     }
+ }
+-- 
+2.13.3
+

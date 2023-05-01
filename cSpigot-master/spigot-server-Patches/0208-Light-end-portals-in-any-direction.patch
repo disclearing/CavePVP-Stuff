@@ -1,0 +1,30 @@
+From 7de0aaa75a5b9246ca10be8dadf11fc4f7d6ccf8 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sat, 19 Aug 2017 17:00:21 +1000
+Subject: [PATCH] Light end portals in any direction
+
+
+diff --git a/src/main/java/net/minecraft/server/ItemEnderEye.java b/src/main/java/net/minecraft/server/ItemEnderEye.java
+index 91d9770c2..2c0a8d6cc 100644
+--- a/src/main/java/net/minecraft/server/ItemEnderEye.java
++++ b/src/main/java/net/minecraft/server/ItemEnderEye.java
+@@ -31,7 +31,7 @@ public class ItemEnderEye extends Item {
+                     world.addParticle("smoke", d0, d1, d2, d3, d4, d5);
+                 }
+ 
+-                j1 = i1 & 3;
++                for (j1 = 0; j1 < 4; j1++) { // MineHQ - Light end portal in any direction
+                 int k1 = 0;
+                 int l1 = 0;
+                 boolean flag = false;
+@@ -98,6 +98,7 @@ public class ItemEnderEye extends Item {
+                         }
+                     }
+                 }
++                } // MineHQ
+ 
+                 return true;
+             }
+-- 
+2.13.3
+

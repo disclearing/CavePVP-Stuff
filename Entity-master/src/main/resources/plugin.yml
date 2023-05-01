@@ -1,0 +1,7 @@
+name: Entity
+main: org.cavepvp.entity.EntityPlugin
+author: MineHQ Development Team
+version: 1.0-SNAPSHOT
+softdepend: [ProtocolLib, Proton]
+commands:
+  entity:

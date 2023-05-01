@@ -1,0 +1,6 @@
+[submodule "spigot-api"]
+	path = spigot-api
+	url = git@github.com:AlfieC/spigot-api.git
+[submodule "spigot-server"]
+	path = spigot-server
+	url = git@github.com:AlfieC/spigot-server.git

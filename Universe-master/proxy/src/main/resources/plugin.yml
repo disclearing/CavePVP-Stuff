@@ -1,0 +1,3 @@
+name: Universe
+version: ${version}
+main:  cc.fyre.universe.Universe

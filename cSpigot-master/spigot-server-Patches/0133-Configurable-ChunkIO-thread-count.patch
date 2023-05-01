@@ -1,0 +1,61 @@
+From d30557aeef365d5b154483646e7cd22392e35cb6 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sun, 8 May 2016 19:08:16 +0200
+Subject: [PATCH] Configurable ChunkIO thread count
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java b/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java
+index e4fd9bc60..94dcd5ef6 100644
+--- a/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java
++++ b/src/main/java/org/bukkit/craftbukkit/chunkio/ChunkIOExecutor.java
+@@ -5,10 +5,10 @@ import net.minecraft.server.ChunkProviderServer;
+ import net.minecraft.server.ChunkRegionLoader;
+ import net.minecraft.server.World;
+ import org.bukkit.craftbukkit.util.AsynchronousExecutor;
++import org.spigotmc.SpigotConfig; // Poweruser
+ 
+ public class ChunkIOExecutor {
+     static final int BASE_THREADS = 1;
+-    static final int PLAYERS_PER_THREAD = 50;
+ 
+     private static final AsynchronousExecutor<QueuedChunk, Chunk, Runnable, RuntimeException> instance = new AsynchronousExecutor<QueuedChunk, Chunk, Runnable, RuntimeException>(new ChunkIOProvider(), BASE_THREADS);
+ 
+@@ -26,7 +26,7 @@ public class ChunkIOExecutor {
+     }
+ 
+     public static void adjustPoolSize(int players) {
+-        int size = Math.max(BASE_THREADS, (int) Math.ceil(players / PLAYERS_PER_THREAD));
++        int size = Math.max(BASE_THREADS, (int) Math.ceil(players / SpigotConfig.playersPerChunkIOThread)); // Poweruser
+         instance.setActiveThreads(size);
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java b/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java
+index 1a1ba7c17..9c92ca38c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/AsynchronousExecutor.java
+@@ -352,6 +352,6 @@ public final class AsynchronousExecutor<P, T, C, E extends Throwable> {
+     }
+ 
+     public void setActiveThreads(final int coreSize) {
+-        pool.setCorePoolSize(coreSize);
++        pool.setMaximumPoolSize(coreSize); // Poweruser
+     }
+ }
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index e888296b3..eff9a948e 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -425,5 +425,10 @@ public class SpigotConfig
+     private static void setviewdistanceCommand() {
+         commands.put( "setviewdistance", new net.frozenorb.command.SetViewDistanceCommand( "setviewdistance" ) );
+     }
++
++    public static int playersPerChunkIOThread;
++    private static void playersPerChunkIOThread() {
++        playersPerChunkIOThread = Math.max(1, getInt( "settings.chunkio.players-per-thread", 150) );
++    }
+     // Poweruser end
+ }
+-- 
+2.13.3
+

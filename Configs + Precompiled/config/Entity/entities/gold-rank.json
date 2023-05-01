@@ -1,0 +1,82 @@
+{
+    "type": "NPC",
+    "name": "gold-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 45.5,
+        "y": 69.0,
+        "z": -7.5,
+        "yaw": 359.93378,
+        "pitch": 0.028621972
+    },
+    "commands": [
+        "viewproduct lifetime-gold"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_gold-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 45.5,
+            "y": 71.0,
+            "z": -7.5,
+            "yaw": 359.93378,
+            "pitch": 0.028621972
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&a&lFREE",
+                "location": {
+                    "world": "Spawn",
+                    "x": 45.5,
+                    "y": 71.23,
+                    "z": -7.5,
+                    "yaw": 359.93378,
+                    "pitch": 0.028621972
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&6&lGold Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 45.5,
+                    "y": 71.0,
+                    "z": -7.5,
+                    "yaw": 359.93378,
+                    "pitch": 0.028621972
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 45.5,
+                    "y": 70.77,
+                    "z": -7.5,
+                    "yaw": 359.93378,
+                    "pitch": 0.028621972
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "TkJLmRHv/+jEAAW46megHzwt07f4fQgRV5GDXHUV5p31mWcSh+qN6JTLttTRz0GIgNyVpzdpQtZMhCq3eJ3mUH+UEZZVv/Y4WgVzA41sGvvPGjD/w5d10VXVDTb3hzTsYpJ7pTuwHdp1HKmhhTRuAFkqhjaZObzL++c8Q1EiWMo7eaWTfqVtrzrqkSFt5oYpkZrBF2+nZWdwfbDWCvcwd5/VYIMvFxiajzffkMe627+BjwOmmhs0GMNOKUbqG/W/ORuuwrO1pflDNJGL9/oFOIK8Llp2gKvdFVMv0g8BqGFY7kCTamoAVIQPxleepEFZeaDx58EE+PPraS3ugp2GT5ZYQ2hZC1e4XxPbLYnHhy54YJdiPlrmu0djqr/ivIEI8rSIT7p+KK6n7CQ17TMF/mu0x/OVcZOd9cbsrpog5HxcZo7qvhiirPSxbjOjMiX0adnRdMsewNypH9bvRsQTIvtu/3OnpwHElvxDGteM8+C7ydkgmtqer+IfwqclYqOPyOR6Iq0e6Xl3pRyE0x0fuBPday0TgoUWMqKvqG9tsPDyvLkOmYsxKRvdYFiv2zLqLcId22JTgVm9+52pdV5AyaVYYMsVOEVo5a4SJ8LfVki8J2NxG/9KyiV/ppl6UgeGuyrhtxt9VY2gUYxDJneec3BCEVQmohtMoDm5qx/r+mg=",
+    "skinUsername": "StopOverReacting",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNDI0NzU3OCwKICAicHJvZmlsZUlkIiA6ICI2NmVjYjZlNzY4ODI0ODAxOTZhNDJmYjBmYTQ2YzUxOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJTdG9wT3ZlclJlYWN0aW5nIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RhNzc4YWI4Yjk4ZjMyMWJlODUxMDIzODA0MGJjNTY1MzM0N2ZhNTJlZTEwYThiMDYwZGRiNzY2ZTUwN2NjMDIiCiAgICB9CiAgfQp9",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

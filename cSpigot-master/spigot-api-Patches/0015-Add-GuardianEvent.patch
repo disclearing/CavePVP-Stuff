@@ -1,0 +1,83 @@
+From 32603bad7742a1ad03cd8dd73f5e2a1020a61b2e Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 13 Nov 2016 10:40:52 -0200
+Subject: [PATCH] Add GuardianEvent
+
+
+diff --git a/src/main/java/org/bukkit/event/player/GuardianEvent.java b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+new file mode 100644
+index 00000000..629d6868
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/player/GuardianEvent.java
+@@ -0,0 +1,67 @@
++package org.bukkit.event.player;
++
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++
++import lombok.Getter;
++
++public class GuardianEvent extends PlayerEvent {
++
++    @Getter private static HandlerList handlerList = new HandlerList();
++
++    @Getter private final Cheat cheat;
++    @Getter private final DisplayLevel level;
++    @Getter private final String type;
++    @Getter private final String extraInfo;
++    @Getter private final String legacyString;
++
++    public GuardianEvent(Player player, Cheat cheat, DisplayLevel level, String type, String extraInfo, String legacyString) {
++        super(player);
++
++        this.cheat = cheat;
++        this.level = level;
++        this.type = type;
++        this.extraInfo = extraInfo;
++        this.legacyString = legacyString;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlerList;
++    }
++
++    public enum Cheat {
++
++        SPEED_HACKS,
++        FLY_HACKS,
++        AUTO_CLICKER,
++        KILL_AURA,
++        HOVER,
++        CRITICALS,
++        NO_FALL,
++        TIMER,
++        ANTI_KNOCKBACK,
++        PHASE,
++        FAST_USE,
++        REGENERATION,
++
++        GENERAL, // Used for wrongly formed packets and other stuff
++
++        DEBUG // Used for debugging only
++
++    }
++
++    public enum DisplayLevel {
++
++        LOW,
++        MEDIUM,
++        HIGH,
++        HIGHEST;
++
++        public boolean willDisplay(Player player) {
++            return player.hasPermission("guardian.display." + name().toLowerCase());
++        }
++
++    }
++
++}
+\ No newline at end of file
+-- 
+2.11.0.windows.3
+

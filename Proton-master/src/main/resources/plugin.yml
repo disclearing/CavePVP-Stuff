@@ -1,0 +1,4 @@
+name: Proton
+version: ${version}
+main: cc.fyre.proton.Proton
+depend: [ProtocolLib]

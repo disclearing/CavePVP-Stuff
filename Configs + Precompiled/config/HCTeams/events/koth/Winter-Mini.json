@@ -1,0 +1,16 @@
+{
+  "name": "Winter-Mini",
+  "capLocation": {
+    "x": 250.5,
+    "y": 40.0,
+    "z": -51.5
+  },
+  "world": "MiniKOTH",
+  "capDistance": 3,
+  "capTime": 300,
+  "hidden": false,
+  "mini": true,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

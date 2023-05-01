@@ -1,0 +1,22 @@
+From d0558edc57662f1fbfceb70b89b4f58ab8ebf8fa Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Mon, 9 Jul 2018 01:22:53 -0500
+Subject: [PATCH] EquipmentSetEvent fix
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerInventory.java b/src/main/java/net/minecraft/server/PlayerInventory.java
+index 42d8bd7b..12255d82 100644
+--- a/src/main/java/net/minecraft/server/PlayerInventory.java
++++ b/src/main/java/net/minecraft/server/PlayerInventory.java
+@@ -400,7 +400,7 @@ public class PlayerInventory implements IInventory {
+ 
+                 j -= 100;
+                 if (j >= 0 && j < this.armor.length) {
+-                    this.player.setEquipment(i, itemstack);
++                    this.player.setEquipment(j, itemstack);
+                 }
+             }
+         }
+-- 
+2.15.2 (Apple Git-101.1)
+

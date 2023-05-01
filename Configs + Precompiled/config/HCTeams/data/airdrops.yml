@@ -1,0 +1,368 @@
+rewards:
+  reward_1:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2§l$§a§l25 §9§lPAY§3§lPAL
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: none
+    giveItem: false
+  reward_2:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §a§l14d Spring Rank
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addrank {player} Holiday 14d {displayName}
+    giveItem: false
+  reward_3:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §c§l7d §4§lCave §c§lRank
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addrank {player} Cave 7d {displayName}
+    giveItem: false
+  reward_4:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a5 Buycraft Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.1
+    command: vouchers addamount {player} 5
+    giveItem: false
+  reward_5:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a10 Store Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addamount {player} 10
+    giveItem: false
+  reward_6:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a25 Store Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addamount {player} 25
+    giveItem: false
+  reward_7:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a50 Store Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addamount {player} 50
+    giveItem: false
+  reward_8:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§kiiii§2§l $§a§l100 Store Voucher §4§kiiii
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addamount {player} 100
+    giveItem: false
+  reward_9:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BEDROCK
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §2$§a75 Store Voucher
+        enchants:
+          DURABILITY: 1000
+    chance: 0.0
+    command: vouchers addamount {player} 75
+    giveItem: false
+  reward_10:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DROPPER
+      amount: 2
+    chance: 0.0
+    command: airdrops give {player} 2
+    giveItem: false
+  reward_11:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_HELMET
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAirdrop §7┃ §fHelmet
+        lore:
+        - §cHellForged III
+        - §cImplants V
+        - §cMermaid III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 4
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_12:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_CHESTPLATE
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAirdrop §7┃ §fChestplate
+        lore:
+        - §cHellForged III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 4
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_13:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_LEGGINGS
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAirdrop §7┃ §fLeggings
+        lore:
+        - §cHellForged III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 4
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_14:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_BOOTS
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAirdrop §7┃ §fBoots
+        lore:
+        - §cSpeed II
+        - §cHellForged III
+        - §cRecover I
+        - §cFireResistance I
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 2
+          DURABILITY: 4
+          PROTECTION_FALL: 4
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_15:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_SWORD
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAirdrop §7┃ §fSword
+        enchants:
+          DAMAGE_ALL: 2
+          DURABILITY: 5
+          LOOT_BONUS_MOBS: 5
+    chance: 6.0
+    command: none
+    giveItem: true
+  reward_16:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: BOW
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lAirdrop §7┃ §fBow
+        enchants:
+          ARROW_DAMAGE: 5
+          ARROW_FIRE: 1
+          DURABILITY: 5
+          ARROW_INFINITE: 1
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_17:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      damage: 1
+      amount: 2
+    chance: 1.0
+    command: none
+    giveItem: true
+  reward_18:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      amount: 64
+    chance: 6.0
+    command: none
+    giveItem: true
+  reward_19:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: DIAMOND_BLOCK
+      amount: 32
+    chance: 8.0
+    command: none
+    giveItem: true
+  reward_20:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: IRON_BLOCK
+      amount: 32
+    chance: 8.0
+    command: none
+    giveItem: true
+  reward_21:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLD_BLOCK
+      amount: 32
+    chance: 8.0
+    command: none
+    giveItem: true
+  reward_22:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EMERALD_BLOCK
+      amount: 32
+    chance: 8.0
+    command: none
+    giveItem: true
+  reward_23:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: EXPLOSIVE_MINECART
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §4§lTNT Minecart
+        lore:
+        - ''
+        - §6❙ §fRight Click to spawn a TNT Minecart
+        - §6❙ §c§l50 blocks §fabove your head!
+        - ''
+        - §fCan be found in an §b§lAirdrop§f!
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_24:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: NETHER_STAR
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §b§lNinja Star
+        lore:
+        - ''
+        - §6❙ §fTeleport to the last person that
+        - §6❙ §fhit you within the last §e§l30 seconds§f!
+        - ''
+        - §fCan be found in an §b§lAirdrop§f!
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_25:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: INK_SACK
+      damage: 14
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lPortable Bard
+        lore:
+        - ''
+        - §6❙ §fReceive §c§l5 §fportable bard effects!
+        - ''
+        - §fCan be found in an §b§lAirdrop§f!
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_26:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: WATCH
+      amount: 5
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lTime Warp
+        lore:
+        - ''
+        - §6❙ §fTravel back to where
+        - §6❙ §fyou last threw a pearl!
+        - ''
+        - §fCan be found in an §b§lAirdrop§f!
+    chance: 5.0
+    command: none
+    giveItem: true
+  reward_27:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: FISHING_ROD
+      meta:
+        ==: ItemMeta
+        meta-type: UNSPECIFIC
+        display-name: §6§lGrapple
+        lore:
+        - §7Hook the block you'd like to
+        - §7move towards and then release to get sent!
+        - ''
+        - §fCan be found in an §b§lAir Drop§f!
+    chance: 5.0
+    command: none
+    giveItem: true

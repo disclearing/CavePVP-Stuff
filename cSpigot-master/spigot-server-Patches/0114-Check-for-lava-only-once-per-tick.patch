@@ -1,0 +1,39 @@
+From 401b871734b34b3a2a0b8139b52dfae8723d5150 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Thu, 10 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Check for lava only once per tick
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index c31c59294..d67d54aa9 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -132,6 +132,11 @@ public abstract class Entity {
+     public void inactiveTick() { }
+     // Spigot end
+ 
++    // Poweruser start
++    private boolean isInLava;
++    private int lastLavaCheck;
++    // Poweruser end
++
+     public int getId() {
+         return this.id;
+     }
+@@ -925,7 +930,12 @@ public abstract class Entity {
+     }
+ 
+     public boolean P(IBlockAccess iblockaccess) {
+-        return this.world.a(this.boundingBox.grow(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.LAVA, iblockaccess);
++        int currentTick = MinecraftServer.getServer().al();
++        if(this.lastLavaCheck != currentTick) {
++            this.lastLavaCheck = currentTick;
++            this.isInLava = this.world.a(this.boundingBox.grow(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.LAVA, iblockaccess);
++        }
++        return this.isInLava;
+     }
+     // Poweruser end
+ 
+-- 
+2.13.3
+

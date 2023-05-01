@@ -1,0 +1,95 @@
+From 37f754c9c0bcffbc4ca6c1bb7dd70c6628185c40 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 4 Jun 2016 16:31:25 +0200
+Subject: [PATCH] Add option use world spawn in TheEnd when porting
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 0401520fc..e1d5ba0d2 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -746,7 +746,13 @@ public abstract class PlayerList {
+                 worldserver1 = this.server.worlds.get(0);
+                 chunkcoordinates = worldserver1.getSpawn();
+             } else {
+-                chunkcoordinates = worldserver1.getDimensionSpawn();
++                // Poweruser start
++                if(worldserver1.spigotConfig.useAlternateEndSpawn) {
++                    chunkcoordinates = worldserver1.getSpawn();
++                } else {
++                    chunkcoordinates = worldserver1.getDimensionSpawn();
++                }
++                // Poweruser end
+             }
+ 
+             d0 = (double) chunkcoordinates.x;
+diff --git a/src/main/java/net/minecraft/server/PortalTravelAgent.java b/src/main/java/net/minecraft/server/PortalTravelAgent.java
+index 5954520c7..bff6c698d 100644
+--- a/src/main/java/net/minecraft/server/PortalTravelAgent.java
++++ b/src/main/java/net/minecraft/server/PortalTravelAgent.java
+@@ -32,13 +32,22 @@ public class PortalTravelAgent {
+         } else {
+             // CraftBukkit start - Modularize end portal creation
+             ChunkCoordinates created = this.createEndPortal(d0, d1, d2);
+-            entity.setPositionRotation((double) created.x, (double) created.y, (double) created.z, entity.yaw, 0.0F);
++            // Poweruser start
++            float yaw = entity.yaw;
++            float pitch = 0.0F;
++            if(this.a.spigotConfig.useAlternateEndSpawn) {
++                yaw = this.a.getWorldData().getSpawnYaw();
++                pitch = this.a.getWorldData().getSpawnPitch();
++            }
++            entity.setPositionRotation((double) created.x, (double) created.y, (double) created.z, yaw, pitch);
++            // Poweruser end
+             entity.motX = entity.motY = entity.motZ = 0.0D;
+         }
+     }
+ 
+     // Split out from original a(Entity, double, double, double, float) method in order to enable being called from createPortal
+     private ChunkCoordinates createEndPortal(double x, double y, double z) {
++        if(this.a.spigotConfig.useAlternateEndSpawn) { return this.a.getSpawn(); } // Poweruser
+             int i = MathHelper.floor(x);
+             int j = MathHelper.floor(y) - 1;
+             int k = MathHelper.floor(z);
+@@ -65,6 +74,7 @@ public class PortalTravelAgent {
+ 
+     // use logic based on creation to verify end portal
+     private ChunkCoordinates findEndPortal(ChunkCoordinates portal) {
++        if(this.a.spigotConfig.useAlternateEndSpawn) { return this.a.getSpawn(); } // Poweruser
+         int i = portal.x;
+         int j = portal.y - 1;
+         int k = portal.z;
+@@ -196,7 +206,14 @@ public class PortalTravelAgent {
+         if (this.a.getWorld().getEnvironment() == org.bukkit.World.Environment.THE_END) {
+             // entity.setPositionRotation((double) i, (double) j, (double) k, entity.yaw, 0.0F);
+             // entity.motX = entity.motY = entity.motZ = 0.0D;
+-            position.setPitch(0.0F);
++            // Poweruser start
++            float pitch = 0.0F;
++            if(this.a.spigotConfig.useAlternateEndSpawn) {
++                pitch = this.a.getWorldData().getSpawnPitch();
++                position.setYaw(this.a.getWorldData().getSpawnYaw());
++            }
++            position.setPitch(pitch);
++            // Poweruser end
+             velocity.setX(0);
+             velocity.setY(0);
+             velocity.setZ(0);
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index 8fcca06ca..db532f75d 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -381,5 +381,10 @@ public class SpigotWorldConfig
+     private void dontUpdateMapItemsInPlayerInventory() {
+         updateMapItemsInPlayerInventory = getBoolean( "updateMapItemsInPlayerInventory" , false);
+     }
++
++    public boolean useAlternateEndSpawn;
++    private void useAlternateEndSpawn() {
++        useAlternateEndSpawn = getBoolean( "useAlternateEndSpawn", false);
++    }
+     // Poweruser end
+ }
+-- 
+2.13.3
+

@@ -1,0 +1,26 @@
+From 2a5c1bb596520219ecda1e1277bd4a437bbc0fec Mon Sep 17 00:00:00 2001
+From: Byteflux <byte@byteflux.net>
+Date: Thu, 28 May 2015 22:57:05 -0700
+Subject: [PATCH] Fix scoreboard prefix and suffix in tab list
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
+index adb8e8fd2..857806227 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutPlayerInfo.java
+@@ -82,6 +82,12 @@ public class PacketPlayOutPlayerInfo extends Packet {
+     }
+ 
+     public void b(PacketDataSerializer packetdataserializer) throws IOException {
++        // PaperSpigot start - Fix scoreboard prefix and suffix in tab list
++        String username = this.username;
++        if (packetdataserializer.version >= 47 && action == ADD_PLAYER && username != null && username.equals(player.getName())) {
++            username = null;
++        }
++        // PaperSpigot end
+         if ( packetdataserializer.version >= 20 )
+         {
+             packetdataserializer.b( action );
+-- 
+2.13.3
+

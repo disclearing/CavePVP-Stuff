@@ -1,0 +1,21 @@
+From f377496fe7dcf3bcae77e42b6ea3ab4efda4f73c Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 9 Jul 2017 17:32:28 +0100
+Subject: [PATCH] Don't tick blocks if neighbor chunks aren't loaded
+
+
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 4225a7f5f..264358470 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -355,6 +355,7 @@ public class WorldServer extends World {
+             this.timings.doTickTiles_tickingChunks_tickChunk.startTiming(); // Poweruser
+             chunk.b(false);
+             this.timings.doTickTiles_tickingChunks_tickChunk.stopTiming(); // Poweruser
++            if (!chunk.areNeighborsLoaded(1)) continue; // MineHQ
+             this.methodProfiler.c("thunder");
+             int i1;
+             int j1;
+-- 
+2.13.3
+

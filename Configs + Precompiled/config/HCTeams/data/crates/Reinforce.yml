@@ -1,0 +1,47 @@
+id: Reinforce
+displayName: §6§lReinforce Lootbox
+material: BEACON
+fireworkColor: 16711680
+lore:
+- §7Unlocked at §fstore.cavepvp.org
+- ''
+- §c§lEND REWARDS
+- §8┃ §4§lLEGENDARY §4Cave §7Rank
+- §8┃ §4§lLEGENDARY §aSpring §7Rank
+- §8┃ §4§lLEGENDARY §dRavine §7Rank
+- §8┃ §4§lLEGENDARY §2$§a50 §7Buycraft Voucher
+- §8┃ §4§lLEGENDARY §2$§a25 §7Buycraft Voucher
+- §8┃ §4§lLEGENDARY §ePremium Battle Pass
+- §8┃ §5§lRARE §77d §e§lVIP §7Subscription
+- §8┃ §5§lRARE §72x §c§lPerk §7Keys
+- §8┃ §5§lRARE §2$§a10 §7Buycraft Voucher
+- §8┃ §d§lUNCOMMON §73x §b§lAirdrops
+- §8┃ §a§lCOMMON §7Random Clickable Kit
+- §8┃ §a§lCOMMON §56x §7End Portal Frames
+- §8┃ §a§lCOMMON §616x §7God Apples
+- §8┃ §a§lCOMMON §e64x §7Golden Apples
+- ''
+- §c§lREWARDS
+- §8┃ §c§lRARE §cFire §7Sword
+- §8┃ §d§lUNCOMMON §bDiamond §7Helmet
+- §8┃ §d§lUNCOMMON §bDiamond §7Chestplate
+- §8┃ §d§lUNCOMMON §bDiamond §7Leggings
+- §8┃ §d§lUNCOMMON §bDiamond §7Boots
+- §8┃ §d§lUNCOMMON §bDiamond §7Looting Sword
+- §8┃ §a§lCOMMON §6Gold §7Helmet
+- §8┃ §a§lCOMMON §6Gold §7Chestplate
+- §8┃ §a§lCOMMON §6Gold §7Leggings
+- §8┃ §a§lCOMMON §6Gold §7Boots
+- §8┃ §a§lCOMMON §dLeather §7Helmet
+- §8┃ §a§lCOMMON §dLeather §7Chestplate
+- §8┃ §a§lCOMMON §dLeather §7Leggings
+- §8┃ §a§lCOMMON §dLeather §7Boots
+items:
+  GOLDEN_APPLE_1:
+    itemStack:
+      ==: org.bukkit.inventory.ItemStack
+      type: GOLDEN_APPLE
+      amount: 16
+    chance: 6.0
+    giveItem: true
+    broadcast: false

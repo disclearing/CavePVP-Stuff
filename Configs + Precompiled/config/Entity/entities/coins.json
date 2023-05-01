@@ -1,0 +1,130 @@
+{
+    "type": "NPC",
+    "name": "coins",
+    "location": {
+        "world": "Spawn",
+        "x": 0.5,
+        "y": 70.0,
+        "z": 0.5,
+        "yaw": 183.77856,
+        "pitch": -1.1162077
+    },
+    "commands": [
+        "coinshop"
+    ],
+    "equipment": [
+        {
+            "type": "DOUBLE_PLANT",
+            "amount": 1,
+            "durability": 0,
+            "metadata": {}
+        },
+        {
+            "type": "LEATHER_HELMET",
+            "amount": 1,
+            "durability": 0,
+            "metadata": {
+                "color": 15066419
+            }
+        },
+        {
+            "type": "LEATHER_CHESTPLATE",
+            "amount": 1,
+            "durability": 0,
+            "metadata": {
+                "color": 15066419
+            }
+        },
+        {
+            "type": "LEATHER_LEGGINGS",
+            "amount": 1,
+            "durability": 0,
+            "metadata": {
+                "color": 15066419
+            }
+        },
+        {
+            "type": "LEATHER_BOOTS",
+            "amount": 1,
+            "durability": 0,
+            "metadata": {
+                "color": 15066419
+            }
+        }
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_coins_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 0.5,
+            "y": 72.095,
+            "z": 0.5,
+            "yaw": 183.77856,
+            "pitch": -1.1162077
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&a&l* NEW *",
+                "location": {
+                    "world": "Spawn",
+                    "x": 0.5,
+                    "y": 72.555,
+                    "z": 0.5,
+                    "yaw": 183.77856,
+                    "pitch": -1.1162077
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&6&lCoin Shop",
+                "location": {
+                    "world": "Spawn",
+                    "x": 0.5,
+                    "y": 72.325,
+                    "z": 0.5,
+                    "yaw": 183.77856,
+                    "pitch": -1.1162077
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&7Click to view the Coin Shop",
+                "location": {
+                    "world": "Spawn",
+                    "x": 0.5,
+                    "y": 72.095,
+                    "z": 0.5,
+                    "yaw": 183.77856,
+                    "pitch": -1.1162077
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&ostore.cavepvp.org",
+                "location": {
+                    "world": "Spawn",
+                    "x": 0.5,
+                    "y": 71.865,
+                    "z": 0.5,
+                    "yaw": 183.77856,
+                    "pitch": -1.1162077
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "p/6wgsr8veWi4tTOIGEdbzcb/Z8/48e7iTvnE5e5UD1odkaay2jJG4Ve6bHSUA+X/3GolPxQHyzEPhb8OPiRixK0EkeLtInKiNnUmwyo+H4YTeQcWvtap3SChMnMch9kJf2Q3wXtc5XbvM+Hg8cYscqOcBhW/k/WcbI57LiHaY4yaaH6ePf1xlaQZ95lTs8vhMYobpDu0hU23eSU6RA1bp+R0W+w6NlxizAfYh2p4wRWcZQgzN5BomkymSXi5Fq1IPf6RPOavVwHww/9T3oFq5nSrJf56xTsHPgRnxAy/rs7FdGYOdRJoWORD4+lC3DdNtDwsTbz4UpAwpIo0nBOQwfrop/F92YouX+FQKH9lLVPCP2PTVS9rwZ+oTR9nsnZpu87DxWz8z1VwfrDUOQWUKbH+EZkTyK4D+mWnXQ+zqTUR6LrdIvlwEOJtaQLN23uwG1cpJYRjPWYTQL7eW9ImLzFcaj1bogllziKhqqzUUptlV3hHPYYUAbM4xGmxkESAsqHIc+dtJoeBvx2I0qWn5j0vv7RI81RZxqsL1xjjpXkAjQg7NapXnnDdIMcoyT9kfY0eJs9xdUXq6ZAH5io7xkN3auPDuvm8Whx0SAIhZ/AAAyt7qs8VLEkFLheuE9bOPv7Ea6tWlL7CJ+8jETdUdOF1A6jEbv2vPlIDCAEamM=",
+    "skinUsername": "SimplyTrash",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1NDM3MTM5MDAxMCwKICAicHJvZmlsZUlkIiA6ICIwZjdhNGU5ODdmNTA0NjU0ODMzNGVlMTcxMDkyNWFjZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTaW1wbHlUcmFzaCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8xYzZhMzU5MjBlZDYwMTcwNzAxODg5MjZjNzgzMjkwYmMyNjZlODE4N2ZmNTVmMWNkODMxZjIyNTQ2MThiZjcxIgogICAgfQogIH0KfQ==",
+    "animations": [
+        "Rings_GOLD",
+        "Rings_YELLOW"
+    ],
+    "visibility": "VISIBLE"
+}

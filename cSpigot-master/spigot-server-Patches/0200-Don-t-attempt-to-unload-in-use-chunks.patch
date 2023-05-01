@@ -1,0 +1,55 @@
+From 98ca5b4f41769c4c9de0b8400d6ddecd562e0c23 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 25 Jul 2017 21:36:30 +0100
+Subject: [PATCH] Don't attempt to unload in-use chunks
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 0eb4daea1..a7d7a9934 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -49,7 +49,14 @@ public class ChunkProviderServer implements IChunkProvider {
+         // CraftBukkit end
+     }
+ 
+-    public void queueUnload(int i, int j) {
++    // MineHQ start
++    public void queueUnload(int x, int z) {
++        queueUnload(x, z, false);
++    }
++
++    public void queueUnload(int i, int j, boolean checked) {
++        if (!checked && this.world.getPlayerChunkMap().isChunkInUse(i, j)) return;
++    // MineHQ end
+         // PaperSpigot start - Asynchronous lighting updates
+         Chunk chunk = this.chunks.get(i, j); // MineHQ
+         if (chunk != null && chunk.world.paperSpigotConfig.useAsyncLighting && (chunk.pendingLightUpdates.get() > 0 || chunk.world.getTime() - chunk.lightUpdateTime < 20)) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 7e5ae9e4e..2de043843 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -198,18 +198,18 @@ public class CraftWorld implements World {
+ 
+     public boolean unloadChunkRequest(int x, int z, boolean safe) {
+         org.spigotmc.AsyncCatcher.catchOp( "chunk unload"); // Spigot
+-        if (safe && isChunkInUse(x, z)) {
++        if (isChunkInUse(x, z)) { // MineHQ - never unload in-use chunks
+             return false;
+         }
+ 
+-        world.chunkProviderServer.queueUnload(x, z);
++        world.chunkProviderServer.queueUnload(x, z, true); // MineHQ
+ 
+         return true;
+     }
+ 
+     public boolean unloadChunk(int x, int z, boolean save, boolean safe) {
+         org.spigotmc.AsyncCatcher.catchOp( "chunk unload"); // Spigot
+-        if (safe && isChunkInUse(x, z)) {
++        if (isChunkInUse(x, z)) { // MineHQ - never unload in-use chunks
+             return false;
+         }
+ 
+-- 
+2.13.3
+

@@ -1,0 +1,73 @@
+From f3d0be63e95d1cd1401607f1e2532a0a48997a1a Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 16 Nov 2018 18:28:17 -0600
+Subject: [PATCH] Stage progress, pre-Guardian removal commit
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityEnderPearl.java b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+index 1df389ed..4571d445 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderPearl.java
++++ b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+@@ -104,28 +104,30 @@ public class EntityEnderPearl extends EntityProjectile {
+ 
+                 if (entityplayer.playerConnection.b().isConnected() && entityplayer.world == this.world) { // MineHQ
+                     // CraftBukkit start - Fire PlayerTeleportEvent
+-                    org.bukkit.craftbukkit.entity.CraftPlayer player = entityplayer.getBukkitEntity();
+-                    org.bukkit.Location location = this.lastValidTeleport;
+-                    location.setPitch(player.getLocation().getPitch());
+-                    location.setYaw(player.getLocation().getYaw());
+-
+-                    PlayerTeleportEvent teleEvent = new PlayerTeleportEvent(player, player.getLocation(), location, PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
+-                    Bukkit.getPluginManager().callEvent(teleEvent);
+-
+-                    if (!teleEvent.isCancelled() && !entityplayer.playerConnection.isDisconnected()) {
+-                        if (this.getShooter().am()) {
+-                            this.getShooter().mount((Entity) null);
++                    if (this.lastValidTeleport != null) {
++                        org.bukkit.craftbukkit.entity.CraftPlayer player = entityplayer.getBukkitEntity();
++                        org.bukkit.Location location = this.lastValidTeleport;
++                        location.setPitch(player.getLocation().getPitch());
++                        location.setYaw(player.getLocation().getYaw());
++
++                        PlayerTeleportEvent teleEvent = new PlayerTeleportEvent(player, player.getLocation(), location, PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
++                        Bukkit.getPluginManager().callEvent(teleEvent);
++
++                        if (!teleEvent.isCancelled() && !entityplayer.playerConnection.isDisconnected()) {
++                            if (this.getShooter().am()) {
++                                this.getShooter().mount((Entity) null);
++                            }
++
++                            entityplayer.playerConnection.teleport(teleEvent.getTo());
++                            this.getShooter().fallDistance = 0.0F;
++                            CraftEventFactory.entityDamage = this;
++                            this.getShooter().damageEntity(DamageSource.FALL, 5.0F);
++                            CraftEventFactory.entityDamage = null;
+                         }
+-
+-                        entityplayer.playerConnection.teleport(teleEvent.getTo());
+-                        this.getShooter().fallDistance = 0.0F;
+-                        CraftEventFactory.entityDamage = this;
+-                        this.getShooter().damageEntity(DamageSource.FALL, 5.0F);
+-                        CraftEventFactory.entityDamage = null;
++                        // CraftBukkit end
++                    } else {
++                        Bukkit.getPluginManager().callEvent(new PlayerPearlRefundEvent(entityplayer.getBukkitEntity()));
+                     }
+-                    // CraftBukkit end
+-                } else {
+-                    Bukkit.getPluginManager().callEvent(new PlayerPearlRefundEvent(entityplayer.getBukkitEntity()));
+                 }
+             }
+ 
+@@ -140,7 +142,7 @@ public class EntityEnderPearl extends EntityProjectile {
+         if (shooter != null && !shooter.isAlive()) {
+             this.die();
+         } else {
+-            AxisAlignedBB newBoundingBox = AxisAlignedBB.a(this.locX - 0.3D, this.locY + 0.01D, this.locZ - 0.3D, this.locX + 0.3D, this.locY + 0.25D, this.locZ + 0.3D);
++            AxisAlignedBB newBoundingBox = AxisAlignedBB.a(this.locX - 0.3D, this.locY - 0.05D, this.locZ - 0.3D, this.locX + 0.3D, this.locY + 0.5D, this.locZ + 0.3D);
+ 
+             if (!this.world.boundingBoxContainsMaterials(this.boundingBox.grow(0.25D, 0D, 0.25D), PROHIBITED_PEARL_BLOCKS) && this.world.getCubes(this, newBoundingBox).isEmpty()) {
+                 this.lastValidTeleport = getBukkitEntity().getLocation();
+-- 
+2.17.2 (Apple Git-113)
+

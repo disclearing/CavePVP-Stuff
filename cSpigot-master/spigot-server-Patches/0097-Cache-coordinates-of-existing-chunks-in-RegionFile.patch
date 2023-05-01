@@ -1,0 +1,106 @@
+From dcc4fe4663cc0430d99c8ec6184c83a4a250afd0 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Sat, 30 Jan 2016 22:07:28 +0100
+Subject: [PATCH] Cache coordinates of existing chunks in RegionFile
+
+
+diff --git a/src/main/java/net/minecraft/server/RegionFile.java b/src/main/java/net/minecraft/server/RegionFile.java
+index 9cd34a445..f44c9e8dc 100644
+--- a/src/main/java/net/minecraft/server/RegionFile.java
++++ b/src/main/java/net/minecraft/server/RegionFile.java
+@@ -23,6 +23,25 @@ public class RegionFile {
+     private int g;
+     private long h;
+ 
++    // Poweruser start
++    private Boolean[] existingChunkCache = new Boolean[1024];
++
++    private boolean isExistingChunkCacheEntrySet(int i, int j) {
++        return this.existingChunkCache[i + j * 32] != null;
++    }
++
++    private boolean checkExistingChunkCache(int i, int j) {
++        return this.existingChunkCache[i + j * 32].booleanValue();
++    }
++
++    private void addCoordinatesToCache(int i, int j, boolean result) {
++        Boolean a = this.existingChunkCache[i + j * 32];
++        if(a == null || a.booleanValue() != result) {
++            this.existingChunkCache[i + j * 32] = new Boolean(result);
++        }
++    }
++    // Poweruser end
++
+     public RegionFile(File file1) {
+         this.b = file1;
+         this.g = 0;
+@@ -88,10 +107,16 @@ public class RegionFile {
+     }
+ 
+     // CraftBukkit start - This is a copy (sort of) of the method below it, make sure they stay in sync
+-    public synchronized boolean chunkExists(int i, int j) {
++    public boolean chunkExists(int i, int j) { // Poweruser - move synchronization inside method
+         if (this.d(i, j)) {
+             return false;
+         } else {
++            // Poweruser start
++            if(this.isExistingChunkCacheEntrySet(i, j)) {
++                return this.checkExistingChunkCache(i, j);
++            }
++            synchronized(this) {
++            // Poweruser end
+             try {
+                 int k = this.e(i, j);
+ 
+@@ -113,16 +138,17 @@ public class RegionFile {
+                     }
+ 
+                     byte b0 = this.c.readByte();
+-                    if (b0 == 1 || b0 == 2) {
+-                        return true;
+-                    }
++                    // Poweruser start
++                    boolean foundChunk = (b0 == 1 || b0 == 2);
++                    this.addCoordinatesToCache(i, j, foundChunk);
++                    return foundChunk;
++                    // Poweruser end
+                 }
+             } catch (IOException ioexception) {
+                 return false;
+             }
++            }
+         }
+-
+-        return false;
+     }
+     // CraftBukkit end
+ 
+@@ -154,14 +180,17 @@ public class RegionFile {
+                             byte[] abyte;
+ 
+                             if (b0 == 1) {
++                                this.addCoordinatesToCache(i, j, true); // Poweruser
+                                 abyte = new byte[j1 - 1];
+                                 this.c.read(abyte);
+                                 return new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte))));
+                             } else if (b0 == 2) {
++                                this.addCoordinatesToCache(i, j, true); // Poweruser
+                                 abyte = new byte[j1 - 1];
+                                 this.c.read(abyte);
+                                 return new DataInputStream(new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(abyte))));
+                             } else {
++                                this.addCoordinatesToCache(i, j, false); // Poweruser
+                                 return null;
+                             }
+                         }
+@@ -245,6 +274,7 @@ public class RegionFile {
+             }
+ 
+             this.b(i, j, (int) (MinecraftServer.ar() / 1000L));
++            this.addCoordinatesToCache(i, j, true); // Poweruser
+         } catch (IOException ioexception) {
+             ioexception.printStackTrace();
+         }
+-- 
+2.13.3
+

@@ -1,0 +1,5 @@
+name: Hub
+version: 1.0-SNAPSHOT
+author: Fyre Network
+main: cc.fyre.hub.Hub
+depend: [Proton, Neutron, Universe]

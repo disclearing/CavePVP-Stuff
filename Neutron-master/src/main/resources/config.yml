@@ -1,0 +1,10 @@
+network: "CAVEPVP"
+mongo:
+  host: "localhost"
+  port: 27017
+  database: "Neutron"
+server:
+  name: "Hub-01"
+fancyName:
+  displayName: true
+  tabListName: true

@@ -1,0 +1,16 @@
+{
+  "name": "Hell",
+  "capLocation": {
+    "x": 89.5,
+    "y": 37.0,
+    "z": 450.5
+  },
+  "world": "world_nether",
+  "capDistance": 4,
+  "capTime": 480,
+  "hidden": false,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

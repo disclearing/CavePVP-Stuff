@@ -1,0 +1,29 @@
+From 46c4a4bf3cec69f874ae7a90a6a3e1ddb2447437 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Thu, 17 Nov 2016 19:03:50 -0200
+Subject: [PATCH] POM Changes
+
+
+diff --git a/pom.xml b/pom.xml
+index 3d1d5be9..fbcbfc12 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -142,15 +142,4 @@
+             <scope>test</scope>
+         </dependency>
+     </dependencies>
+-
+-    <distributionManagement>
+-        <repository>
+-            <id>minehq-repo</id>
+-            <url>http://maven.minehq.com:8081/artifactory/minehq-low</url>
+-        </repository>
+-        <snapshotRepository>
+-            <id>minehq-repo</id>
+-            <url>http://maven.minehq.com:8081/artifactory/minehq-low</url>
+-        </snapshotRepository>
+-    </distributionManagement>
+ </project>
+-- 
+2.11.0.windows.3
+

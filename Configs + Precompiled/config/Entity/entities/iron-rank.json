@@ -1,0 +1,82 @@
+{
+    "type": "NPC",
+    "name": "iron-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 37.5,
+        "y": 69.0,
+        "z": -5.5,
+        "yaw": -0.21955574,
+        "pitch": 0.37111962
+    },
+    "commands": [
+        "freerank"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_iron-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 37.5,
+            "y": 71.0,
+            "z": -5.5,
+            "yaw": -0.21955574,
+            "pitch": 0.37111962
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "§a§lFREE",
+                "location": {
+                    "world": "Spawn",
+                    "x": 37.5,
+                    "y": 71.23,
+                    "z": -5.5,
+                    "yaw": -0.21955574,
+                    "pitch": 0.37111962
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§7§lIron Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 37.5,
+                    "y": 71.0,
+                    "z": -5.5,
+                    "yaw": -0.21955574,
+                    "pitch": 0.37111962
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 37.5,
+                    "y": 70.77,
+                    "z": -5.5,
+                    "yaw": -0.21955574,
+                    "pitch": 0.37111962
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "nGIjagYeNTqsfc3LU6jSqSzDjRNSOXJGMvnb0/W1HrMTP4MWuPLFJ7Mi4ujIh64HN94q3sQisbS5SuZAm99gOEPA1bdS7km8qm5HxvIXJGOqTKlaMJWrhGigNMS39vVdXb+4IEx9LERKxfae8HxZpxByjPp4/+7ja4xgQPLQRbJ5oo+ijOt4TsYUt6hhnkZrVTpdBVYKGSf+Z2FH6mqDzXjGJmxZ5Je55O9c8ST3gMmolqbFA1hMSg1YfxmFM+RrN8EOKEuAW94BC31U+aTaATPR2gUeKXm5iNQFdXovwjb9D6au/TUI8+NALOaZjM21AWysI3wkXXlnQZU6uLNwk5PJgulyXMyE/yE5czsNcK/I5Q8y9RADs6DRIHRXi0GrWZelQBCgKQcpFJS7M+Wg4UaZjIf6x5agglhIeBdXfj9KpLRPD3cOLDVEHWQaRbq4zVYh6UNgZDkBBSsM3029h6ug+8O622JIUDcccm6F4u8ZRbWxoAdF3/6iqs5l5kBzTUlnmgSbGv87qilVCysSQ4EpwBBBMAegrwkY/7LK4LvehZriKn7hJwEg/ozojTveUrJTwmQ+xy7MRq++OuZAy7HMsRnHx0+pgkNBjuFbE6N8bsi1u1SohN+9SX/PvPKOZrOi1hnddUjJsIV+1q1AIuoIFWRocVeVyXlIuQeP518=",
+    "skinUsername": "legionL",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNDIyODMyMSwKICAicHJvZmlsZUlkIiA6ICI0OTlhNmM0NThhYzY0YWMwYWUzYWQ0M2FiM2NiMDIyOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJMZWdpb25MIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzkyZDUyNjM0NmFlMmZjMmE5YTFmZDZmOTcyZTljZDhkMjZhZjQ3Yjc4ZmYyODhkOTlkZDVlN2ZmNTQ4NDg0OWYiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

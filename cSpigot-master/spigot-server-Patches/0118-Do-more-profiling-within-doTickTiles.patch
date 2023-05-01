@@ -1,0 +1,124 @@
+From 6dec90eb596a06a6b7e4e164a39980d69b8aec91 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Wed, 23 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Do more profiling within doTickTiles
+
+
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index aa89f7b12..b20aa6574 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -2287,6 +2287,7 @@ public abstract class World implements IBlockAccess {
+         {
+             return;
+         }
++        this.timings.doTickTiles_buildList.startTiming(); // Poweruser
+         // Keep chunks with growth inside of the optimal chunk range
+         int chunksPerPlayer = Math.min( 200, Math.max( 1, (int) ( ( ( optimalChunks - players.size() ) / (double) players.size() ) + 0.5 ) ) );
+         int randRange = 3 + chunksPerPlayer / 30;
+@@ -2336,6 +2337,7 @@ public abstract class World implements IBlockAccess {
+         }
+ 
+         this.methodProfiler.b();
++        this.timings.doTickTiles_buildList.stopTiming(); // Poweruser
+     }
+ 
+     protected abstract int p();
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 7ad08521f..2456ac883 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -321,6 +321,7 @@ public class WorldServer extends World {
+         // CraftBukkit start
+         // Iterator iterator = this.chunkTickList.iterator();
+ 
++        this.timings.doTickTiles_tickingChunks.startTiming(); // Poweruser
+         // Spigot start
+         for (net.minecraft.util.gnu.trove.iterator.TLongShortIterator iter = chunkTickList.iterator(); iter.hasNext();) {
+             iter.advance();
+@@ -339,12 +340,16 @@ public class WorldServer extends World {
+             int l = chunkZ * 16;
+ 
+             this.methodProfiler.a("getChunk");
++            this.timings.doTickTiles_tickingChunks_getChunk.startTiming(); // Poweruser
+             Chunk chunk = this.getChunkAt(chunkX, chunkZ);
+             // CraftBukkit end
+ 
+             this.a(k, l, chunk);
++            this.timings.doTickTiles_tickingChunks_getChunk.stopTiming(); // Poweruser
+             this.methodProfiler.c("tickChunk");
++            this.timings.doTickTiles_tickingChunks_tickChunk.startTiming(); // Poweruser
+             chunk.b(false);
++            this.timings.doTickTiles_tickingChunks_tickChunk.stopTiming(); // Poweruser
+             this.methodProfiler.c("thunder");
+             int i1;
+             int j1;
+@@ -364,6 +369,7 @@ public class WorldServer extends World {
+ 
+             this.methodProfiler.c("iceandsnow");
+             if (this.random.nextInt(16) == 0) {
++                this.timings.doTickTiles_tickingChunks_iceAndSnow.startTiming(); // Poweruser
+                 this.k = this.k * 3 + 1013904223;
+                 i1 = this.k >> 2;
+                 j1 = i1 & 15;
+@@ -402,9 +408,11 @@ public class WorldServer extends World {
+                         this.getType(j1 + k, l1 - 1, k1 + l).l(this, j1 + k, l1 - 1, k1 + l);
+                     }
+                 }
++                this.timings.doTickTiles_tickingChunks_iceAndSnow.stopTiming(); // Poweruser
+             }
+ 
+             this.methodProfiler.c("tickBlocks");
++            this.timings.doTickTiles_tickingChunks_tickBlocks.startTiming(); // Poweruser
+             ChunkSection[] achunksection = chunk.getSections();
+ 
+             j1 = achunksection.length;
+@@ -431,6 +439,7 @@ public class WorldServer extends World {
+                     }
+                 }
+             }
++            this.timings.doTickTiles_tickingChunks_tickBlocks.stopTiming(); // Poweruser
+ 
+             this.methodProfiler.b();
+         }
+@@ -440,6 +449,7 @@ public class WorldServer extends World {
+             chunkTickList.clear();
+         }
+         // Spigot End
++        this.timings.doTickTiles_tickingChunks.stopTiming(); // Poweruser
+     }
+ 
+     public boolean a(int i, int j, int k, Block block) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+index e1c779bf1..35149225a 100644
+--- a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
++++ b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+@@ -121,6 +121,12 @@ public class SpigotTimings {
+         public final CustomTimingsHandler doPortalForcer;
+         public final CustomTimingsHandler doTickPending;
+         public final CustomTimingsHandler doTickTiles;
++        public final CustomTimingsHandler doTickTiles_buildList;
++        public final CustomTimingsHandler doTickTiles_tickingChunks;
++        public final CustomTimingsHandler doTickTiles_tickingChunks_getChunk;
++        public final CustomTimingsHandler doTickTiles_tickingChunks_tickChunk;
++        public final CustomTimingsHandler doTickTiles_tickingChunks_iceAndSnow;
++        public final CustomTimingsHandler doTickTiles_tickingChunks_tickBlocks;
+         public final CustomTimingsHandler doVillages;
+         public final CustomTimingsHandler doChunkMap;
+         public final CustomTimingsHandler doChunkGC;
+@@ -151,6 +157,12 @@ public class SpigotTimings {
+             doChunkUnload = new CustomTimingsHandler("** " + name + "doChunkUnload");
+             doTickPending = new CustomTimingsHandler("** " + name + "doTickPending");
+             doTickTiles = new CustomTimingsHandler("** " + name + "doTickTiles");
++            doTickTiles_buildList = new CustomTimingsHandler("** " + name + "doTickTiles_buildList");
++            doTickTiles_tickingChunks = new CustomTimingsHandler("** " + name + "doTickTiles_tickingChunks");
++            doTickTiles_tickingChunks_getChunk = new CustomTimingsHandler("** " + name + "doTickTiles_tickingChunks_getChunk");
++            doTickTiles_tickingChunks_tickChunk = new CustomTimingsHandler("** " + name + "doTickTiles_tickingChunks_tickChunk");
++            doTickTiles_tickingChunks_iceAndSnow = new CustomTimingsHandler("** " + name + "doTickTiles_tickingChunks_iceAndSnow");
++            doTickTiles_tickingChunks_tickBlocks = new CustomTimingsHandler("** " + name + "doTickTiles_tickingChunks_tickBlocks");
+             doVillages = new CustomTimingsHandler("** " + name + "doVillages");
+             doChunkMap = new CustomTimingsHandler("** " + name + "doChunkMap");
+             doSounds = new CustomTimingsHandler("** " + name + "doSounds");
+-- 
+2.13.3
+

@@ -1,0 +1,602 @@
+From 17267aa9a40dee58eeeb3628680d4022fb4f49c4 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sat, 27 Oct 2018 21:07:42 -0500
+Subject: [PATCH] t
+
+
+diff --git a/src/main/java/net/minecraft/server/EnchantmentManager.java b/src/main/java/net/minecraft/server/EnchantmentManager.java
+index deda4728..83154f29 100644
+--- a/src/main/java/net/minecraft/server/EnchantmentManager.java
++++ b/src/main/java/net/minecraft/server/EnchantmentManager.java
+@@ -137,7 +137,7 @@ public class EnchantmentManager {
+             b.a = 25;
+         }
+ 
+-        return (b.a + 1 >> 1) + random.nextInt((b.a >> 1) + 1);
++        return b.a;
+     }
+ 
+     public static float a(EntityLiving entityliving, EntityLiving entityliving1) {
+diff --git a/src/main/java/net/minecraft/server/EntityEnderPearl.java b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+index 8da37d33..fbb051b4 100644
+--- a/src/main/java/net/minecraft/server/EntityEnderPearl.java
++++ b/src/main/java/net/minecraft/server/EntityEnderPearl.java
+@@ -1,24 +1,27 @@
+ package net.minecraft.server;
+ 
+-import java.util.Set;
+-
+-// CraftBukkit start
++import com.google.common.collect.Sets;
+ import org.bukkit.Bukkit;
+-import org.bukkit.Location;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.event.player.PlayerPearlRefundEvent;
+ import org.bukkit.event.player.PlayerTeleportEvent;
++import org.bukkit.material.Gate;
++import org.bukkit.util.BlockIterator;
++import org.bukkit.util.Vector;
++import org.spigotmc.SpigotConfig;
+ 
+-import com.google.common.collect.Sets;
++import java.util.Set;
++
++// CraftBukkit start
+ 
+ public class EntityEnderPearl extends EntityProjectile {
+ 
+-    private Location lastValidTeleport = null;
+     private Item toRefundPearl = null;
++    private EntityLiving c;
+ 
+-    private static Set<Block> PROHIBITED_PEARL_BLOCKS = Sets.newHashSet(Block.getById(85), 
++    private static Set<Block> PROHIBITED_PEARL_BLOCKS = Sets.newHashSet(Block.getById(85),
+             Block.getById(107)
+-            );
++    );
+ 
+     public EntityEnderPearl(World world) {
+         super(world);
+@@ -27,23 +30,53 @@ public class EntityEnderPearl extends EntityProjectile {
+ 
+     public EntityEnderPearl(World world, EntityLiving entityliving) {
+         super(world, entityliving);
++        this.c = entityliving;
+         this.loadChunks = world.paperSpigotConfig.loadUnloadedEnderPearls; // PaperSpigot
+     }
+ 
+-    // MineHQ start
+-    public void h() {
+-        AxisAlignedBB newBoundingBox = AxisAlignedBB.a(this.locX - 0.3D, this.locY - 0.05D, this.locZ - 0.3D, this.locX + 0.3D, this.locY + 0.5D, this.locZ + 0.3D);
+-        
+-        if (!this.world.boundingBoxContainsMaterials(this.boundingBox.grow(0.25D, 0D, 0.25D), PROHIBITED_PEARL_BLOCKS) && this.world.getCubes(this, newBoundingBox).isEmpty()) {
+-            this.lastValidTeleport = getBukkitEntity().getLocation();
++    protected void a(MovingObjectPosition movingobjectposition) {
++        if (SpigotConfig.pearlThroughGatesAndTripwire) {
++            Block block = this.world.getType(movingobjectposition.b, movingobjectposition.c, movingobjectposition.d);
++
++            if (block == Blocks.TRIPWIRE) {
++                return;
++            } else if (block == Blocks.FENCE_GATE) {
++                BlockIterator bi = null;
++
++                try {
++                    Vector l = new Vector(this.locX, this.locY, this.locZ);
++                    Vector l2 = new Vector(this.locX + this.motX, this.locY + this.motY, this.locZ + this.motZ);
++                    Vector dir = new Vector(l2.getX() - l.getX(), l2.getY() - l.getY(), l2.getZ() - l.getZ()).normalize();
++                    bi = new BlockIterator(this.world.getWorld(), l, dir, 0, 1);
++                } catch (IllegalStateException ex) {
++                    // ignore
++                }
++
++                if (bi != null) {
++                    boolean open = true;
++
++                    while (bi.hasNext()) {
++                        org.bukkit.block.Block b = bi.next();
++
++                        if (b.getState().getData() instanceof Gate && !((Gate) b.getState().getData()).isOpen()) {
++                            open = false;
++                            break;
++                        }
++                    }
++
++                    if (open) {
++                        return;
++                    }
++                }
++            }
+         }
+ 
+-        super.h();
+-    }
+-    // MineHQ start
+ 
+-    protected void a(MovingObjectPosition movingobjectposition) {
+         if (movingobjectposition.entity != null) {
++            if (movingobjectposition.entity == this.c) {
++                return;
++            }
++
+             movingobjectposition.entity.damageEntity(DamageSource.projectile(this, this.getShooter()), 0.0F);
+         }
+ 
+@@ -62,31 +95,29 @@ public class EntityEnderPearl extends EntityProjectile {
+                 EntityPlayer entityplayer = (EntityPlayer) this.getShooter();
+ 
+                 if (entityplayer.playerConnection.b().isConnected() && entityplayer.world == this.world) { // MineHQ
+-                    if (this.lastValidTeleport != null) {
+-                        // CraftBukkit start - Fire PlayerTeleportEvent
+-                        org.bukkit.craftbukkit.entity.CraftPlayer player = entityplayer.getBukkitEntity();
+-                        org.bukkit.Location location = this.lastValidTeleport.clone(); // MineHQ
+-                        location.setPitch(player.getLocation().getPitch());
+-                        location.setYaw(player.getLocation().getYaw());
+-
+-                        PlayerTeleportEvent teleEvent = new PlayerTeleportEvent(player, player.getLocation(), location, PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
+-                        Bukkit.getPluginManager().callEvent(teleEvent);
+-
+-                        if (!teleEvent.isCancelled() && !entityplayer.playerConnection.isDisconnected()) {
+-                            if (this.getShooter().am()) {
+-                                this.getShooter().mount((Entity) null);
+-                            }
+-
+-                            entityplayer.playerConnection.teleport(teleEvent.getTo());
+-                            this.getShooter().fallDistance = 0.0F;
+-                            CraftEventFactory.entityDamage = this;
+-                            this.getShooter().damageEntity(DamageSource.FALL, 5.0F);
+-                            CraftEventFactory.entityDamage = null;
++                    // CraftBukkit start - Fire PlayerTeleportEvent
++                    org.bukkit.craftbukkit.entity.CraftPlayer player = entityplayer.getBukkitEntity();
++                    org.bukkit.Location location = this.getBukkitEntity().getLocation();
++                    location.setPitch(player.getLocation().getPitch());
++                    location.setYaw(player.getLocation().getYaw());
++
++                    PlayerTeleportEvent teleEvent = new PlayerTeleportEvent(player, player.getLocation(), location, PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
++                    Bukkit.getPluginManager().callEvent(teleEvent);
++
++                    if (!teleEvent.isCancelled() && !entityplayer.playerConnection.isDisconnected()) {
++                        if (this.getShooter().am()) {
++                            this.getShooter().mount((Entity) null);
+                         }
+-                        // CraftBukkit end
+-                    } else {
+-                        Bukkit.getPluginManager().callEvent(new PlayerPearlRefundEvent(entityplayer.getBukkitEntity()));
++
++                        entityplayer.playerConnection.teleport(teleEvent.getTo());
++                        this.getShooter().fallDistance = 0.0F;
++                        CraftEventFactory.entityDamage = this;
++                        this.getShooter().damageEntity(DamageSource.FALL, 5.0F);
++                        CraftEventFactory.entityDamage = null;
+                     }
++                    // CraftBukkit end
++                } else {
++                    Bukkit.getPluginManager().callEvent(new PlayerPearlRefundEvent(entityplayer.getBukkitEntity()));
+                 }
+             }
+ 
+@@ -94,6 +125,17 @@ public class EntityEnderPearl extends EntityProjectile {
+         }
+     }
+ 
++    @Override
++    public void h() {
++        EntityLiving shooter = this.getShooter();
++
++        if (shooter != null && !shooter.isAlive()) {
++            this.die();
++        } else {
++            super.h();
++        }
++    }
++
+     public Item getToRefundPearl() {
+         return this.toRefundPearl;
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index df2333f1..5101d3a1 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -961,18 +961,25 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+                     boolean flag2 = entity.damageEntity(DamageSource.playerAttack(this), f);
+ 
+                     if (flag2) {
+-                        if (i > 0) {
+-                            if (SpigotConfig.alternateKnockback) {
+-                                entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F));
+-                            } else {
+-                                entity.g(
+-                                        (double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * SpigotConfig.knockbackExtraHorizontal),
+-                                        SpigotConfig.knockbackExtraVertical,
+-                                        (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * SpigotConfig.knockbackExtraHorizontal));
++                        if (SpigotConfig.knockbackMode == SpigotConfig.MMC) {
++                            if (this.isApplyingSprintKnockback()) {
++                                entity.g(-MathHelper.sin(this.yaw * 3.1415927f / 180.0f) * i * 0.5f, 0.1, MathHelper.cos(this.yaw * 3.1415927f / 180.0f) * i * 0.5f);
++                                this.setApplyingSprintKnockback(false);
++                            }
++                        } else {
++                            if (i > 0) {
++                                if (SpigotConfig.knockbackMode == SpigotConfig.KOHI) {
++                                    entity.g((double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F), 0.1D, (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * 0.5F));
++                                } else {
++                                    entity.g(
++                                            (double) (-MathHelper.sin(this.yaw * 3.1415927F / 180.0F) * (float) i * SpigotConfig.knockbackExtraHorizontal),
++                                            SpigotConfig.knockbackExtraVertical,
++                                            (double) (MathHelper.cos(this.yaw * 3.1415927F / 180.0F) * (float) i * SpigotConfig.knockbackExtraHorizontal));
++                                }
++                                this.motX *= 0.6D;
++                                this.motZ *= 0.6D;
++                                this.setSprinting(false);
+                             }
+-                            this.motX *= 0.6D;
+-                            this.motZ *= 0.6D;
+-                            this.setSprinting(false);
+                         }
+ 
+                         // Kohi start
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index a642090a..4317cd3b 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -88,6 +88,7 @@ public abstract class EntityLiving extends Entity {
+     // CraftBukkit start
+     public int expToDrop;
+     public int maxAirTicks = 300;
++    private boolean applyingSprintKnockback;
+     ArrayList<org.bukkit.inventory.ItemStack> drops = null;
+     // CraftBukkit end
+     // Spigot start
+@@ -900,7 +901,7 @@ public abstract class EntityLiving extends Entity {
+         if (this.random.nextDouble() >= this.getAttributeInstance(GenericAttributes.c).getValue()) {
+             this.al = true;
+             float f1 = MathHelper.sqrt(d0 * d0 + d1 * d1);
+-            if (SpigotConfig.alternateKnockback) {
++            if (SpigotConfig.knockbackMode == SpigotConfig.KOHI) {
+                 double magnitude = f1;
+ 
+                 this.motX /= SpigotConfig.knockbackFriction;
+@@ -914,6 +915,28 @@ public abstract class EntityLiving extends Entity {
+                 if (this.motY > SpigotConfig.knockbackVerticalLimit) {
+                     this.motY = SpigotConfig.knockbackVerticalLimit;
+                 }
++            } else if (SpigotConfig.knockbackMode == SpigotConfig.MMC) {
++                if (this.random.nextDouble() >= this.getAttributeInstance(GenericAttributes.c).getValue()) {
++                    this.al = true;
++                    final float f2 = MathHelper.sqrt(d0 * d0 + d1 * d1);
++                    float f3 = 0.4f;
++                    float f4 = 0.4f;
++                    final double knockbackReductionHorizontal = 1.0 - SpigotConfig.knockbackHorizontal;
++                    final double knockbackReductionVertical = 1.0 - SpigotConfig.knockbackVertical;
++                    final double frictionHorizontal = 2.0 - knockbackReductionHorizontal;
++                    final double frictionVertical = 2.0 - knockbackReductionVertical - 0.25;
++                    f3 *= (float)(1.0 - knockbackReductionHorizontal);
++                    f4 *= (float)(1.0 - knockbackReductionVertical);
++                    this.motX /= frictionHorizontal;
++                    this.motY /= frictionVertical;
++                    this.motZ /= frictionHorizontal;
++                    this.motX -= d0 / f2 * f3;
++                    this.motY += f4;
++                    this.motZ -= d1 / f2 * f3;
++                    if (this.motY > 0.4000000059604645) {
++                        this.motY = 0.4000000059604645;
++                    }
++                }
+             } else {
+                 float f2 = 0.4F;
+ 
+@@ -1260,6 +1283,7 @@ public abstract class EntityLiving extends Entity {
+ 
+     public void setSprinting(boolean flag) {
+         super.setSprinting(flag);
++        this.setApplyingSprintKnockback(flag);
+         AttributeInstance attributeinstance = this.getAttributeInstance(GenericAttributes.d);
+ 
+         if (attributeinstance.a(b) != null) {
+@@ -1271,6 +1295,15 @@ public abstract class EntityLiving extends Entity {
+         }
+     }
+ 
++    public void setApplyingSprintKnockback(final boolean flag) {
++        this.applyingSprintKnockback = flag;
++    }
++
++    public boolean isApplyingSprintKnockback() {
++        return this.applyingSprintKnockback;
++    }
++
++
+     public abstract ItemStack[] getEquipment();
+ 
+     protected float bf() {
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index c30ffec6..2397a59e 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -25,11 +25,13 @@ import org.bukkit.craftbukkit.CraftWorld;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.craftbukkit.inventory.CraftItemStack;
++import org.bukkit.craftbukkit.util.CraftPotionUtils;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.inventory.InventoryType;
+ import org.bukkit.event.player.PlayerRespawnEvent;
+ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+ // CraftBukkit end
++import org.bukkit.potion.PotionEffect;
+ import org.spigotmc.ProtocolData; // Spigot - protocol patch
+ import org.spigotmc.SpigotConfig;
+ 
+@@ -1053,7 +1055,9 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+ 
+     protected void a(MobEffect mobeffect) {
+         super.a(mobeffect);
+-        this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
++        if (this.playerConnection != null) {
++            this.playerConnection.sendPacket(new PacketPlayOutEntityEffect(this.getId(), mobeffect));
++        }
+     }
+ 
+     protected void a(MobEffect mobeffect, boolean flag) {
+diff --git a/src/main/java/net/minecraft/server/EntityProjectile.java b/src/main/java/net/minecraft/server/EntityProjectile.java
+index 5287cdab..dcc55ed6 100644
+--- a/src/main/java/net/minecraft/server/EntityProjectile.java
++++ b/src/main/java/net/minecraft/server/EntityProjectile.java
+@@ -115,38 +115,6 @@ public abstract class EntityProjectile extends Entity implements IProjectile {
+         Vec3D vec3d1 = Vec3D.a(this.locX + this.motX, this.locY + this.motY, this.locZ + this.motZ);
+         MovingObjectPosition movingobjectposition = this.world.a(vec3d, vec3d1);
+ 
+-        // Riot start - pearling through open fence gates & string
+-        if (SpigotConfig.pearlThroughGatesAndTripwire && this instanceof EntityEnderPearl && movingobjectposition != null && movingobjectposition.type == EnumMovingObjectType.BLOCK) {
+-            
+-            int fromX = MathHelper.floor(this.locX);
+-            int fromY = MathHelper.floor(this.locY);
+-            int fromZ = MathHelper.floor(this.locZ);
+-            
+-            int toX = MathHelper.floor(this.locX + this.motX);
+-            int toY = MathHelper.floor(this.locY + this.motY);
+-            int toZ = MathHelper.floor(this.locZ + this.motZ);
+-            
+-            int collisionX = movingobjectposition.b;
+-            int collisionY = movingobjectposition.c;
+-            int collisionZ = movingobjectposition.d;
+-
+-            boolean isFromClear = isClear(fromX, fromY, fromZ);
+-            boolean isToClear = isClear(toX, toY, toZ);
+-            boolean isCollisionClear = isClear(collisionX, collisionY, collisionZ);
+-
+-            if (isFromClear && isCollisionClear && isToClear) {
+-                movingobjectposition = null;
+-            } else {
+-                Bukkit.getLogger().info("isFromClear:" + isFromClear);
+-                Bukkit.getLogger().info("isCollisionClear:" + isCollisionClear);
+-                Bukkit.getLogger().info("isToClear:" + isToClear);
+-                Bukkit.getLogger().info(String.format("from: %d,%d,%d", fromX, fromY, fromZ));
+-                Bukkit.getLogger().info(String.format("collision: %d,%d,%d", collisionX, collisionY, collisionZ));
+-                Bukkit.getLogger().info(String.format("to: %d,%d,%d", toX, toY, toZ));
+-            }
+-        }
+-        // Riot end
+-
+         vec3d = Vec3D.a(this.locX, this.locY, this.locZ);
+         vec3d1 = Vec3D.a(this.locX + this.motX, this.locY + this.motY, this.locZ + this.motZ);
+         if (movingobjectposition != null) {
+@@ -289,10 +257,4 @@ public abstract class EntityProjectile extends Entity implements IProjectile {
+ 
+         return this.shooter;
+     }
+-
+-    private boolean isClear(int x, int y, int z) {
+-        Block block = this.world.getType(x, y, z);
+-
+-        return block == null || block == Blocks.AIR || (block == Blocks.FENCE_GATE && (this.world.getData(x, y, z) & 0x4) != 0x0);
+-    }
+ }
+diff --git a/src/main/java/net/minecraft/server/EntityTracker.java b/src/main/java/net/minecraft/server/EntityTracker.java
+index a7c4b25c..05b5f4c2 100644
+--- a/src/main/java/net/minecraft/server/EntityTracker.java
++++ b/src/main/java/net/minecraft/server/EntityTracker.java
+@@ -60,7 +60,7 @@ public class EntityTracker {
+         } else if (entity instanceof EntitySnowball) {
+             this.addEntity(entity, 64, 10, true);
+         } else if (entity instanceof EntityEnderPearl) {
+-            this.addEntity(entity, 64, 10, true);
++            this.addEntity(entity, 64, 2, true);
+         } else if (entity instanceof EntityEnderSignal) {
+             this.addEntity(entity, 64, 4, true);
+         } else if (entity instanceof EntityEgg) {
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 143e41b2..ef77a210 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -461,7 +461,8 @@ public class EntityTrackerEntry {
+                         entityplayer.playerConnection.sendPacket(packet);
+                         if (trackerInstanceOf && SpigotConfig.onlyCustomTab) entityplayer.playerConnection.sendPacket(PacketPlayOutPlayerInfo.removePlayer((EntityPlayer) tracker));
+                     } else {
+-                        if (tracker instanceof EntityPlayer && !SpigotConfig.onlyCustomTab) { entityplayer.playerConnection.sendPacket(PacketPlayOutPlayerInfo.addPlayer((EntityPlayer) tracker));
++                        if (tracker instanceof EntityPlayer && !SpigotConfig.onlyCustomTab) {
++                            entityplayer.playerConnection.sendPacket(PacketPlayOutPlayerInfo.addPlayer((EntityPlayer) tracker));
+                         }
+                         
+                         entityplayer.playerConnection.sendPacket(packet);
+diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
+index f6150520..ac33bb38 100644
+--- a/src/main/java/net/minecraft/server/LoginListener.java
++++ b/src/main/java/net/minecraft/server/LoginListener.java
+@@ -155,7 +155,7 @@ public class LoginListener implements PacketLoginInListener {
+     }
+ 
+     public String getName() {
+-        return this.i != null ? this.i.toString() + " (" + this.networkManager.getSocketAddress().toString() + ")" : String.valueOf(this.networkManager.getSocketAddress());
++        return this.i != null ? "[" + this.i.getName() + ", " + this.i.getId() + "]" + " (" + this.networkManager.getSocketAddress().toString() + ")" : String.valueOf(this.networkManager.getSocketAddress());
+     }
+ 
+     public void a(EnumProtocol enumprotocol, EnumProtocol enumprotocol1) {
+diff --git a/src/main/java/net/minecraft/server/NextTickListEntry.java b/src/main/java/net/minecraft/server/NextTickListEntry.java
+index cbb35765..f63c095a 100644
+--- a/src/main/java/net/minecraft/server/NextTickListEntry.java
++++ b/src/main/java/net/minecraft/server/NextTickListEntry.java
+@@ -30,7 +30,7 @@ public class NextTickListEntry implements Comparable {
+     }
+ 
+     public int hashCode() {
+-        return (this.a * 1024 * 1024 + this.c * 1024 + this.b) * 256;
++        return (c & 0xff) | ((a & 0x7fff) << 8) | ((b & 0x7fff) << 24) | ((a < 0) ? 0x0080000000 : 0) | ((b < 0) ? 0x0000008000 : 0);
+     }
+ 
+     public NextTickListEntry a(long i) {
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index fc0507d6..fd9e344c 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -344,7 +344,7 @@ public abstract class PlayerList {
+         }
+         // CraftBukkit end
+ 
+-        if (!SpigotConfig.playerListPackets) return; // MineHQ
++        if (SpigotConfig.onlyCustomTab) return; // MineHQ
+ 
+         // CraftBukkit start - sendAll above replaced with this loop
+         PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.addPlayer( entityplayer ); // Spigot - protocol patch
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 6de5a6b6..da78af52 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -641,7 +641,14 @@ public class WorldServer extends World {
+         }
+     }
+ 
++    private static int tookTooLongs = 0;
++
+     public List a(Chunk chunk, boolean flag) {
++
++        if (Bukkit.getPluginManager().getPlugin("UHC") != null) {
++            return null;
++        }
++
+         ArrayList arraylist = null;
+         ChunkCoordIntPair chunkcoordintpair = chunk.l();
+         int i = (chunkcoordintpair.x << 4) - 2;
+@@ -652,13 +659,22 @@ public class WorldServer extends World {
+         for (int i1 = 0; i1 < 2; ++i1) {
+             Iterator iterator;
+ 
++            int size;
++            String ita;
+             if (i1 == 0) {
+                 iterator = this.N.iterator();
++                size = this.N.size();
++                ita = "N";
+             } else {
+                 iterator = this.V.iterator();
++                size = this.V.size();
++                ita = "V";
+             }
+ 
+-            while (iterator.hasNext()) {
++            long started = System.currentTimeMillis();
++
++
++            while (iterator.hasNext() && (System.currentTimeMillis() - started < 500) && tookTooLongs < 30) {
+                 NextTickListEntry nextticklistentry = (NextTickListEntry) iterator.next();
+ 
+                 if (nextticklistentry.a >= i && nextticklistentry.a < j && nextticklistentry.c >= k && nextticklistentry.c < l) {
+@@ -673,6 +689,13 @@ public class WorldServer extends World {
+                     arraylist.add(nextticklistentry);
+                 }
+             }
++
++            if (1000 <= System.currentTimeMillis() - started) {
++                Bukkit.getLogger().info("Saving took too long :(");
++                Bukkit.getLogger().info("Iterator size: " + size + ". Iterator: " + ita);
++                Bukkit.getLogger().info("Removing from iterator? " + flag);
++                tookTooLongs++;
++            }
+         }
+ 
+         return arraylist;
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/HashTreeSet.java b/src/main/java/org/bukkit/craftbukkit/util/HashTreeSet.java
+index 80a5c29f..e690831d 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/HashTreeSet.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/HashTreeSet.java
+@@ -1,5 +1,7 @@
+ package org.bukkit.craftbukkit.util;
+ 
++import org.bukkit.Bukkit;
++
+ import java.util.Collection;
+ import java.util.HashSet;
+ import java.util.Iterator;
+@@ -44,6 +46,9 @@ public class HashTreeSet<V> implements Set<V> {
+ 
+             @Override
+             public V next() {
++                if (!Bukkit.isPrimaryThread()) {
++                    throw new IllegalStateException("Async access of HTS iterator");
++                }
+                 return last = it.next();
+             }
+ 
+@@ -71,12 +76,19 @@ public class HashTreeSet<V> implements Set<V> {
+ 
+     @Override
+     public boolean add(V e) {
++        if (!Bukkit.isPrimaryThread()) {
++            throw new IllegalStateException("Async access of HTS add");
++        }
++
+         hash.add(e);
+         return tree.add(e);
+     }
+ 
+     @Override
+     public boolean remove(Object o) {
++        if (!Bukkit.isPrimaryThread()) {
++            throw new IllegalStateException("Async access of HTS remove");
++        }
+         hash.remove(o);
+         return tree.remove(o);
+     }
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index f7678418..b420ec14 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -532,8 +532,11 @@ public class SpigotConfig
+     public static boolean onlyCustomTab;
+     private static void packets() {
+         onlyCustomTab = getBoolean("settings.only-custom-tab", false);
+-        playerListPackets = !onlyCustomTab && !getBoolean("settings.disable.player-list-packets", false);
+-        updatePingOnTablist = !onlyCustomTab && !getBoolean("settings.disable.ping-update-packets", false);
++
++        if (!onlyCustomTab) {
++            playerListPackets = !getBoolean("settings.disable.player-list-packets", false);
++            updatePingOnTablist = getBoolean("settings.disable.ping-update-packets", false);
++        }
+     }
+     // MineHQ end
+ 
+@@ -542,7 +545,13 @@ public class SpigotConfig
+         reduceArmorDamage = getBoolean("settings.reduce-armor-damage", false);
+     }
+ 
+-    public static boolean alternateKnockback;
++    // Kohi = 0, MineHQ = 1, MMC = 2
++
++    public static int KOHI = 0;
++    public static int MINEHQ = 1;
++    public static int MMC = 2;
++
++    public static int knockbackMode = 0;
+     public static double knockbackFriction = 2.0D;
+     public static double knockbackHorizontal = 0.35D;
+     public static double knockbackVertical = 0.35D;
+@@ -550,7 +559,7 @@ public class SpigotConfig
+     public static double knockbackExtraHorizontal = 0.425D;
+     public static double knockbackExtraVertical = 0.085D;
+     private static void knockback() {
+-        alternateKnockback = getBoolean("settings.alternate-knockback", false);
++        knockbackMode = getInt("settings.knockback-mode", 0);
+     }
+ 
+     public static boolean pearlThroughGatesAndTripwire = false;
+-- 
+2.17.2 (Apple Git-113)
+

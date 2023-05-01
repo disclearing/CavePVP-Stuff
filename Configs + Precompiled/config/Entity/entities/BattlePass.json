@@ -1,0 +1,86 @@
+{
+    "type": "NPC",
+    "name": "BattlePass",
+    "location": {
+        "world": "Spawn",
+        "x": -5.5,
+        "y": 70.0,
+        "z": -5.5,
+        "yaw": 217.28561,
+        "pitch": -0.0
+    },
+    "commands": [
+        "bp"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_BattlePass_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": -5.5,
+            "y": 72.095,
+            "z": -5.5,
+            "yaw": 217.28561,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&a* &a&lREVAMPED &a*",
+                "location": {
+                    "world": "Spawn",
+                    "x": -5.5,
+                    "y": 72.325,
+                    "z": -5.5,
+                    "yaw": 217.28561,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&6&lBattle Pass",
+                "location": {
+                    "world": "Spawn",
+                    "x": -5.5,
+                    "y": 72.095,
+                    "z": -5.5,
+                    "yaw": 217.28561,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§f§ostore.cavepvp.org",
+                "location": {
+                    "world": "Spawn",
+                    "x": -5.5,
+                    "y": 71.865,
+                    "z": -5.5,
+                    "yaw": 217.28561,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "UKL73mwIp2SpejoDRqpHQMWbGJ6NSWs6ZaFY3HWuqAswrc/cUTAMx+zTi8e8RpW20vfLe/26HDXRxXoJ0Zp5LiZvWvEB4h4x3Q86n2iD1NURikbUGK1HZFk9T3qLemNAD0lO+3XvAMdl/IFwHxY90N6LMzAGcbhYmwo7o+gtaee4V+tGYaHfY5dHaJ69Vnemb7N7VDM2cQRXlxRtX/pPzX/4JdLNoSIEusgedZkDLRW7pZuZK5oQBmXWHIOjMMW2ygxTfsGRd1OMOIHy8ErlAs6V0n4lmv7uj+RQ+WZU2UELtgFAy1X7TYs1OdnZDrrZd/uqtyZgKD4wu+2Ai182psk/WE8sQwKC4GdWRWq/qnlUU1AHRZNik19o/JWTWJessJgs76QpuB4QsimTEM2Wfxvpmog8joV7/5sizlPDVT5UvHAg3uPgI6mM6rlXl8cyrgHlQJakAmteSeYSMBgZI1nAVuqUsPmCUMm2habsae8+PDgkY/JtdqIVslJmwJtjBTuAxFevj/E3vi//lF+KPEaWq6CDvI1hXdGS6RJZZfJwVfEUGkqiu+IsPYdg6jG7M4DBWKs3EwIjeLka23MePi9IqLuAIGbhs+yrSH+mYHuEt51rMsH6GCgBB5+OMPVskCR2tTreC/aO8/Jg5M9MPxpr5kKzNql86FGH03ydrNw=",
+    "skinUsername": "Rayzo",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY2NTk1MzczNzA1NywKICAicHJvZmlsZUlkIiA6ICJjNTgwNmIzMmE0ZTA0MDViYjM4MjExMjUwZGZlNWQ3YiIsCiAgInByb2ZpbGVOYW1lIiA6ICJSYXl6byIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9lNDNiMmJhOTU4MWY3YTAzNGVhMWQzMWNkZDU4MGM3NzViZGY5ODMxNjJkM2IyNzBkZTRiNDUyOTdmMTU4NjZlIgogICAgfQogIH0KfQ==",
+    "animations": [
+        "Rings_YELLOW",
+        "Rings_GREEN",
+        "Rings_DARK_GREEN"
+    ],
+    "visibility": "VISIBLE"
+}

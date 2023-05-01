@@ -1,0 +1,30 @@
+From 946da1bd87b8d13c097b30140ddcc6f95fb857cd Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 9 Jul 2017 16:27:56 +0100
+Subject: [PATCH] Slightly optimize ActivationRange
+
+
+diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
+index 1a2221dac..f7ceb4d56 100644
+--- a/src/main/java/org/spigotmc/ActivationRange.java
++++ b/src/main/java/org/spigotmc/ActivationRange.java
+@@ -148,11 +148,14 @@ public class ActivationRange
+             int k = MathHelper.floor(maxBB.c / 16.0D);
+             int l = MathHelper.floor(maxBB.f / 16.0D);
+ 
++            Chunk chunk = null; // MineHQ
+             for (int i1 = i; i1 <= j; ++i1) {
+                 for (int j1 = k; j1 <= l; ++j1) {
+-                    if (world.getWorld().isChunkLoaded(i1, j1)) {
+-                        activateChunkEntities(world.getChunkAt(i1, j1));
++                    // MineHQ start
++                    if ((chunk = world.getChunkIfLoaded(i1, j1)) != null) {
++                        activateChunkEntities(chunk);
+                     }
++                    // MineHQ end
+                 }
+             }
+         }
+-- 
+2.13.3
+

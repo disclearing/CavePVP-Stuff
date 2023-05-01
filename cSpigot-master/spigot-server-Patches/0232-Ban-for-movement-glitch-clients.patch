@@ -1,0 +1,24 @@
+From a864238051057e8260c153c1312ad54544f1dfdb Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Wed, 16 Jan 2019 18:55:46 -0600
+Subject: [PATCH] Ban for movement glitch clients
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index a8b3b3dd..5e9fe5b1 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -490,6 +490,10 @@ public class PlayerConnection implements PacketPlayInListener {
+                 if(this.movedTooQuicklyViolations > 0 && violationDelayPassed) {
+                     c.warn(this.player.getName() + " moved too quickly! Violations: " + this.movedTooQuicklyViolations);
+                     this.movedTooQuicklyViolations = 0;
++
++                    if (this.movedTooQuicklyViolations > 10) {
++                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban " + this.player.getName() + " Suspicious movement");
++                    }
+                 }
+                 if (d10 > org.spigotmc.SpigotConfig.movedTooQuicklyThreshold && this.checkMovement && (!this.minecraftServer.N() || !this.minecraftServer.M().equals(this.player.getName()))) { // CraftBukkit - Added this.checkMovement condition to solve this check being triggered by teleports
+                     this.movedTooQuicklyViolations++;
+-- 
+2.17.2 (Apple Git-113)
+

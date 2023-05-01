@@ -1,0 +1,31 @@
+plugins {
+    id "org.jetbrains.kotlin.kapt"
+    id "com.github.johnrengelman.shadow"
+}
+
+group 'cc.fyre.modsuite'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    compileOnly "io.github.waterfallmc:travertine-bootstrap:1.16-R0.5-SNAPSHOT"
+
+    compileOnly "cc.fyre.core:proxy:1.0-SNAPSHOT"
+    compileOnly "cc.fyre.shard:util:$shard_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+shadowJar {
+    shadowJar.archiveName = this.rootProject.name + "-" + this.name + "-" + this.version + ".jar"
+}
+
+publishing {
+
+    publications {
+
+        shadow(MavenPublication) {
+            publication -> project.shadow.component(publication)
+        }
+
+    }
+
+}

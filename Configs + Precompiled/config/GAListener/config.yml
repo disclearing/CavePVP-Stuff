@@ -1,0 +1,208 @@
+#  GAListener v1.3.2
+#  http://www.minecraft-index.com
+
+#  settings section
+
+#  onlineonly - Only delivers rewards when the player is online.  If they are offline it will wait and deliver when they next join the server!
+#  luckyvote - Enables the lucky voting section, this allows voters to have a random chance to receive additional rewards when they vote.
+#  permvote - Enables the permission voting section, this allows voters to receive different rewards based upon their permissions.
+#  cumulative - Enables the cumulative voting section, this allows voters to receive rewards once they have reached a certain number of votes.
+#  broadcastqueue - Show broadcast message for queued votes.
+#  broadcastoffline - Show broadcast message for offline queued votes.
+#  broadcastrecent - Show broadcast message to recent voters (last 24 hours)
+#  votecommand - Enables the /vote command which will show the message contained in the votemessage section at the bottom of the config.
+#  rewardcommand - Enables the /rewards command which will show a list of all the cumulative voting rewards.
+#  joinmessage - Show the message contained in the joinmessage section at the bottom of this config when a player joins the server.
+#  voteremind - Message players who haven't voted in the last 24 hours. Shows the message contained in the remindmessage section at the bottom of this config.
+#  remindseconds - How often (in seconds) between each reminder message.
+#  ratelimit - Ignore votes received within this many seconds since the last vote for the same player on the same site.  This should prevent duplicate votes.
+#  logfile - Log received votes to vote.log file.
+#  dbMode - Database mode. Use either mysql or sqlite.
+#  dbFile - Database filename for SQLite.
+#  dbHost - Database IP / Hostname for MySQL.
+#  dbPort - Database port for MySQL.
+#  dbUser - Database username for MySQL.
+#  dbPass - Database password for MySQL.
+#  dbName - Database name for MySQL.
+#  dbPrefix - Database table prefix.
+
+settings:
+  onlineonly: true
+  luckyvote: false
+  permvote: false
+  cumulative: false
+  broadcastqueue: true
+  broadcastrecent: true
+  broadcastoffline: false
+  votecommand: true
+  rewardcommand: false
+  joinmessage: false
+  voteremind: false
+  remindseconds: 300
+  ratelimit: 10
+  logfile: false
+  dbMode: 'sqlite'
+  dbFile: 'GAL.db'
+  dbHost: 'localhost'
+  dbPort: 3306
+  dbUser: 'root'
+  dbPass: ''
+  dbName: 'GAL'
+  dbPrefix: ''
+
+#  services section (default is used if service doesn't exist)
+#  The example below would give 5 diamonds per vote.
+
+services:
+  default:
+    broadcast: ''
+    playermessage: '{GREEN}Thanks for voting at {service}!'
+    commands:
+    - '/sbc &4&lVote &8┃ &f{username} &7has voted and received &b&l3x Rare Keys&7! &f/vote'
+    - '/cr givekey {username} Rare 3'
+    #- '/raw &f{username} &6has received another &f&l3x Winter Keys&6! &a&l(DOUBLE VOTE)'
+
+#  luckyvotes section
+#  The example below would give a 1 in 10 chance of a voter receiving an extra $1000, and a 1 in 50 chance of an extra $1000 and 100XP.
+
+luckyvotes:
+  '5':
+    broadcast: '&f{username} &6got lucky and won an additional &f&l3x Winter Keys&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/cr givekey {username} Winter 3'
+  '10':
+    broadcast: '&f{username} &6got lucky and won &5&l5x Item Keys&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/cr givekey {username} Items 5'
+  '25':
+    broadcast: '&f{username} &6got lucky and won &c&l10x Valentines Crates&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/crates give {username} Valentines 10'
+  '50':
+    broadcast: '&f{username} &6has reached &f3 votes &6and won &5&l10x Item Keys&6, &6&lReinforce Lootboxes&6, &4&lValentines Crates&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/crates give {username} Reinforce 10'
+
+
+#  permission reward section
+#  This example would give players with the permission node "gal.double" 10 Diamonds instead of their regular reward.
+
+perms:
+  double:
+    broadcast: '{GREEN}{username} {GOLD}has voted @ {GREEN}{service} {GOLD}and received {GREEN}10 Diamonds!'
+    playermessage: '{GREEN}Thanks for voting at {AQUA}{service}!'
+    commands: 
+    - '/give {username} 264 10'
+
+#  cumulative reward section
+#  This example would give players 20 Diamonds once they have reached a total of 10 votes.
+
+cumulative:
+  '3':
+    broadcast: '&f{username} &6has reached &f3 votes &6and won &5&l3x Item Keys&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/cr givekey {username} Items 3'
+  '5':
+    broadcast: '&f{username} &6has reached &f5 votes &6and won &4&l3x Valentines Crates&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/crates give {username} Valentines 3'
+  '10':
+    broadcast: '&f{username} &6has reached &f10 votes &6and won &6&l3x Reinforce Crates&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/crates give {username} Reinforce 3'
+  '20':
+    broadcast: '&f{username} &6has reached &f3 votes &6and won &5&l10x Item Keys&6, &6&lReinforce Lootboxes&6, &4&lValentines Crates&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/cr givekey {username} Items 10'
+    - '/crates give {username} Valentines 10'
+    - '/crates give {username} Reinforce 10'
+  '50':
+    broadcast: '&f{username} &6has reached &f3 votes &6and won &a&l8x Perk Keys&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/cr givekey {username} Perk 8'
+  '75':
+    broadcast: '&f{username} &6has reached &f3 votes &6and won &b&l20x Airdrops&6!'
+    playermessage: '{GREEN}Thanks for voting 3 times!'
+    commands: 
+    - '/airdrops give {username} 20'
+
+#  Reward top voters on every day set here. Use {username} and {day} to get info about player and day.
+#  The first number is the day of month > general commands > rank position and rank commands.
+
+day-reward:
+  enable: false
+  '1': # day of month
+    general-cmds: []
+    rank: 
+      '1': #rank in top 10 voters
+        cmds:
+        - 'setvip {username} Vip1 20'
+      '2':
+        cmds:
+        - 'setvip {username} Vip1 10'
+      '3':
+        cmds:
+        - 'setvip {username} Vip1 3'
+    
+
+#  blocked - a list of worlds where rewards should be disabled, they will remain queued until the player is in an allowed world.
+
+blocked:
+- world_blocked
+
+#  Available formatting codes for messages:
+
+#  {service} {servicename} {SERVICE} = service name
+#  {username} {player} {name} = player username
+#  {votes} = current vote total
+#  & = Colour Symbol to enter manual colours / control codes
+#  {AQUA} {BLACK} {BLUE} {DARK_AQUA} {DARK_BLUE}
+#  {DARK_GRAY} {DARK_GREEN} {DARK_PURPLE} {DARK_RED} {GOLD}
+#  {GRAY} {GREEN} {LIGHT_PURPLE} {RED} {WHITE} {YELLOW} {BOLD}
+#  {ITALIC} {UNDERLINE} {STRIKETHROUGH} {STRIKE} 
+#  {STRIKETHROUGH} {MAGIC} {RESET}
+
+votemessage:
+- ''
+- '&4&LVOTING'
+- '&7Vote daily for the network to receive various prizes.'
+- ''
+- '&4&lREWARDS'
+- '&7Voting can get you the following:'
+- '&4&l┃ &fYou will always get &b&l3x Rare Keys&f.'
+- ''
+- '&4&lLINKS'
+- '&4&l┃ &fhttps://minecraftservers.org/vote/590425'
+- '&4&l┃ &fhttps://minecraft-mp.com/server/217111/vote/'
+- '&4&l┃ &fhttps://minecraft-server-list.com/server/464678/vote/'
+- ''
+remindmessage:
+- ''
+
+joinmessage:
+- ''
+
+#  Additional formatting codes for below:
+
+#  {TOTAL} = vote total - used for /rewards
+#  {REWARD} = current rewardmessage as specified in the cumulative reward section - used for /rewards
+#  {POSITION} = current rank - used for /votetop
+#  {username} = player name - used for /votetop
+
+rewardformat: '{GREEN}{TOTAL} Votes {GRAY}- {AQUA}{REWARD}'
+votetopformat: '{POSITION}. {GREEN}{username} - {WHITE}{TOTAL}'
+rewardheader: 
+- '{GOLD}---------------- {WHITE}[ {DARK_AQUA}Rewards{WHITE} ] {GOLD}----------------'
+votetopheader: 
+- '{GOLD}---------------- {WHITE}[ {DARK_AQUA}Top Voters{WHITE} ] {GOLD}----------------'
+rewardfooter: 
+- '{AQUA}You currently have {GREEN}{votes} Votes'

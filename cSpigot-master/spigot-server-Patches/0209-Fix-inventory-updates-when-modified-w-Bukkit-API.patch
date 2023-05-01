@@ -1,0 +1,80 @@
+From 804b678f03572af4fbbcdcf6fbdaf20994d5b337 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sat, 2 Sep 2017 10:37:56 -0400
+Subject: [PATCH] Fix inventory updates when modified w/ Bukkit API
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+index 84955df3f..de0ecb496 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+@@ -1,15 +1,21 @@
+ package org.bukkit.craftbukkit.inventory;
+ 
+-import net.minecraft.server.PacketPlayOutHeldItemSlot;
+-import net.minecraft.server.PlayerInventory;
++import java.util.HashMap;
+ 
+ import org.apache.commons.lang.Validate;
++import org.bukkit.Material;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.entity.HumanEntity;
+ import org.bukkit.inventory.EntityEquipment;
+ import org.bukkit.inventory.ItemStack;
+ 
++import net.minecraft.server.EntityHuman;
++import net.minecraft.server.EntityPlayer;
++import net.minecraft.server.PacketPlayOutHeldItemSlot;
++import net.minecraft.server.PlayerInventory;
++
+ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.inventory.PlayerInventory, EntityEquipment {
++
+     public CraftInventoryPlayer(net.minecraft.server.PlayerInventory inventory) {
+         super(inventory);
+     }
+@@ -170,4 +176,40 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+     public void setBootsDropChance(float chance) {
+         throw new UnsupportedOperationException();
+     }
+-}
++
++    // MineHQ start
++    @Override
++    public HashMap<Integer, ItemStack> addItem(ItemStack... items) {
++        HashMap<Integer, ItemStack> leftover = super.addItem(items);
++        this.updatePlayerInventory();
++        return leftover;
++    }
++
++    @Override
++    public void remove(Material material) {
++        super.remove(material);
++        this.updatePlayerInventory();
++    }
++
++    @Override
++    public HashMap<Integer, ItemStack> removeItem(ItemStack... items) {
++        HashMap<Integer, ItemStack> leftover = super.removeItem(items);
++        this.updatePlayerInventory();
++        return leftover;
++    }
++
++    @Override
++    public void remove(ItemStack item) {
++        super.remove(item);
++        this.updatePlayerInventory();
++    }
++
++    private void updatePlayerInventory() {
++        EntityHuman human = this.getInventory().player;
++        if (human instanceof EntityPlayer) {
++            EntityPlayer player = (EntityPlayer) human;
++            player.updateInventory(player.defaultContainer);
++        }
++    }
++    // MineHQ end
++}
+\ No newline at end of file
+-- 
+2.13.3
+

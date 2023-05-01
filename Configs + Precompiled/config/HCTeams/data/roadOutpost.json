@@ -1,0 +1,472 @@
+{
+  "chests": [
+    {
+      "location": {
+        "world": "world",
+        "x": -44.0,
+        "y": 69.0,
+        "z": 1197.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 32.0,
+        "y": 69.0,
+        "z": 1237.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 24.0,
+        "y": 74.0,
+        "z": 1179.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 38.0,
+        "y": 69.0,
+        "z": 1179.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 22.0,
+        "y": 69.0,
+        "z": 1201.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": -21.0,
+        "y": 70.0,
+        "z": 1223.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": -24.0,
+        "y": 74.0,
+        "z": 1220.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 11.0,
+        "y": 74.0,
+        "z": 1223.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": -15.0,
+        "y": 74.0,
+        "z": 1176.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 4.0,
+        "y": 69.0,
+        "z": 1158.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": -24.0,
+        "y": 69.0,
+        "z": 1207.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": 7.0,
+        "y": 69.0,
+        "z": 1175.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": -2.0,
+        "y": 69.0,
+        "z": 1157.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world",
+        "x": -38.0,
+        "y": 69.0,
+        "z": 1165.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    }
+  ],
+  "loot": [
+    {
+      "type": "FLINT",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§d§lTazer",
+        "lore": [
+          "",
+          "§6❙ §fHit a player and for the next",
+          "§6❙ §e§l5 seconds §fthey will not be able to",
+          "§6❙ §fmove or take knockback.",
+          "",
+          "§fCan be found in the §4§lCave Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§3§lInvisibility",
+        "lore": [
+          "",
+          "§6❙ §fWhen you right click this item",
+          "§6❙ §fyour armor will no longer be visible.",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "PAPER",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§a§lMed Kit",
+        "lore": [
+          "",
+          "§6❙ §fRight Click to receive Resistance 3,",
+          "§6❙ §fRegeneration 3, and 4 Absorption",
+          "§6❙ §fHearts for §e§l5 seconds§f!",
+          "",
+          "§fCan be found in the §6§lSummer Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 5,
+      "data": 5,
+      "meta": {
+        "displayName": "§5§lPower Stone",
+        "lore": [
+          "",
+          "§6❙ §fRight Click to receive Strength II,",
+          "§6❙ §fResistance III and Regeneration III for §e§l10 seconds",
+          "§6❙ §fDuring that time you may not use any potions!",
+          "",
+          "§fCan be found in the §b§lIlluminated Chest§f!"
+        ]
+      }
+    },
+    {
+      "type": "WORKBENCH",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§3§lCrafting Chaos",
+        "lore": [
+          "",
+          "§6❙ §fHit an enemy and for §e§l10 seconds§f, every",
+          "§6❙ §fhit you deal has a §c§l15% §fchance of",
+          "§6❙ §fputting them in a crafting table.",
+          "",
+          "§fCan be found in the §3§lHeaded Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "SNOW_BALL",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§4§lBall Of Rage",
+        "lore": [
+          "",
+          "§6❙ §fThrow to create a cloud of effects",
+          "§6❙ §fwhere all teammates within 5 block",
+          "§6❙ §fradius will be given positive effects.",
+          "",
+          "§fCan be found in the §4§lCave Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "STICK",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§3§lSpin Bot",
+        "lore": [
+          "",
+          "§6❙ §fHit a player §c§l3 times §fand every",
+          "§6❙ §fhit for §e§l10 seconds §fhas a chance",
+          "§6❙ §fof rotating their head",
+          "",
+          "§fCan be found in the §d§lPartner Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "EMERALD",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§4§lPhoenix Mode",
+        "lore": [
+          "",
+          "§6❙ §fClick to create a cloud of particles.",
+          "§6❙ §fInside the cloud, enemies deal §c§l-20% §fdamage",
+          "§6❙ §fto you and you deal §c§l+20% §fdamage to enemies.",
+          "",
+          "§fCan be found in the §4§lResucting Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "SPIDER_EYE",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§e§lSpider Ability",
+        "lore": [
+          "",
+          "§6❙ §fClick to activate and for the",
+          "§6❙ §fnext §e§l15 seconds§f, all hits dealt",
+          "§6❙ §fhave a §c§l25% §fchance of putting a",
+          "§6❙ §fcobweb underneath the enemy.",
+          "",
+          "§fCan be found in the §d§lPartner Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "GOLD_INGOT",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lMidas Touch",
+        "lore": [
+          "",
+          "§6❙ §fClick to activate and for §e§l15 seconds",
+          "§6❙ §fa 3x3 of gold blocks appear under you.",
+          "§6❙ §fYou cannot break/place/interact with.",
+          "§6❙ §fblocks on top of these gold blocks.",
+          "",
+          "§fCan be found in the §6§lSummer Lootbox§f!"
+        ]
+      }
+    },
+    {
+      "type": "BLAZE_ROD",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lAnti-Blockup",
+        "lore": [
+          "",
+          "§6❙ §fWhen you hit a player with this",
+          "§6❙ §c§l3 times §fthey may not block up for §e§l15 seconds§f.",
+          "",
+          "§fCan be found in the §6§lSummer Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "WATCH",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§6§lTime Warp",
+        "lore": [
+          "",
+          "§6❙ §fTravel back to where",
+          "§6❙ §fyou last threw a pearl!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "RED_ROSE",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§a§lCombo Ability",
+        "lore": [
+          "",
+          "§6❙ §fGet a second of strength II for the",
+          "§6❙ §famount of hits dealt within §e§l10 seconds§f.",
+          "",
+          "§fCan be found in the §a§lDylan Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "GOLD_INGOT",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§e§lSoul Stone",
+        "lore": [
+          "",
+          "§6❙ §fUpon going below 2 hearts, you will be instantly",
+          "§6❙ §fhealed and given Resistance III for §e§l5 seconds§f.",
+          "",
+          "§fCan be found in the §b§lIlluminated Chest§f!"
+        ]
+      }
+    },
+    {
+      "type": "NETHER_STAR",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§b§lNinja Star",
+        "lore": [
+          "",
+          "§6❙ §fTeleport to the last person that",
+          "§6❙ §fhit you within the last §e§l30 seconds§f!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 2,
+      "data": 14,
+      "meta": {
+        "displayName": "§6§lPortable Bard",
+        "lore": [
+          "",
+          "§6❙ §fReceive §c§l5 §fportable bard effects!",
+          "",
+          "§fCan be found in an §b§lAirdrop§f!"
+        ]
+      }
+    },
+    {
+      "type": "REDSTONE",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§c§lReality Stone",
+        "lore": [
+          "",
+          "§6❙ §fRight Click to teleport to the player",
+          "§6❙ §fthat you last hit within a §e§l30 second §fperiod.",
+          "",
+          "§fCan be found in the §b§lIlluminated Chest§f!"
+        ]
+      }
+    },
+    {
+      "type": "EYE_OF_ENDER",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§c§lAnti Pearl 2.0",
+        "lore": [
+          "",
+          "§6❙ §fHit a player to put them on enderpearl cooldown.",
+          "§6❙ §fRight Click to remove your enderpearl cooldown.",
+          "",
+          "§fCan be found in the §c§liMakeMcVids Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "EGG",
+      "amount": 16,
+      "data": 0,
+      "meta": {
+        "displayName": "§d§lEggport",
+        "lore": [
+          "",
+          "§6❙ §fSwitch places with your",
+          "§6❙ §fenemy that are within §c§l15 §fblocks!",
+          "",
+          "§fCan be found in the §6§lSummer Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "MONSTER_EGG",
+      "amount": 5,
+      "data": 66,
+      "meta": {
+        "displayName": "§5§lWitch Effect",
+        "lore": [
+          "",
+          "§6❙ §fSpawn a witch that give you passive",
+          "§6❙ §fbard effects: strength, regeneration,",
+          "§6❙ §fand resistance.",
+          "",
+          "§fCan be found in the §d§lPartner Crate§f!"
+        ]
+      }
+    },
+    {
+      "type": "IRON_BLOCK",
+      "amount": 5,
+      "data": 0,
+      "meta": {
+        "displayName": "§a§lTank",
+        "lore": [
+          "",
+          "§6❙ §fEvery potion you splash for",
+          "§6❙ §e§l15 seconds §fwill fully heal you!",
+          "",
+          "§fCan be found in the §d§lPartner Crate§f!"
+        ]
+      }
+    }
+  ]
+}

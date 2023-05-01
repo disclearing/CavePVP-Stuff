@@ -1,0 +1,84 @@
+{
+    "type": "NPC",
+    "name": "cave-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 26.5,
+        "y": 70.0,
+        "z": -5.5,
+        "yaw": 89.927216,
+        "pitch": -0.0
+    },
+    "commands": [
+        "viewcategory cave rank"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_cave-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 26.5,
+            "y": 72.095,
+            "z": -5.5,
+            "yaw": 89.927216,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "§f",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 72.325,
+                    "z": -5.5,
+                    "yaw": 89.927216,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§4§lCave Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 72.095,
+                    "z": -5.5,
+                    "yaw": 89.927216,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 71.865,
+                    "z": -5.5,
+                    "yaw": 89.927216,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "Az4eJZ6I8m4TzSfCurk1opQw/gbse9sDLe9SE/tNcQB1B6TCw7xHe3cx0sVurTrAoGdPDBBgQZMxM62JgAkAhA5LL+F7xvbtz9ZV2ACA5tF3iuR+zvozrrEGPZDvg6e694p8tN0tOB6S3v7OocyakFV1dlTaMfurhbWkqpsZvYEh9roUhiz7xJn7mTpWHoiB1Ap+j4ewUpnDeqS0zMckNXWEMCf0iUNkWVWWmTnIJoTGSowI2UvG6RI0OGbvwAjyCOLZZ8BoJZ3dO8ypUxZ4NosNHNhzMGpeXBUyf/QryDJ7kZM+l6s+QLXPSqQeWjnMfs2vVWBWxXTmZovWGzg6cRkibAuV5qXyg/Md1uXWcoBFYrVJAY/1FlfALnWpOUjhOgaS/CA8XJsEGECa2iVDC64dCk/2R7Uwvk7AZrv1rKi8uXuOls7dNMUJgwG2m+4HAhMoP+xK+909XiWu3q0WKpBUK+xqtOC1xx2kXWyP2cHrz1WPCvyXoPqBsaEwPnSvRTFCTdqSe/ZBvCBZ9T6SgBcoUBimc4NTv4bOuyQmUdtYjXlPjH0tL/FaoasfwdQWdq5G1lNMnMC2F/A3LPfwgwNLYIzCoXKLmzt2875PD9Nnu52L72VljGUUa9/t0e7HwoptOEDdZNXCjTgp38lzeTCByKsdH5pAbGwXsf5TD6w=",
+    "skinUsername": "staticdaddy",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY1MzcxNTk4NTE2NCwKICAicHJvZmlsZUlkIiA6ICJhMzk1YjVmYzIyYTg0ZTAyYjhhMTE1YjlkYzYwZjk1ZiIsCiAgInByb2ZpbGVOYW1lIiA6ICJTdGF0aWNEYWRkeSIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9mOTU2MjA3NzYzNTgyNTk4YzVlMjI1NDE3MDBmNjhlNmIwMjQ2ZWI1NTE2YWY0MDQwMzNlOTg5NjY0NDgzYzZlIgogICAgfSwKICAgICJDQVBFIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8yMzQwYzBlMDNkZDI0YTExYjE1YThiMzNjMmE3ZTllMzJhYmIyMDUxYjI0ODFkMGJhN2RlZmQ2MzVjYTdhOTMzIgogICAgfQogIH0KfQ==",
+    "animations": [
+        "Rings_DARK_RED"
+    ],
+    "visibility": "VISIBLE"
+}

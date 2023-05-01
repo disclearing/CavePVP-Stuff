@@ -1,0 +1,73 @@
+From e07c937ebab7d30a1547e7e72ff2b6c5daa181ca Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sat, 29 Jul 2017 02:09:50 +0100
+Subject: [PATCH] Don't spam attributes
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 8338bed30..9eba5fa6e 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -676,6 +676,15 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         if (currentVehicle != this.vehicle) {
+             this.playerConnection.sendPacket(new PacketPlayOutAttachEntity(0, this, this.vehicle));
+             this.playerConnection.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
++            // MineHQ start
++            if (this.vehicle instanceof EntityLiving) {
++                AttributeMapServer attributemapserver = (AttributeMapServer) ((EntityLiving) this.vehicle).getAttributeMap();
++                Collection collection = attributemapserver.c();
++                if (!collection.isEmpty()) {
++                    this.playerConnection.sendPacket(new PacketPlayOutUpdateAttributes(this.vehicle.getId(), collection));
++                }
++            }
++            // MineHQ end
+         }
+         // CraftBukkit end
+     }
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index d4f3fd427..8e05bc923 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -356,6 +356,7 @@ public class EntityTrackerEntry {
+                 // CraftBukkit start - Send scaled max health
+                 if (this.tracker instanceof EntityPlayer) {
+                     ((EntityPlayer) this.tracker).getBukkitEntity().injectScaledMaxHealth(set, false);
++                    ((EntityPlayer) this.tracker).playerConnection.sendPacket(new PacketPlayOutUpdateAttributes(this.tracker.getId(), set)); // MineHQ
+                 }
+                 // CraftBukkit end
+ 
+@@ -369,7 +370,12 @@ public class EntityTrackerEntry {
+                 }
+                 // Guardian end
+ 
+-                this.broadcastIncludingSelf(new PacketPlayOutUpdateAttributes(this.tracker.getId(), set)); // CraftBukkit
++                // MineHQ start
++                // this.broadcastIncludingSelf(new PacketPlayOutUpdateAttributes(this.tracker.getId(), set)); // CraftBukkit
++                if (this.tracker.passenger instanceof EntityPlayer) {
++                    ((EntityPlayer) this.tracker.passenger).playerConnection.sendPacket(new PacketPlayOutUpdateAttributes(this.tracker.getId(), set));
++                }
++                // MineHQ end
+             }
+ 
+             set.clear();
+@@ -462,6 +468,8 @@ public class EntityTrackerEntry {
+                     }
+                     // MineHQ end
+ 
++                    // MineHQ start
++                    /*
+                     if (this.tracker instanceof EntityLiving) {
+                         AttributeMapServer attributemapserver = (AttributeMapServer) ((EntityLiving) this.tracker).getAttributeMap();
+                         Collection collection = attributemapserver.c();
+@@ -475,6 +483,8 @@ public class EntityTrackerEntry {
+                             entityplayer.playerConnection.sendPacket(new PacketPlayOutUpdateAttributes(this.tracker.getId(), collection));
+                         }
+                     }
++                    */
++                    // MineHQ end
+ 
+                     this.j = this.tracker.motX;
+                     this.k = this.tracker.motY;
+-- 
+2.13.3
+

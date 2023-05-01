@@ -1,0 +1,82 @@
+{
+    "type": "NPC",
+    "name": "Vote",
+    "location": {
+        "world": "Spawn",
+        "x": 22.5,
+        "y": 70.0,
+        "z": 19.5,
+        "yaw": 123.824356,
+        "pitch": -0.0
+    },
+    "commands": [
+        "vote"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_Vote_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 22.5,
+            "y": 72.095,
+            "z": 19.5,
+            "yaw": 123.824356,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&a&lVote",
+                "location": {
+                    "world": "Spawn",
+                    "x": 22.5,
+                    "y": 72.325,
+                    "z": 19.5,
+                    "yaw": 123.824356,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "§7Vote daily for free keys!",
+                "location": {
+                    "world": "Spawn",
+                    "x": 22.5,
+                    "y": 72.095,
+                    "z": 19.5,
+                    "yaw": 123.824356,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&o/vote",
+                "location": {
+                    "world": "Spawn",
+                    "x": 22.5,
+                    "y": 71.865,
+                    "z": 19.5,
+                    "yaw": 123.824356,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "P4NhSjT/Wnnw97b4Oo7J3AJ4ZfSuF65zEwsP8HGtvT/YWZw1LwtQYSrbWdLcmTwap7PjQ2IGZNGpLUEMQMzlHN7UxAuHZ1Vkc7m506VVNfM+os6Ml1s/jfF8TCSvOzBtBirlOhXb5eFF1oNJfYp008GGva7dmCF4LAzInf24Ft5NLSjJ2JJgV394Ve6caRldloct+ltOik/ZWN35uAiFTnMLLG7DjzQrah+G3LTNUJPmrTRP9ppk42G5ei7i2nAHoreN7bGUS/L7cfIqr4iL+b04ohd1g/JYtBWv9p1EV7P5n5ictOtCNV7yvLJbxdbKfuVBzXZ2vPCBfEOE5gLxCs+45iC/E/H+FWulCkLQfXV2yOob0VoIrysbuKlIU8jwsMLgUqSpz51xbV7paoZyh1o4CAvaLFwsjpq1hF4uN6PrQwYuXRhbpB9kLbirqLfzUdB25OxEa59AxELXNH6wVamscaIfFY0oXbs5NbU4KIwlDNgOmR3xc39e9h9++qhVNA+1IH+8Qdd9kt82VMOV4nPAKIu7h8YKxKa0tEB2EF8jCPWWMQoBtWotbHd/SNmGr+f+/HmxObKB2t4Vw4indyK5GAQmlLn78CqWN6+JihmNjjdP8C8qngnX5XaZKQCNc2g6ZvN2PpaxU1Flifp0DnSJIF3cO0kDQqsC6TeBlLs=",
+    "skinUsername": "iLikeToGlitqh",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY2NTk1Mzc2NjE0NywKICAicHJvZmlsZUlkIiA6ICJlZWUzNTg1ZGU2NDg0MDk4YmE2ODdlZGNmZDBiMTgwOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJpTGlrZVRvR2xpdHFoIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzE3MzllMzU4YWJiOTc4YWM4ZmYxOWFkZjdlNzliNWVjY2U4ZmIzMTAwMGJmNDJjOTJjYjA5N2ExMWY3NGNmMzMiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==",
+    "animations": [],
+    "visibility": "VISIBLE"
+}

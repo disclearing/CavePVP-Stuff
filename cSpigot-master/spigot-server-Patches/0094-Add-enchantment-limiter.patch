@@ -1,0 +1,690 @@
+From 011da780744c36534b8ff6b8191881f6e08de2a4 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 22:56:07 -0400
+Subject: [PATCH] Add enchantment limiter
+
+
+diff --git a/src/main/java/net/minecraft/server/Enchantment.java b/src/main/java/net/minecraft/server/Enchantment.java
+index d96ca7d44..60398271e 100644
+--- a/src/main/java/net/minecraft/server/Enchantment.java
++++ b/src/main/java/net/minecraft/server/Enchantment.java
+@@ -1,9 +1,17 @@
+ package net.minecraft.server;
+ 
++import org.bukkit.configuration.file.YamlConfiguration;
++import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
++
++import java.io.File;
+ import java.util.ArrayList;
++import java.util.List;
+ 
+ public abstract class Enchantment {
+ 
++    private static final File CONFIG_FILE = new File("enchantments.yml");
++    protected static YamlConfiguration config = YamlConfiguration.loadConfiguration(CONFIG_FILE);
++
+     // CraftBukkit - update CraftEnchant.getName(i) if this changes
+     public static final Enchantment[] byId = new Enchantment[256];
+     public static final Enchantment[] c;
+@@ -35,10 +43,14 @@ public abstract class Enchantment {
+     private final int weight;
+     public EnchantmentSlotType slot;
+     protected String name;
++    protected String configName;
++    private final int startLevel;
++    private final int maxLevel;
++    private List<String> conflictingNames;
++    private boolean[] conflicts;
+ 
+     protected Enchantment(int i, int j, EnchantmentSlotType enchantmentslottype) {
+         this.id = i;
+-        this.weight = j;
+         this.slot = enchantmentslottype;
+         if (byId[i] != null) {
+             throw new IllegalArgumentException("Duplicate enchantment id!");
+@@ -46,7 +58,13 @@ public abstract class Enchantment {
+             byId[i] = this;
+         }
+ 
+-        org.bukkit.enchantments.Enchantment.registerEnchantment(new org.bukkit.craftbukkit.enchantments.CraftEnchantment(this)); // CraftBukkit
++        CraftEnchantment craftEnch = new CraftEnchantment(this);
++        org.bukkit.enchantments.Enchantment.registerEnchantment(craftEnch); // CraftBukkit
++        this.configName = craftEnch.getName().toLowerCase().replace('_', '-');
++        this.weight = config.getInt(configName + ".weight", j);
++        this.startLevel = config.getInt(configName + ".start-level", 1);
++        this.maxLevel = config.getInt(configName + ".max-level", getDefaultMaxLevel());
++        this.conflictingNames = config.getStringList(configName + ".conflicting");
+     }
+ 
+     public int getRandomWeight() {
+@@ -54,10 +72,14 @@ public abstract class Enchantment {
+     }
+ 
+     public int getStartLevel() {
+-        return 1;
++        return startLevel;
+     }
+ 
+     public int getMaxLevel() {
++        return maxLevel;
++    }
++
++    public int getDefaultMaxLevel() {
+         return 1;
+     }
+ 
+@@ -78,7 +100,28 @@ public abstract class Enchantment {
+     }
+ 
+     public boolean a(Enchantment enchantment) {
+-        return this != enchantment;
++        if (enchantment == this) {
++            return false;
++        }
++        initCustomConflicts();
++        enchantment.initCustomConflicts();
++        return !conflicts[enchantment.id] && !enchantment.conflicts[id];
++    }
++
++    private void initCustomConflicts() {
++        if (this.conflicts == null) {
++            this.conflicts = new boolean[256];
++
++            for (String s : conflictingNames) {
++                for (int i = 0; i < 256; i++) {
++                    if (byId[i] != null && byId[i].configName.equals(s)) {
++                        this.conflicts[i] = true;
++                        System.out.println(this.configName + " conflicts " + s);
++                        break;
++                    }
++                }
++            }
++        }
+     }
+ 
+     public Enchantment b(String s) {
+diff --git a/src/main/java/net/minecraft/server/EnchantmentArrowDamage.java b/src/main/java/net/minecraft/server/EnchantmentArrowDamage.java
+new file mode 100644
+index 000000000..70187c197
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentArrowDamage.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentArrowDamage extends Enchantment {
++
++    public EnchantmentArrowDamage(int i, int j) {
++        super(i, j, EnchantmentSlotType.BOW);
++        this.b("arrowDamage");
++    }
++
++    public int a(int i) {
++        return 1 + (i - 1) * 10;
++    }
++
++    public int b(int i) {
++        return this.a(i) + 15;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 5;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentArrowKnockback.java b/src/main/java/net/minecraft/server/EnchantmentArrowKnockback.java
+new file mode 100644
+index 000000000..0f9104156
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentArrowKnockback.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentArrowKnockback extends Enchantment {
++
++    public EnchantmentArrowKnockback(int i, int j) {
++        super(i, j, EnchantmentSlotType.BOW);
++        this.b("arrowKnockback");
++    }
++
++    public int a(int i) {
++        return 12 + (i - 1) * 20;
++    }
++
++    public int b(int i) {
++        return this.a(i) + 25;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 2;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentDigging.java b/src/main/java/net/minecraft/server/EnchantmentDigging.java
+new file mode 100644
+index 000000000..5e9ab5683
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentDigging.java
+@@ -0,0 +1,25 @@
++package net.minecraft.server;
++
++public class EnchantmentDigging extends Enchantment {
++
++    protected EnchantmentDigging(int i, int j) {
++        super(i, j, EnchantmentSlotType.DIGGER);
++        this.b("digging");
++    }
++
++    public int a(int i) {
++        return 1 + 10 * (i - 1);
++    }
++
++    public int b(int i) {
++        return super.a(i) + 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 5;
++    }
++
++    public boolean canEnchant(ItemStack itemstack) {
++        return itemstack.getItem() == Items.SHEARS ? true : super.canEnchant(itemstack);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentDurability.java b/src/main/java/net/minecraft/server/EnchantmentDurability.java
+new file mode 100644
+index 000000000..4a15bdb92
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentDurability.java
+@@ -0,0 +1,31 @@
++package net.minecraft.server;
++
++import java.util.Random;
++
++public class EnchantmentDurability extends Enchantment {
++
++    protected EnchantmentDurability(int i, int j) {
++        super(i, j, EnchantmentSlotType.BREAKABLE);
++        this.b("durability");
++    }
++
++    public int a(int i) {
++        return 5 + (i - 1) * 8;
++    }
++
++    public int b(int i) {
++        return super.a(i) + 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 3;
++    }
++
++    public boolean canEnchant(ItemStack itemstack) {
++        return itemstack.g() ? true : super.canEnchant(itemstack);
++    }
++
++    public static boolean a(ItemStack itemstack, int i, Random random) {
++        return itemstack.getItem() instanceof ItemArmor && random.nextFloat() < 0.6F ? false : random.nextInt(i + 1) > 0;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentFire.java b/src/main/java/net/minecraft/server/EnchantmentFire.java
+new file mode 100644
+index 000000000..3d101a219
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentFire.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentFire extends Enchantment {
++
++    protected EnchantmentFire(int i, int j) {
++        super(i, j, EnchantmentSlotType.WEAPON);
++        this.b("fire");
++    }
++
++    public int a(int i) {
++        return 10 + 20 * (i - 1);
++    }
++
++    public int b(int i) {
++        return super.a(i) + 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 2;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentFlameArrows.java b/src/main/java/net/minecraft/server/EnchantmentFlameArrows.java
+new file mode 100644
+index 000000000..2c936e122
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentFlameArrows.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentFlameArrows extends Enchantment {
++
++    public EnchantmentFlameArrows(int i, int j) {
++        super(i, j, EnchantmentSlotType.BOW);
++        this.b("arrowFire");
++    }
++
++    public int a(int i) {
++        return 20;
++    }
++
++    public int b(int i) {
++        return 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 1;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentInfiniteArrows.java b/src/main/java/net/minecraft/server/EnchantmentInfiniteArrows.java
+new file mode 100644
+index 000000000..525f09b0f
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentInfiniteArrows.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentInfiniteArrows extends Enchantment {
++
++    public EnchantmentInfiniteArrows(int i, int j) {
++        super(i, j, EnchantmentSlotType.BOW);
++        this.b("arrowInfinite");
++    }
++
++    public int a(int i) {
++        return 20;
++    }
++
++    public int b(int i) {
++        return 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 1;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentKnockback.java b/src/main/java/net/minecraft/server/EnchantmentKnockback.java
+new file mode 100644
+index 000000000..44a684181
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentKnockback.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentKnockback extends Enchantment {
++
++    protected EnchantmentKnockback(int i, int j) {
++        super(i, j, EnchantmentSlotType.WEAPON);
++        this.b("knockback");
++    }
++
++    public int a(int i) {
++        return 5 + 20 * (i - 1);
++    }
++
++    public int b(int i) {
++        return super.a(i) + 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 2;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentLootBonus.java b/src/main/java/net/minecraft/server/EnchantmentLootBonus.java
+new file mode 100644
+index 000000000..8f0d2879a
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentLootBonus.java
+@@ -0,0 +1,31 @@
++package net.minecraft.server;
++
++public class EnchantmentLootBonus extends Enchantment {
++
++    protected EnchantmentLootBonus(int i, int j, EnchantmentSlotType enchantmentslottype) {
++        super(i, j, enchantmentslottype);
++        if (enchantmentslottype == EnchantmentSlotType.DIGGER) {
++            this.b("lootBonusDigger");
++        } else if (enchantmentslottype == EnchantmentSlotType.FISHING_ROD) {
++            this.b("lootBonusFishing");
++        } else {
++            this.b("lootBonus");
++        }
++    }
++
++    public int a(int i) {
++        return 15 + (i - 1) * 9;
++    }
++
++    public int b(int i) {
++        return super.a(i) + 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 3;
++    }
++
++    public boolean a(Enchantment enchantment) {
++        return super.a(enchantment) && enchantment.id != SILK_TOUCH.id;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentOxygen.java b/src/main/java/net/minecraft/server/EnchantmentOxygen.java
+new file mode 100644
+index 000000000..3d52cd59c
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentOxygen.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentOxygen extends Enchantment {
++
++    public EnchantmentOxygen(int i, int j) {
++        super(i, j, EnchantmentSlotType.ARMOR_HEAD);
++        this.b("oxygen");
++    }
++
++    public int a(int i) {
++        return 10 * i;
++    }
++
++    public int b(int i) {
++        return this.a(i) + 30;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 3;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentProtection.java b/src/main/java/net/minecraft/server/EnchantmentProtection.java
+new file mode 100644
+index 000000000..b5d4d5caf
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentProtection.java
+@@ -0,0 +1,76 @@
++package net.minecraft.server;
++
++public class EnchantmentProtection extends Enchantment {
++
++    private static final String[] E = new String[] { "all", "fire", "fall", "explosion", "projectile"};
++    private static final int[] F = new int[] { 1, 10, 5, 5, 3};
++    private static final int[] G = new int[] { 11, 8, 6, 8, 6};
++    private static final int[] H = new int[] { 20, 12, 10, 12, 15};
++    public final int a;
++
++    public EnchantmentProtection(int i, int j, int k) {
++        super(i, j, EnchantmentSlotType.ARMOR);
++        this.a = k;
++        if (k == 2) {
++            this.slot = EnchantmentSlotType.ARMOR_FEET;
++        }
++    }
++
++    public int a(int i) {
++        return F[this.a] + (i - 1) * G[this.a];
++    }
++
++    public int b(int i) {
++        return this.a(i) + H[this.a];
++    }
++
++    public int getDefaultMaxLevel() {
++        return 4;
++    }
++
++    public int a(int i, DamageSource damagesource) {
++        if (damagesource.ignoresInvulnerability()) {
++            return 0;
++        } else {
++            float f = (float) (6 + i * i) / 3.0F;
++
++            return this.a == 0 ? MathHelper.d(f * 0.75F) : (this.a == 1 && damagesource.o() ? MathHelper.d(f * 1.25F) : (this.a == 2 && damagesource == DamageSource.FALL ? MathHelper.d(f * 2.5F) : (this.a == 3 && damagesource.isExplosion() ? MathHelper.d(f * 1.5F) : (this.a == 4 && damagesource.a() ? MathHelper.d(f * 1.5F) : 0))));
++        }
++    }
++
++    public String a() {
++        return "enchantment.protect." + E[this.a];
++    }
++
++    public boolean a(Enchantment enchantment) {
++        if (!super.a(enchantment)) {
++            return false;
++        }
++        if (enchantment instanceof EnchantmentProtection) {
++            EnchantmentProtection enchantmentprotection = (EnchantmentProtection) enchantment;
++
++            return enchantmentprotection.a == this.a ? false : this.a == 2 || enchantmentprotection.a == 2;
++        }
++        return true;
++    }
++
++    public static int a(Entity entity, int i) {
++        int j = EnchantmentManager.getEnchantmentLevel(Enchantment.PROTECTION_FIRE.id, entity.getEquipment());
++
++        if (j > 0) {
++            i -= MathHelper.d((float) i * (float) j * 0.15F);
++        }
++
++        return i;
++    }
++
++    public static double a(Entity entity, double d0) {
++        int i = EnchantmentManager.getEnchantmentLevel(Enchantment.PROTECTION_EXPLOSIONS.id, entity.getEquipment());
++
++        if (i > 0) {
++            d0 -= (double) MathHelper.floor(d0 * (double) ((float) i * 0.15F));
++        }
++
++        return d0;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentSilkTouch.java b/src/main/java/net/minecraft/server/EnchantmentSilkTouch.java
+new file mode 100644
+index 000000000..99c317955
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentSilkTouch.java
+@@ -0,0 +1,29 @@
++package net.minecraft.server;
++
++public class EnchantmentSilkTouch extends Enchantment {
++
++    protected EnchantmentSilkTouch(int i, int j) {
++        super(i, j, EnchantmentSlotType.DIGGER);
++        this.b("untouching");
++    }
++
++    public int a(int i) {
++        return 15;
++    }
++
++    public int b(int i) {
++        return super.a(i) + 50;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 1;
++    }
++
++    public boolean a(Enchantment enchantment) {
++        return super.a(enchantment) && enchantment.id != LOOT_BONUS_BLOCKS.id;
++    }
++
++    public boolean canEnchant(ItemStack itemstack) {
++        return itemstack.getItem() == Items.SHEARS ? true : super.canEnchant(itemstack);
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentThorns.java b/src/main/java/net/minecraft/server/EnchantmentThorns.java
+index 6841259d7..4a2c8f083 100644
+--- a/src/main/java/net/minecraft/server/EnchantmentThorns.java
++++ b/src/main/java/net/minecraft/server/EnchantmentThorns.java
+@@ -9,15 +9,15 @@ public class EnchantmentThorns extends Enchantment {
+         this.b("thorns");
+     }
+ 
+-    public int a(int n) {
+-        return 10 + 20 * (n - 1);
++    public int a(int i) {
++        return 10 + 20 * (i - 1);
+     }
+ 
+     public int b(int i) {
+         return super.a(i) + 50;
+     }
+ 
+-    public int getMaxLevel() {
++    public int getDefaultMaxLevel() {
+         return 3;
+     }
+ 
+@@ -25,30 +25,26 @@ public class EnchantmentThorns extends Enchantment {
+         return itemstack.getItem() instanceof ItemArmor ? true : super.canEnchant(itemstack);
+     }
+ 
+-    public void b(EntityLiving entityliving, Entity entity, int n) {
+-        Random ai = entityliving.aI();
+-        ItemStack a = EnchantmentManager.a(Enchantment.THORNS, entityliving);
++    public void b(EntityLiving entityliving, Entity entity, int i) {
++        Random random = entityliving.aI();
++        ItemStack itemstack = EnchantmentManager.a(Enchantment.THORNS, entityliving);
+ 
+-        if (a(n, ai)) {
+-            entity.damageEntity(DamageSource.a(entityliving), b(n, ai));
++        if (a(i, random)) {
++            entity.damageEntity(DamageSource.a(entityliving), (float) b(i, random));
+             entity.makeSound("damage.thorns", 0.5F, 1.0F);
+-            if (a != null) {
+-                a.damage(3, entityliving);
++            if (itemstack != null) {
++                itemstack.damage(3, entityliving);
+             }
+-        } else if (a != null) {
+-            a.damage(1, entityliving);
++        } else if (itemstack != null) {
++            itemstack.damage(1, entityliving);
+         }
+     }
+ 
+-    public static boolean a(int n, Random random) {
+-        return n > 0 && random.nextFloat() < 0.15f * n;
++    public static boolean a(int i, Random random) {
++        return i <= 0 ? false : random.nextFloat() < 0.15F * (float) i;
+     }
+ 
+-    public static int b(int n, Random random) {
+-        if (n > 10) {
+-            return n - 10;
+-        }
+-
+-        return 1 + random.nextInt(4);
++    public static int b(int i, Random random) {
++        return i > 10 ? i - 10 : 1 + random.nextInt(4);
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentWaterWorker.java b/src/main/java/net/minecraft/server/EnchantmentWaterWorker.java
+new file mode 100644
+index 000000000..9064fd0d0
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentWaterWorker.java
+@@ -0,0 +1,21 @@
++package net.minecraft.server;
++
++public class EnchantmentWaterWorker extends Enchantment {
++
++    public EnchantmentWaterWorker(int i, int j) {
++        super(i, j, EnchantmentSlotType.ARMOR_HEAD);
++        this.b("waterWorker");
++    }
++
++    public int a(int i) {
++        return 1;
++    }
++
++    public int b(int i) {
++        return this.a(i) + 40;
++    }
++
++    public int getDefaultMaxLevel() {
++        return 1;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/net/minecraft/server/EnchantmentWeaponDamage.java b/src/main/java/net/minecraft/server/EnchantmentWeaponDamage.java
+new file mode 100644
+index 000000000..72ab5153a
+--- /dev/null
++++ b/src/main/java/net/minecraft/server/EnchantmentWeaponDamage.java
+@@ -0,0 +1,55 @@
++package net.minecraft.server;
++
++public class EnchantmentWeaponDamage extends Enchantment {
++
++    private static final String[] E = new String[] { "all", "undead", "arthropods"};
++    private static final int[] F = new int[] { 1, 5, 5};
++    private static final int[] G = new int[] { 11, 8, 8};
++    private static final int[] H = new int[] { 20, 20, 20};
++    public final int a;
++
++    public EnchantmentWeaponDamage(int i, int j, int k) {
++        super(i, j, EnchantmentSlotType.WEAPON);
++        this.a = k;
++    }
++
++    public int a(int i) {
++        return F[this.a] + (i - 1) * G[this.a];
++    }
++
++    public int b(int i) {
++        return this.a(i) + H[this.a];
++    }
++
++    public int getDefaultMaxLevel() {
++        return 5;
++    }
++
++    public float a(int i, EnumMonsterType enummonstertype) {
++        return this.a == 0 ? (float) i * 1.25F : (this.a == 1 && enummonstertype == EnumMonsterType.UNDEAD ? (float) i * 2.5F : (this.a == 2 && enummonstertype == EnumMonsterType.ARTHROPOD ? (float) i * 2.5F : 0.0F));
++    }
++
++    public String a() {
++        return "enchantment.damage." + E[this.a];
++    }
++
++    public boolean a(Enchantment enchantment) {
++        return super.a(enchantment) && !(enchantment instanceof EnchantmentWeaponDamage);
++    }
++
++    public boolean canEnchant(ItemStack itemstack) {
++        return itemstack.getItem() instanceof ItemAxe ? true : super.canEnchant(itemstack);
++    }
++
++    public void a(EntityLiving entityliving, Entity entity, int i) {
++        if (entity instanceof EntityLiving) {
++            EntityLiving entityliving1 = (EntityLiving) entity;
++
++            if (this.a == 2 && entityliving1.getMonsterType() == EnumMonsterType.ARTHROPOD) {
++                int j = 20 + entityliving.aI().nextInt(10 * i);
++
++                entityliving1.addEffect(new MobEffect(MobEffectList.SLOWER_MOVEMENT.id, j, 3));
++            }
++        }
++    }
++}
+\ No newline at end of file
+-- 
+2.13.3
+

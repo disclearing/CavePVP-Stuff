@@ -1,0 +1,75 @@
+From 5c12b85fa21e09b7189602ac7c7740574ce53c3f Mon Sep 17 00:00:00 2001
+From: Francisco <francisco.gsaldanha@gmail.com>
+Date: Mon, 27 Feb 2017 12:18:00 -0300
+Subject: [PATCH] Add configurable smelting and brewing multipliers (Spigot
+ config)
+
+
+diff --git a/src/main/java/net/minecraft/server/TileEntityBrewingStand.java b/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
+index b9acbf9d8..1436c2b16 100644
+--- a/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
++++ b/src/main/java/net/minecraft/server/TileEntityBrewingStand.java
+@@ -7,6 +7,7 @@ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+ import org.bukkit.entity.HumanEntity;
+ import org.bukkit.event.inventory.BrewEvent;
+ import io.kohi.kspigot.potion.PotionsConfig;
++import org.spigotmc.SpigotConfig;
+ // CraftBukkit end
+ 
+ public class TileEntityBrewingStand extends TileEntity implements IWorldInventory {
+@@ -69,7 +70,7 @@ public class TileEntityBrewingStand extends TileEntity implements IWorldInventor
+         this.lastTick = MinecraftServer.currentTick;
+ 
+         if (this.brewTime > 0) {
+-            this.brewTime -= elapsedTicks;
++            this.brewTime -= elapsedTicks * SpigotConfig.brewingMultiplier; // MineHQ
+             if (this.brewTime <= 0) { // == -> <=
+                 // CraftBukkit end
+                 this.l();
+diff --git a/src/main/java/net/minecraft/server/TileEntityFurnace.java b/src/main/java/net/minecraft/server/TileEntityFurnace.java
+index 3fdd796cf..f06ef7e3c 100644
+--- a/src/main/java/net/minecraft/server/TileEntityFurnace.java
++++ b/src/main/java/net/minecraft/server/TileEntityFurnace.java
+@@ -8,6 +8,7 @@ import org.bukkit.entity.HumanEntity;
+ import org.bukkit.event.inventory.FurnaceBurnEvent;
+ import org.bukkit.event.inventory.FurnaceSmeltEvent;
+ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
++import org.spigotmc.SpigotConfig;
+ // CraftBukkit end
+ 
+ public class TileEntityFurnace extends TileEntity implements IWorldInventory {
+@@ -171,7 +172,7 @@ public class TileEntityFurnace extends TileEntity implements IWorldInventory {
+ 
+         // CraftBukkit - moved from below
+         if (this.isBurning() && this.canBurn()) {
+-            this.cookTime += elapsedTicks;
++            this.cookTime += elapsedTicks * SpigotConfig.smeltingMultiplier; // MineHQ
+             if (this.cookTime >= 200) {
+                 this.cookTime %= 200;
+                 this.burn();
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 025a3c2f9..1b3d48e15 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -457,6 +457,18 @@ public class SpigotConfig
+     }
+     // Poweruser end
+ 
++    // Griffin start
++    public static int brewingMultiplier;
++    private static void brewingMultiplier() {
++        brewingMultiplier = getInt("settings.brewingMultiplier", 1);
++    }
++
++    public static int smeltingMultiplier;
++    private static void smeltingMultiplier() {
++        brewingMultiplier = getInt("settings.smeltingMultiplier", 1);
++    }
++    // Griffin end
++
+     // Guardian start
+     public static boolean guardianEnabled;
+     private static void guardianEnabled() {
+-- 
+2.13.3
+

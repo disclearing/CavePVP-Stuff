@@ -1,0 +1,33 @@
+From 33007da36bf07ece81846bed7d34c49477bd439f Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Thu, 19 May 2016 22:44:40 +0200
+Subject: [PATCH] Fix enderpearls loading chunks
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 101696f13..8898f0fe5 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -440,8 +440,17 @@ public abstract class Entity {
+      * PaperSpigot - Load surrounding chunks the entity is moving through
+      */
+     public void loadChunks() {
+-        for (int cx = (int) locX >> 4; cx <= (int) (locX + motX) >> 4; ++cx) {
+-            for (int cz = (int) locZ >> 4; cz <= (int) (locZ + motZ) >> 4; ++cz) {
++        int xstart = MathHelper.floor(this.locX);
++        int zstart = MathHelper.floor(this.locZ);
++        int xend = MathHelper.floor(this.locX + this.motX);
++        int zend = MathHelper.floor(this.locZ + this.motZ);
++
++        int xmin = Math.min(xstart, xend) - 3;
++        int xmax = Math.max(xstart, xend) + 3;
++        int zmin = Math.min(zstart, zend) - 3;
++        int zmax = Math.max(zstart, zend) + 3;
++        for (int cx = xmin >> 4; cx <= xmax >> 4; ++cx) {
++            for (int cz = zmin >> 4; cz <= zmax >> 4; ++cz) {
+                 world.chunkProvider.getChunkAt(cx, cz);
+             }
+         }
+-- 
+2.13.3
+

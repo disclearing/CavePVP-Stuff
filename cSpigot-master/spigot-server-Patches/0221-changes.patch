@@ -1,0 +1,300 @@
+From 1380f5cf4e8a4cbaaa691c5209f7ced126ab6269 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 8 Jul 2018 14:06:36 -0500
+Subject: [PATCH] changes
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 4a20d7e2d..88e4be82c 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -402,7 +402,7 @@ public class ChunkProviderServer implements IChunkProvider {
+                         this.saveChunkNOP(chunk);
+                         saveChunkNOP += System.nanoTime() - nanoStart;
+                         nanoStart = System.nanoTime();
+-                        this.chunks.remove(locX, locZ); // CraftBukkit // MineHQ
++                        this.chunks.remove(LongHash.toLong(locX, locZ)); // CraftBukkit // MineHQ
+                         chunkRemove += System.nanoTime() - nanoStart;
+                         unloaded++;
+                         this.world.timings.doChunkUnloadSave.stopTiming();
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index b6183f057..a52b2c604 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -1,17 +1,31 @@
+ package net.minecraft.server;
+ 
+-import com.google.common.base.Function;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.HashMap;
++import java.util.HashSet;
++import java.util.Iterator;
++import java.util.List;
++import java.util.Random;
++import java.util.UUID;
++
+ import org.bukkit.Bukkit;
+ import org.bukkit.craftbukkit.SpigotTimings;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
++import org.bukkit.craftbukkit.util.CraftPotionUtils;
++import org.bukkit.entity.LivingEntity;
+ import org.bukkit.event.entity.EntityDamageEvent;
+ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+ import org.bukkit.event.entity.EntityRegainHealthEvent;
++import org.bukkit.event.entity.PotionEffectAddEvent;
++import org.bukkit.event.entity.PotionEffectExpireEvent;
++import org.bukkit.event.entity.PotionEffectExtendEvent;
++import org.bukkit.event.entity.PotionEffectRemoveEvent;
+ import org.bukkit.event.player.PlayerAttackEvent;
+ import org.spigotmc.ActivationRange;
+ import org.spigotmc.SpigotConfig;
+ 
+-import java.util.*;
++import com.google.common.base.Function;
+ 
+ // CraftBukkit start
+ // CraftBukkit end
+@@ -456,6 +470,16 @@ public abstract class EntityLiving extends Entity {
+ 
+             if (!mobeffect.tick(this)) {
+                 if (!this.world.isStatic) {
++                    PotionEffectExpireEvent event = new PotionEffectExpireEvent((LivingEntity) this.getBukkitEntity(),
++                            CraftPotionUtils.toBukkit(mobeffect));
++                    
++                    this.world.getServer().getPluginManager().callEvent(event);
++                    
++                    if (event.isCancelled()) {
++                        CraftPotionUtils.extendDuration(mobeffect, event.getDuration());
++                        continue;
++                    }
++                    
+                     iterator.remove();
+                     this.b(mobeffect);
+                 }
+@@ -510,15 +534,13 @@ public abstract class EntityLiving extends Entity {
+     }
+ 
+     public void removeAllEffects() {
+-        Iterator iterator = this.effects.keySet().iterator();
++        Iterator iterator = new HashSet<>(this.effects.keySet()).iterator();
+ 
+         while (iterator.hasNext()) {
+             Integer integer = (Integer) iterator.next();
+-            MobEffect mobeffect = (MobEffect) this.effects.get(integer);
+ 
+             if (!this.world.isStatic) {
+-                iterator.remove();
+-                this.b(mobeffect);
++                removeEffect(integer);
+             }
+         }
+     }
+@@ -542,11 +564,28 @@ public abstract class EntityLiving extends Entity {
+     }
+ 
+     public void addEffect(MobEffect mobeffect) {
++        this.addEffect(mobeffect, PotionEffectAddEvent.EffectCause.UNKNOWN);
++    }
++    
++    public void addEffect(MobEffect mobeffect, PotionEffectAddEvent.EffectCause effectCause) {
+         if (this.d(mobeffect)) {
+             if (this.effects.containsKey(Integer.valueOf(mobeffect.getEffectId()))) {
+-                ((MobEffect) this.effects.get(Integer.valueOf(mobeffect.getEffectId()))).a(mobeffect);
+-                this.a((MobEffect) this.effects.get(Integer.valueOf(mobeffect.getEffectId())), true);
++                MobEffect current = (MobEffect) this.effects.get(mobeffect.getEffectId());
++                PotionEffectExtendEvent event = new PotionEffectExtendEvent((LivingEntity) this.getBukkitEntity(),
++                        CraftPotionUtils.toBukkit(mobeffect),
++                        CraftPotionUtils.toBukkit(current), effectCause);
++                
++                this.world.getServer().getPluginManager().callEvent(event);
++                if (event.isCancelled()) return;
++                
++                current.a(mobeffect);
++                this.a(current, true);
+             } else {
++                PotionEffectAddEvent event = new PotionEffectAddEvent((LivingEntity) this.getBukkitEntity(),
++                        CraftPotionUtils.toBukkit(mobeffect), effectCause);
++                
++                this.world.getServer().getPluginManager().callEvent(event);
++                if (event.isCancelled()) return;
+                 this.effects.put(Integer.valueOf(mobeffect.getEffectId()), mobeffect);
+                 this.a(mobeffect);
+             }
+@@ -573,6 +612,14 @@ public abstract class EntityLiving extends Entity {
+         MobEffect mobeffect = (MobEffect) this.effects.remove(Integer.valueOf(i));
+ 
+         if (mobeffect != null) {
++            PotionEffectRemoveEvent event = new PotionEffectRemoveEvent((LivingEntity) this.getBukkitEntity(),
++                    CraftPotionUtils.toBukkit(mobeffect));
++            this.world.getServer().getPluginManager().callEvent(event);
++            if (event.isCancelled()) {
++                this.effects.put(i, mobeffect);
++                return;
++            }
++            
+             this.b(mobeffect);
+         }
+     }
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 5bd9ca430..88652d4a5 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -274,7 +274,7 @@ public class PlayerConnection implements PacketPlayInListener {
+             packetsNotReceived++;
+             keepAlives.add(h);
+ 
+-            if (keepAlives.size() > 120 && Bukkit.shouldGuardianAct()) {
++            if (keepAlives.size() > 240 && Bukkit.shouldGuardianAct()) {
+                 disconnect("Disconnected due to lag");
+                 return;
+             }
+@@ -284,7 +284,7 @@ public class PlayerConnection implements PacketPlayInListener {
+         }
+ 
+         // Guardian start
+-        if (packetsNotReceived >= 40 && Bukkit.shouldGuardianAct()) {
++        if (packetsNotReceived >= 240 && Bukkit.shouldGuardianAct()) {
+             disconnect("Disconnected due to lag");
+             return;
+         }
+diff --git a/src/main/java/net/minecraft/server/PlayerInventory.java b/src/main/java/net/minecraft/server/PlayerInventory.java
+index 83d7b75bf..408ddea51 100644
+--- a/src/main/java/net/minecraft/server/PlayerInventory.java
++++ b/src/main/java/net/minecraft/server/PlayerInventory.java
+@@ -5,7 +5,9 @@ import java.util.concurrent.Callable;
+ // CraftBukkit start
+ import java.util.List;
+ 
++import org.bukkit.Bukkit;
+ import org.bukkit.craftbukkit.entity.CraftHumanEntity;
++import org.bukkit.craftbukkit.inventory.CraftItemStack;
+ import org.bukkit.entity.HumanEntity;
+ // CraftBukkit end
+ 
+@@ -327,7 +329,7 @@ public class PlayerInventory implements IInventory {
+             i -= aitemstack.length;
+             aitemstack = this.armor;
+         }
+-
++        
+         aitemstack[i] = itemstack;
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index a9e222b29..08ccef185 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -80,14 +80,6 @@ public class CraftInventory implements Inventory {
+     }
+ 
+     public void setItem(int index, ItemStack item) {    
+-        
+-        ItemStack oldItem = getItem(index);
+-        
+-        if (oldItem != null) {
+-            Bukkit.getLogger().info("Removing item " + oldItem.getType().toString() + ", setting to: " + (item == null ? "null" : item.getType().toString()));
+-            new Throwable().printStackTrace();
+-        }
+-        
+         getInventory().setItem(index, ((item == null || item.getTypeId() == 0) ? null : CraftItemStack.asNMSCopy(item)));
+     }
+ 
+@@ -341,11 +333,6 @@ public class CraftInventory implements Inventory {
+     public HashMap<Integer, ItemStack> removeItem(ItemStack... items) {
+         Validate.notNull(items, "Items cannot be null");
+         HashMap<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
+-
+-        for (ItemStack item : items) {
+-            Bukkit.getLogger().info("Removing item " + item.getType().toString() + ".");
+-            new Throwable().printStackTrace();
+-        }
+         
+         // TODO: optimization
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+index b7cf36b44..31ce4b761 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+@@ -195,14 +195,6 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+     @Override
+     public HashMap<Integer, ItemStack> removeItem(ItemStack... items) {
+         HashMap<Integer, ItemStack> leftover = super.removeItem(items);
+-        
+-        for (ItemStack item : items) {
+-            if (item != null) {
+-                Bukkit.getLogger().info("Removing item " + item.getType().toString() + ".");
+-                new Throwable().printStackTrace();
+-            }
+-        }
+-        
+         this.updatePlayerInventory();
+         return leftover;
+     }
+@@ -210,12 +202,6 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+     @Override
+     public void remove(ItemStack item) {
+         super.remove(item);
+-        
+-        if (item != null) {
+-            Bukkit.getLogger().info("Removing item " + item.getType().toString() + ".");
+-            new Throwable().printStackTrace();
+-        }
+-        
+         this.updatePlayerInventory();
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftPotionUtils.java b/src/main/java/org/bukkit/craftbukkit/util/CraftPotionUtils.java
+new file mode 100644
+index 000000000..f7a54b41a
+--- /dev/null
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftPotionUtils.java
+@@ -0,0 +1,45 @@
++package org.bukkit.craftbukkit.util;
++
++import org.bukkit.potion.PotionEffect;
++import org.bukkit.potion.PotionEffectType;
++
++import net.minecraft.server.MobEffect;
++import net.minecraft.server.MobEffectList;
++
++public final class CraftPotionUtils {
++    
++    public static PotionEffectType toBukkit(MobEffectList nms) {
++        return PotionEffectType.getById(nms.getId());
++    }
++    
++    public static PotionEffect toBukkit(MobEffect effect) {
++        return new PotionEffect(
++                PotionEffectType.getById(effect.getEffectId()),
++                effect.getDuration(),
++                effect.getAmplifier(),
++                effect.isAmbient());
++    }
++    
++    public static MobEffectList toNMS(PotionEffectType effect) {
++        return MobEffectList.byId[effect.getId()];
++    }
++    
++    public static MobEffect toNMS(PotionEffect effect) {
++        return new MobEffect(effect.getType().getId(),
++                effect.getDuration(),
++                effect.getAmplifier(),
++                effect.isAmbient());
++    }
++    
++    public static MobEffect cloneWithDuration(MobEffect effect, int duration) {
++        return new MobEffect(effect.getEffectId(),
++                duration,
++                effect.getAmplifier(),
++                effect.isAmbient());
++    }
++    
++    public static void extendDuration(MobEffect effect, int duration) {
++        effect.a(cloneWithDuration(effect, duration));
++    }
++    
++}
+-- 
+2.15.2 (Apple Git-101.1)
+

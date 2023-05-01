@@ -1,0 +1,16 @@
+{
+  "name": "Road-Outpost",
+  "capLocation": {
+    "x": 0.5,
+    "y": 70.0,
+    "z": 1199.5
+  },
+  "world": "world",
+  "capDistance": 3,
+  "capTime": 900,
+  "hidden": true,
+  "mini": false,
+  "active": false,
+  "koth": true,
+  "type": "KOTH"
+}

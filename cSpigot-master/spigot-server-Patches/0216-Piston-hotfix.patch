@@ -1,0 +1,60 @@
+From 48d31be017a61385da5c678a2df69c3aa6570b17 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Thu, 5 Oct 2017 10:54:36 +0100
+Subject: [PATCH] Piston hotfix
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index a506111eb..6bc793a8e 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -40,6 +40,7 @@ public abstract class Entity {
+     // CraftBukkit start
+     private static final int CURRENT_LEVEL = 2;
+     public int inWebTick; // Guardian
++    public int inPistonTick; // Guardian
+     static boolean isLevelAtLeast(NBTTagCompound tag, int level) {
+         return tag.hasKey("Bukkit.updateLevel") && tag.getInt("Bukkit.updateLevel") >= level;
+     }
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 7ca323857..0e95cf08a 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -829,7 +829,6 @@ public class PlayerConnection implements PacketPlayInListener {
+                 }
+                 // Fly (Module G) end*/
+ 
+-                AxisAlignedBB preBB = getBoundingBoxRounded();
+                 if ((!this.player.abilities.canFly)) {
+                     boolean teleport = networkManager.currentTime - this.positionSentTime < 5000L;
+                     double horizontalSpeed = this.horizontalSpeed;
+@@ -896,6 +895,13 @@ public class PlayerConnection implements PacketPlayInListener {
+                             }
+                         }
+ 
++                        // Guardian - piston hotfix (essentially the same as prplz' fix)
++                        if (MinecraftServer.currentTick - this.player.inPistonTick < 50) { // in a piston in the last 50 ticks?
++                            if (this.player.world.a(this.player.boundingBox.grow(1.5D, 1.5D, 1.5D), Material.PISTON)) {
++                                horizontalSpeed *= 5.0D;
++                            }
++                        }
++
+                         if ((Bukkit.shouldGuardianAct()) && (!teleport)) {
+                             double speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
+ 
+diff --git a/src/main/java/net/minecraft/server/TileEntityPiston.java b/src/main/java/net/minecraft/server/TileEntityPiston.java
+index 69fe247bc..b3480559e 100644
+--- a/src/main/java/net/minecraft/server/TileEntityPiston.java
++++ b/src/main/java/net/minecraft/server/TileEntityPiston.java
+@@ -67,7 +67,7 @@ public class TileEntityPiston extends TileEntity {
+ 
+                 while (iterator.hasNext()) {
+                     Entity entity = (Entity) iterator.next();
+-
++                    entity.inPistonTick = MinecraftServer.currentTick; // Guardian
+                     entity.move((double) (f1 * (float) Facing.b[this.j]), (double) (f1 * (float) Facing.c[this.j]), (double) (f1 * (float) Facing.d[this.j]));
+                 }
+ 
+-- 
+2.13.5 (Apple Git-94)
+

@@ -1,0 +1,51 @@
+From cd0be606050a58a4da80743b2b784204ba41de09 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Thu, 28 Jan 2016 01:15:37 +0100
+Subject: [PATCH] Allow skipping of map item updates for players
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 3581aa392..bf029c802 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -263,14 +263,16 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+         try {
+             super.h();
+ 
+-            for (int i = 0; i < this.inventory.getSize(); ++i) {
+-                ItemStack itemstack = this.inventory.getItem(i);
++            if(this.world.spigotConfig.updateMapItemsInPlayerInventory) { // Poweruser
++                for (int i = 0; i < this.inventory.getSize(); ++i) {
++                    ItemStack itemstack = this.inventory.getItem(i);
+ 
+-                if (itemstack != null && itemstack.getItem().h()) {
+-                    Packet packet = ((ItemWorldMapBase) itemstack.getItem()).c(itemstack, this.world, this);
++                    if (itemstack != null && itemstack.getItem().h()) {
++                        Packet packet = ((ItemWorldMapBase) itemstack.getItem()).c(itemstack, this.world, this);
+ 
+-                    if (packet != null) {
+-                        this.playerConnection.sendPacket(packet);
++                        if (packet != null) {
++                            this.playerConnection.sendPacket(packet);
++                        }
+                     }
+                 }
+             }
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index 045ed3159..8fcca06ca 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -376,5 +376,10 @@ public class SpigotWorldConfig
+         enderPearlsCanPassNonSolidBlocks = getBoolean("enderPearlsCanPassNonSolidBlocks", false);
+         log("Enderpearls can pass non-solid blocks: " + enderPearlsCanPassNonSolidBlocks);
+     }
++
++    public boolean updateMapItemsInPlayerInventory;
++    private void dontUpdateMapItemsInPlayerInventory() {
++        updateMapItemsInPlayerInventory = getBoolean( "updateMapItemsInPlayerInventory" , false);
++    }
+     // Poweruser end
+ }
+-- 
+2.13.3
+

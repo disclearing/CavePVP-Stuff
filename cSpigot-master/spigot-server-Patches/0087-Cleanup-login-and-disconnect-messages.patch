@@ -1,0 +1,57 @@
+From 6fc7063fb70f9bb44cadf3b2cf715ba31857450e Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 01:12:44 -0400
+Subject: [PATCH] Cleanup login and disconnect messages
+
+
+diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
+index bd254def8..8d24d4563 100644
+--- a/src/main/java/net/minecraft/server/LoginListener.java
++++ b/src/main/java/net/minecraft/server/LoginListener.java
+@@ -51,7 +51,7 @@ public class LoginListener implements PacketLoginInListener {
+ 
+     public void disconnect(String s) {
+         try {
+-            c.info("Disconnecting " + this.getName() + ": " + s);
++            c.info("Disconnecting " + this.i.getName() + ": " + s);
+             ChatComponentText chatcomponenttext = new ChatComponentText(s);
+ 
+             this.networkManager.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
+@@ -121,7 +121,7 @@ public class LoginListener implements PacketLoginInListener {
+     }
+ 
+     public void a(IChatBaseComponent ichatbasecomponent) {
+-        c.info(this.getName() + " lost connection: " + ichatbasecomponent.c());
++        c.info((this.i != null ? this.i.getName() : this.networkManager.getSocketAddress()) + " lost connection: " + ichatbasecomponent.c());
+     }
+ 
+     public String getName() {
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 7fd43f713..8ea21d53b 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -211,7 +211,7 @@ public abstract class PlayerList {
+         }
+ 
+         // CraftBukkit - Moved from above, added world
+-        g.info(entityplayer.getName() + "[" + s1 + "] logged in with entity id " + entityplayer.getId() + " at ([" + entityplayer.world.worldData.getName() + "] " + entityplayer.locX + ", " + entityplayer.locY + ", " + entityplayer.locZ + ")");
++        g.info(entityplayer.getName() + " logged in at (" + entityplayer.world.worldData.getName() + ", " + String.format("%.1f", entityplayer.locX) + ", " + String.format("%.1f", entityplayer.locY) + ", " + String.format("%.1f", entityplayer.locZ) + ")");
+     }
+ 
+     public void sendScoreboard(ScoreboardServer scoreboardserver, EntityPlayer entityplayer) { // CraftBukkit - protected -> public
+diff --git a/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java b/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
+index 1b2620cda..fca32adf9 100644
+--- a/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
++++ b/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
+@@ -103,7 +103,7 @@ class ThreadPlayerLookupUUID extends Thread {
+         }
+         // CraftBukkit end
+ 
+-        LoginListener.e().info("UUID of player " + LoginListener.a(this.a).getName() + " is " + LoginListener.a(this.a).getId());
++        //LoginListener.e().info("UUID of player " + LoginListener.a(this.a).getName() + " is " + LoginListener.a(this.a).getId());
+         LoginListener.a(this.a, EnumProtocolState.READY_TO_ACCEPT);
+     }
+ }
+-- 
+2.13.3
+

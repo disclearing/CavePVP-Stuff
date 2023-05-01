@@ -1,0 +1,260 @@
+Mongo:
+  Host: '0.0.0.0'
+  Pass: ""
+  DBName: 'Fasts'
+serverName: Fasts
+networkWebsite: cavepvp.org
+statsRoot: cavepvp.org/stats
+tab:
+  serverName: '&4&lFasts'
+  sectionColor: '&4'
+  infoColor: '&7'
+nightmare:
+  enabled: true
+  worldName: "NightmareEvent"
+glowstoneMountain: true
+cavern: false
+startingTimer: true
+forceInvites: false
+squads: false
+idleCheck: false
+uhcHealing: false
+passiveTag: true
+allowBoosting: false
+waterPlacementInClaims: false
+blockRemoval: false
+rodPrevention: false
+skybridgePrevention: false
+reduceArmorDamage: true
+blockEntitiesThroughPortals: true
+archerTagColor: YELLOW
+defaultRelationColor: RED
+pvpClasses:
+  archer: true
+  bard: true
+  rogue: true
+  ranger: false
+minerWorld:
+  regen:
+    COAL_ORE: 30
+    IRON_ORE: 60
+    GOLD_ORE: 90
+    DIAMOND_ORE: 120
+potions:
+  REGEN:
+    splash: false
+    drinkables: false
+  SPEED:
+    splash: true
+    drinkables: true
+  FIRE_RESISTANCE:
+    splash: true
+    drinkables: true
+  POISON:
+    splash: true
+    drinkables: true
+  INSTANT_HEAL:
+    splash: true
+    drinkables: true
+  NIGHT_VISION:
+    splash: true
+    drinkables: true
+  WEAKNESS:
+    splash: false
+    drinkables: false
+  STRENGTH:
+    splash: false
+    drinkables: false
+  SLOWNESS:
+    splash: true
+    drinkables: true
+  INSTANT_DAMAGE:
+    splash: false
+    drinkables: false
+  WATER_BREATHING:
+    splash: true
+    drinkables: true
+  INVISIBILITY:
+    splash: true
+    drinkables: true
+reclaims:
+  Iron:
+    priority: 14
+    commands:
+      - cr givekey {player} Rare 3
+      - pvp addlives {player} 10
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &7&lIron Rank&7.
+  Gold:
+    priority: 13
+    commands:
+      - cr givekey {player} Rare 5
+      - pvp addlives {player} 20
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &6&lGold Rank&7.
+  Diamond:
+    priority: 12
+    commands:
+      - cr givekey {player} Legendary 4
+      - cr givekey {player} Rare 8
+      - pvp addlives {player} 30
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &b&lDiamond Rank&7.
+  Emerald:
+    priority: 11
+    commands:
+      - cr givekey {player} Legendary 5
+      - cr givekey {player} Rare 10
+      - pvp addlives {player} 45
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &a&lEmerald Rank&7.
+  Pearl:
+    priority: 10
+    commands:
+      - cr givekey {player} Legendary 6
+      - cr givekey {player} Rare 12
+      - pvp addlives {player} 60
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &5&lPearl Rank&7.
+  Sapphire:
+    priority: 9
+    commands:
+      - cr givekey {player} Legendary 7
+      - cr givekey {player} Rare 14
+      - pvp addlives {player} 70
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &9&LSapphire Rank&7.
+  Platinum:
+    priority: 8
+    commands:
+      - crates give {player} Seasonal 1
+      - crates give {player} Reinforce 1
+      - cr givekey {player} Legendary 10
+      - cr givekey {player} Rare 15
+      - pvp addlives {player} 80
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &3&lPlatinum Rank&7.
+  Ravine:
+    priority: 7
+    commands:
+      - airdrops give {player} 1
+      - crates give {player} Seasonal 2
+      - crates give {player} Reinforce 2
+      - cr givekey {player} Legendary 10
+      - cr givekey {player} Rare 20
+      - pvp addlives {player} 100
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &d&lRavine Rank&7.
+  Chat-Mod:
+    priority: 7
+    commands:
+      - airdrops give {player} 1
+      - crates give {player} Seasonal 2
+      - crates give {player} Reinforce 2
+      - cr givekey {player} Legendary 10
+      - cr givekey {player} Rare 20
+      - pvp addlives {player} 100
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &d&lChat-Mod Rank&7.
+  YouTuber:
+    priority: 7
+    commands:
+      - airdrops give {player} 1
+      - crates give {player} Seasonal 2
+      - crates give {player} Reinforce 2
+      - cr givekey {player} Legendary 10
+      - cr givekey {player} Rare 20
+      - pvp addlives {player} 100
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &c&lYou&f&lTube Rank&7.
+  Streamer:
+    priority: 7
+    commands:
+      - airdrops give {player} 1
+      - crates give {player} Seasonal 2
+      - crates give {player} Reinforce 2
+      - cr givekey {player} Legendary 10
+      - cr givekey {player} Rare 20
+      - pvp addlives {player} 100
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &5&lStreamer Rank&7.
+  Famous:
+    priority: 6
+    commands:
+      - airdrops give {player} 2
+      - crates give {player} Seasonal 2
+      - crates give {player} Reinforce 2
+      - cr givekey {player} Legendary 10
+      - cr givekey {player} Rare 20
+      - pvp addlives {player} 100
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &d&oFamous Rank&7.
+  Holiday:
+    priority: 5
+    commands:
+      - airdrops give {player} 3
+      - crates give {player} Seasonal 4
+      - crates give {player} Reinforce 4
+      - cr givekey {player} Seasonal 3
+      - cr givekey {player} Cave 4
+      - cr givekey {player} Legendary 12
+      - cr givekey {player} Rare 24
+      - pvp addlives {player} 150
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &6&lSummer Rank&7.
+  Builder:
+    priority: 4
+    commands:
+      - airdrops give {player} 3
+      - crates give {player} Seasonal 3
+      - crates give {player} Reinforce 3
+      - cr givekey {player} Seasonal 3
+      - cr givekey {player} Cave 3
+      - cr givekey {player} Legendary 12
+      - cr givekey {player} Rare 24
+      - pvp addlives {player} 150
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &2&lBuilder Rank&7.
+  Cave:
+    priority: 3
+    commands:
+      - airdrops give {player} 5
+      - crates give {player} Seasonal 5
+      - crates give {player} Reinforce 5
+      - cr givekey {player} Seasonal 5
+      - cr givekey {player} Cave 5
+      - cr givekey {player} Legendary 15
+      - cr givekey {player} Rare 30
+      - pvp addlives {player} 150
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &4&lCave Rank&7.
+  Custom:
+    priority: 2
+    commands:
+      - mcrate give {player} Seasonal 3
+      - airdrops give {player} 12
+      - crates give {player} Seasonal 12
+      - crates give {player} Reinforce 12
+      - cr givekey {player} Seasonal 24
+      - cr givekey {player} Rare 48
+      - addbasetokens {player} 1
+      - addfallertokens {player} 1
+      - pvp addlives {player} 150
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &6&lCustom Rank&7.
+  Partner:
+    priority: 1
+    commands:
+      - coin purchase {player} MANUAL 5000 PARTNER-RECLAIM 0.0
+      - mcrate give {player} Seasonal 2
+      - airdrops give {player} 5
+      - crates give {player} Reinforce 5
+      - crates give {player} Seasonal 5
+      - cr givekey {player} Seasonal 5
+      - cr givekey {player} {player} 15
+      - pvp addlives {player} 150
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &d&lPartner Rank&7.
+  Owner:
+    priority: 0
+    commands:
+      - coin purchase {player} MANUAL 5000 PARTNER-RECLAIM 0.0
+      - mcrate give {player} Seasonal 2
+      - airdrops give {player} 5
+      - crates give {player} Reinforce 5
+      - crates give {player} Seasonal 5
+      - cr givekey {player} Seasonal 5
+      - cr givekey {player} {player} 15
+      - pvp addlives {player} 150
+      - sbc &4&lReclaim &8┃ &f{player} &7has reclaimed their &4&lOwner Rank&7.
+  VIP:
+    priority: 99
+    commands:
+      - airdrop give {player} 5
+      - crates give {player} Reinforce 5
+      - crates give {player} Seasonal 5
+      - crate givekey {player} Cave 10
+      - sbc &4&lReclaim &8┃ &f{player} &7has redeemed their &e&lVIP Subscription &7perks.

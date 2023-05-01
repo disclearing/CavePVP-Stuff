@@ -1,0 +1,495 @@
+items:
+  '1':
+    ==: org.bukkit.inventory.ItemStack
+    type: DROPPER
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §b§lAir Drop
+      lore:
+      - §7Obtainable at §fstore.cavepvp.org§7.
+      - ''
+      - §ePlace this down to designate a location for the drop!
+  '2':
+    ==: org.bukkit.inventory.ItemStack
+    type: BEACON
+    amount: 3
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lReinforce Lootbox
+      lore:
+      - §7Unlocked at §fstore.cavepvp.org
+      - ''
+      - §c§lEND REWARDS
+      - §8┃ §4§lLEGENDARY §4Cave §7Rank
+      - §8┃ §4§lLEGENDARY §6Santa §7Rank
+      - §8┃ §4§lLEGENDARY §dRavine §7Rank
+      - §8┃ §4§lLEGENDARY §2$§a50 §7Buycraft Voucher
+      - §8┃ §4§lLEGENDARY §2$§a25 §7Buycraft Voucher
+      - §8┃ §4§lLEGENDARY §ePremium Battle Pass
+      - §8┃ §5§lRARE §77d §e§lVIP §7Subscription
+      - §8┃ §5§lRARE §72x §c§lPerk §7Keys
+      - §8┃ §5§lRARE §2$§a10 §7Buycraft Voucher
+      - §8┃ §d§lUNCOMMON §73x §b§lAirdrops
+      - §8┃ §d§lUNCOMMON §7Permanent §6§l2022 §7Kit
+      - §8┃ §a§lCOMMON §75x §5§lItem §7Keys
+      - §8┃ §a§lCOMMON §75x §6§l2022 §7Keys
+      - §8┃ §a§lCOMMON §7Random Clickable Kit
+      - §8┃ §a§lCOMMON §56x §7End Portal Frames
+      - §8┃ §a§lCOMMON §616x §7God Apples
+      - §8┃ §a§lCOMMON §e64x §7Golden Apples
+      - ''
+      - §c§lREWARDS
+      - §8┃ §c§lRARE §cFire §7Sword
+      - §8┃ §d§lUNCOMMON §bDiamond §7Helmet
+      - §8┃ §d§lUNCOMMON §bDiamond §7Chestplate
+      - §8┃ §d§lUNCOMMON §bDiamond §7Leggings
+      - §8┃ §d§lUNCOMMON §bDiamond §7Boots
+      - §8┃ §d§lUNCOMMON §bDiamond §7Looting Sword
+      - §8┃ §a§lCOMMON §6Gold §7Helmet
+      - §8┃ §a§lCOMMON §6Gold §7Chestplate
+      - §8┃ §a§lCOMMON §6Gold §7Leggings
+      - §8┃ §a§lCOMMON §6Gold §7Boots
+      - §8┃ §a§lCOMMON §dLeather §7Helmet
+      - §8┃ §a§lCOMMON §dLeather §7Chestplate
+      - §8┃ §a§lCOMMON §dLeather §7Leggings
+      - §8┃ §a§lCOMMON §dLeather §7Boots
+  '3':
+    ==: org.bukkit.inventory.ItemStack
+    type: ENDER_CHEST
+    amount: 3
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §f§ki§6§l 2022 §e§lLootbox §f§ki
+      lore:
+      - §7Unlocked at §fstore.cavepvp.org
+      - ''
+      - §c§lEND REWARDS
+      - §8┃ §4§lLEGENDARY §4Cave §7Rank
+      - §8┃ §4§lLEGENDARY §62022 §7Rank
+      - §8┃ §4§lLEGENDARY §dRavine §7Rank
+      - §8┃ §4§lLEGENDARY §2$§a50 §7Buycraft Voucher
+      - §8┃ §4§lLEGENDARY §2$§a25 §7Buycraft Voucher
+      - §8┃ §4§lLEGENDARY §ePremium Battle Pass
+      - §8┃ §5§lRARE §77d §e§lVIP §7Subscription
+      - §8┃ §5§lRARE §72x §a§lPerk §7Keys
+      - §8┃ §5§lRARE §2$§a10 §7Buycraft Voucher
+      - §8┃ §d§lUNCOMMON §73x §b§lAirdrops
+      - §8┃ §d§lUNCOMMON §7Permanent §6§l2022 §7Kit
+      - §8┃ §a§lCOMMON §75x §5§lItem §7Keys
+      - §8┃ §a§lCOMMON §75x §6§l2022 §7Keys
+      - §8┃ §a§lCOMMON §7Random Clickable Kit
+      - ''
+      - §2§lREWARDS
+      - §8┃ §5§lRARE §62022 §7Bow
+      - §8┃ §5§lRARE §c1x §7Crowbar
+      - §8┃ §d§lUNCOMMON §52x §7End Portal Frames
+      - §8┃ §d§lUNCOMMON §6§l3x §7God Apple
+      - §8┃ §d§lUNCOMMON §d32x §7Ender Pearls
+      - §8┃ §d§lUNCOMMON §632x §7Golden Apple
+      - §8┃ §d§lUNCOMMON §62022 §7Sword
+      - §8┃ §d§lUNCOMMON §62022 §7Helmet
+      - §8┃ §d§lUNCOMMON §62022 §7Chestplate
+      - §8┃ §d§lUNCOMMON §62022 §7Leggings
+      - §8┃ §d§lUNCOMMON §62022 §7Boots
+      - §8┃ §d§lUNCOMMON §62022 §7Pickaxe
+      - §8┃ §a§lCOMMON §d64x §7Random Valuable Blocks
+      - §8┃ §a§lCOMMON §864x §7Gun Powder
+      - §8┃ §a§lCOMMON §e64x §7Glowstone Blocks
+      - §8┃ §a§lCOMMON §464x §7Nether Wart
+      - §8┃ §a§lCOMMON §c64x §7Glistering Melons
+  '4':
+    ==: org.bukkit.inventory.ItemStack
+    type: TRIPWIRE_HOOK
+    amount: 15
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §f§ki§6§l 2022 §e§lKey §f§ki
+      lore:
+      - ''
+      - §7Right click the §6§l2022 §e§lCrate §7to obtain rewards
+  '5':
+    ==: org.bukkit.inventory.ItemStack
+    type: TRIPWIRE_HOOK
+    amount: 15
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §5§lItems Key
+      lore:
+      - ''
+      - §7Right click the §5Items Crate §7to obtain rewards!
+  '6':
+    ==: org.bukkit.inventory.ItemStack
+    type: INK_SACK
+    damage: 1
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lSimplyTrash Key
+      lore:
+      - ''
+      - §7Right click the §4SimplyTrash Crate §7to obtain rewards!
+      enchants:
+        DURABILITY: 1
+  '7':
+    ==: org.bukkit.inventory.ItemStack
+    type: INK_SACK
+    damage: 4
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §9§lDrePvP Key
+      lore:
+      - ''
+      - §7Right click the §9DrePvP Crate §7to obtain rewards!
+      enchants:
+        DURABILITY: 1
+  '8':
+    ==: org.bukkit.inventory.ItemStack
+    type: INK_SACK
+    damage: 10
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §a§lDylan Key
+      lore:
+      - ''
+      - §7Right click the §aDylan Crate §7to obtain rewards!
+      enchants:
+        DURABILITY: 1
+  '9':
+    ==: org.bukkit.inventory.ItemStack
+    type: TRIPWIRE_HOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §3§lHeaded Key
+      lore:
+      - §7Right click a §3Headed Crate §7to receive rewards!
+      enchants:
+        DURABILITY: 1
+  '10':
+    ==: org.bukkit.inventory.ItemStack
+    type: INK_SACK
+    damage: 1
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c§liMakeMcVids Key
+      lore:
+      - ''
+      - §7Right click the §ciMakeMcVids Crate §7to obtain rewards!
+      enchants:
+        DURABILITY: 1
+  '11':
+    ==: org.bukkit.inventory.ItemStack
+    type: DIAMOND_SWORD
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c§l§nCarepackage§7 Sword
+      enchants:
+        DAMAGE_ALL: 2
+        DAMAGE_UNDEAD: 4
+        DURABILITY: 4
+        DAMAGE_ARTHROPODS: 5
+        LOOT_BONUS_MOBS: 4
+  '12':
+    ==: org.bukkit.inventory.ItemStack
+    type: DIAMOND_HELMET
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c§l§nCarepackage§7 Helmet
+      lore:
+      - §cHellForged IV
+      - §cImplants V
+      - §cMermaid III
+      - §cRecover I
+      - §cFireResistance I
+      - §cGreed I
+      enchants:
+        PROTECTION_ENVIRONMENTAL: 2
+        DURABILITY: 4
+        PROTECTION_EXPLOSIONS: 4
+  '13':
+    ==: org.bukkit.inventory.ItemStack
+    type: DIAMOND_CHESTPLATE
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c§l§nCarepackage§7 Chestplate
+      lore:
+      - §cHellForged IV
+      - §cRecover I
+      - §cFireResistance I
+      - §cFury I
+      - §cSwift I
+      enchants:
+        PROTECTION_ENVIRONMENTAL: 2
+        DURABILITY: 4
+        PROTECTION_EXPLOSIONS: 4
+  '14':
+    ==: org.bukkit.inventory.ItemStack
+    type: DIAMOND_LEGGINGS
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c§l§nCarepackage§7 Leggings
+      lore:
+      - §cHellForged IV
+      - §cRecover I
+      - §cFireResistance I
+      enchants:
+        PROTECTION_ENVIRONMENTAL: 2
+        DURABILITY: 4
+        PROTECTION_EXPLOSIONS: 4
+  '15':
+    ==: org.bukkit.inventory.ItemStack
+    type: DIAMOND_BOOTS
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §c§l§nCarepackage§7 Boots
+      lore:
+      - §cSpeed II
+      - §cHellForged IV
+      - §cRecover I
+      - §cFireResistance I
+      enchants:
+        PROTECTION_ENVIRONMENTAL: 2
+        DURABILITY: 4
+        PROTECTION_FALL: 4
+        PROTECTION_EXPLOSIONS: 4
+  '16':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cGlowing IV'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§a§lCommon'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '17':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cFireResistance I'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§a§lCommon'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '18':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cMermaid III'
+      - '§4§l┃ §fApplicable to: §cHelmet'
+      - '§4§l┃ §fLevel: §c§a§lCommon'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '19':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cImplants V'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§5§lRare'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '20':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cHellForged IV'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§5§lRare'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '21':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cSpeed II'
+      - '§4§l┃ §fApplicable to: §cBoots'
+      - '§4§l┃ §fLevel: §c§5§lRare'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '22':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cFury I'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§6§lLegendary'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '23':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cInvisibility I'
+      - '§4§l┃ §fApplicable to: §cChestplate'
+      - '§4§l┃ §fLevel: §c§6§lLegendary'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '24':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cGreed I'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§6§lLegendary'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '25':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cFarmer I'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§d§lMythical'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '26':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cSwift I'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§d§lMythical'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '27':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §4§lEnchant Book
+      lore:
+      - '§4§l┃ §fEnchant: §cResistor I'
+      - '§4§l┃ §fApplicable to: §cHelmet, Chestplate, Leggings, Boots'
+      - '§4§l┃ §fLevel: §c§d§lMythical'
+      - ''
+      - §cDouble Click this book on the armor you want to put it on!
+  '28':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fRavine §7kit.
+  '29':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fUltimateArcher §7kit.
+  '30':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fiMake §7kit.
+  '31':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fDiamond §7kit.
+  '32':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fBard §7kit.
+  '33':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fDylan §7kit.
+  '34':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fArcher §7kit.
+  '35':
+    ==: org.bukkit.inventory.ItemStack
+    type: BOOK
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §6§lClickable Kit
+      lore:
+      - §7Right Click to use the §fUltimateMiner §7kit.

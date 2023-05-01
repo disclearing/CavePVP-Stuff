@@ -1,0 +1,59 @@
+From 01d6d23867ee5142a699754ebd258aa1d988b313 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 18 Jul 2017 01:13:40 +0100
+Subject: [PATCH] Remove CraftScheduler async task debugger
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+index 361d39663..ae39ee8a4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
++++ b/src/main/java/org/bukkit/craftbukkit/scheduler/CraftScheduler.java
+@@ -75,9 +75,11 @@ public class CraftScheduler implements BukkitScheduler {
+     private final ConcurrentHashMap<Integer, CraftTask> runners = new ConcurrentHashMap<Integer, CraftTask>();
+     private volatile int currentTick = -1;
+     private final Executor executor = ThreadingManager.getCommonThreadPool(); // Poweruser
++    // MineHQ start - nope
+     private CraftAsyncDebugger debugHead = new CraftAsyncDebugger(-1, null, null) {@Override StringBuilder debugTo(StringBuilder string) {return string;}};
+     private CraftAsyncDebugger debugTail = debugHead;
+     private static final int RECENT_TICKS;
++    // MineHQ end
+ 
+     static {
+         RECENT_TICKS = 30;
+@@ -362,7 +364,7 @@ public class CraftScheduler implements BukkitScheduler {
+                 }
+                 parsePending();
+             } else {
+-                debugTail = debugTail.setNext(new CraftAsyncDebugger(currentTick + RECENT_TICKS, task.getOwner(), task.getTaskClass()));
++                // debugTail = debugTail.setNext(new CraftAsyncDebugger(currentTick + RECENT_TICKS, task.getOwner(), task.getTaskClass())); // MineHQ - nope
+                 executor.execute(task);
+                 // We don't need to parse pending
+                 // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
+@@ -377,7 +379,7 @@ public class CraftScheduler implements BukkitScheduler {
+         }
+         pending.addAll(temp);
+         temp.clear();
+-        debugHead = debugHead.getNextHead(currentTick);
++        // debugHead = debugHead.getNextHead(currentTick); // MineHQ - nope
+     }
+ 
+     private void addTask(final CraftTask task) {
+@@ -434,10 +436,15 @@ public class CraftScheduler implements BukkitScheduler {
+ 
+     @Override
+     public String toString() {
++        // MineHQ start
++        return "";
++        /*
+         int debugTick = currentTick;
+         StringBuilder string = new StringBuilder("Recent tasks from ").append(debugTick - RECENT_TICKS).append('-').append(debugTick).append('{');
+         debugHead.debugTo(string);
+         return string.append('}').toString();
++        */
++        // MineHQ end
+     }
+ 
+     @Deprecated
+-- 
+2.13.3
+

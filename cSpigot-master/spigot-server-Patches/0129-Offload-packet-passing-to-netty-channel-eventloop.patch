@@ -1,0 +1,162 @@
+From 406f92634ac7dd722529a93eb450c07a2a196351 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Tue, 29 Mar 2016 15:48:18 +0200
+Subject: [PATCH] Offload packet passing to netty channel eventloop
+
+
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index b35650ee0..474afb52a 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -28,6 +28,17 @@ import org.spigotmc.SpigotCompressor;
+ import org.spigotmc.SpigotDecompressor;
+ // Spigot end
+ 
++// Poweruser start
++import java.util.Collections;
++import java.util.concurrent.ConcurrentLinkedQueue;
++import java.util.concurrent.TimeUnit;
++import java.util.Collection;
++import java.util.HashMap;
++import java.util.Map;
++
++import net.minecraft.util.io.netty.channel.EventLoop;
++// Poweruser end
++
+ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+     private static final Logger i = LogManager.getLogger();
+@@ -70,6 +81,35 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+     public static final GenericFutureListener[] emptyListenerArray = new GenericFutureListener[0]; // Poweruser
+ 
++    // Poweruser start
++    private static final Map<EventLoop, PacketSender> senderTasks = Collections.synchronizedMap(new HashMap<EventLoop, NetworkManager.PacketSender>());
++    private PacketSender assignedPacketSender;
++
++    public static class PacketSender implements Runnable {
++
++        private Queue<QueuedPacket> commonPacketQueue = new ConcurrentLinkedQueue<QueuedPacket>();
++
++        private void queuePacket(QueuedPacket queuedPacket) {
++            this.commonPacketQueue.add(queuedPacket);
++        }
++
++        private void queuePackets(Collection<QueuedPacket> collection) {
++            this.commonPacketQueue.addAll(collection);
++        }
++
++        @Override
++        public void run() {
++            QueuedPacket packet = null;
++            while((packet = this.commonPacketQueue.poll()) != null) {
++                NetworkManager manager = QueuedPacket.getNetworkManager(packet);
++                if(manager.isConnected()) {
++                    manager.b(QueuedPacket.a(packet), QueuedPacket.b(packet));
++                }
++            }
++        }
++    }
++    // Poweruser end
++
+     public NetworkManager(boolean flag) {
+         this.j = flag;
+     }
+@@ -82,6 +122,18 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         this.preparing = false;
+         // Spigot End
+         this.a(EnumProtocol.HANDSHAKING);
++        // Poweruser start
++        EventLoop eventLoop = this.m.eventLoop();
++        PacketSender sender;
++        if(senderTasks.containsKey(eventLoop)) {
++            sender = senderTasks.get(eventLoop);
++        } else {
++            sender = new NetworkManager.PacketSender();
++            senderTasks.put(eventLoop, sender);
++            eventLoop.scheduleAtFixedRate(sender, 5L, 5L, TimeUnit.MILLISECONDS);
++        }
++        this.assignedPacketSender = sender;
++        // Poweruser end
+     }
+ 
+     public void a(EnumProtocol enumprotocol) {
+@@ -126,12 +178,26 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     }
+ 
+     public void handle(Packet packet, GenericFutureListener... agenericfuturelistener) {
++        /*
+         if (this.m != null && this.m.isOpen()) {
+             this.i();
+             this.b(packet, agenericfuturelistener);
+         } else {
+             this.l.add(new QueuedPacket(packet, agenericfuturelistener));
+         }
++        */
++        // Poweruser start
++        QueuedPacket queuedpacket = new QueuedPacket(this, packet, agenericfuturelistener);
++        if(this.assignedPacketSender != null && this.isConnected()) {
++            if(!this.l.isEmpty()) {
++                this.assignedPacketSender.queuePackets(this.l);
++                this.l.clear();
++            }
++            this.assignedPacketSender.queuePacket(queuedpacket);
++        } else {
++            this.l.add(queuedpacket);
++        }
++        // Poweruser end
+     }
+ 
+     private void b(Packet packet, GenericFutureListener[] agenericfuturelistener) {
+@@ -168,7 +234,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     }
+ 
+     public void a() {
+-        this.i();
++        //this.i(); // Poweruser - done through PacketSender
+         EnumProtocol enumprotocol = (EnumProtocol) this.m.attr(d).get();
+ 
+         if (this.p != enumprotocol) {
+@@ -195,8 +261,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+ 
+             this.o.a();
+         }
+-
+-        this.m.flush();
++        //this.m.flush(); // Poweruser - done through PacketSender
+     }
+ 
+     public SocketAddress getSocketAddress() {
+@@ -204,6 +269,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     }
+ 
+     public void close(IChatBaseComponent ichatbasecomponent) {
++        this.assignedPacketSender = null; // Poweruser
+         // Spigot Start
+         this.preparing = false;
+         this.k.clear(); // Spigot Update - 20140921a
+diff --git a/src/main/java/net/minecraft/server/QueuedPacket.java b/src/main/java/net/minecraft/server/QueuedPacket.java
+index fdebf9dd3..06480afef 100644
+--- a/src/main/java/net/minecraft/server/QueuedPacket.java
++++ b/src/main/java/net/minecraft/server/QueuedPacket.java
+@@ -8,7 +8,16 @@ class QueuedPacket {
+     private final Packet a;
+     private final GenericFutureListener[] b;
+ 
+-    public QueuedPacket(Packet packet, GenericFutureListener... agenericfuturelistener) {
++    // Poweruser start
++    private final NetworkManager manager;
++
++    static NetworkManager getNetworkManager(QueuedPacket queuedpacket) {
++        return queuedpacket.manager;
++    }
++
++    public QueuedPacket(NetworkManager manager, Packet packet, GenericFutureListener... agenericfuturelistener) {
++        this.manager = manager;
++    // Poweruser end
+         this.a = packet;
+         this.b = agenericfuturelistener;
+     }
+-- 
+2.13.3
+

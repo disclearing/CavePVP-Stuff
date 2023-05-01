@@ -1,0 +1,5 @@
+name: MonthlyCrates
+version: 1.0-SNAPSHOT
+author: SimplyTrash
+main: net.splodgebox.monthlycrates.Core
+depend: [ Proton ]

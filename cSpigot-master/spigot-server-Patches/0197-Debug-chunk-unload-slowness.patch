@@ -1,0 +1,284 @@
+From 5816498c7b1d9d42998cfc6ce0fb70d0db41dac4 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sun, 23 Jul 2017 18:41:03 +1000
+Subject: [PATCH] Debug chunk unload slowness
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 5a061b274..0eb4daea1 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -351,33 +351,58 @@ public class ChunkProviderServer implements IChunkProvider {
+         }
+     }
+ 
++
+     public boolean unloadChunks() {
+         if (!this.world.savingDisabled) {
++            int chunksSize = this.chunks.size();
++            int unloadSize = this.unloadQueue.size();
++            int unloaded = 0;
++            long start = System.currentTimeMillis();
++            long nanoStart = System.nanoTime();
++            long unloadQueuePopTotal = 0, chunksGet = 0, callEvent = 0, removeEntities = 0, saveChunk = 0, saveChunkNOP = 0, chunkRemove = 0, updateNeighbourCounts = 0;
+             // CraftBukkit start
+             Server server = this.world.getServer();
+-            for (int i = 0; i < 100 && !this.unloadQueue.isEmpty(); i++) {
++            for (int i = 0; i < 100 && !this.unloadQueue.isEmpty() && (System.currentTimeMillis() - start) < 150; i++) {
++                nanoStart = System.nanoTime();
+                 long chunkcoordinates = this.unloadQueue.popFirst();
++                unloadQueuePopTotal += System.nanoTime() - nanoStart;
+                 // MineHQ start
+                 int locX = LongHash.msw(chunkcoordinates);
+                 int locZ = LongHash.lsw(chunkcoordinates);
++                nanoStart = System.nanoTime();
+                 Chunk chunk = this.chunks.get(locX, locZ);
++                chunksGet += System.nanoTime() - nanoStart;
+                 // MineHQ end
+                 if (chunk == null) continue;
+ 
+                 ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk);
++                nanoStart = System.nanoTime();
+                 server.getPluginManager().callEvent(event);
++                callEvent += System.nanoTime() - nanoStart;
+                 if (!event.isCancelled()) {
+                     if (chunk != null) {
++                        this.world.timings.doChunkUnloadSave.startTiming();
++                        nanoStart = System.nanoTime();
+                         chunk.removeEntities();
++                        removeEntities += System.nanoTime() - nanoStart;
++                        nanoStart = System.nanoTime();
+                         this.saveChunk(chunk);
++                        saveChunk += System.nanoTime() - nanoStart;
++                        nanoStart = System.nanoTime();
+                         this.saveChunkNOP(chunk);
++                        saveChunkNOP += System.nanoTime() - nanoStart;
++                        nanoStart = System.nanoTime();
+                         this.chunks.remove(locX, locZ); // CraftBukkit // MineHQ
++                        chunkRemove += System.nanoTime() - nanoStart;
++                        unloaded++;
++                        this.world.timings.doChunkUnloadSave.stopTiming();
+                     }
+ 
+                     // this.unloadQueue.remove(olong);
+                     // this.chunks.remove(olong.longValue());
+ 
+                     // Update neighbor counts
++                    nanoStart = System.nanoTime();
+                     for (int x = -2; x < 3; x++) {
+                         for (int z = -2; z < 3; z++) {
+                             if (x == 0 && z == 0) {
+@@ -391,13 +416,35 @@ public class ChunkProviderServer implements IChunkProvider {
+                             }
+                         }
+                     }
++                    updateNeighbourCounts += System.nanoTime() - nanoStart;
+                 }
+             }
+             // CraftBukkit end
++            long timeTaken = System.currentTimeMillis() - start;
++            if (timeTaken > 75) {
++                MinecraftServer.getLogger().warn("ChunkProviderServer.unloadChunks took too long! " + timeTaken + "ms!");
++                MinecraftServer.getLogger().warn("World name: " + this.world.worldData.getName());
++                MinecraftServer.getLogger().warn("chunks.size() = " + chunksSize);
++                MinecraftServer.getLogger().warn("unloadQueue.size() = " + unloadSize);
++                MinecraftServer.getLogger().warn("chunks unloaded this run: " + unloaded);
++                MinecraftServer.getLogger().warn("unloadQueuePopTotal: " + unloadQueuePopTotal);
++                MinecraftServer.getLogger().warn("chunksGet: " + chunksGet);
++                MinecraftServer.getLogger().warn("callEvent: " + callEvent);
++                MinecraftServer.getLogger().warn("removeEntities: " + removeEntities);
++                MinecraftServer.getLogger().warn("saveChunk: " + saveChunk);
++                MinecraftServer.getLogger().warn("saveChunkNOP: " + saveChunkNOP);
++                MinecraftServer.getLogger().warn("chunkRemove: " + chunkRemove);
++                MinecraftServer.getLogger().warn("updateNeighbourCounts: " + updateNeighbourCounts);
++                this.world.printTimings();
++                MinecraftServer.getLogger().warn("world.N.size(): " + world.N.size());
++                MinecraftServer.getLogger().warn("world.V.size(): " + world.V.size());
++            }
+ 
+             if (this.f != null) {
+                 this.f.a();
+             }
++
++            this.world.clearTimings();
+         }
+ 
+         return this.chunkProvider.unloadChunks();
+diff --git a/src/main/java/net/minecraft/server/ChunkRegionLoader.java b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+index 7a27c6c3d..5a1ed2c94 100644
+--- a/src/main/java/net/minecraft/server/ChunkRegionLoader.java
++++ b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+@@ -126,6 +126,7 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+     }
+ 
+     public void a(World world, Chunk chunk) {
++        this.worldInQuestion = world;
+         // CraftBukkit start - "handle" exception
+         try {
+             world.G();
+@@ -144,18 +145,24 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+         } catch (Exception exception) {
+             exception.printStackTrace();
+         }
++        this.worldInQuestion = null;
+     }
+ 
++    private World worldInQuestion;
+     protected void a(ChunkCoordIntPair chunkcoordintpair, NBTTagCompound nbttagcompound) {
+         Object object = this.d;
+-
++        this.start = System.nanoTime();
+         synchronized (this.d) {
++            worldInQuestion.obtainLock += differenceAndReset();
+             // Spigot start
+             if (this.pendingSaves.put(chunkcoordintpair, new PendingChunkToSave(chunkcoordintpair, nbttagcompound)) != null) {
++                worldInQuestion.pendingSavesPut += differenceAndReset();
+                 return;
+             }
++            worldInQuestion.pendingSavesPut += differenceAndReset();
+             // Spigot end
+             FileIOThread.a.a(this);
++            worldInQuestion.fileIOThreadAddition += differenceAndReset();
+         }
+     }
+ 
+@@ -202,7 +209,15 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+         }
+     }
+ 
++    private long start;
++    private long differenceAndReset() {
++        long difference = System.nanoTime() - start;
++        start = System.nanoTime();
++        return difference;
++    }
++
+     private void a(Chunk chunk, World world, NBTTagCompound nbttagcompound) {
++        start = System.nanoTime();
+         nbttagcompound.setByte("V", (byte) 1);
+         nbttagcompound.setInt("xPos", chunk.locX);
+         nbttagcompound.setInt("zPos", chunk.locZ);
+@@ -211,6 +226,7 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+         nbttagcompound.setBoolean("TerrainPopulated", chunk.done);
+         nbttagcompound.setBoolean("LightPopulated", chunk.lit);
+         nbttagcompound.setLong("InhabitedTime", chunk.s);
++        world.writeStartNBT += differenceAndReset();
+         ChunkSection[] achunksection = chunk.getSections();
+         NBTTagList nbttaglist = new NBTTagList();
+         boolean flag = !world.worldProvider.g;
+@@ -246,7 +262,9 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+         }
+ 
+         nbttagcompound.set("Sections", nbttaglist);
++        world.writeSections += differenceAndReset();
+         nbttagcompound.setByteArray("Biomes", chunk.m());
++        world.writeBiomes += differenceAndReset();
+         chunk.o = false;
+         NBTTagList nbttaglist1 = new NBTTagList();
+ 
+@@ -267,6 +285,7 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+         }
+ 
+         nbttagcompound.set("Entities", nbttaglist1);
++        world.writeEntities += differenceAndReset();
+         NBTTagList nbttaglist2 = new NBTTagList();
+ 
+         iterator = chunk.tileEntities.values().iterator();
+@@ -280,6 +299,7 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+         }
+ 
+         nbttagcompound.set("TileEntities", nbttaglist2);
++        world.writeTileEntities += differenceAndReset();
+         List list = world.a(chunk, false);
+ 
+         if (list != null) {
+@@ -302,6 +322,7 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+ 
+             nbttagcompound.set("TileTicks", nbttaglist3);
+         }
++        world.writeTileTicks += differenceAndReset();
+     }
+ 
+     private Chunk a(World world, NBTTagCompound nbttagcompound) {
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 1f1697f12..539a3ef73 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -3478,4 +3478,32 @@ public abstract class World implements IBlockAccess {
+             iworldaccess.b();
+         }
+     }
++
++    // MineHQ start - chunk unload queue slowness
++    public long obtainLock, pendingSavesPut, fileIOThreadAddition, writeStartNBT, writeSections, writeBiomes, writeEntities, writeTileEntities, writeTileTicks;
++    public void printTimings() {
++        MinecraftServer.getLogger().warn("Obtain lock: " + obtainLock);
++        MinecraftServer.getLogger().warn("Pending saves put: " + pendingSavesPut);
++        MinecraftServer.getLogger().warn("File IO thread addition: " + fileIOThreadAddition);
++        MinecraftServer.getLogger().warn("Write start NBT: " + writeStartNBT);
++        MinecraftServer.getLogger().warn("Write sections: " + writeSections);
++        MinecraftServer.getLogger().warn("Write biomes: " + writeBiomes);
++        MinecraftServer.getLogger().warn("Write entities: " + writeEntities);
++        MinecraftServer.getLogger().warn("Write tile entities: " + writeTileEntities);
++        MinecraftServer.getLogger().warn("Write tile ticks: " + writeTileTicks);
++        
++    }
++
++    public void clearTimings() {
++        this.obtainLock = 0;
++        this.pendingSavesPut = 0;
++        this.fileIOThreadAddition = 0;
++        this.writeStartNBT = 0;
++        this.writeSections = 0;
++        this.writeBiomes = 0;
++        this.writeEntities = 0;
++        this.writeTileEntities = 0;
++        this.writeTileTicks = 0;
++    }
++    // MineHQ end
+ }
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 264358470..b79e4ba78 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -32,7 +32,7 @@ public class WorldServer extends World {
+     private final MinecraftServer server;
+     public EntityTracker tracker; // CraftBukkit - private final -> public
+     private final PlayerChunkMap manager;
+-    private HashTreeSet<NextTickListEntry> N; // PaperSpigot
++    public HashTreeSet<NextTickListEntry> N; // PaperSpigot
+     public ChunkProviderServer chunkProviderServer;
+     public boolean savingDisabled;
+     private boolean O;
+@@ -42,7 +42,7 @@ public class WorldServer extends World {
+     private BlockActionDataList[] S = new BlockActionDataList[] { new BlockActionDataList((BananaAPI) null), new BlockActionDataList((BananaAPI) null)};
+     private int T;
+     private static final StructurePieceTreasure[] U = new StructurePieceTreasure[] { new StructurePieceTreasure(Items.STICK, 0, 1, 3, 10), new StructurePieceTreasure(Item.getItemOf(Blocks.WOOD), 0, 1, 3, 10), new StructurePieceTreasure(Item.getItemOf(Blocks.LOG), 0, 1, 3, 10), new StructurePieceTreasure(Items.STONE_AXE, 0, 1, 1, 3), new StructurePieceTreasure(Items.WOOD_AXE, 0, 1, 1, 5), new StructurePieceTreasure(Items.STONE_PICKAXE, 0, 1, 1, 3), new StructurePieceTreasure(Items.WOOD_PICKAXE, 0, 1, 1, 5), new StructurePieceTreasure(Items.APPLE, 0, 2, 3, 5), new StructurePieceTreasure(Items.BREAD, 0, 2, 3, 3), new StructurePieceTreasure(Item.getItemOf(Blocks.LOG2), 0, 1, 3, 10)};
+-    private List V = new ArrayList();
++    public List V = new ArrayList();
+     private IntHashMap entitiesById;
+ 
+     // CraftBukkit start
+diff --git a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+index e34e6bb37..38a930f8b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
++++ b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+@@ -138,6 +138,7 @@ public class SpigotTimings {
+     public static class WorldTimingsHandler {
+         public final CustomTimingsHandler mobSpawn;
+         public final CustomTimingsHandler doChunkUnload;
++        public final CustomTimingsHandler doChunkUnloadSave;
+         public final CustomTimingsHandler doPortalForcer;
+         public final CustomTimingsHandler doTickPending;
+         public final CustomTimingsHandler doTickTiles;
+@@ -175,6 +176,7 @@ public class SpigotTimings {
+ 
+             mobSpawn = new CustomTimingsHandler("** " + name + "mobSpawn");
+             doChunkUnload = new CustomTimingsHandler("** " + name + "doChunkUnload");
++            doChunkUnloadSave = new CustomTimingsHandler("** " + name + "doChunkUnload_save");
+             doTickPending = new CustomTimingsHandler("** " + name + "doTickPending");
+             doTickTiles = new CustomTimingsHandler("** " + name + "doTickTiles");
+             doTickTiles_buildList = new CustomTimingsHandler("** " + name + "doTickTiles_buildList");
+-- 
+2.13.3
+

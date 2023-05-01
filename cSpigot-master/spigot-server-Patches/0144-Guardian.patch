@@ -1,0 +1,2069 @@
+From 0e0e835c91378cf44b332528884a377b0f0b1da0 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Sun, 13 Nov 2016 10:57:11 -0200
+Subject: [PATCH] Guardian
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index aebb9e09f..101696f13 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -1,38 +1,38 @@
+ package net.minecraft.server;
+ 
+-import java.util.List;
+-import java.util.Random;
+-import java.util.UUID;
+-import java.util.concurrent.Callable;
+-
+-// CraftBukkit start
+ import org.bukkit.Bukkit;
+ import org.bukkit.Location;
+ import org.bukkit.Server;
+ import org.bukkit.TravelAgent;
+ import org.bukkit.block.BlockFace;
++import org.bukkit.craftbukkit.CraftWorld;
++import org.bukkit.craftbukkit.SpigotTimings;
++import org.bukkit.craftbukkit.entity.CraftEntity;
++import org.bukkit.craftbukkit.entity.CraftPlayer;
++import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.entity.Hanging;
+ import org.bukkit.entity.LivingEntity;
+ import org.bukkit.entity.Painting;
+ import org.bukkit.entity.Vehicle;
+-import org.spigotmc.CustomTimingsHandler; // Spigot
+ import org.bukkit.event.entity.EntityCombustByEntityEvent;
++import org.bukkit.event.entity.EntityCombustEvent;
++import org.bukkit.event.entity.EntityPortalEvent;
+ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
+ import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
+ import org.bukkit.event.vehicle.VehicleEnterEvent;
+ import org.bukkit.event.vehicle.VehicleExitEvent;
+-import org.bukkit.craftbukkit.CraftWorld;
+-import org.bukkit.craftbukkit.entity.CraftEntity;
+-import org.bukkit.craftbukkit.entity.CraftPlayer;
+-import org.bukkit.craftbukkit.event.CraftEventFactory;
+-import org.bukkit.event.entity.EntityCombustEvent;
+-import org.bukkit.event.entity.EntityPortalEvent;
+ import org.bukkit.plugin.PluginManager;
+-// CraftBukkit end
++import org.spigotmc.CustomTimingsHandler;
++
++import java.util.List;
++import java.util.Random;
++import java.util.UUID;
++import java.util.concurrent.Callable;
+ 
++// CraftBukkit start
++// CraftBukkit end
+ // Poweruser start
+-import org.bukkit.craftbukkit.SpigotTimings;
+ // Poweruser end
+ 
+ public abstract class Entity {
+diff --git a/src/main/java/net/minecraft/server/EntityHuman.java b/src/main/java/net/minecraft/server/EntityHuman.java
+index f30a2cb63..dc06cbd7a 100644
+--- a/src/main/java/net/minecraft/server/EntityHuman.java
++++ b/src/main/java/net/minecraft/server/EntityHuman.java
+@@ -982,6 +982,13 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+                                 attackedPlayer.playerConnection.sendPacket(new PacketPlayOutEntityVelocity(attackedPlayer));
+                             }
+ 
++                            // Guardian start
++                            attackedPlayer.playerConnection.lastMotionTick = MinecraftServer.currentTick;
++                            attackedPlayer.playerConnection.lastHitMotionX = entity.motX;
++                            attackedPlayer.playerConnection.lastHitMotionY = entity.motY;
++                            attackedPlayer.playerConnection.lastHitMotionZ = entity.motZ;
++                            // Guardian end
++
+                             attackedPlayer.velocityChanged = false;
+                             attackedPlayer.motX = victimMotX;
+                             attackedPlayer.motY = victimMotY;
+@@ -1307,6 +1314,7 @@ public abstract class EntityHuman extends EntityLiving implements ICommandListen
+     public void bj() {
+         super.bj();
+         this.a(StatisticList.r, 1);
++
+         if (this.isSprinting()) {
+             this.applyExhaustion(world.spigotConfig.sprintExhaustion); // Spigot - Change to use configurable value
+         } else {
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 10b745a1a..ae28a8053 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -10,6 +10,8 @@ import java.util.UUID;
+ // CraftBukkit start
+ import java.util.ArrayList;
+ import com.google.common.base.Function;
++
++import org.bukkit.Bukkit;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.event.entity.EntityDamageEvent;
+ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+@@ -17,12 +19,13 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
+ // CraftBukkit end
+ 
+ import org.bukkit.craftbukkit.SpigotTimings; // Spigot
++import org.bukkit.event.player.PlayerAttackEvent;
+ import org.spigotmc.ActivationRange;
+ 
+ public abstract class EntityLiving extends Entity {
+ 
+     private static final UUID b = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
+-    private static final AttributeModifier c = (new AttributeModifier(b, "Sprinting speed boost", 0.30000001192092896D, 2)).a(false);
++    public static final AttributeModifier c = (new AttributeModifier(b, "Sprinting speed boost", 0.30000001192092896D, 2)).a(false); // Guardian: private -> public
+     private AttributeMapBase d;
+     public CombatTracker combatTracker = new CombatTracker(this); // CraftBukkit - private -> public, remove final
+     public final HashMap effects = new HashMap(); // CraftBukkit - protected -> public
+@@ -650,6 +653,12 @@ public abstract class EntityLiving extends Entity {
+     }
+ 
+     public boolean damageEntity(DamageSource damagesource, float f) {
++        // Guardian start
++        if (damagesource.getEntity() instanceof EntityPlayer) {
++            Bukkit.getPluginManager().callEvent(new PlayerAttackEvent(((EntityPlayer) damagesource.getEntity()).getBukkitEntity(), getBukkitEntity()));
++        }
++        // Guardian end
++
+         if (this.isInvulnerable()) {
+             return false;
+         } else if (this.world.isStatic) {
+@@ -670,6 +679,14 @@ public abstract class EntityLiving extends Entity {
+                 this.aF = 1.5F;
+                 boolean flag = true;
+ 
++                // Guardian start
++                if ((this instanceof EntityPlayer)) {
++                    ((EntityPlayer)this).playerConnection.speedPackets = 0;
++                    ((EntityPlayer)this).playerConnection.notHitPackets = 0;
++                    ((EntityPlayer)this).playerConnection.lastHit = System.currentTimeMillis();
++                }
++                // Guardian end
++
+                 if ((float) this.noDamageTicks > (float) this.maxNoDamageTicks / 2.0F) {
+                     if (f <= this.lastDamage) {
+                         return false;
+@@ -697,6 +714,17 @@ public abstract class EntityLiving extends Entity {
+                     this.activatedTick = MinecraftServer.currentTick + (this.maxNoDamageTicks * 2);
+                 }
+ 
++                // Guardian start
++                if ((damagesource.getEntity() instanceof EntityPlayer)) {
++                    EntityPlayer player = (EntityPlayer)damagesource.getEntity();
++
++                    long now = System.currentTimeMillis();
++                    if ((this instanceof EntityPlayer)) {
++                        player.playerConnection.lastAttackPlayerTime = now;
++                    }
++                }
++                // Guardian end
++
+                 this.az = 0.0F;
+                 Entity entity = damagesource.getEntity();
+ 
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index bf029c802..d331be67e 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -471,6 +471,12 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+                     }
+                 }
+ 
++                // Guardian start
++                if (damagesource.isExplosion()) {
++                    this.playerConnection.lastHitByExplosion = System.currentTimeMillis();
++                }
++                // Guardian end
++
+                 return super.damageEntity(damagesource, f);
+             }
+         }
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 5601696ca..ed26b9917 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -265,7 +265,18 @@ public class EntityTrackerEntry {
+                     ((EntityPlayer) this.tracker).getBukkitEntity().injectScaledMaxHealth(set, false);
+                 }
+                 // CraftBukkit end
+-                this.broadcastIncludingSelf(new PacketPlayOutUpdateAttributes(this.tracker.getId(), set));
++
++                // Guardian start
++                if (this.tracker instanceof EntityPlayer) {
++                    for (AttributeInstance attr : (Collection<AttributeInstance>) set) {
++                        if (attr.getAttribute() == GenericAttributes.d) {
++                            ((EntityPlayer)this.tracker).playerConnection.updateMovementSpeed();
++                        }
++                    }
++                }
++                // Guardian end
++
++                this.broadcastIncludingSelf(new PacketPlayOutUpdateAttributes(this.tracker.getId(), set)); // CraftBukkit
+             }
+ 
+             set.clear();
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index 6e69b7326..9d3903d15 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.server;
+ 
+ import java.net.SocketAddress;
++import java.util.ArrayList;
++import java.util.List;
+ import java.util.Queue;
+ import javax.crypto.SecretKey;
+ 
+@@ -8,7 +10,6 @@ import net.minecraft.util.com.google.common.collect.Queues;
+ import net.minecraft.util.com.google.common.util.concurrent.ThreadFactoryBuilder;
+ import net.minecraft.util.com.mojang.authlib.properties.Property;
+ import net.minecraft.util.io.netty.channel.Channel;
+-import net.minecraft.util.io.netty.channel.ChannelFutureListener;
+ import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
+ import net.minecraft.util.io.netty.channel.SimpleChannelInboundHandler;
+ import net.minecraft.util.io.netty.channel.local.LocalChannel;
+@@ -25,8 +26,15 @@ import org.apache.logging.log4j.MarkerManager;
+ // Spigot start
+ import com.google.common.collect.ImmutableSet;
+ import org.spigotmc.SpigotCompressor;
++import org.spigotmc.SpigotConfig;
+ import org.spigotmc.SpigotDecompressor;
+ // Spigot end
++// Guardian start
++import org.bukkit.event.player.GuardianEvent;
++import org.bukkit.Bukkit;
++import net.minecraft.util.com.google.common.base.Joiner;
++import java.util.Iterator;
++// Guardian end
+ 
+ // Poweruser start
+ import org.spigotmc.CustomTimingsHandler;
+@@ -83,10 +91,40 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     }
+     // Poweruser end
+ 
++    // Guardian start
++    private Packet[] packets = new Packet[10];
++    private long[] limitTimes = new long[12];
++    public long lastTickNetworkProcessed = MinecraftServer.currentTick;
++    public long ticksSinceLastPacket = -1L;
++    private int numOfKillAuraB = 0;
++    private List<Long> numOfKillAuraBLogs = new ArrayList<Long>();
++    private int numOfT = 0;
++    private List<Long> numOfKillAuraTLogs = new ArrayList<Long>();
++    private long lastKillAuraKTick = MinecraftServer.currentTick;
++    public long currentTime = System.currentTimeMillis();
++    public long lastVehicleTime = -1L;
++    public int numOfFlyingPacketsInARow = 0;
++    // Guardian end
++
+     public static final GenericFutureListener[] emptyListenerArray = new GenericFutureListener[0]; // Poweruser
+ 
+     public NetworkManager(boolean flag) {
+         this.j = flag;
++
++        // Guardian start
++        this.limitTimes[0] = 4000L;
++        this.limitTimes[1] = 4000L;
++        this.limitTimes[2] = 4000L;
++        this.limitTimes[3] = 4000L;
++        this.limitTimes[4] = 5000L;
++        this.limitTimes[5] = 6000L;
++        this.limitTimes[6] = 7000L;
++        this.limitTimes[7] = 7000L;
++        this.limitTimes[8] = 7000L;
++        this.limitTimes[9] = 7000L;
++        this.limitTimes[10] = 7000L;
++        this.limitTimes[11] = 7000L;
++        // Guardian end
+     }
+ 
+     public void channelActive(ChannelHandlerContext channelhandlercontext) throws Exception { // CraftBukkit - throws Exception
+@@ -128,7 +166,219 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         if (this.m.isOpen() && !this.lockDownIncomingTraffic) { // Poweruser
+             if (packet.a()) {
+                 packet.handle(this.o);
++                // Guardian start
++                if (packet instanceof PacketPlayInKeepAlive) {
++                    this.k.add(packet);
++                }
++                // Guardian end
+             } else {
++                // Guardian start
++                if ((this.o instanceof PlayerConnection)) {
++                    PlayerConnection connection = (PlayerConnection)this.o;
++
++                    if (((packet instanceof PacketPlayInChat)) || ((packet instanceof PacketPlayInCustomPayload))) {
++                        this.k.add(packet);
++                        return;
++                    }
++
++                    if ((packet instanceof PacketPlayInFlying)) {
++                        connection.movesReceived += 1L;
++                        connection.killAuraXSwing = false;
++                        if (packet.getClass() != PacketPlayInFlying.class) {
++                            this.numOfFlyingPacketsInARow = 0;
++                        } else if (++this.numOfFlyingPacketsInARow == 21 && Bukkit.shouldGuardianAct()) {
++                            String message = connection.getPlayer().getName() + " is using Regen (Module B)";
++                            runSync(
++                                    new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.REGENERATION, "B", GuardianEvent.DisplayLevel.HIGH, message)
++                            );
++                        }
++                    }
++
++                    if (!connection.player.abilities.canInstantlyBuild) {
++                        if ((connection.lastAttackPlayerTime == 0L) || (this.currentTime - connection.lastAttackPlayerTime > 5000L) || (!Bukkit.shouldGuardianAct())) {
++                            connection.autoclickerAStage = (connection.autoclickerAThreshold = 0);
++                            connection.autoClickerBStage = (connection.autoClickerBThreshold = connection.killAuraTypePOther = 0);
++                            connection.killAuraNStage = (connection.killAuraQThreshold = 0);
++                        } else {
++                            // Autoclicker Module A
++                            if (connection.autoclickerAStage == 0) {
++                                if ((packet instanceof PacketPlayInArmAnimation)) {
++                                    connection.autoclickerAStage = 1;
++                                }
++                            } else if (connection.autoclickerAStage == 1) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 0)) {
++                                    connection.autoclickerAStage = 2;
++                                } else {
++                                    connection.autoclickerAStage = 0;
++                                }
++                            } else if (connection.autoclickerAStage == 2) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 1)) {
++                                    if (++connection.autoclickerAThreshold == 5) {
++                                        connection.autoclickerAThreshold = 0;
++
++                                        String message = connection.getPlayer().getName() + " is using Autoclicker (Module A)";
++                                        runSync(
++                                                new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.AUTO_CLICKER, "A", GuardianEvent.DisplayLevel.HIGHEST, message)
++                                        );
++                                    }
++                                } else {
++                                    connection.autoclickerAThreshold = 0;
++                                }
++                                connection.autoclickerAStage = 0;
++                            }
++
++                            // Autoclicker Module B
++                            if (connection.autoClickerBStage == 0) {
++                                if ((packet instanceof PacketPlayInArmAnimation)) {
++                                    connection.autoClickerBStage = 1;
++                                }
++                            } else if (connection.autoClickerBStage == 1) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 0)) {
++                                    connection.autoClickerBStage = 2;
++                                } else {
++                                    connection.autoClickerBStage = 0;
++                                }
++                            } else if (connection.autoClickerBStage == 2) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 1)) {
++                                    if (++connection.autoClickerBThreshold == 5) {
++                                        if (connection.autoClickerBStage > 0) {
++                                            String message = connection.getPlayer().getName() + " is using Autoclicker (Module B) [" + connection.killAuraTypePOther + "]";
++                                            runSync(
++                                                    new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.AUTO_CLICKER, "B", GuardianEvent.DisplayLevel.HIGHEST, message)
++                                                    .addData("other", connection.killAuraTypePOther)
++                                            );
++                                        }
++                                        connection.autoClickerBThreshold = (connection.killAuraTypePOther = 0);
++                                    }
++                                    connection.autoClickerBStage = 0;
++                                } else if ((packet instanceof PacketPlayInArmAnimation)) {
++                                    connection.autoClickerBStage = 3;
++                                } else {
++                                    connection.autoClickerBStage = (connection.autoClickerBThreshold = connection.killAuraTypePOther = 0);
++                                }
++                            } else if (connection.autoClickerBStage == 3) {
++                                if ((packet instanceof PacketPlayInFlying)) {
++                                    connection.autoClickerBStage = 4;
++                                } else {
++                                    connection.autoClickerBStage = (connection.autoClickerBThreshold = connection.killAuraTypePOther = 0);
++                                }
++                            } else if (connection.autoClickerBStage == 4) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 1)) {
++                                    connection.killAuraTypePOther += 1;
++                                    connection.autoClickerBStage = 0;
++                                } else {
++                                    connection.autoClickerBStage = (connection.autoClickerBThreshold = connection.killAuraTypePOther = 0);
++                                }
++                            }
++
++                            // KillAura Module N
++                            if ((connection.killAuraNStage != 1) && ((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 0)) {
++                                connection.killAuraQThreshold = 0;
++                            }
++
++                            if (connection.killAuraNStage == 0) {
++                                if ((packet instanceof PacketPlayInArmAnimation)) {
++                                    connection.killAuraNStage = 1;
++                                }
++                            } else if (connection.killAuraNStage == 1) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 0)) {
++                                    connection.killAuraNStage = 2;
++                                } else {
++                                    connection.killAuraNStage = 0;
++                                }
++                            } else if (connection.killAuraNStage == 2) {
++                                if ((packet instanceof PacketPlayInFlying)) {
++                                    connection.killAuraNStage = 3;
++                                } else {
++                                    connection.killAuraNStage = 0;
++                                }
++                            } else if (connection.killAuraNStage == 3) {
++                                if (((packet instanceof PacketPlayInBlockDig)) && (((PacketPlayInBlockDig)packet).g() == 1)) {
++                                    if (++connection.killAuraQThreshold == 5) {
++                                        connection.killAuraQThreshold = 0;
++
++                                        String message = connection.getPlayer().getName() + " is using Kill Aura (Module NX)";
++                                        runSync(
++                                                new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "N", GuardianEvent.DisplayLevel.HIGH, message)
++                                        );
++                                    }
++                                }
++                                connection.killAuraNStage = 0;
++                            }
++                        }
++                    }
++
++                    // KillAura Module X
++                    if ((packet instanceof PacketPlayInArmAnimation)) {
++                        connection.killAuraXSwing = true;
++                    }
++
++                    if ((connection.movesReceived > 20L) && (getVersion() <= 47) && (!connection.killAuraXSwing) && Bukkit.shouldGuardianAct() && ((packet instanceof PacketPlayInUseEntity)) && (((PacketPlayInUseEntity)packet).c() == EnumEntityUseAction.ATTACK)) {
++                        String message = connection.getPlayer().getName() + " is using Kill Aura (Module X)";
++                        runSync(
++                                new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "X", GuardianEvent.DisplayLevel.HIGH, message)
++                        );
++                    }
++
++                    if (Bukkit.shouldGuardianAct()) {
++                        // Criticals Module B
++                        if (((packet instanceof PacketPlayInFlying)) && (((PacketPlayInFlying)packet).hasPos)) {
++                            if (((PacketPlayInFlying)packet).i()) {
++                                connection.criticalBStage = 1;
++                                connection.criticalBY = ((PacketPlayInFlying)packet).d();
++                            } else if ((connection.criticalBStage == 1) && (((PacketPlayInFlying)packet).d() < connection.criticalBY)) {
++                                connection.criticalBStage = 2;
++                                connection.criticalBHeight = (connection.criticalBY - ((PacketPlayInFlying)packet).d());
++                                connection.criticalBY = ((PacketPlayInFlying)packet).d();
++                            } else if ((connection.criticalBStage == 2) && (((PacketPlayInFlying)packet).d() > connection.criticalBY)) {
++                                connection.criticalBStage = 3;
++                                connection.criticalBY = ((PacketPlayInFlying)packet).d();
++                            } else if ((connection.criticalBStage == 3) && (((PacketPlayInFlying)packet).d() < connection.criticalBY)) {
++                                connection.criticalBStage = 4;
++                                connection.criticalBY = ((PacketPlayInFlying)packet).d();
++                            } else {
++                                connection.criticalBStage = 0;
++                            }
++                        } else {
++                            if (((packet instanceof PacketPlayInArmAnimation)) && (connection.criticalBStage == 4)) {
++                                String message = String.format("%s is using Criticals (Module B) [%.4f]", connection.getPlayer().getName(), connection.criticalBHeight);
++                                runSync(
++                                        new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.CRITICALS, "B", GuardianEvent.DisplayLevel.HIGH, message)
++                                        .addData("height", connection.criticalBHeight)
++                                );
++                            }
++
++                            connection.criticalBStage = 0;
++                        }
++                    }
++
++                    if (getVersion() <= 47) {
++                        // Bad Packets Module A
++                        if (connection.justSentSprint) {
++                            if ((packet instanceof PacketPlayInFlying)) {
++                                connection.justSentSprint = false;
++                            } else if (((packet instanceof PacketPlayInEntityAction)) && ((((PacketPlayInEntityAction)packet).d() == 1) || (((PacketPlayInEntityAction)packet).d() == 2))) {
++                                connection.justSentSprint = false;
++                            } else {
++                                long now = System.currentTimeMillis();
++                                if (now - connection.lastSprintViolationTime > 1000L) {
++                                    connection.lastSprintViolationTime = now;
++
++                                    String message = connection.getPlayer().getName() + " sent Bad Packets (Module A) [" + packet.getClass().getSimpleName() + "]";
++                                    runSync(
++                                            new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.GENERAL, "A", GuardianEvent.DisplayLevel.HIGH, message)
++                                            .addData("packet", packet.getClass().getSimpleName())
++                                    );
++                                }
++                                connection.justSentSprint = false;
++                            }
++                        }
++                        if (((packet instanceof PacketPlayInEntityAction)) && ((((PacketPlayInEntityAction)packet).d() == 4) || (((PacketPlayInEntityAction)packet).d() == 5))) {
++                            connection.justSentSprint = true;
++                        }
++                    }
++                }
++                // Guardian end
+                 this.k.add(packet);
+             }
+         }
+@@ -195,6 +445,7 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         }
+ 
+         if (this.o != null) {
++            boolean processed = false; // Guardian
+             // PaperSpigot start - Improve Network Manager packet handling - Configurable packets per player per tick processing
+             Packet packet;
+             for (int i = org.github.paperspigot.PaperSpigotConfig.maxPacketsPerPlayer; (packet = (Packet) this.k.poll()) != null && i >= 0; --i) {
+@@ -211,7 +462,231 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+                     this.k.clear();
+                     break;
+                 }
++                // Poweruser end
++
++                // Guardian start
++                if (!processed) {
++                    this.ticksSinceLastPacket = (MinecraftServer.currentTick - this.lastTickNetworkProcessed);
++                    this.lastTickNetworkProcessed = MinecraftServer.currentTick;
++                    this.currentTime = System.currentTimeMillis();
++                    processed = true;
++                }
+ 
++                if (o instanceof PlayerConnection) {
++                    PlayerConnection connection = (PlayerConnection) o;
++
++                    if ((packet instanceof PacketPlayInKeepAlive)) {
++                        ((PlayerConnection)this.o).handleKeepAliveSync((PacketPlayInKeepAlive)packet);
++                        continue;
++                    }
++
++                    if (((packet instanceof PacketPlayInChat)) || ((packet instanceof PacketPlayInCustomPayload))) {
++                        packet.handle(this.o);
++                        continue;
++                    }
++
++                    if (Bukkit.shouldGuardianAct() && !MinecraftServer.getServer().getAllowFlight() && !connection.player.abilities.canFly && !connection.player.abilities.canInstantlyBuild) {
++                        boolean eventFired = false;
++                        int size = connection.lastPacketsQueue.size();
++                        if (size >= this.packets.length) {
++                            if (((packet instanceof PacketPlayInUseEntity)) && (((PacketPlayInUseEntity)packet).c() == EnumEntityUseAction.ATTACK)) {
++                                for (int j = 0; j < this.packets.length; j++) {
++                                    this.packets[j] = connection.lastPacketsQueue.removeLast();
++                                }
++
++                                Class packet0Class = this.packets[0].getClass();
++                                if (packet0Class.equals(PacketPlayInArmAnimation.class)) {
++                                    if ((this.packets[1].getClass().equals(PacketPlayInUseEntity.class)) && (this.packets[2].getClass().equals(PacketPlayInArmAnimation.class)) && (((PacketPlayInUseEntity)this.packets[1]).c() == EnumEntityUseAction.ATTACK) && (getVersion() <= 47)) {
++                                        if ((this.packets[3].getClass().equals(PacketPlayInUseEntity.class)) && (this.packets[4].getClass().equals(PacketPlayInArmAnimation.class)) && (((PacketPlayInUseEntity)this.packets[3]).c() == EnumEntityUseAction.ATTACK)) {
++                                            if ((this.packets[5].getClass().equals(PacketPlayInUseEntity.class)) && (this.packets[6].getClass().equals(PacketPlayInArmAnimation.class)) && (((PacketPlayInUseEntity)this.packets[5]).c() == EnumEntityUseAction.ATTACK)) {
++                                                if ((this.packets[7].getClass().equals(PacketPlayInUseEntity.class)) && (this.packets[8].getClass().equals(PacketPlayInArmAnimation.class)) && (((PacketPlayInUseEntity)this.packets[7]).c() == EnumEntityUseAction.ATTACK)) {
++                                                    if (this.lastKillAuraKTick != MinecraftServer.currentTick) {
++                                                        String message = connection.getPlayer().getName() + " is using Kill Aura (Module KX) [" + this.ticksSinceLastPacket + "]";
++                                                        Bukkit.getPluginManager().callEvent(
++                                                                new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "K", GuardianEvent.DisplayLevel.HIGH, message)
++                                                                .addData("ticksSinceLastPacket", ticksSinceLastPacket)
++                                                        );
++
++                                                        this.lastKillAuraKTick = MinecraftServer.currentTick;
++                                                    }
++                                                } else {
++                                                    String message = connection.getPlayer().getName() + " is using Kill Aura (Module SX) [" + this.ticksSinceLastPacket + "]";
++                                                    Bukkit.getPluginManager().callEvent(
++                                                            new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "S", GuardianEvent.DisplayLevel.HIGH, message)
++                                                            .addData("ticksSinceLastPacket", ticksSinceLastPacket)
++                                                    );
++                                                }
++                                            } else {
++                                                this.numOfKillAuraTLogs.add(this.ticksSinceLastPacket);
++                                                if (++this.numOfT == 3) {
++                                                    String message = connection.getPlayer().getName() + " is using Kill Aura (Module T) [" + Joiner.on(" ").join(this.numOfKillAuraTLogs) + "]";
++                                                    Bukkit.getPluginManager().callEvent(
++                                                            new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "T", GuardianEvent.DisplayLevel.HIGH, message)
++                                                            .addData("logs", Joiner.on(" ").join(this.numOfKillAuraTLogs))
++                                                    );
++
++                                                    this.numOfT = 0;
++                                                    this.numOfKillAuraTLogs.clear();
++                                                }
++                                            }
++                                        } else {
++                                            this.numOfKillAuraBLogs.add(this.ticksSinceLastPacket);
++                                            if (++this.numOfKillAuraB == 5) {
++                                                String message = connection.getPlayer().getName() + " is using Kill Aura (Module B) [" + Joiner.on(" ").join(this.numOfKillAuraBLogs) + "]";
++                                                Bukkit.getPluginManager().callEvent(
++                                                        new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "B", GuardianEvent.DisplayLevel.HIGH, message)
++                                                        .addData("logs", Joiner.on(" ").join(this.numOfKillAuraBLogs))
++                                                );
++
++                                                this.numOfKillAuraB = 0;
++                                                this.numOfKillAuraBLogs.clear();
++                                            }
++                                        }
++                                    } else {
++                                        int numberOfPreviousPacketPlayInPositionLooks = 0;
++                                        boolean foundPrevHitPacket = false;
++                                        for (int j = 1; j < this.packets.length; j++) {
++                                            Class packetJClass = this.packets[j].getClass();
++                                            if ((packetJClass.equals(PacketPlayInPositionLook.class)) || (packetJClass.equals(PacketPlayInPosition.class)) || (packetJClass.equals(PacketPlayInLook.class)) || (packetJClass.equals(PacketPlayInFlying.class))) {
++                                                numberOfPreviousPacketPlayInPositionLooks++;
++                                                foundPrevHitPacket = true;
++                                            } else {
++                                                if (packetJClass.equals(PacketPlayInUseEntity.class)) {
++                                                    break;
++                                                }
++                                            }
++                                        }
++
++                                        if (foundPrevHitPacket) {
++                                            PacketPlayInUseEntity packetPlayInUseEntity = (PacketPlayInUseEntity)packet;
++                                            EnumEntityUseAction action = packetPlayInUseEntity.c();
++                                            WorldServer worldserver = MinecraftServer.getServer().getWorldServer(connection.player.dimension);
++                                            Entity entity = packetPlayInUseEntity.a(worldserver);
++
++                                            boolean validData;
++                                            validData = (action == EnumEntityUseAction.ATTACK) && (entity != connection.player) && (entity != null) && ((entity instanceof EntityPlayer));
++
++                                            if (validData) {
++                                                EntityPlayer entityPlayer = (EntityPlayer)entity;
++                                                validData = entityPlayer.playerConnection.hasMovedInHalfSecond;
++                                            }
++
++                                            if (validData) {
++                                                List<Long> times = connection.killAuraFViolations.get(numberOfPreviousPacketPlayInPositionLooks);
++
++                                                if (connection.killAuraFViolations.size() > 1) {
++                                                    connection.killAuraFViolations.clear();
++                                                }
++
++                                                if (times == null) {
++                                                    times = new ArrayList<Long>();
++                                                    connection.killAuraFViolations.put(numberOfPreviousPacketPlayInPositionLooks, times);
++                                                }
++
++                                                long currentTime = System.currentTimeMillis();
++                                                int typeCViolations = 0;
++                                                times.add(currentTime);
++
++                                                for (Iterator<Long> iterator = times.iterator(); iterator.hasNext();) {
++                                                    Long time = iterator.next();
++                                                    long timeLimiter = numberOfPreviousPacketPlayInPositionLooks < 12 ? this.limitTimes[numberOfPreviousPacketPlayInPositionLooks] : 4000L;
++
++                                                    if (time + timeLimiter >= currentTime) {
++                                                        typeCViolations++;
++                                                    } else {
++                                                        iterator.remove();
++                                                    }
++                                                }
++
++                                                if (typeCViolations >= 10) {
++                                                    String message = connection.getPlayer().getName() + " is using Kill Aura (Module FX) [" + numberOfPreviousPacketPlayInPositionLooks + "]";
++                                                    Bukkit.getPluginManager().callEvent(
++                                                            new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "F", GuardianEvent.DisplayLevel.HIGH, message)
++                                                            .addData("packets", numberOfPreviousPacketPlayInPositionLooks)
++                                                    );
++
++                                                    times.clear();
++                                                    eventFired = true;
++                                                }
++                                            }
++                                        }
++                                    }
++                                }
++
++                                for (int j = this.packets.length - 1; j >= 0; j--) {
++                                    connection.lastPacketsQueue.add(this.packets[j]);
++                                }
++                            } else if ((packet instanceof PacketPlayInBlockPlace)) {
++                                for (int j = 0; j < 3; j++) {
++                                    this.packets[j] = connection.lastPacketsQueue.removeLast();
++                                }
++
++                                if (((this.packets[0] instanceof PacketPlayInFlying)) && ((this.packets[1] instanceof PacketPlayInBlockPlace)) && ((this.packets[2] instanceof PacketPlayInBlockDig))) {
++                                    String message = connection.getPlayer().getName() + " is eating or shooting too fast (Module A)";
++                                    Bukkit.getPluginManager().callEvent(
++                                            new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.FAST_USE, "A", GuardianEvent.DisplayLevel.HIGH, message)
++                                    );
++                                }
++
++                                for (int j = 2; j >= 0; j--) {
++                                    connection.lastPacketsQueue.add(this.packets[j]);
++                                }
++                            } else if ((packet instanceof PacketPlayInHeldItemSlot)) {
++                                for (int j = 0; j < 3; j++) {
++                                    this.packets[j] = connection.lastPacketsQueue.removeLast();
++                                }
++                                if (((this.packets[0] instanceof PacketPlayInBlockPlace)) && ((this.packets[1] instanceof PacketPlayInFlying)) && ((this.packets[2] instanceof PacketPlayInBlockDig))) {
++                                    String message = connection.getPlayer().getName() + " is eating or shooting too fast (Module B)";
++                                    Bukkit.getPluginManager().callEvent(
++                                            new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.FAST_USE, "B", GuardianEvent.DisplayLevel.HIGH, message)
++                                    );
++                                }
++                                for (int j = 2; j >= 0; j--) {
++                                    connection.lastPacketsQueue.add(this.packets[j]);
++                                }
++                            } if (connection.isDigging) {
++                                if ((packet instanceof PacketPlayInFlying)) {
++                                    connection.killAuraRStage = 1;
++                                } else if ((packet instanceof PacketPlayInArmAnimation)) {
++                                    if (connection.killAuraRStage == 1) {
++                                        connection.killAuraRStage = 2;
++                                    } else if (connection.killAuraRStage == 2) {
++                                        connection.killAuraRStage = 0;
++
++                                        if (connection.digHorizontalMovement > 1) {
++                                            connection.killAuraRThreshold += 1;
++
++                                            if (connection.killAuraRThreshold >= 3) {
++                                                String message = connection.getPlayer().getName() + " is using Kill Aura (Module RX) [" + connection.killAuraRThreshold + "]";
++                                                Bukkit.getPluginManager().callEvent(
++                                                        new GuardianEvent(connection.getPlayer(), GuardianEvent.Cheat.KILL_AURA, "R", GuardianEvent.DisplayLevel.HIGH, message)
++                                                        .addData("threshold", connection.killAuraRThreshold)
++                                                );
++                                            }
++                                        }
++                                    }
++                                } else {
++                                    connection.killAuraRStage = 0;
++                                }
++                            } else {
++                                connection.killAuraRStage = 0;
++                            }
++                        }
++
++                        if (size == 10) {
++                            connection.lastPacketsQueue.removeFirst();
++                        }
++
++                        connection.lastPacketsQueue.add(packet);
++
++                        if (eventFired) {
++                            connection.lastPacketsQueue.clear();
++                        }
++                    }
++                }
++                // Guardian end
++
++                // Poweruser start
+                 CustomTimingsHandler packetHandlerTimer = SpigotTimings.getPacketHandlerTimings(packet);
+                 packetHandlerTimer.startTiming();
+                 try {
+@@ -228,6 +703,18 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         this.m.flush();
+     }
+ 
++    // Guardian start
++    private void runSync(final GuardianEvent event) {
++        MinecraftServer.getServer().processQueue.add(new Runnable() {
++
++            public void run() {
++                Bukkit.getPluginManager().callEvent(event);
++            }
++
++        });
++    }
++    // Guardian end
++
+     public SocketAddress getSocketAddress() {
+         return this.n;
+     }
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityVelocity.java b/src/main/java/net/minecraft/server/PacketPlayOutEntityVelocity.java
+index 170f27f32..801994b39 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutEntityVelocity.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutEntityVelocity.java
+@@ -2,10 +2,12 @@ package net.minecraft.server;
+ 
+ public class PacketPlayOutEntityVelocity extends Packet {
+ 
+-    private int a;
+-    private int b;
+-    private int c;
+-    private int d;
++    // Guardian start: Make all of these public
++    public int a;
++    public int b;
++    public int c;
++    public int d;
++    // Guardian end
+ 
+     public PacketPlayOutEntityVelocity() {}
+ 
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index a3c0917ce..a597e8fd5 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -1,14 +1,5 @@
+ package net.minecraft.server;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.DataInputStream;
+-import java.io.IOException;
+-import java.util.ArrayList;
+-import java.util.Date;
+-import java.util.Iterator;
+-import java.util.Random;
+-import java.util.concurrent.Callable;
+-
+ import net.minecraft.util.com.google.common.base.Charsets;
+ import net.minecraft.util.com.google.common.collect.Lists;
+ import net.minecraft.util.io.netty.buffer.Unpooled;
+@@ -16,13 +7,8 @@ import net.minecraft.util.io.netty.util.concurrent.GenericFutureListener;
+ import net.minecraft.util.org.apache.commons.lang3.StringUtils;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+-
+-// CraftBukkit start
+-import java.io.UnsupportedEncodingException;
+-import java.util.concurrent.ExecutionException;
+-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+-import java.util.HashSet;
+-
++import org.bukkit.Bukkit;
++import org.bukkit.Location;
+ import org.bukkit.craftbukkit.SpigotTimings;
+ import org.bukkit.craftbukkit.entity.CraftPlayer;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+@@ -31,36 +17,32 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
+ import org.bukkit.craftbukkit.util.CraftChatMessage;
+ import org.bukkit.craftbukkit.util.LazyPlayerSet;
+ import org.bukkit.craftbukkit.util.Waitable;
+-
+-import org.bukkit.Location;
+ import org.bukkit.entity.Player;
+ import org.bukkit.event.Event;
+ import org.bukkit.event.block.Action;
+ import org.bukkit.event.block.SignChangeEvent;
+-import org.bukkit.event.inventory.ClickType;
+-import org.bukkit.event.inventory.CraftItemEvent;
+-import org.bukkit.event.inventory.InventoryAction;
+-import org.bukkit.event.inventory.InventoryClickEvent;
+-import org.bukkit.event.inventory.InventoryCreativeEvent;
++import org.bukkit.event.inventory.*;
+ import org.bukkit.event.inventory.InventoryType.SlotType;
+-import org.bukkit.event.player.AsyncPlayerChatEvent;
+-import org.bukkit.event.player.PlayerAnimationEvent;
+-import org.bukkit.event.player.PlayerChatEvent;
+-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+-import org.bukkit.event.player.PlayerInteractEntityEvent;
+-import org.bukkit.event.player.PlayerItemHeldEvent;
+-import org.bukkit.event.player.PlayerKickEvent;
+-import org.bukkit.event.player.PlayerMoveEvent;
+-import org.bukkit.event.player.PlayerTeleportEvent;
+-import org.bukkit.event.player.PlayerToggleFlightEvent;
+-import org.bukkit.event.player.PlayerToggleSneakEvent;
+-import org.bukkit.event.player.PlayerToggleSprintEvent;
++import org.bukkit.event.player.*;
+ import org.bukkit.inventory.CraftingInventory;
+ import org.bukkit.inventory.InventoryView;
+ import org.bukkit.util.NumberConversions;
+-// CraftBukkit end
++import org.github.paperspigot.PaperSpigotConfig;
++import org.spigotmc.SpigotConfig;
++
++import java.io.ByteArrayInputStream;
++import java.io.DataInputStream;
++import java.io.IOException;
++import java.io.UnsupportedEncodingException;
++import java.util.*;
++import java.util.concurrent.Callable;
++import java.util.concurrent.TimeUnit;
++import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+ 
+-import org.github.paperspigot.PaperSpigotConfig; // PaperSpigot
++// CraftBukkit start
++// CraftBukkit end
++// Guardian start
++// Guardian end
+ 
+ public class PlayerConnection implements PacketPlayInListener {
+ 
+@@ -91,6 +73,125 @@ public class PlayerConnection implements PacketPlayInListener {
+     private double offsetDistanceSum = 0.0D;
+     // Poweruser end
+ 
++    // Guardian start
++    public static final int MAX_IN_COMBAT_SPEED_PACKETS = 10;
++    public static final int MAX_NOT_IN_COMBAT_SPEED_PACKETS = 5;
++
++    public int packetsNotReceived = 0;
++    public long lastKeepAlivePacketReceived = -1;
++
++    public double lastGroundY = -1D;
++
++    public long lastHitByExplosion = -1L;
++    public long lastHit = -1L;
++
++    public int hoverPackets = 0;
++    public int speedPackets = 0;
++    public int notHitPackets = 3;
++    public double lastSpeedDistance = -1D;
++
++    public int lastMajorPacketProcessed = MinecraftServer.currentTick;
++    public int packetsReceivedSinceLastMajorTick = 0;
++    public boolean processedMajorTick = false;
++    public double averageMaxPacketsPerSecond = 2.5D;
++
++    public boolean lastHasPos;
++    public boolean lastHasLook;
++
++    public int lastFuckedUpPacketReceivedTick = 0;
++    public long lastCheckedFuckedUpPacketReceivedTick = 0;
++    public int morePacketStrikes = 0;
++
++    public double lastBlockGlitchFromX = 0.0D;
++    public double lastBlockGlitchFromZ = 0.0D;
++    public double lastBlockGlitchToX = 0.0D;
++    public double lastBlockGlitchToZ = 0.0D;
++
++    public long movesReceived = 0L;
++
++    public LinkedList<Packet> lastPacketsQueue = new LinkedList<Packet>();
++
++    public int killAuraTypeAViolations = 0;
++    public int killAuraTypeBViolations = 0;
++    public Map<Integer, List<Long>> killAuraFViolations = new HashMap<Integer, List<Long>>();
++
++    public long lastCalculatedHalfSecondTime = 0L;
++    public double lastHalfSecondX = 0D;
++    public double lastHalfSecondY = -1D;
++    public double lastHalfSecondZ = 0D;
++    public boolean hasMovedInHalfSecond;
++
++    public Set<Integer> keepAlives = new HashSet<Integer>();
++
++    public double lastHitMotionX = 10000.0D;
++    public double lastHitMotionY = 10000.0D;
++    public double lastHitMotionZ = 10000.0D;
++
++    public long lastMotionTick = 0L;
++    public int antiKBViolations = 0;
++
++    public long lastKAPacketTick = MinecraftServer.currentTick;
++    public long lastKAMovementPacket = MinecraftServer.currentTick;
++    public long lastNotificationTick = MinecraftServer.currentTick;
++    public long lastAttackPlayerTime = 0L;
++
++    public boolean isDigging = false;
++    public int digHorizontalMovement = 0;
++
++    public int killAuraRStage = 0;
++    public int killAuraRThreshold = 0;
++    public int autoclickerAStage = 0;
++    public int autoclickerAThreshold = 0;
++    public int autoClickerBStage = 0;
++    public int autoClickerBThreshold = 0;
++    public int killAuraTypePOther = 0;
++    public int killAuraNStage = 0;
++    public int killAuraQThreshold = 0;
++    public boolean killAuraXSwing = false;
++
++    public final List<PacketPlayOutEntityVelocity> velocitiesSent = new ArrayList<PacketPlayOutEntityVelocity>();
++    public final List<Long> velocitySentTimes = new ArrayList<Long>();
++    public long positionSentTime = System.currentTimeMillis();
++
++    public int reducedKbAmount = 0;
++
++    public int miniJumpAmount = 0;
++
++    public double horizontalSpeed = 1.0D;
++    public double newHorizontalSpeed = 0.0D;
++    public long newHorizontalSpeedTime;
++    public double blockFriction = 0.0D;
++    public int blockFrictionX = Integer.MAX_VALUE;
++    public int blockFrictionY = Integer.MAX_VALUE;
++    public int blockFrictionZ = Integer.MAX_VALUE;
++    public double previousHorizontalMove = 0.0D;
++
++    public int flyTypeDAmount = 0;
++
++    public int speedTypeDAmount = 0;
++
++    public int criticalBStage = 0;
++    public double criticalBY;
++    public double criticalBHeight = 0.0D;
++
++    public boolean justSentSprint = false;
++    public long lastSpeedTime = -1L;
++    public long lastSprintViolationTime = System.currentTimeMillis();
++    private long lastJumpEffectTime = System.currentTimeMillis();
++    private long lastKickedForFly;
++
++
++    private double nextExpectedYDelta = 0.0D;
++    public int lastVelocitySentTick = Integer.MIN_VALUE;
++
++    private int gGoodTicks = 0;
++
++    long lastDismounted;
++
++    private int flyModuleGAmount;
++    private int fastFallModuleGAmount;
++    // Guardian end
++
+     public PlayerConnection(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
+         this.minecraftServer = minecraftserver;
+         this.networkManager = networkmanager;
+@@ -134,13 +235,31 @@ public class PlayerConnection implements PacketPlayInListener {
+         this.g = false;
+         ++this.e;
+         this.minecraftServer.methodProfiler.a("keepAlive");
+-        if ((long) this.e - this.k > 40L) {
++        if ((long) this.e - this.k > 10L) { // Guardian: 40L -> 10L
+             this.k = (long) this.e;
+             this.i = this.d();
+             this.h = (int) this.i;
++
++            // Guardian start
++            packetsNotReceived++;
++            keepAlives.add(h);
++
++            if (keepAlives.size() > 120 && Bukkit.shouldGuardianAct()) {
++                disconnect("Disconnected due to lag");
++                return;
++            }
++            // Guardian end
++
+             this.sendPacket(new PacketPlayOutKeepAlive(this.h));
+         }
+ 
++        // Guardian start
++        if (packetsNotReceived >= 40 && Bukkit.shouldGuardianAct()) {
++            disconnect("Disconnected due to lag");
++            return;
++        }
++        // Guardian end
++
+         // CraftBukkit start
+         for (int spam; (spam = this.chatThrottle) > 0 && !chatSpamField.compareAndSet(this, spam, spam - 1); ) ;
+         /* Use thread-safe field access instead
+@@ -201,6 +320,60 @@ public class PlayerConnection implements PacketPlayInListener {
+         // CraftBukkit end
+         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
+ 
++        // Guardian start: Timer
++        long numOfTicksSinceLastPacket = this.networkManager.ticksSinceLastPacket;
++        if (Bukkit.shouldGuardianAct() && !this.player.abilities.canFly && this.player.vehicle == null) {
++            if (networkManager.currentTime - this.positionSentTime > 1000L) {
++                if ((this.lastFuckedUpPacketReceivedTick == MinecraftServer.currentTick) && (this.lastCheckedFuckedUpPacketReceivedTick != MinecraftServer.currentTick) && (packetplayinflying.hasPos != this.lastHasPos) && (packetplayinflying.hasLook != this.lastHasLook)) {
++                    this.lastCheckedFuckedUpPacketReceivedTick = MinecraftServer.currentTick;
++                } else {
++                    this.packetsReceivedSinceLastMajorTick += 1L;
++                    this.lastFuckedUpPacketReceivedTick = MinecraftServer.currentTick;
++                    this.lastHasPos = packetplayinflying.hasPos;
++                    this.lastHasLook = packetplayinflying.hasLook;
++                }
++
++                if ((!this.processedMajorTick) && (this.lastMajorPacketProcessed + 20L < MinecraftServer.currentTick)) {
++                    long diff = MinecraftServer.currentTick - this.lastMajorPacketProcessed;
++                    this.lastMajorPacketProcessed = MinecraftServer.currentTick;
++                    this.processedMajorTick = true;
++
++                    if (numOfTicksSinceLastPacket > 20L) {
++                        this.packetsReceivedSinceLastMajorTick = 0;
++                        this.lastFuckedUpPacketReceivedTick = 0;
++                        this.lastCheckedFuckedUpPacketReceivedTick = 0L;
++                        this.lastHasPos = false;
++                        this.lastHasLook = false;
++                    }
++
++                    if ((numOfTicksSinceLastPacket <= 20L) && (packetsReceivedSinceLastMajorTick / diff >= averageMaxPacketsPerSecond)) {
++
++                        if (++this.morePacketStrikes >= 3L) {
++                            String message = this.player.getName() + " uses Timer Modifications (Module A) [P:" + packetsReceivedSinceLastMajorTick + "]";
++
++                            Bukkit.getPluginManager().callEvent(
++                                    new GuardianEvent(getPlayer(), GuardianEvent.Cheat.TIMER, "A", GuardianEvent.DisplayLevel.HIGH, message)
++                                    .addData("packets", packetsReceivedSinceLastMajorTick)
++                            );
++                        }
++                    } else if (this.morePacketStrikes > 0L) {
++                        this.morePacketStrikes -= 1L;
++                    }
++
++                    this.packetsReceivedSinceLastMajorTick = 0;
++                    this.lastFuckedUpPacketReceivedTick = 0;
++                    this.lastCheckedFuckedUpPacketReceivedTick = 0L;
++                    this.lastHasPos = false;
++                    this.lastHasLook = false;
++                }
++
++                else if (MinecraftServer.currentTick % 20 != 0) {
++                    this.processedMajorTick = false;
++                }
++            }
++        }
++        // Guardian end: Timer
++
+         this.g = true;
+         if (!this.player.viewingCredits) {
+             double d0;
+@@ -212,6 +385,8 @@ public class PlayerConnection implements PacketPlayInListener {
+                 }
+             }
+ 
++            this.lastKAMovementPacket = MinecraftServer.currentTick; // Guardian
++
+             // CraftBukkit start - fire PlayerMoveEvent
+             Player player = this.getPlayer();
+             // Spigot Start
+@@ -242,10 +417,49 @@ public class PlayerConnection implements PacketPlayInListener {
+                 to.setPitch(packetplayinflying.pitch);
+             }
+ 
++            // Guardian start: Anti-KB
++            if (Bukkit.shouldGuardianAct() && !this.player.abilities.canFly && this.player.vehicle == null) {
++                if (this.lastMotionTick != 0L) {
++                    if (this.lastMotionTick + 20L < MinecraftServer.currentTick) {
++                        this.lastMotionTick = 0L;
++                        this.lastHitMotionX = (this.lastHitMotionY = this.lastHitMotionZ = 0.0D);
++
++                        if (lastKeepAlivePacketReceived + 800L > networkManager.currentTime) {
++                            if (++antiKBViolations >= 3) {
++                                String message = String.format("%s uses Client Modifications (Module K) at %.1f %.1f %.1f", player.getName(), to.getX(), to.getY(), to.getZ());
++
++                                Bukkit.getPluginManager().callEvent(
++                                        new GuardianEvent(getPlayer(), GuardianEvent.Cheat.CLIENT_MODIFICATIONS, "K", GuardianEvent.DisplayLevel.HIGHEST, message, new Location(player.getWorld(), to.getX(), to.getY(), to.getZ()))
++                                );
++                                antiKBViolations = 0;
++                            }
++                        }
++                    } else if (!packetplayinflying.i()) {
++                        this.lastMotionTick = 0L;
++                        this.lastHitMotionX = (this.lastHitMotionY = this.lastHitMotionZ = 0.0D);
++
++                        if (this.antiKBViolations > 0) {
++                            this.antiKBViolations -= 1;
++                        }
++                    }
++                }
++            } else {
++                this.lastMotionTick = 0L;
++                this.lastHitMotionX = (this.lastHitMotionY = this.lastHitMotionZ = 0.0D);
++            }
++            // Guardian end: Anti-KB
++
+             // Prevent 40 event-calls for less than a single pixel of movement >.>
+             double delta = Math.pow(this.lastPosX - to.getX(), 2) + Math.pow(this.lastPosY - to.getY(), 2) + Math.pow(this.lastPosZ - to.getZ(), 2);
+             float deltaAngle = Math.abs(this.lastYaw - to.getYaw()) + Math.abs(this.lastPitch - to.getPitch());
+ 
++            // Guardian start
++            float f4 = 0.0625F;
++            AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().grow(f4, f4, f4).a(0.0D, -0.55D, 0.0D);
++
++            boolean touchingAir = !worldserver.c(axisalignedbb);
++            // Guardian end
++
+             if ((delta > 1f / 256 || deltaAngle > 10f) && (this.checkMovement && !this.player.dead)) {
+                 this.lastPosX = to.getX();
+                 this.lastPosY = to.getY();
+@@ -253,6 +467,159 @@ public class PlayerConnection implements PacketPlayInListener {
+                 this.lastYaw = to.getYaw();
+                 this.lastPitch = to.getPitch();
+ 
++                // Guardian start
++                if (Bukkit.shouldGuardianAct()) {
++                    if (this.lastCalculatedHalfSecondTime + 500L < networkManager.currentTime) {
++                        this.lastCalculatedHalfSecondTime = networkManager.currentTime;
++                        this.lastHalfSecondX = to.getX();
++                        this.lastHalfSecondY = to.getY();
++                        this.lastHalfSecondZ = to.getZ();
++
++                        double distanceSquared = NumberConversions.square(to.getX() - from.getX()) + NumberConversions.square(to.getZ() - from.getZ());
++                        this.hasMovedInHalfSecond = (distanceSquared >= 0.0225D);
++                    }
++
++                    if ((!this.player.abilities.canFly) && (this.player.vehicle == null)) {
++                        if (this.player.onGround) {
++                            lastGroundY = from.getY();
++                            hoverPackets = 0;
++                        } else {
++                            if (worldserver.containsLiquidOrClimbable(axisalignedbb)) {
++                                this.lastGroundY = from.getY();
++                            }
++
++                            if ((packetplayinflying.hasPos) && (to.getY() > 0.0D) && (to.getY() == from.getY()) && (touchingAir) && (this.networkManager.lastVehicleTime + TimeUnit.SECONDS.toMillis(5) < networkManager.currentTime)) {
++                                this.hoverPackets += 1;
++
++                                if (this.hoverPackets >= 5) {
++                                    String message = String.format("%s is hovering at %.1f %.1f %.1f", this.player.getName(), to.getX(), to.getY(), to.getZ());
++                                    Bukkit.getPluginManager().callEvent(
++                                            new GuardianEvent(getPlayer(), GuardianEvent.Cheat.HOVER, null, GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), to.getX(), to.getY(), to.getZ()))
++                                    );
++                                    this.hoverPackets = 0;
++                                }
++                            } else {
++                                this.hoverPackets = 0;
++                            }
++                        }
++                    }
++
++                    if (this.lastGroundY + 1.0D < to.getY()) {
++                        this.killAuraTypeAViolations = 0;
++                        this.killAuraTypeBViolations = 0;
++                    }
++
++                    if ((!this.player.abilities.canFly) && (this.player.vehicle == null)) {
++                        if (this.lastGroundY != -1.0D) {
++                            if (this.lastHitByExplosion + TimeUnit.SECONDS.toMillis(10) < networkManager.currentTime) {
++                                long packetDiff = numOfTicksSinceLastPacket == 0L ? 1L : numOfTicksSinceLastPacket;
++
++                                double limit;
++                                MobEffect mobeffect = this.player.getEffect(MobEffectList.FASTER_MOVEMENT);
++                                int amplification = mobeffect != null ? mobeffect.getAmplifier() + 1 : 0;
++
++                                boolean speedIsActive = false;
++                                switch (amplification) {
++                                    case 0:
++                                        limit = 0.35D;
++                                        break;
++                                    case 1:
++                                        limit = 0.39D;
++                                        this.lastSpeedTime = networkManager.currentTime;
++                                        speedIsActive = true;
++                                        break;
++                                    case 2:
++                                        limit = 0.42D;
++                                        this.lastSpeedTime = networkManager.currentTime;
++                                        speedIsActive = true;
++                                        break;
++                                    default:
++                                        limit = 0.35D + 0.05D * amplification;
++                                        this.lastSpeedTime = networkManager.currentTime;
++                                        speedIsActive = true;
++                                }
++
++                                double speed = Math.sqrt(NumberConversions.square(to.getX() - from.getX()) + NumberConversions.square(to.getZ() - from.getZ()));
++                                if (this.lastKeepAlivePacketReceived + 1000L > networkManager.currentTime) {
++                                    double speedWithLag = speed / packetDiff;
++                                    if (speedWithLag > limit) {
++                                        if (speedWithLag >= this.lastSpeedDistance) {
++                                            if ((!speedIsActive) && (networkManager.currentTime < this.lastSpeedTime + 2000L)) {
++                                            } else {
++                                                boolean isFalsePositive = false;
++                                                double roundedFromX = Math.round(from.getX() * 10000.0D) / 10000.0D;
++                                                double roundedFromZ = Math.round(from.getZ() * 10000.0D) / 10000.0D;
++                                                double roundedToX = Math.round(to.getX() * 10000.0D) / 10000.0D;
++                                                double roundedToZ = Math.round(to.getZ() * 10000.0D) / 10000.0D;
++
++                                                if ((roundedFromX == roundedToX) || (roundedFromZ == roundedToZ)) {
++                                                    isFalsePositive = true;
++                                                } else if ((this.lastBlockGlitchFromX == roundedFromX) || (this.lastBlockGlitchFromZ == roundedFromZ) || (this.lastBlockGlitchFromX == roundedToX) || (this.lastBlockGlitchFromZ == roundedToX)) {
++                                                    isFalsePositive = true;
++                                                } else if ((this.lastBlockGlitchToX == roundedFromX) || (this.lastBlockGlitchToZ == roundedFromZ) || (this.lastBlockGlitchToX == roundedToX) || (this.lastBlockGlitchToZ == roundedToX)) {
++                                                    isFalsePositive = true;
++                                                }
++
++                                                if (!isFalsePositive) {
++                                                    this.lastBlockGlitchFromX = roundedFromX;
++                                                    this.lastBlockGlitchFromZ = roundedFromZ;
++                                                    this.lastBlockGlitchToX = roundedToX;
++                                                    this.lastBlockGlitchToZ = roundedToZ;
++
++                                                    if (++this.speedPackets >= (this.lastHit + 1500L > networkManager.currentTime ? MAX_IN_COMBAT_SPEED_PACKETS : MAX_NOT_IN_COMBAT_SPEED_PACKETS)) {
++                                                        {
++                                                            String message = this.player.getName() + " is speeding (B-Debug-1) [" + from.getX() + " " + from.getY() + " " + from.getZ() + "]";
++                                                            Bukkit.getPluginManager().callEvent(
++                                                                    new GuardianEvent(getPlayer(), GuardianEvent.Cheat.DEBUG, "B-Debug-1", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), from.getX(), from.getY(), from.getZ()))
++                                                            );
++                                                        }
++
++                                                        {
++                                                            String message = this.player.getName() + " is speeding (B-Debug-2) [" + to.getX() + " " + to.getY() + " " + to.getZ() + "]";
++
++                                                            Bukkit.getPluginManager().callEvent(
++                                                                    new GuardianEvent(getPlayer(), GuardianEvent.Cheat.DEBUG, "B-Debug-2", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), to.getX(), to.getY(), to.getZ()))
++                                                            );
++                                                        }
++
++                                                        {
++                                                            String message = this.player.getName() + " is speeding (Module B) [V:" + Math.round(speedWithLag / limit * 10.0D) / 10.0D + "]";
++
++                                                            Bukkit.getPluginManager().callEvent(
++                                                                    new GuardianEvent(getPlayer(), GuardianEvent.Cheat.SPEED_HACKS, "B", GuardianEvent.DisplayLevel.HIGH, message)
++                                                                    .addData("value", Math.round(speedWithLag / limit * 10.0D) / 10.0D)
++                                                            );
++                                                        }
++
++                                                        this.speedPackets = 0;
++                                                    }
++                                                } else {
++                                                    this.speedPackets = 0;
++                                                }
++                                            }
++                                        } else if (++this.speedPackets >= 3) {
++                                            this.speedPackets = 0;
++                                        }
++                                    } else {
++                                        if (++this.notHitPackets >= 3) {
++                                            this.speedPackets = 0;
++                                        }
++                                        if (this.lastHit + 1500L < networkManager.currentTime) {
++                                            this.lastHit = -1L;
++                                        }
++                                    }
++                                }
++                                this.lastSpeedDistance = (speed / packetDiff);
++                            }
++                        }
++                    }
++                }
++
++                if (((this.isDigging) && (to.getX() != this.player.locX)) || (to.getZ() != this.player.locZ)) {
++                    this.digHorizontalMovement += 1;
++                }
++                // Guardian end
++
+                 // Skip the first time we do this
+                 if (true) { // Spigot - don't skip any move events
+                     PlayerMoveEvent event = new PlayerMoveEvent(player, from, to);
+@@ -279,7 +646,11 @@ public class PlayerConnection implements PacketPlayInListener {
+                         return;
+                     }
+                 }
++            } else if (lastCalculatedHalfSecondTime + 500L < networkManager.currentTime) { // Guardian start
++                lastCalculatedHalfSecondTime = networkManager.currentTime;
++                hasMovedInHalfSecond = false;
+             }
++            // Guardian end
+ 
+             if (this.checkMovement && !this.player.dead) {
+                 // CraftBukkit end
+@@ -336,17 +707,17 @@ public class PlayerConnection implements PacketPlayInListener {
+                 float f2 = this.player.yaw;
+                 float f3 = this.player.pitch;
+ 
++                boolean onGround = this.player.onGround; // Guardian
++
+                 if (packetplayinflying.j() && packetplayinflying.d() == -999.0D && packetplayinflying.f() == -999.0D) {
+                     packetplayinflying.a(false);
+                 }
+ 
+-                double d4;
+-
+                 if (packetplayinflying.j()) {
+                     d1 = packetplayinflying.c();
+                     d2 = packetplayinflying.d();
+                     d3 = packetplayinflying.e();
+-                    d4 = packetplayinflying.f() - packetplayinflying.d();
++                    double d4 = packetplayinflying.f() - packetplayinflying.d();
+                     if (!this.player.isSleeping() && (d4 > 1.65D || d4 < 0.1D)) {
+                         this.disconnect("Illegal stance");
+                         c.warn(this.player.getName() + " had an illegal stance: " + d4);
+@@ -371,13 +742,15 @@ public class PlayerConnection implements PacketPlayInListener {
+                     return;
+                 }
+ 
+-                d4 = d1 - this.player.locX;
+-                double d5 = d2 - this.player.locY;
+-                double d6 = d3 - this.player.locZ;
++                // Guardian start: Rename for readability
++                double xDelta = d1 - this.player.locX;
++                double yDelta = d2 - this.player.locY;
++                double zDelta = d3 - this.player.locZ;
++                // Guardian end
+                 // CraftBukkit start - min to max
+-                double d7 = Math.max(Math.abs(d4), Math.abs(this.player.motX));
+-                double d8 = Math.max(Math.abs(d5), Math.abs(this.player.motY));
+-                double d9 = Math.max(Math.abs(d6), Math.abs(this.player.motZ));
++                double d7 = Math.max(Math.abs(xDelta), Math.abs(this.player.motX));
++                double d8 = Math.max(Math.abs(yDelta), Math.abs(this.player.motY));
++                double d9 = Math.max(Math.abs(zDelta), Math.abs(this.player.motZ));
+                 // CraftBukkit end
+                 double d10 = d7 * d7 + d8 * d8 + d9 * d9;
+ 
+@@ -398,26 +771,201 @@ public class PlayerConnection implements PacketPlayInListener {
+ 
+                 SpigotTimings.connectionTimer_PacketFlying_move.startTiming(); // Poweruser
+ 
+-                float f4 = 0.0625F;
+                 boolean flag = worldserver.getCubes(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).isEmpty();
+ 
+-                if (this.player.onGround && !packetplayinflying.i() && d5 > 0.0D) {
++                if (this.player.onGround && !packetplayinflying.i() && yDelta > 0.0D) {
+                     this.player.bj();
+                 }
+ 
+-                this.player.move(d4, d5, d6);
++                // Guardian start
++
++                /*// Fly (Module G) start - Griffin
++                if (!justTeleported && !this.player.abilities.canFly && this.player.vehicle == null && touchingAir && velocitiesSent.isEmpty() && (networkManager.lastVehicleTime + TimeUnit.SECONDS.toMillis(5) < networkManager.currentTime)) {
++                    if (nextExpectedYDelta != 0) {
++                        if (Math.abs(Math.abs(yDelta) - Math.abs(this.nextExpectedYDelta)) > 0.01D) {
++                            this.gGoodTicks = 0;
++
++                            if (yDelta > this.nextExpectedYDelta) {
++                                if (++this.flyModuleGAmount >= 5) {
++                                    this.flyModuleGAmount = 0;
++
++                                    String message = String.format("%s is flying (Module G) at %.1f %.1f %.1f", this.player.getName(), to.getX(), to.getY(), to.getZ());
++
++                                    Bukkit.getPluginManager().callEvent(new GuardianEvent(
++                                            getPlayer(), GuardianEvent.Cheat.FLY_HACKS, "G", GuardianEvent.DisplayLevel.HIGHEST, message)
++                                            .addData("expected", this.nextExpectedYDelta)
++                                            .addData("received", yDelta));
++                                }
++                            } else if (++this.fastFallModuleGAmount >= 5) {
++                                this.fastFallModuleGAmount = 0;
++
++                                String message = String.format("%s is falling too fast (Module G) at %.1f %.1f %.1f", this.player.getName(), to.getX(), to.getY(), to.getZ());
++
++                                Bukkit.getPluginManager().callEvent(new GuardianEvent(
++                                        getPlayer(), GuardianEvent.Cheat.GENERAL, "G", GuardianEvent.DisplayLevel.HIGHEST, message)
++                                        .addData("expected", this.nextExpectedYDelta)
++                                        .addData("received", yDelta));
++                            }
++
++                            if (SpigotConfig.debugGuardian) debugGuardian("G: " + player.getName() + " failed: (E: " + this.nextExpectedYDelta + " | R: " + yDelta + ")");
++                        } else {
++                            if (++this.gGoodTicks >= 30) {
++                                this.flyModuleGAmount = 0;
++                                this.fastFallModuleGAmount = 0;
++                                this.gGoodTicks = 0;
++
++                                if (SpigotConfig.debugGuardian) debugGuardian("G: Reset because we got 30 good ticks.");
++                            }
++                        }
++                    }
++
++                    nextExpectedYDelta = (yDelta - 0.08) * 0.9800000190734863D;
++
++                    if (Math.abs(nextExpectedYDelta) < 0.005D) {
++                        this.nextExpectedYDelta = 0.0D;
++                    }
++                } else {
++                    nextExpectedYDelta = 0.0D;
++                }
++                // Fly (Module G) end*/
++
++                AxisAlignedBB preBB = getBoundingBoxRounded();
++                if ((!this.player.abilities.canFly)) {
++                    boolean teleport = networkManager.currentTime - this.positionSentTime < 5000L;
++                    double horizontalSpeed = this.horizontalSpeed;
++                    double blockFriction = this.blockFriction;
++
++                    if (onGround) {
++                        horizontalSpeed *= 1.3D;
++                        blockFriction *= 0.91D;
++                        horizontalSpeed *= 0.16277136D / (blockFriction * blockFriction * blockFriction);
++
++                        if ((Bukkit.shouldGuardianAct()) && (!packetplayinflying.i()) && (yDelta > 1.0E-4D)) {
++                            horizontalSpeed += 0.2D;
++                            MobEffect jumpBoost = this.player.getEffect(MobEffectList.JUMP);
++                            if ((!teleport) && (!this.player.world.c(this.player.boundingBox.grow(0.5D, 0.249D, 0.5D).d(0.0D, 0.25D, 0.0D))) && (jumpBoost == null)) {
++                                double kb = 0.0D;
++
++                                for (PacketPlayOutEntityVelocity packet : this.velocitiesSent) {
++                                    double packetY = packet.c / 8000.0D;
++                                    if ((packetY > 0.0D) && ((kb == 0.0D) || (packetY < kb))) {
++                                        kb = packetY;
++                                    }
++                                }
++
++                                if ((kb == 0.0D) && (yDelta < 0.15D)) {
++                                    if ((this.miniJumpAmount += 20) > 70) {
++                                        this.miniJumpAmount = 0;
++                                        String message = String.format("%s uses Client Modifications (Module M) [%.3f] at %.1f %.1f %.1f", this.player.getName(), yDelta, d1, d2, d3);
++
++                                        Bukkit.getPluginManager().callEvent(
++                                                new GuardianEvent(getPlayer(), GuardianEvent.Cheat.CLIENT_MODIFICATIONS, "M", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), d1, d2, d3))
++                                                .addData("yDelta", yDelta)
++                                        );
++                                    }
++                                } else if (yDelta < 0.41999998688697815D) {
++                                    if ((kb > 0.1D) && (yDelta < kb * 0.99D) && ((this.reducedKbAmount += 30) > 35)) {
++                                        long percent = Math.round(100.0D * yDelta / kb);
++                                        String message = String.format("%s uses Client Modifications (Module R) [%d%% %.2f/%.2f]", this.player.getName(), percent, yDelta, kb);
++
++                                        Bukkit.getPluginManager().callEvent(
++                                                new GuardianEvent(getPlayer(), GuardianEvent.Cheat.CLIENT_MODIFICATIONS, "R", GuardianEvent.DisplayLevel.HIGHEST, message)
++                                                .addData("percentage", String.format("%d%%", Math.round(100.0D * yDelta / kb)))
++                                                .addData("received/expected", String.format("%.2f/%.2f", yDelta, kb))
++                                        );
++                                    }
++                                }
++                            }
++                        }
++                    } else {
++                        horizontalSpeed = 0.026D;
++                        blockFriction = 0.91D;
++                    }
++
++                    if ((xDelta != 0.0D) || (zDelta != 0.0D)) {
++                        double horizontalMove = Math.sqrt(xDelta * xDelta + zDelta * zDelta);
++
++                        if (this.player.inWater) {
++                            horizontalSpeed *= 3.0D;
++                        }
++
++                        if ((Bukkit.shouldGuardianAct()) && (!teleport)) {
++                            double speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
++
++                            if (speedup > 1.1D) {
++                                double knockbackSquared = 0.0D;
++
++                                for (PacketPlayOutEntityVelocity packet : this.velocitiesSent) {
++                                    double x = packet.b / 8000.0D;
++                                    double z = packet.d / 8000.0D;
++                                    double xz = x * x + z * z;
++                                    if (xz > knockbackSquared) {
++                                        knockbackSquared = xz;
++                                    }
++                                }
++
++                                if (knockbackSquared != 0.0D) {
++                                    horizontalSpeed += Math.sqrt(knockbackSquared);
++                                    speedup = (horizontalMove - this.previousHorizontalMove) / horizontalSpeed;
++                                }
++                            }
++
++                            if (speedup > 1.1D) {
++                                boolean blocksNear = this.player.world.c(this.player.boundingBox.grow(1.5D, 1.5D, 1.5D));
++                                if (!blocksNear) {
++                                    if (this.player.getEffect(MobEffectList.JUMP) == null && (lastJumpEffectTime + 1500L < networkManager.currentTime)) {
++                                        if ((this.flyTypeDAmount += 20) > 90) {
++                                            this.flyTypeDAmount = 0;
++                                            String message = String.format("%s is flying (Module B) [%d%%] at %.1f %.1f %.1f", this.player.getName(), (int) (100.0D * speedup), d1, d2, d3);
++                                            Bukkit.getPluginManager().callEvent(
++                                                    new GuardianEvent(getPlayer(), GuardianEvent.Cheat.FLY_HACKS, "B", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), d1, d2, d3))
++                                                    .addData("speedup", String.format("%d%%", (int) (100.0D * speedup)))
++                                            );
++                                        }
++                                    } else {
++                                        lastJumpEffectTime = System.currentTimeMillis();
++                                    }
++                                } else if ((speedup > 1.5D) && ((this.speedTypeDAmount += 20) > 90)) {
++                                    this.speedTypeDAmount = 0;
++
++                                    String message = String.format("%s is speeding (Module A) [%d%%] at %.1f %.1f %.1f", this.player.getName(), (int) (100.0D * speedup), d1, d2, d3);
++                                    Bukkit.getPluginManager().callEvent(
++                                            new GuardianEvent(getPlayer(), GuardianEvent.Cheat.SPEED_HACKS, "A", GuardianEvent.DisplayLevel.HIGH, message, new Location(getPlayer().getWorld(), d1, d2, d3))
++                                            .addData("speedup", String.format("%d%%", (int) (100.0D * speedup)))
++                                    );
++                                }
++                            }
++                        }
++
++                        this.previousHorizontalMove = (horizontalMove * blockFriction);
++
++                        int blockX = NumberConversions.floor(d1);
++                        int blockY = NumberConversions.floor(d2);
++                        int blockZ = NumberConversions.floor(d3);
++
++                        if ((blockX != this.blockFrictionX) || (blockY != this.blockFrictionY) || (blockZ != this.blockFrictionZ)) {
++                            this.blockFriction = this.player.world.getType(blockX, blockY - 1, blockZ).frictionFactor;
++                            this.blockFrictionX = blockX;
++                            this.blockFrictionY = blockY;
++                            this.blockFrictionZ = blockZ;
++                        }
++                    }
++                }
++                // Guardian end
++
++                this.player.move(xDelta, yDelta, zDelta);
+                 this.player.onGround = packetplayinflying.i();
+-                this.player.checkMovement(d4, d5, d6);
+-                double d11 = d5;
++                this.player.checkMovement(xDelta, yDelta, zDelta);
++                double d11 = yDelta;
+ 
+-                d4 = d1 - this.player.locX;
+-                d5 = d2 - this.player.locY;
+-                if (d5 > -0.5D || d5 < 0.5D) {
+-                    d5 = 0.0D;
++                xDelta = d1 - this.player.locX;
++                yDelta = d2 - this.player.locY;
++                if (yDelta > -0.5D || yDelta < 0.5D) {
++                    yDelta = 0.0D;
+                 }
+ 
+-                d6 = d3 - this.player.locZ;
+-                d10 = d4 * d4 + d5 * d5 + d6 * d6;
++                zDelta = d3 - this.player.locZ;
++                d10 = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
+                 boolean flag1 = false;
+ 
+                 // Spigot: make "moved wrongly" limit configurable
+@@ -452,26 +1000,82 @@ public class PlayerConnection implements PacketPlayInListener {
+                 this.player.setLocation(calculatedX, calculatedY, calculatedZ, f2, f3);
+ 
+                 SpigotTimings.connectionTimer_PacketFlying_move.stopTiming(); // Poweruser
++                // Poweruser end
++
++                // Guardian start
++                if (this.flyTypeDAmount > 0) {
++                    this.flyTypeDAmount -= 1;
++                }
++
++                if (this.speedTypeDAmount > 0) {
++                    this.speedTypeDAmount -= 1;
++                }
++
++                if (this.miniJumpAmount > 0) {
++                    this.miniJumpAmount -= 1;
++                }
++
++                if (this.reducedKbAmount > 0) {
++                    this.reducedKbAmount -= 1;
++                }
++
++                if (this.player.vehicle != null) {
++                    networkManager.lastVehicleTime = networkManager.currentTime;
++                }
++                // Guardian end
+ 
++                // Poweruser start
+                 if (flag1 || (!this.player.isSleeping() && flag && !flag2) || rayTraceCollision) {
+                     if(!rayTraceCollision && !flag && e % 3 != 0) {
+                         this.player.setPosition(this.y, this.z, this.q);
+                     } else {
+                         this.a(this.y, this.z, this.q, f2, f3);
+                     }
++
++                    // Guardian start
++//                    if (Bukkit.shouldGuardianAct()) {
++//                        double dx = this.y - d1;
++//                        double dy = this.z - d2;
++//                        double dz = this.q - d3;
++//
++//                        if (!(dx == 0 && dz == 0)) {
++//                            if (Math.abs(dx) > 0.3D || Math.abs(dz) > 0.3D) {
++//                                String legacyMessage = String.format("%s is trying to phase (%.2f, %.2f, %.2f) at %.1f,%.1f,%.1f", this.player.getName(), dx, dy, dz, this.y, this.z, this.q);
++//
++//                                Bukkit.getPluginManager().callEvent(new GuardianEvent(getPlayer(), GuardianEvent.Cheat.PHASE, GuardianEvent.DisplayLevel.HIGH, "A", String.format("at %.1f,%.1f,%.1f", this.y, this.z, this.q), legacyMessage));
++//                            }
++//                        } else {
++//                            String legacyMessage = String.format("%s tries to VClip %.1f blocks at %.1f,%.1f,%.1f", this.player.getName(), -dy, this.y, this.z, this.q);
++//
++//                            Bukkit.getPluginManager().callEvent(new GuardianEvent(getPlayer(), GuardianEvent.Cheat.PHASE, GuardianEvent.DisplayLevel.HIGH, "B", String.format("%.1f blocks at %.1f,%.1f,%.1f", -dy, this.y, this.z, this.q), legacyMessage));
++//                        }
++//                    }
++                    // Guardian end
+                     return;
+                 }
+                 // Poweruser end
+ 
+-                AxisAlignedBB axisalignedbb = this.player.boundingBox.clone().grow((double) f4, (double) f4, (double) f4).a(0.0D, -0.55D, 0.0D);
+-
+                 if (!this.minecraftServer.getAllowFlight() && !this.player.abilities.canFly && !worldserver.c(axisalignedbb)) { // CraftBukkit - check abilities instead of creative mode
+                     if (d11 >= -0.03125D) {
+                         ++this.f;
+                         if (this.f > 80) {
+-                            c.warn(this.player.getName() + " was kicked for floating too long!");
+-                            this.disconnect("Flying is not enabled on this server");
+-                            return;
++                            if (Bukkit.shouldGuardianAct() && lastKickedForFly + TimeUnit.MINUTES.toMillis(1) < networkManager.currentTime) { // Guardian - Only kick them if we are currently doing checks, add a delay between kicks
++                                lastKickedForFly = networkManager.currentTime;
++
++                                if (!player.isOp()) { // Guardian: Only kick if they're not opped
++                                    this.disconnect("Flying is not enabled on this server");
++                                    c.warn(this.player.getName() + " was kicked for flying!");
++                                }
++
++                                // Guardian start
++                                String message = String.format("%s was caught flying (Module V) at %.1f %.1f %.1f", this.player.getName(), this.player.locX, this.player.locY, this.player.locZ);
++
++                                Bukkit.getPluginManager().callEvent(
++                                        new GuardianEvent(player, GuardianEvent.Cheat.FLY_HACKS, "V", GuardianEvent.DisplayLevel.HIGH, message, new Location(player.getWorld(), this.player.locX, this.player.locY, this.player.locZ))
++                                );
++                                // Guardian end
++                                return;
++                            }
+                         }
+                     }
+                 } else {
+@@ -489,6 +1093,17 @@ public class PlayerConnection implements PacketPlayInListener {
+         }
+     }
+ 
++    private AxisAlignedBB getBoundingBoxRounded() {
++        AxisAlignedBB bb = this.player.boundingBox.clone();
++        bb.a = (Math.round(bb.a * 1000000.0D) / 1000000.0D);
++        bb.b = (Math.round(bb.b * 1000000.0D) / 1000000.0D);
++        bb.c = (Math.round(bb.c * 1000000.0D) / 1000000.0D);
++        bb.d = (Math.round(bb.d * 1000000.0D) / 1000000.0D);
++        bb.e = (Math.round(bb.e * 1000000.0D) / 1000000.0D);
++        bb.f = (Math.round(bb.f * 1000000.0D) / 1000000.0D);
++        return bb;
++    }
++
+     public void a(double d0, double d1, double d2, float f, float f1) {
+         // CraftBukkit start - Delegate to teleport(Location)
+         Player player = this.getPlayer();
+@@ -536,12 +1151,25 @@ public class PlayerConnection implements PacketPlayInListener {
+         this.q = d2;
+         this.player.setLocation(d0, d1, d2, f, f1);
+         this.player.playerConnection.sendPacket(new PacketPlayOutPosition(d0, d1 + 1.6200000047683716D, d2, f, f1, false));
++        this.lastGroundY = -1.0D; // Guardian
+     }
+ 
+     public void a(PacketPlayInBlockDig packetplayinblockdig) {
+         if (this.player.dead) return; // CraftBukkit
+         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
+ 
++        // Guardian start
++        if (!this.player.abilities.canInstantlyBuild) {
++            if (packetplayinblockdig.g() == 0) {
++                this.isDigging = true;
++                this.killAuraRThreshold = 0;
++                this.digHorizontalMovement = 0;
++            } else if ((packetplayinblockdig.g() == 1) || (packetplayinblockdig.g() == 2)) {
++                this.isDigging = false;
++            }
++        }
++        // Guardian end
++
+         this.player.v();
+         if (packetplayinblockdig.g() == 4) {
+             // CraftBukkit start - limit how quickly items can be dropped
+@@ -851,6 +1479,18 @@ public class PlayerConnection implements PacketPlayInListener {
+         }
+         // CraftBukkit end
+ 
++        // Guardian start
++        if (((packet instanceof PacketPlayOutEntityVelocity)) && (((PacketPlayOutEntityVelocity)packet).a == this.player.getId())) {
++            this.velocitiesSent.add((PacketPlayOutEntityVelocity) packet);
++            this.velocitySentTimes.add(System.currentTimeMillis());
++            this.lastVelocitySentTick = MinecraftServer.currentTick;
++        }
++
++        if ((packet instanceof PacketPlayOutPosition)) {
++            this.positionSentTime = System.currentTimeMillis();
++        }
++        // Guardian end
++
+         try {
+             this.networkManager.handle(packet, NetworkManager.emptyListenerArray); // Poweruser
+         } catch (Throwable throwable) {
+@@ -862,6 +1502,32 @@ public class PlayerConnection implements PacketPlayInListener {
+         }
+     }
+ 
++    // Guardian start
++    public void handleKeepAliveSync(PacketPlayInKeepAlive packet)  {
++        this.keepAlives.remove(packet.c());
++
++        long latency = 1000 + this.keepAlives.size() * 1000;
++
++        Iterator it = this.velocitySentTimes.iterator();
++        int i = 0;
++        while (it.hasNext()) {
++            long ts = (Long) it.next();
++
++            if (this.networkManager.currentTime - ts > latency) {
++                it.remove();
++                this.velocitiesSent.remove(i);
++            } else {
++                i++;
++            }
++        }
++
++        if ((this.newHorizontalSpeed != 0.0D) && (this.networkManager.currentTime - this.newHorizontalSpeedTime > latency)) {
++            this.horizontalSpeed = this.newHorizontalSpeed;
++            this.newHorizontalSpeed = 0.0D;
++        }
++    }
++    // Guardian end
++
+     public void a(PacketPlayInHeldItemSlot packetplayinhelditemslot) {
+         // CraftBukkit start
+         if (this.player.dead) return;
+@@ -1169,6 +1835,11 @@ public class PlayerConnection implements PacketPlayInListener {
+             this.player.setSneaking(false);
+         } else if (packetplayinentityaction.d() == 4) {
+             this.player.setSprinting(true);
++            // Guardian start
++            if (this.player.isBlocking()) {
++                this.player.bA(); // stopUsingItem
++            }
++            // Guardian end
+         } else if (packetplayinentityaction.d() == 5) {
+             this.player.setSprinting(false);
+         } else if (packetplayinentityaction.d() == 3) {
+@@ -1247,6 +1918,12 @@ public class PlayerConnection implements PacketPlayInListener {
+                         return;
+                     }
+ 
++                    // Guardian start
++                    if (this.player.isBlocking()) {
++                        this.player.bA(); // stopUsingItem
++                    }
++                    // Guardian end
++
+                     this.player.attack(entity);
+ 
+                     // CraftBukkit start
+@@ -1787,6 +2464,26 @@ public class PlayerConnection implements PacketPlayInListener {
+     }
+ 
+     public void a(PacketPlayInKeepAlive packetplayinkeepalive) {
++        // Guardian start
++        if (this.lastKeepAlivePacketReceived == -1L) {
++            this.lastKeepAlivePacketReceived = networkManager.currentTime;
++        }
++        else if (this.lastKeepAlivePacketReceived + 2000L < networkManager.currentTime) {
++            this.lastKeepAlivePacketReceived += 550L;
++        } else {
++            this.lastKeepAlivePacketReceived = networkManager.currentTime;
++        }
++
++        this.packetsNotReceived -= 1;
++
++        if ((this.player.isAlive()) && (!this.player.sleeping) && (this.lastKAPacketTick + 20L > MinecraftServer.currentTick) && (this.lastKAMovementPacket + 100L < MinecraftServer.currentTick) &&
++                (this.lastNotificationTick + 20L < MinecraftServer.currentTick)) {
++            this.lastNotificationTick = MinecraftServer.currentTick;
++        }
++
++        this.lastKAPacketTick = MinecraftServer.currentTick;
++        // Guardian end
++
+         if (packetplayinkeepalive.c() == this.h) {
+             int i = (int) (this.d() - this.i);
+ 
+@@ -2034,6 +2731,36 @@ public class PlayerConnection implements PacketPlayInListener {
+         }
+     }
+ 
++    // Guardian start
++    public void updateMovementSpeed() {
++        AttributeModifiable moveSpeed = (AttributeModifiable) this.player.getAttributeMap().a(GenericAttributes.d);
++        double base = moveSpeed.b();
++        double value = base;
++
++        for (AttributeModifier modifier : (Collection<AttributeModifier>) moveSpeed.a(0)) {
++            value += modifier.d();
++        }
++        for (AttributeModifier modifier : (Collection<AttributeModifier>)  moveSpeed.a(1)) {
++            value += modifier.d() * base;
++        }
++        for (AttributeModifier modifier : (Collection<AttributeModifier>)  moveSpeed.a(2)) {
++            if (modifier != EntityLiving.c) {
++                value *= (1.0D + modifier.d());
++            }
++        }
++        if (value < this.horizontalSpeed)
++        {
++            this.newHorizontalSpeed = value;
++            this.newHorizontalSpeedTime = System.currentTimeMillis();
++        }
++        else
++        {
++            this.horizontalSpeed = value;
++            this.newHorizontalSpeed = 0.0D;
++        }
++    }
++    // Guardian end
++
+     public void a(EnumProtocol enumprotocol, EnumProtocol enumprotocol1) {
+         if (enumprotocol1 != EnumProtocol.PLAY) {
+             throw new IllegalStateException("Unexpected change in protocol!");
+diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src/main/java/net/minecraft/server/PlayerInteractManager.java
+index e5c87af6c..cd7aa9415 100644
+--- a/src/main/java/net/minecraft/server/PlayerInteractManager.java
++++ b/src/main/java/net/minecraft/server/PlayerInteractManager.java
+@@ -110,6 +110,8 @@ public class PlayerInteractManager {
+                 if (tileentity != null) {
+                     this.player.playerConnection.sendPacket(tileentity.getUpdatePacket());
+                 }
++
++                this.player.playerConnection.isDigging = false; // Guardian
+                 return;
+             }
+             // CraftBukkit end
+@@ -145,6 +147,8 @@ public class PlayerInteractManager {
+                     if (f > 1.0f) {
+                         ((EntityPlayer) this.player).playerConnection.sendPacket(new PacketPlayOutBlockChange(i, j, k, this.world));
+                     }
++
++                    this.player.playerConnection.isDigging = false; // Guardian
+                     return;
+                 }
+                 org.bukkit.event.block.BlockDamageEvent blockEvent = CraftEventFactory.callBlockDamageEvent(this.player, i, j, k, this.player.inventory.getItemInHand(), f >= 1.0f);
+@@ -161,6 +165,8 @@ public class PlayerInteractManager {
+                 // CraftBukkit end
+ 
+                 if (block.getMaterial() != Material.AIR && f >= 1.0F) {
++                    this.player.playerConnection.isDigging = false; // Guardian
++
+                     this.breakBlock(i, j, k);
+                 } else {
+                     this.d = true;
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index d8a7cfd6d..af1a4a741 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -2747,6 +2747,50 @@ public abstract class World implements IBlockAccess {
+         return arraylist;
+     }
+ 
++    // Guardian start
++    public boolean containsLiquidOrClimbable(AxisAlignedBB axisalignedbb) {
++        try {
++            int i = MathHelper.floor(axisalignedbb.a);
++            int j = MathHelper.floor(axisalignedbb.d + 1.0D);
++            int k = MathHelper.floor(axisalignedbb.b);
++            int l = MathHelper.floor(axisalignedbb.e + 1.0D);
++            int i1 = MathHelper.floor(axisalignedbb.c);
++            int j1 = MathHelper.floor(axisalignedbb.f + 1.0D);
++            if (axisalignedbb.a < 0.0D) {
++                i--;
++            }
++            if (axisalignedbb.b < 0.0D) {
++                k--;
++            }
++            if (axisalignedbb.c < 0.0D) {
++                i1--;
++            }
++            Chunk chunk = null;
++            for (int k1 = i; k1 < j; k1++) {
++                for (int i2 = i1; i2 < j1; i2++) {
++                    int chunkX = k1 >> 4;
++                    int chunkZ = i2 >> 4;
++                    if (chunk == null) {
++                        chunk = getChunkAt(chunkX, chunkZ);
++                    } else if ((chunkX != chunk.locX) || (chunkZ != chunk.locZ)) {
++                        chunk = getChunkAt(chunkX, chunkZ);
++                    }
++                    for (int l1 = k; l1 < l; l1++) {
++                        Block block = chunk.getType(k1 & 0xF, l1, i2 & 0xF);
++                        if ((block.getMaterial().isLiquid()) || (block == Blocks.LADDER) || (block == Blocks.VINE)) {
++                            return true;
++                        }
++                    }
++                }
++            }
++
++            return false;
++        } catch (Exception e) {
++            return false;
++        }
++    }
++    // Guardian end
++
+     public Entity a(Class oclass, AxisAlignedBB axisalignedbb, Entity entity) {
+         List list = this.a(oclass, axisalignedbb);
+         Entity entity1 = null;
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index ae7d80c10..0187fb727 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -181,6 +181,7 @@ import org.bukkit.plugin.messaging.StandardMessenger;
+ import org.bukkit.scheduler.BukkitWorker;
+ import org.bukkit.util.StringUtil;
+ import org.bukkit.util.permissions.DefaultPermissions;
++import org.spigotmc.SpigotConfig;
+ import org.yaml.snakeyaml.Yaml;
+ import org.yaml.snakeyaml.constructor.SafeConstructor;
+ import org.yaml.snakeyaml.error.MarkedYAMLException;
+@@ -1844,6 +1845,23 @@ public final class CraftServer implements Server {
+         return console.getIdleTimeout();
+     }
+ 
++    // Guardian start
++    @Override
++    public boolean isGuardianEnabled() {
++        return SpigotConfig.guardianEnabled;
++    }
++
++    @Override
++    public void setGuardianEnabled(boolean enabled) {
++        SpigotConfig.guardianEnabled = enabled;
++    }
++
++    @Override
++    public boolean shouldGuardianAct() {
++        return isGuardianEnabled() && spigot().getTPS()[0] >= 19.0D;
++    }
++    // Guardian end
++
+     @Deprecated
+     @Override
+     public UnsafeValues getUnsafe() {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 111df31d3..9541bd2c3 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1,47 +1,24 @@
+ package org.bukkit.craftbukkit.entity;
+ 
+ import com.google.common.collect.ImmutableSet;
+-import com.google.common.collect.MapMaker;
+-
+-import java.io.ByteArrayOutputStream;
+-import java.io.IOException;
+-import java.net.InetSocketAddress;
+-import java.net.SocketAddress;
+-import java.util.Collection;
+-import java.util.HashSet;
+-import java.util.LinkedHashMap;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-import java.util.UUID;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-
+ import net.md_5.bungee.api.chat.BaseComponent;
+ import net.minecraft.server.*;
+-
+ import net.minecraft.util.com.mojang.authlib.GameProfile;
+-import org.apache.commons.lang.Validate;
+ import org.apache.commons.lang.NotImplementedException;
+-import org.bukkit.*;
++import org.apache.commons.lang.Validate;
+ import org.bukkit.Achievement;
+-import org.bukkit.BanList;
+-import org.bukkit.Statistic;
++import org.bukkit.*;
+ import org.bukkit.Material;
++import org.bukkit.Statistic;
+ import org.bukkit.Statistic.Type;
+ import org.bukkit.World;
+ import org.bukkit.configuration.serialization.DelegateDeserialization;
+ import org.bukkit.conversations.Conversation;
+ import org.bukkit.conversations.ConversationAbandonedEvent;
+ import org.bukkit.conversations.ManuallyAbandonedConversationCanceller;
++import org.bukkit.craftbukkit.*;
+ import org.bukkit.craftbukkit.block.CraftSign;
+ import org.bukkit.craftbukkit.conversations.ConversationTracker;
+-import org.bukkit.craftbukkit.CraftEffect;
+-import org.bukkit.craftbukkit.CraftOfflinePlayer;
+-import org.bukkit.craftbukkit.CraftServer;
+-import org.bukkit.craftbukkit.CraftSound;
+-import org.bukkit.craftbukkit.CraftStatistic;
+-import org.bukkit.craftbukkit.CraftWorld;
+ import org.bukkit.craftbukkit.map.CraftMapView;
+ import org.bukkit.craftbukkit.map.RenderData;
+ import org.bukkit.craftbukkit.scoreboard.CraftScoreboard;
+@@ -58,6 +35,14 @@ import org.bukkit.plugin.messaging.StandardMessenger;
+ import org.bukkit.scoreboard.Scoreboard;
+ import org.bukkit.util.Vector;
+ 
++import java.io.ByteArrayOutputStream;
++import java.io.IOException;
++import java.net.InetSocketAddress;
++import java.net.SocketAddress;
++import java.util.*;
++import java.util.logging.Level;
++import java.util.logging.Logger;
++
+ @DelegateDeserialization(CraftOfflinePlayer.class)
+ public class CraftPlayer extends CraftHumanEntity implements Player {
+     private long firstPlayed = 0;
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 24b584880..025a3c2f9 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -456,4 +456,16 @@ public class SpigotConfig
+         lagSpikeLoggerTickLimitNanos = ((long) getInt( "settings.lagSpikeLogger.tickLimitInMilliseconds", 100)) * 1000000L;
+     }
+     // Poweruser end
++
++    // Guardian start
++    public static boolean guardianEnabled;
++    private static void guardianEnabled() {
++        guardianEnabled = getBoolean("settings.guardian.enabled", true);
++    }
++
++    public static boolean guardianTesting;
++    private static void guardianTesting() {
++        guardianTesting = getBoolean("settings.guardian.testing", false);
++    }
++    // Guardian end
+ }
+-- 
+2.13.3
+

@@ -1,0 +1,122 @@
+From 7a1d9da4e4ecd06481216e098c4b4086c6f84436 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Wed, 16 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Fix rounding errors on chunk coordinate calculations
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerChunkMap.java b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+index 4ca5fe8eb..ffac105db 100644
+--- a/src/main/java/net/minecraft/server/PlayerChunkMap.java
++++ b/src/main/java/net/minecraft/server/PlayerChunkMap.java
+@@ -116,8 +116,10 @@ public class PlayerChunkMap {
+     }
+ 
+     public void addPlayer(EntityPlayer entityplayer) {
+-        int i = (int) entityplayer.locX >> 4;
+-        int j = (int) entityplayer.locZ >> 4;
++        // Poweruser start
++        int i = MathHelper.floor(entityplayer.locX) >> 4;
++        int j = MathHelper.floor(entityplayer.locZ) >> 4;
++        // Poweruser end
+ 
+         entityplayer.d = entityplayer.locX;
+         entityplayer.e = entityplayer.locZ;
+@@ -144,8 +146,10 @@ public class PlayerChunkMap {
+         ArrayList arraylist = new ArrayList(entityplayer.chunkCoordIntPairQueue);
+         int i = 0;
+         int j = this.g;
+-        int k = (int) entityplayer.locX >> 4;
+-        int l = (int) entityplayer.locZ >> 4;
++        // Poweruser start
++        int k = MathHelper.floor(entityplayer.locX) >> 4;
++        int l = MathHelper.floor(entityplayer.locZ) >> 4;
++        // Poweruser end
+         int i1 = 0;
+         int j1 = 0;
+         ChunkCoordIntPair chunkcoordintpair = PlayerChunk.a(this.a(k, l, true));
+@@ -185,8 +189,10 @@ public class PlayerChunkMap {
+     }
+ 
+     public void removePlayer(EntityPlayer entityplayer) {
+-        int i = (int) entityplayer.d >> 4;
+-        int j = (int) entityplayer.e >> 4;
++        // Poweruser start
++        int i = MathHelper.floor(entityplayer.d) >> 4;
++        int j = MathHelper.floor(entityplayer.e) >> 4;
++        // Poweruser end
+ 
+         for (int k = i - this.g; k <= i + this.g; ++k) {
+             for (int l = j - this.g; l <= j + this.g; ++l) {
+@@ -209,15 +215,19 @@ public class PlayerChunkMap {
+     }
+ 
+     public void movePlayer(EntityPlayer entityplayer) {
+-        int i = (int) entityplayer.locX >> 4;
+-        int j = (int) entityplayer.locZ >> 4;
++        // Poweruser start
++        int i = MathHelper.floor(entityplayer.locX) >> 4;
++        int j = MathHelper.floor(entityplayer.locZ) >> 4;
++        // Poweruser end
+         double d0 = entityplayer.d - entityplayer.locX;
+         double d1 = entityplayer.e - entityplayer.locZ;
+         double d2 = d0 * d0 + d1 * d1;
+ 
+         if (d2 >= 64.0D) {
+-            int k = (int) entityplayer.d >> 4;
+-            int l = (int) entityplayer.e >> 4;
++            // Poweruser start
++            int k = MathHelper.floor(entityplayer.d) >> 4;
++            int l = MathHelper.floor(entityplayer.e) >> 4;
++            // Poweruser end
+             int i1 = this.g;
+             int j1 = i - k;
+             int k1 = j - l;
+@@ -272,8 +282,8 @@ public class PlayerChunkMap {
+ 
+             while (iterator.hasNext()) {
+                 EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+-                int k = (int) entityplayer.locX >> 4;
+-                int l = (int) entityplayer.locZ >> 4;
++                int k = MathHelper.floor(entityplayer.locX) >> 4;
++                int l = MathHelper.floor(entityplayer.locZ) >> 4;
+                 int i1;
+                 int j1;
+ 
+@@ -332,8 +342,10 @@ public class PlayerChunkMap {
+         private int z;
+ 
+         public ChunkCoordComparator (EntityPlayer entityplayer) {
+-            x = (int) entityplayer.locX >> 4;
+-            z = (int) entityplayer.locZ >> 4;
++            // Poweruser start
++            x = MathHelper.floor(entityplayer.locX) >> 4;
++            z = MathHelper.floor(entityplayer.locZ) >> 4;
++            // Poweruser end
+         }
+ 
+         public int compare(ChunkCoordIntPair a, ChunkCoordIntPair b) {
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index e1d5ba0d2..c1da32963 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -257,7 +257,7 @@ public abstract class PlayerList {
+         }
+ 
+         worldserver1.getPlayerChunkMap().addPlayer(entityplayer);
+-        worldserver1.chunkProviderServer.getChunkAt((int) entityplayer.locX >> 4, (int) entityplayer.locZ >> 4);
++        worldserver1.chunkProviderServer.getChunkAt(MathHelper.floor(entityplayer.locX) >> 4, MathHelper.floor(entityplayer.locZ) >> 4);
+     }
+ 
+     public int d() {
+@@ -577,7 +577,7 @@ public abstract class PlayerList {
+         entityplayer1.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+         // CraftBukkit end
+ 
+-        worldserver.chunkProviderServer.getChunkAt((int) entityplayer1.locX >> 4, (int) entityplayer1.locZ >> 4);
++        worldserver.chunkProviderServer.getChunkAt(MathHelper.floor(entityplayer1.locX) >> 4, MathHelper.floor(entityplayer1.locZ) >> 4);
+ 
+         while (avoidSuffocation && !worldserver.getCubes(entityplayer1, entityplayer1.boundingBox).isEmpty()) { // CraftBukkit
+             entityplayer1.setPosition(entityplayer1.locX, entityplayer1.locY + 1.0D, entityplayer1.locZ);
+-- 
+2.13.3
+

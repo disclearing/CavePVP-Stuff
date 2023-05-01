@@ -1,0 +1,39 @@
+From ae22c665c475dcbebd552e3bc6bd6ec35832799b Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:23:04 -0400
+Subject: [PATCH] Configurable experience orb despawn rate
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityExperienceOrb.java b/src/main/java/net/minecraft/server/EntityExperienceOrb.java
+index 575076036..0f540690b 100644
+--- a/src/main/java/net/minecraft/server/EntityExperienceOrb.java
++++ b/src/main/java/net/minecraft/server/EntityExperienceOrb.java
+@@ -104,7 +104,7 @@ public class EntityExperienceOrb extends Entity {
+ 
+         ++this.a;
+         ++this.b;
+-        if (this.b >= 6000) {
++        if (this.b >= this.world.spigotConfig.expDespawnRate) {
+             this.die();
+         }
+     }
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index 854ba6d80..ddfc8f2c2 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -355,4 +355,12 @@ public class SpigotWorldConfig
+     {
+         hangingTickFrequency = getInt( "hanging-tick-frequency", 100 );
+     }
++
++    public int expDespawnRate;
++
++    private void expDespawnRate() {
++        expDespawnRate = getInt( "exp-despawn-rate", 6000 );
++        log( "Experience Orb Despawn Rate: " + expDespawnRate );
++    }
++
+ }
+-- 
+2.13.3
+

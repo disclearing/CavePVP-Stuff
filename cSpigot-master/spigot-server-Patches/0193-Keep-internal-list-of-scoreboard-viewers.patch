@@ -1,0 +1,144 @@
+From c899bf46864150faefbc05f99397c46c40410ebc Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Thu, 20 Jul 2017 23:15:24 +0100
+Subject: [PATCH] Keep internal list of scoreboard viewers
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 8a0e9ffce..e77faabc8 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -261,6 +261,8 @@ public abstract class PlayerList {
+                 hashset.add(scoreboardobjective);
+             }
+         }
++
++        scoreboardserver.addViewer(entityplayer); // MineHQ
+     }
+ 
+     public void setPlayerFileData(WorldServer[] aworldserver) {
+diff --git a/src/main/java/net/minecraft/server/Scoreboard.java b/src/main/java/net/minecraft/server/Scoreboard.java
+index d3511ca08..1f01c6b6c 100644
+--- a/src/main/java/net/minecraft/server/Scoreboard.java
++++ b/src/main/java/net/minecraft/server/Scoreboard.java
+@@ -10,6 +10,14 @@ import java.util.Map;
+ 
+ public class Scoreboard {
+ 
++    // MineHQ start
++    public java.util.Set<EntityPlayer> viewers() {
++        return viewers;
++    }
++
++    protected java.util.Set<EntityPlayer> viewers = Collections.EMPTY_SET;
++    // MineHQ end
++
+     private final Map objectivesByName = new HashMap();
+     private final Map objectivesByCriteria = new HashMap();
+     private final Map playerScores = new HashMap();
+@@ -23,6 +31,17 @@ public class Scoreboard {
+         return (ScoreboardObjective) this.objectivesByName.get(s);
+     }
+ 
++    // MineHQ start
++    public void addViewer(EntityPlayer player) {
++        if (viewers == Collections.EMPTY_SET) viewers = new java.util.HashSet<EntityPlayer>();
++        viewers.add(player);
++    }
++
++    public void removeViewer(EntityPlayer player) {
++        if (viewers != Collections.EMPTY_SET && viewers.remove(player) && viewers.isEmpty()) viewers = Collections.EMPTY_SET;
++    }
++    // MineHQ end
++
+     public ScoreboardObjective registerObjective(String s, IScoreboardCriteria iscoreboardcriteria) {
+         ScoreboardObjective scoreboardobjective = this.getObjective(s);
+ 
+diff --git a/src/main/java/net/minecraft/server/ScoreboardServer.java b/src/main/java/net/minecraft/server/ScoreboardServer.java
+index 15910585e..faeb34a02 100644
+--- a/src/main/java/net/minecraft/server/ScoreboardServer.java
++++ b/src/main/java/net/minecraft/server/ScoreboardServer.java
+@@ -2,6 +2,7 @@ package net.minecraft.server;
+ 
+ import java.util.ArrayList;
+ import java.util.Arrays;
++import java.util.Collections;
+ import java.util.HashSet;
+ import java.util.Iterator;
+ import java.util.List;
+@@ -148,11 +149,12 @@ public class ScoreboardServer extends Scoreboard {
+ 
+     public void e(ScoreboardObjective scoreboardobjective) {
+         List list = this.getScoreboardScorePacketsForObjective(scoreboardobjective);
+-        Iterator iterator = this.a.getPlayerList().players.iterator();
++        // MineHQ start
++        Iterator<EntityPlayer> iterator = viewers.iterator();
+ 
+         while (iterator.hasNext()) {
+-            EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+-            if (entityplayer.getBukkitEntity().getScoreboard().getHandle() != this) continue; // CraftBukkit - Only players on this board
++            EntityPlayer entityplayer = iterator.next();
++        // MineHQ end
+             Iterator iterator1 = list.iterator();
+ 
+             while (iterator1.hasNext()) {
+@@ -181,11 +183,12 @@ public class ScoreboardServer extends Scoreboard {
+ 
+     public void g(ScoreboardObjective scoreboardobjective) {
+         List list = this.f(scoreboardobjective);
+-        Iterator iterator = this.a.getPlayerList().players.iterator();
++        // MineHQ start
++        Iterator<EntityPlayer> iterator = viewers.iterator();
+ 
+         while (iterator.hasNext()) {
+-            EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+-            if (entityplayer.getBukkitEntity().getScoreboard().getHandle() != this) continue; // CraftBukkit - Only players on this board
++            EntityPlayer entityplayer = iterator.next();
++        // MineHQ end
+             Iterator iterator1 = list.iterator();
+ 
+             while (iterator1.hasNext()) {
+@@ -212,11 +215,7 @@ public class ScoreboardServer extends Scoreboard {
+ 
+     // CraftBukkit start - Send to players
+     private void sendAll(Packet packet) {
+-        for (EntityPlayer entityplayer : (List<EntityPlayer>) this.a.getPlayerList().players) {
+-            if (entityplayer.getBukkitEntity().getScoreboard().getHandle() == this) {
+-                entityplayer.playerConnection.sendPacket(packet);
+-            }
+-        }
++        if (viewers != Collections.EMPTY_SET) for (EntityPlayer entityPlayer : viewers) entityPlayer.playerConnection.sendPacket(packet); // MineHQ
+     }
+     // CraftBukkit end
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java
+index 295aed28e..1b06dc8d9 100644
+--- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java
++++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftScoreboardManager.java
+@@ -67,6 +67,8 @@ public final class CraftScoreboardManager implements ScoreboardManager {
+             return;
+         }
+ 
++        if (oldboard != null) oldboard.removeViewer(entityplayer); // MineHQ
++
+         if (scoreboard == mainScoreboard) {
+             playerBoards.remove(player);
+         } else {
+@@ -96,7 +98,13 @@ public final class CraftScoreboardManager implements ScoreboardManager {
+ 
+     // CraftBukkit method
+     public void removePlayer(Player player) {
+-        playerBoards.remove(player);
++        // MineHQ start
++        CraftPlayer craftPlayer = (CraftPlayer) player;
++        CraftScoreboard scoreboard = playerBoards.remove(craftPlayer);
++        if (scoreboard != null) {
++            scoreboard.getHandle().removeViewer(craftPlayer.getHandle());
++        }
++        // MineHQ end
+     }
+ 
+     // CraftBukkit method
+-- 
+2.13.3
+

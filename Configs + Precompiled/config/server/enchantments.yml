@@ -1,0 +1,115 @@
+damage-all:
+  weight: 60
+  max-level: 2
+  start-level: 1
+protection-environmental:
+  weight: 60
+  max-level: 2
+  start-level: 1
+thorns:
+  weight: 0
+  max-level: 0
+  start-level: 0
+knockback:
+  weight: 0
+  max-level: 0
+  start-level: 0
+fire-aspect:
+  weight: 0
+  max-level: 0
+  start-level: 0
+protection-fire:
+  weight: 5
+  start-level: 1
+  max-level: 4
+  conflicting: []
+protection-fall:
+  weight: 5
+  start-level: 1
+  max-level: 4
+  conflicting: []
+protection-explosions:
+  weight: 2
+  start-level: 1
+  max-level: 4
+  conflicting: []
+protection-projectile:
+  weight: 5
+  start-level: 1
+  max-level: 4
+  conflicting: []
+oxygen:
+  weight: 2
+  start-level: 1
+  max-level: 3
+  conflicting: []
+water-worker:
+  weight: 2
+  start-level: 1
+  max-level: 1
+  conflicting: []
+damage-undead:
+  weight: 5
+  start-level: 1
+  max-level: 5
+  conflicting: []
+damage-arthropods:
+  weight: 5
+  start-level: 1
+  max-level: 5
+  conflicting: []
+loot-bonus-mobs:
+  weight: 2
+  start-level: 1
+  max-level: 3
+  conflicting: []
+dig-speed:
+  weight: 10
+  start-level: 1
+  max-level: 5
+  conflicting: []
+silk-touch:
+  weight: 1
+  start-level: 1
+  max-level: 1
+  conflicting: []
+durability:
+  weight: 5
+  start-level: 1
+  max-level: 3
+  conflicting: []
+loot-bonus-blocks:
+  weight: 2
+  start-level: 1
+  max-level: 3
+  conflicting: []
+arrow-damage:
+  weight: 10
+  start-level: 1
+  max-level: 4
+  conflicting: []
+arrow-knockback:
+  weight: 2
+  start-level: 1
+  max-level: 2
+  conflicting: []
+arrow-fire:
+  weight: 2
+  start-level: 1
+  max-level: 1
+  conflicting: []
+arrow-infinite:
+  weight: 1
+  start-level: 1
+  max-level: 1
+  conflicting: []
+luck:
+  weight: 2
+  start-level: 1
+  max-level: 3
+  conflicting: []
+lure:
+  weight: 2
+  start-level: 1
+  max-level: 1
+  conflicting: []

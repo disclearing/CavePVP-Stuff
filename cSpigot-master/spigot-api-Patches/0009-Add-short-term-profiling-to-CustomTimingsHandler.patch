@@ -1,0 +1,82 @@
+From 44c0cc9e9e3b1886d1d2fed5971ae99b8075a3ce Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 19 Dec 2015 03:04:55 +0100
+Subject: [PATCH] Add short term profiling to CustomTimingsHandler
+
+
+diff --git a/src/main/java/org/spigotmc/CustomTimingsHandler.java b/src/main/java/org/spigotmc/CustomTimingsHandler.java
+index 8d982974..040a556a 100644
+--- a/src/main/java/org/spigotmc/CustomTimingsHandler.java
++++ b/src/main/java/org/spigotmc/CustomTimingsHandler.java
+@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
+ import org.bukkit.Bukkit;
+ import org.bukkit.World;
+ 
++import java.util.ArrayDeque; // Poweruser
+ /**
+  * Provides custom timing sections for /timings merged.
+  */
+@@ -31,6 +32,10 @@ public class CustomTimingsHandler
+     private long totalTime = 0;
+     private long curTickTotal = 0;
+     private long violations = 0;
++    // Poweruser start
++    private ArrayDeque<Long> currentTimings;
++    private long currentTimingsSum;
++    // Poweruser end
+ 
+     public CustomTimingsHandler(String name)
+     {
+@@ -41,6 +46,10 @@ public class CustomTimingsHandler
+     {
+         this.name = name;
+         this.parent = parent;
++        // Poweruser start
++        this.currentTimings = new ArrayDeque<Long>();
++        this.currentTimingsSum = 0L;
++        // Poweruser end
+         HANDLERS.add( this );
+     }
+ 
+@@ -101,6 +110,7 @@ public class CustomTimingsHandler
+         {
+             for ( CustomTimingsHandler timings : HANDLERS )
+             {
++                timings.updateAverageCalculation(); // Poweruser
+                 if ( timings.curTickTotal > 50000000 )
+                 {
+                     timings.violations += Math.ceil( timings.curTickTotal / 50000000 );
+@@ -161,5 +171,30 @@ public class CustomTimingsHandler
+         totalTime = 0;
+         start = 0;
+         timingDepth = 0;
++        // Poweruser start
++        this.currentTimings.clear();
++        this.currentTimingsSum = 0L;
++        // Poweruser end
+     }
++
++    // Poweruser start
++    private void updateAverageCalculation() {
++        this.currentTimingsSum += this.curTickTotal;
++        this.currentTimings.add(this.curTickTotal);
++        while(this.currentTimings.size() > 20) {
++            Long value = this.currentTimings.poll();
++            this.currentTimingsSum -= value.longValue();
++        }
++    }
++
++    /**
++     * Returns the average tick time over the last 20 ticks
++     */
++    public long getRecentAverage() {
++        if(!this.currentTimings.isEmpty()) {
++            return this.currentTimingsSum / this.currentTimings.size();
++        }
++        return 0L;
++    }
++    // Poweruser end
+ }
+-- 
+2.11.0.windows.3
+

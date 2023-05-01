@@ -1,0 +1,22 @@
+From c04ac0f2ae66bfd11b1f7db91dce4833bc3fa672 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:28:04 -0400
+Subject: [PATCH] Fix players getting glitched in the ground
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index ed51f0a2c..5601696ca 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -128,7 +128,7 @@ public class EntityTrackerEntry {
+                 // CraftBukkit end
+ 
+                 if (this.m > 0 || this.tracker instanceof EntityArrow) {
+-                    if (j1 >= -128 && j1 < 128 && k1 >= -128 && k1 < 128 && l1 >= -128 && l1 < 128 && this.v <= 400 && !this.x) {
++                    if (j1 >= -128 && j1 < 128 && k1 >= -128 && k1 < 128 && l1 >= -128 && l1 < 128 && this.v <= 50 && !this.x) { // Kohi - greatly reduce forced teleport interval
+                         if (flag && flag1) {
+                             object = new PacketPlayOutRelEntityMoveLook(this.tracker.getId(), (byte) j1, (byte) k1, (byte) l1, (byte) l, (byte) i1, tracker.onGround); // Spigot - protocol patch
+                         } else if (flag) {
+-- 
+2.13.3
+

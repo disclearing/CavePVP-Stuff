@@ -1,0 +1,140 @@
+From 039ad78c4950ce1ab679d6262ec7aa4892255ac3 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:23:58 -0400
+Subject: [PATCH] Add heath obfuscation
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 066b2d3de..ed51f0a2c 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -1,10 +1,6 @@
+ package net.minecraft.server;
+ 
+-import java.util.Collection;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Set;
++import java.util.*;
+ 
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
+@@ -244,7 +240,19 @@ public class EntityTrackerEntry {
+         DataWatcher datawatcher = this.tracker.getDataWatcher();
+ 
+         if (datawatcher.a()) {
+-            this.broadcastIncludingSelf(new PacketPlayOutEntityMetadata(this.tracker.getId(), datawatcher, false));
++            // MineHQ start
++            List changedMetadata = datawatcher.b();
++            if (this.doHealthObfuscation()) {
++                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(this.tracker.getId(), new ArrayList(changedMetadata), false).obfuscateHealth();
++                if (!metadataPacket.didFindHealth() || 1 < metadataPacket.getMetadata().size()) this.broadcast(metadataPacket);
++            } else {
++                this.broadcast(new PacketPlayOutEntityMetadata(this.tracker.getId(), changedMetadata, false));
++            }
++
++            if (this.tracker instanceof EntityPlayer) {
++                ((EntityPlayer) this.tracker).playerConnection.sendPacket(new PacketPlayOutEntityMetadata(this.tracker.getId(), changedMetadata, false));
++            }
++            // MineHQ end
+         }
+ 
+         if (this.tracker instanceof EntityLiving) {
+@@ -332,9 +340,19 @@ public class EntityTrackerEntry {
+                     // Spigot end
+ 
+                     entityplayer.playerConnection.sendPacket(packet);
++
+                     if (!this.tracker.getDataWatcher().d()) {
+-                        entityplayer.playerConnection.sendPacket(new PacketPlayOutEntityMetadata(this.tracker.getId(), this.tracker.getDataWatcher(), true));
++                        // MineHQ start
++                        PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(this.tracker.getId(), this.tracker.getDataWatcher(), true);
++
++                        if (this.doHealthObfuscation()) {
++                            metadataPacket.obfuscateHealth();
++                        }
++
++                        entityplayer.playerConnection.sendPacket(metadataPacket);
++                        // MineHQ end
+                     }
++                    // MineHQ end
+ 
+                     if (this.tracker instanceof EntityLiving) {
+                         AttributeMapServer attributemapserver = (AttributeMapServer) ((EntityLiving) this.tracker).getAttributeMap();
+@@ -533,4 +551,9 @@ public class EntityTrackerEntry {
+             entityplayer.d(this.tracker);
+         }
+     }
++
++    public boolean doHealthObfuscation() {
++        return this.tracker.isAlive() && (this.tracker instanceof EntityPlayer);
++    }
++
+ }
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java b/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
+index c937f5920..1d07cb820 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutEntityMetadata.java
+@@ -1,11 +1,13 @@
+ package net.minecraft.server;
+ 
++import java.util.Iterator;
+ import java.util.List;
+ 
+ public class PacketPlayOutEntityMetadata extends Packet {
+ 
+     private int a;
+     private List b;
++    private boolean found = false; // MineHQ
+ 
+     public PacketPlayOutEntityMetadata() {}
+ 
+@@ -18,6 +20,44 @@ public class PacketPlayOutEntityMetadata extends Packet {
+         }
+     }
+ 
++    // Kohi start
++    // Constructor accepting List of change metadata
++    public PacketPlayOutEntityMetadata(int i, List list, boolean flag) {
++        this.a = i;
++        this.b = list;
++    }
++
++    // replaces health with 1.0F
++    public PacketPlayOutEntityMetadata obfuscateHealth() {
++        Iterator iter = b.iterator();
++        found = false;
++
++        while (iter.hasNext()) {
++            WatchableObject watchable = (WatchableObject) iter.next();
++            if (watchable.a() == 6) {
++                iter.remove();
++                found = true;
++            }
++        }
++
++        if (found) {
++            b.add(new WatchableObject(3, 6, Float.valueOf(1.0F)));
++        }
++
++        return this;
++    }
++    // Kohi end
++
++    // MineHQ start
++    public boolean didFindHealth() {
++        return this.found;
++    }
++
++    public List getMetadata() {
++        return this.b;
++    }
++    // MineHQ end
++
+     public void a(PacketDataSerializer packetdataserializer) {
+         this.a = packetdataserializer.readInt();
+         this.b = DataWatcher.b(packetdataserializer);
+-- 
+2.13.3
+

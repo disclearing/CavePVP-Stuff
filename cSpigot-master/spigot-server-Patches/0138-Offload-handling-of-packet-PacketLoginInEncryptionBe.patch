@@ -1,0 +1,114 @@
+From 72116723adb3997c8324c51bc79b3106cae986cf Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Fri, 27 May 2016 21:58:33 +0200
+Subject: [PATCH] Offload handling of packet PacketLoginInEncryptionBegin
+
+
+diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
+index 22a8e91b3..f61505207 100644
+--- a/src/main/java/net/minecraft/server/LoginListener.java
++++ b/src/main/java/net/minecraft/server/LoginListener.java
+@@ -47,7 +47,29 @@ public class LoginListener implements PacketLoginInListener {
+         random.nextBytes(this.e);
+     }
+ 
++    // Poweruser start
++    private IllegalStateException authenticationException;
++
++    protected void caughtAuthenticationException(Exception e) {
++        this.authenticationException = new IllegalStateException(e.getMessage(), e);
++    }
++
++    protected boolean compareRandomConnectionKey(byte[] array) {
++        return Arrays.equals(this.e, array);
++    }
++
++    protected void setLoginKey(SecretKey loginKey) {
++        this.loginKey = loginKey;
++    }
++
+     public void a() {
++        if(this.authenticationException != null) {
++            IllegalStateException exception = this.authenticationException;
++            this.authenticationException = null;
++            throw exception;
++        }
++    // Poweruser end
++
+         if (this.g == EnumProtocolState.READY_TO_ACCEPT) {
+             this.c();
+         }
+@@ -154,6 +176,8 @@ public class LoginListener implements PacketLoginInListener {
+ 
+     public void a(PacketLoginInEncryptionBegin packetlogininencryptionbegin) {
+         Validate.validState(this.g == EnumProtocolState.KEY, "Unexpected key packet", new Object[0]);
++
++        /*
+         PrivateKey privatekey = this.server.K().getPrivate();
+ 
+         if (!Arrays.equals(this.e, packetlogininencryptionbegin.b(privatekey))) {
+@@ -164,6 +188,8 @@ public class LoginListener implements PacketLoginInListener {
+             this.networkManager.a(this.loginKey);
+             ThreadingManager.execute(new ThreadPlayerLookupUUID(this)); // Poweruser
+         }
++        */
++        ThreadingManager.execute(new ThreadPlayerLookupUUID(this, packetlogininencryptionbegin)); // Poweruser
+     }
+ 
+     protected GameProfile a(GameProfile gameprofile) {
+diff --git a/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java b/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
+index a28c9f6fb..4f120cbd0 100644
+--- a/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
++++ b/src/main/java/net/minecraft/server/ThreadPlayerLookupUUID.java
+@@ -12,15 +12,47 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+ import org.bukkit.event.player.PlayerPreLoginEvent;
+ // CraftBukkit end
+ 
++// Poweruser start
++import java.security.PrivateKey;
++import java.util.Arrays;
++// Poweruser end
++
+ class ThreadPlayerLookupUUID implements Runnable { // Poweruser
+ 
+     final LoginListener a;
+ 
+-    ThreadPlayerLookupUUID(LoginListener loginlistener) { // Poweruser
++    // Poweruser start
++    final PacketLoginInEncryptionBegin packetlogininencryptionbegin;
++
++    ThreadPlayerLookupUUID(LoginListener loginlistener, PacketLoginInEncryptionBegin packetlogininencryptionbegin) { // Poweruser
+         this.a = loginlistener;
++        this.packetlogininencryptionbegin = packetlogininencryptionbegin;
++    }
++
++    public ThreadPlayerLookupUUID(LoginListener loginlistener) {
++        this(loginlistener, null);
+     }
++    // Poweruser end
+ 
+     public void run() {
++        // Poweruser start
++        if (this.packetlogininencryptionbegin != null) {
++            try {
++                PrivateKey privatekey = MinecraftServer.getServer().K().getPrivate();
++                if (this.a.compareRandomConnectionKey(this.packetlogininencryptionbegin.b(privatekey))) {
++                    this.a.setLoginKey(packetlogininencryptionbegin.a(privatekey));
++                    LoginListener.a(this.a, EnumProtocolState.AUTHENTICATING);
++                    this.a.networkManager.a(LoginListener.d(this.a));
++                } else {
++                    throw new IllegalStateException("Invalid nonce!");
++                }
++            } catch (Exception e) {
++                this.a.caughtAuthenticationException(e);
++                return;
++            }
++        }
++        // Poweruser end
++
+         GameProfile gameprofile = LoginListener.a(this.a);
+ 
+         try {
+-- 
+2.13.3
+

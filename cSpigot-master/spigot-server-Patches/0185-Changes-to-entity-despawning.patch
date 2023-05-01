@@ -1,0 +1,70 @@
+From d0af5ecc4ba370d7818b118539afb765476db239 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 9 Jul 2017 16:14:59 +0100
+Subject: [PATCH] Changes to entity despawning
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityInsentient.java b/src/main/java/net/minecraft/server/EntityInsentient.java
+index ae3f9a137..ec8fd4b78 100644
+--- a/src/main/java/net/minecraft/server/EntityInsentient.java
++++ b/src/main/java/net/minecraft/server/EntityInsentient.java
+@@ -396,10 +396,14 @@ public abstract class EntityInsentient extends EntityLiving {
+     // Kohi end
+ 
+     protected void w() {
++        this.aU++; // MineHQ
+         if (this.persistent) {
+             this.aU = 0;
+         } else if (this.ticksLived % 50 == 0) { // Kohi - only check every 50 ticks
+-            EntityHuman entityhuman = this.world.findNearbyPlayerWhoAffectsSpawning(this, -1.0D); // PaperSpigot
++            // MineHQ start
++            if (this.world.hardDespawnDistance == -1D) this.world.hardDespawnDistance = Math.sqrt(this.world.paperSpigotConfig.hardDespawnDistance);
++            EntityHuman entityhuman = this.world.findNearbyPlayerWhoAffectsSpawning(this, this.world.hardDespawnDistance); // PaperSpigot
++            // MineHQ end
+ 
+             if (entityhuman != null) {
+                 double d0 = entityhuman.locX - this.locX;
+@@ -413,17 +417,25 @@ public abstract class EntityInsentient extends EntityLiving {
+ 
+                 // Kohi - decrease random check to account for decreased interval
+                 // MineHQ - decrease random check even more for performance
+-                if (this.aU > 600 && this.random.nextInt(10) == 0 && d3 > this.world.paperSpigotConfig.softDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // PaperSpigot - custom despawn distances
++                // MineHQ - remove random
++                if (this.aU > 600 && d3 > this.world.paperSpigotConfig.softDespawnDistance) { // CraftBukkit - remove isTypeNotPersistent() check // PaperSpigot - custom despawn distances
+                     this.die();
+                 } else if (d3 < this.world.paperSpigotConfig.softDespawnDistance) { // PaperSpigot - custom despawn distances
+                     this.aU = 0;
+                 }
+             }
++            // MineHQ start
++            else {
++                if (this.aU > 600) {
++                    this.die();
++                }
++            }
++            // MineHQ end
+         }
+     }
+ 
+     protected void bn() {
+-        ++this.aU;
++        //++this.aU; // MineHQ
+         this.navigation.cleanUpExpiredSearches(); // Poweruser
+         this.world.methodProfiler.a("checkDespawn");
+         this.w();
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 6363e8fca..1f1697f12 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -143,6 +143,8 @@ public abstract class World implements IBlockAccess {
+     // Poweruser end
+     public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<Explosion.CacheKey, Float>(); // PaperSpigot - Optimize explosions
+ 
++    public double hardDespawnDistance = -1D; // MineHQ
++
+     public static long chunkToKey(int x, int z)
+     {
+         long k = ( ( ( (long) x ) & 0xFFFF0000L ) << 16 ) | ( ( ( (long) x ) & 0x0000FFFFL ) << 0 );
+-- 
+2.13.3
+

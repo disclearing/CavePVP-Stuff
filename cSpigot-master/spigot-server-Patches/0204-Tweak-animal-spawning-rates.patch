@@ -1,0 +1,26 @@
+From 2f307ad89840abe69ea604087d66d61dd84cd3a2 Mon Sep 17 00:00:00 2001
+From: Michael Himing <mhiming@gmail.com>
+Date: Sat, 12 Aug 2017 20:58:16 +1000
+Subject: [PATCH] Tweak animal spawning rates
+
+
+diff --git a/src/main/java/net/minecraft/server/BiomeBase.java b/src/main/java/net/minecraft/server/BiomeBase.java
+index 201c845b3..5e90488bd 100644
+--- a/src/main/java/net/minecraft/server/BiomeBase.java
++++ b/src/main/java/net/minecraft/server/BiomeBase.java
+@@ -115,10 +115,10 @@ public abstract class BiomeBase {
+         this.id = i;
+         biomes[i] = this;
+         this.ar = this.a();
+-        this.at.add(new BiomeMeta(EntitySheep.class, 12, 4, 4));
++        this.at.add(new BiomeMeta(EntitySheep.class, 6, 4, 4)); // MineHQ - less sheep
+         this.at.add(new BiomeMeta(EntityPig.class, 10, 4, 4));
+         this.at.add(new BiomeMeta(EntityChicken.class, 10, 4, 4));
+-        this.at.add(new BiomeMeta(EntityCow.class, 8, 4, 4));
++        this.at.add(new BiomeMeta(EntityCow.class, 14, 4, 4)); // MineHQ - more cows
+         this.as.add(new BiomeMeta(EntitySpider.class, 100, 4, 4));
+         this.as.add(new BiomeMeta(EntityZombie.class, 100, 4, 4));
+         this.as.add(new BiomeMeta(EntitySkeleton.class, 100, 4, 4));
+-- 
+2.13.3
+

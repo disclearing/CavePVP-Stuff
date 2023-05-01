@@ -1,0 +1,72 @@
+From 32bc93d1b8990fbaf4957cb4af878100ba846787 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 15 Aug 2017 04:25:04 +0100
+Subject: [PATCH] BlockDropItemsEvent
+
+
+diff --git a/src/main/java/org/bukkit/event/block/BlockDropItemsEvent.java b/src/main/java/org/bukkit/event/block/BlockDropItemsEvent.java
+new file mode 100644
+index 00000000..fb7d18ee
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/block/BlockDropItemsEvent.java
+@@ -0,0 +1,56 @@
++package org.bukkit.event.block;
++
++import java.util.List;
++
++import org.bukkit.block.Block;
++import org.bukkit.entity.Item;
++import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++
++public class BlockDropItemsEvent extends Event implements Cancellable {
++
++    private static final HandlerList handlers = new HandlerList();
++    private Block block;
++    private Player player;
++    private List<Item> toDrop;
++    private boolean cancelled = false;
++
++    public BlockDropItemsEvent(Block block, Player player, List<Item> toDrop) {
++        this.block = block;
++        this.player = player;
++        this.toDrop = toDrop;
++    }
++
++    public Block getBlock() {
++        return this.block;
++    }
++
++    public Player getPlayer() {
++        return this.player;
++    }
++
++    public List<Item> getToDrop() {
++        return this.toDrop;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return this.cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancelled = cancel;
++    }
++}
+\ No newline at end of file
+-- 
+2.13.5 (Apple Git-94)
+

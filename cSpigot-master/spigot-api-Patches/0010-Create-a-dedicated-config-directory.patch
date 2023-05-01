@@ -1,0 +1,25 @@
+From 76147d8079b07013ea733329c6422480adc4b2fb Mon Sep 17 00:00:00 2001
+From: rbrick <rbrickproductions123@gmail.com>
+Date: Sun, 3 Apr 2016 00:46:41 -0500
+Subject: [PATCH] Create a dedicated config directory
+
+
+diff --git a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java b/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
+index f8ef65bc..fa1c475f 100644
+--- a/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
++++ b/src/main/java/org/bukkit/plugin/java/JavaPluginLoader.java
+@@ -76,9 +76,9 @@ public final class JavaPluginLoader implements PluginLoader {
+         }
+ 
+         final File parentFile = file.getParentFile();
+-        final File dataFolder = new File(parentFile, description.getName());
++        final File dataFolder = new File("config", description.getName()); // MineHQ
+         @SuppressWarnings("deprecation")
+-        final File oldDataFolder = new File(parentFile, description.getRawName());
++        final File oldDataFolder = new File("config", description.getRawName()); // MineHQ
+ 
+         // Found old data folder
+         if (dataFolder.equals(oldDataFolder)) {
+-- 
+2.11.0.windows.3
+

@@ -1,0 +1,24 @@
+From f3e39acf9700458ff0c8ef8e1b64ca26105904ae Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 00:46:30 -0400
+Subject: [PATCH] Prevent noclipping
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 5a8aabb41..9094de986 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -410,8 +410,9 @@ public class PlayerConnection implements PacketPlayInListener {
+ 
+                 this.player.setLocation(d1, d2, d3, f2, f3);
+                 boolean flag2 = worldserver.getCubes(this.player, this.player.boundingBox.clone().shrink((double) f4, (double) f4, (double) f4)).isEmpty();
++                boolean rayTraceCollision = delta > 0.3 && worldserver.rayTrace(Vec3D.a(this.y, this.z + 1.0, this.q), Vec3D.a(d1, d2 + 1.0, d3), false, true, false) != null;
+ 
+-                if (flag && (flag1 || !flag2) && !this.player.isSleeping()) {
++                if (flag && (flag1 || !flag2 || rayTraceCollision) && !this.player.isSleeping()) {
+                     this.a(this.y, this.z, this.q, f2, f3);
+                     return;
+                 }
+-- 
+2.13.3
+

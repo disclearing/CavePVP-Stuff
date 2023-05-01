@@ -1,0 +1,504 @@
+From 1de60dda62bc84a8d2e00e038deceb2fa132195e Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Wed, 25 May 2016 06:10:55 +0200
+Subject: [PATCH] Distribute autosave among multiple ticks
+
+
+diff --git a/src/main/java/net/frozenorb/autosave/AutoSave.java b/src/main/java/net/frozenorb/autosave/AutoSave.java
+new file mode 100644
+index 000000000..216aa1287
+--- /dev/null
++++ b/src/main/java/net/frozenorb/autosave/AutoSave.java
+@@ -0,0 +1,197 @@
++package net.frozenorb.autosave;
++
++import java.util.ArrayDeque;
++import java.util.ArrayList;
++import java.util.Queue;
++
++import org.bukkit.event.world.WorldSaveEvent;
++import org.spigotmc.SpigotConfig;
++
++import net.minecraft.server.ExceptionWorldConflict;
++import net.minecraft.server.FileIOThread;
++import net.minecraft.server.IProgressUpdate;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.server.RegionFileCache;
++import net.minecraft.server.WorldServer;
++
++public class AutoSave {
++
++    private AutoSaveStep step;
++    private Queue<WorldServer> levelAndMapsQueue;
++    private Queue<WorldServer> saveChunksQueue;
++    private Queue<WorldServer> unloadChunksQueue;
++    private Queue<WorldServer> eventQueue;
++    private long fileioStart;
++    private long fileioEnd;
++    private int regionFileCount;
++    private long regionFileCacheStart;
++    private long regionFileCacheEnd;
++    private int chunkQueuedCount;
++
++    public AutoSave() {
++        this.levelAndMapsQueue = new ArrayDeque<WorldServer>();
++        this.saveChunksQueue = new ArrayDeque<WorldServer>();
++        this.unloadChunksQueue = new ArrayDeque<WorldServer>();
++        this.eventQueue = new ArrayDeque<WorldServer>();
++        this.reset();
++    }
++
++    public void queueWorld(WorldServer worldserver) {
++        this.levelAndMapsQueue.add(worldserver);
++        this.saveChunksQueue.add(worldserver);
++        this.unloadChunksQueue.add(worldserver);
++        this.eventQueue.add(worldserver);
++    }
++
++    public void reset() {
++        this.levelAndMapsQueue.clear();
++        this.saveChunksQueue.clear();
++        this.unloadChunksQueue.clear();
++        this.eventQueue.clear();
++        this.step = AutoSaveStep.IDLE;
++        this.chunkQueuedCount = 0;
++    }
++
++    private void moveToNextStep() {
++        this.step = AutoSaveStep.nextStep(this.step);
++    }
++
++    public boolean execute() throws ExceptionWorldConflict {
++        WorldServer worldServer;
++        switch(this.step) {
++            default:
++            case IDLE:
++                break;
++            case START:
++                MinecraftServer.getLogger().info("[Autosave] Started ..");
++                for(WorldServer world: this.saveChunksQueue) {
++                    world.getAutoSaveWorldData().setLastAutosaveTimeStamp();
++                }
++                this.moveToNextStep();
++                return this.execute();
++            case SAVE_PLAYERS:
++                MinecraftServer.getServer().getPlayerList().savePlayers();
++                this.moveToNextStep();
++                break;
++            case SAVE_LEVEL_AND_MAPS:
++                worldServer = this.levelAndMapsQueue.poll();
++                if(worldServer != null) {
++                    worldServer.saveOnlyLevel(true, null);
++                }
++
++                if(this.levelAndMapsQueue.isEmpty()) {
++                    this.moveToNextStep();
++                }
++
++                break;
++            case SAVE_CHUNKS:
++                worldServer = this.saveChunksQueue.peek();
++                if(worldServer != null) {
++                    if(worldServer.saveOnlyChunks(false, null)) {
++                        this.chunkQueuedCount += worldServer.getAutoSaveWorldData().getAutoSaveChunkCount();
++                        this.saveChunksQueue.poll();
++                    }
++                }
++
++                if(this.saveChunksQueue.isEmpty()) {
++                    this.moveToNextStep();
++                }
++
++                break;
++            case UNLOAD_CHUNKS:
++                worldServer = this.unloadChunksQueue.poll();
++                if(worldServer != null) {
++                    worldServer.unloadOnlyUnusedChunks(true, null);
++                }
++
++                if(this.unloadChunksQueue.isEmpty()) {
++                    this.moveToNextStep();
++                }
++
++                break;
++            case WRITE_FILES_START:
++                FileIOThread.a.setNoDelay(true);
++                this.fileioStart = System.nanoTime();
++                this.moveToNextStep();
++                break;
++            case WRITE_FILES_WAIT:
++                if(FileIOThread.a.isDone()) {
++                    this.fileioEnd = System.nanoTime();
++                    FileIOThread.a.setNoDelay(false);
++                    this.moveToNextStep();
++                }
++                break;
++            case FIRE_WORLDSAVEEVENT:
++                if(SpigotConfig.autoSaveClearRegionFileCache) {
++                    this.regionFileCount = RegionFileCache.a.size();
++                    this.regionFileCacheStart = System.nanoTime();
++                    RegionFileCache.a();
++                    this.regionFileCacheEnd = System.nanoTime();
++                }
++
++                if(SpigotConfig.autoSaveFireWorldSaveEvent) {
++                    for(WorldServer worldserver: this.eventQueue) {
++                        WorldSaveEvent event = new WorldSaveEvent(worldserver.getWorld());
++                        MinecraftServer.getServer().server.getPluginManager().callEvent(event);
++                    }
++                }
++                this.moveToNextStep();
++                break;                
++            case FINISHED:
++                MinecraftServer.getLogger().info("[Autosave] Done. Queued " + this.chunkQueuedCount + " chunks for saving. Took " + formatLongTime(this.fileioEnd - this.fileioStart) + " seconds to write them.");
++                if(SpigotConfig.autoSaveClearRegionFileCache) {
++                    MinecraftServer.getLogger().info("[Autosave] Cleared " + this.regionFileCount + " cached region files in " + formatLongTime(this.regionFileCacheEnd - this.regionFileCacheStart) + " seconds.");
++                }
++                this.reset();
++                return true;
++        }
++        return false;
++    }
++
++    private static String formatLongTime(long duration) {
++        return String.format("%.2f", ((double) (duration / 1000000L)) / 1000.0D);
++    }
++
++    public boolean isActive() {
++        return this.step.isActiveState();
++    }
++
++    public void start() {
++        this.step = AutoSaveStep.START;
++    }
++
++    public enum AutoSaveStep {
++        IDLE(false),
++        START(),
++        SAVE_PLAYERS(),
++        SAVE_LEVEL_AND_MAPS(),
++        SAVE_CHUNKS(),
++        UNLOAD_CHUNKS(),
++        WRITE_FILES_START(),
++        WRITE_FILES_WAIT(),
++        FIRE_WORLDSAVEEVENT(),
++        FINISHED();
++
++        private final boolean activeState;
++
++        private AutoSaveStep() {
++            this(true);
++        }
++
++        private AutoSaveStep(boolean activeState) {
++            this.activeState = activeState;
++        }
++
++        public static AutoSaveStep nextStep(AutoSaveStep current) {
++            AutoSaveStep[] values = AutoSaveStep.values();
++            if(current.ordinal() + 1 < values.length) {
++                return values[current.ordinal() + 1];
++            }
++            return current;
++        }
++
++        public boolean isActiveState() {
++            return this.activeState;
++        }
++    }
++}
+diff --git a/src/main/java/net/frozenorb/autosave/AutoSaveWorldData.java b/src/main/java/net/frozenorb/autosave/AutoSaveWorldData.java
+new file mode 100644
+index 000000000..0139d6891
+--- /dev/null
++++ b/src/main/java/net/frozenorb/autosave/AutoSaveWorldData.java
+@@ -0,0 +1,33 @@
++package net.frozenorb.autosave;
++
++import net.minecraft.server.World;
++import net.minecraft.server.WorldData;
++
++public class AutoSaveWorldData {
++
++    private long lastAutoSaveTimeStamp;
++    private int autoSaveChunkCount;
++    private final World world;
++
++    public AutoSaveWorldData(World world) {
++        this.world = world;
++        this.setLastAutosaveTimeStamp();
++    }
++
++    public void setLastAutosaveTimeStamp() {
++        this.lastAutoSaveTimeStamp = this.world.worldData.getTime();
++        this.autoSaveChunkCount = 0;
++    }
++
++    public long getLastAutosaveTimeStamp() {
++        return this.lastAutoSaveTimeStamp;
++    }
++
++    public void addAutoSaveChunkCount(int count) {
++        this.autoSaveChunkCount += count;
++    }
++
++    public int getAutoSaveChunkCount() {
++        return this.autoSaveChunkCount;
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/Chunk.java b/src/main/java/net/minecraft/server/Chunk.java
+index 9e3e66806..d3453f644 100644
+--- a/src/main/java/net/minecraft/server/Chunk.java
++++ b/src/main/java/net/minecraft/server/Chunk.java
+@@ -931,10 +931,15 @@ public class Chunk {
+             if (this.o && this.world.getTime() != this.lastSaved || this.n) {
+                 return true;
+             }
+-        } else if (this.o && this.world.getTime() >= this.lastSaved + MinecraftServer.getServer().autosavePeriod * 4) { // PaperSpigot - Only save if we've passed 2 auto save intervals without modification
++        // Poweruser start
++        } else if (this.n && this.world.getAutoSaveWorldData().getLastAutosaveTimeStamp() >= this.lastSaved) {
++            return true;
++        } else if (this.o && this.world.getTime() >= this.lastSaved + MinecraftServer.getServer().autosavePeriod) {
+             return true;
++        } else {
++            return false;
+         }
+-
++        // Poweruser end
+         return this.n;
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+index 1e297ab7e..b4ddc3bbf 100644
+--- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
++++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
+@@ -331,11 +331,19 @@ public class ChunkProviderServer implements IChunkProvider {
+                 this.saveChunk(chunk);
+                 chunk.n = false;
+                 ++i;
+-                if (i == 24 && !flag) {
++                // Poweruser start
++                if (i >= org.spigotmc.SpigotConfig.autoSaveChunksPerTick && !flag) {
++                    this.world.getAutoSaveWorldData().addAutoSaveChunkCount(i);
++                // Poweruser end
+                     return false;
+                 }
+             }
+         }
++        // Poweruser start
++        if(!flag) {
++            this.world.getAutoSaveWorldData().addAutoSaveChunkCount(i);
++        }
++        // Poweruser end
+ 
+         return true;
+     }
+diff --git a/src/main/java/net/minecraft/server/FileIOThread.java b/src/main/java/net/minecraft/server/FileIOThread.java
+index e9c333bfb..28488a2f8 100644
+--- a/src/main/java/net/minecraft/server/FileIOThread.java
++++ b/src/main/java/net/minecraft/server/FileIOThread.java
+@@ -67,4 +67,14 @@ public class FileIOThread implements Runnable {
+ 
+         this.e = false;
+     }
++
++    // Poweruser start
++    public boolean isDone() {
++        return this.c == this.d;
++    }
++
++    public void setNoDelay(boolean active) {
++        this.e = active;
++    }
++    // Poweruser end
+ }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 36d95e7a9..81d36ab27 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -45,6 +45,7 @@ import org.bukkit.event.world.WorldSaveEvent;
+ 
+ // Poweruser start
+ import net.frozenorb.ThreadingManager;
++import net.frozenorb.autosave.AutoSave;
+ // Poweruser end
+ 
+ public abstract class MinecraftServer implements ICommandListener, Runnable, IMojangStatistics {
+@@ -126,6 +127,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+ 
+     // Poweruser start
+     private ThreadingManager threadingManager;
++    private AutoSave autoSaveManager;
+     // Poweruser end
+ 
+     public float lastTickTime = 0F; // MineHQ
+@@ -136,6 +138,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+         j = this;
+         this.d = proxy;
+         this.threadingManager = new ThreadingManager(); // Poweruser
++        this.autoSaveManager = new AutoSave(); // Poweruser
+         // this.universe = file1; // CraftBukkit
+         // this.p = new ServerConnection(this); // Spigot
+         this.o = new CommandDispatcher();
+@@ -620,7 +623,22 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+             this.q.b().a(agameprofile);
+         }
+ 
+-        if ((this.autosavePeriod > 0) && ((this.ticks % this.autosavePeriod) == 0)) { // CraftBukkit
++        // Poweruser start
++        if(this.autoSaveManager.isActive()) {
++            SpigotTimings.worldSaveTimer.startTiming(); // Spigot
++            server.playerCommandState = true;
++            this.autoSaveManager.execute();
++            server.playerCommandState = false;
++            SpigotTimings.worldSaveTimer.stopTiming(); // Spigot
++        } else if ((this.autosavePeriod > 0) && ((this.ticks % this.autosavePeriod) == 0)) { // CraftBukkit
++            this.autoSaveManager.reset();
++            for(WorldServer worldserver: worlds) {
++                this.autoSaveManager.queueWorld(worldserver);
++            }
++            this.autoSaveManager.start();
++        }
++        // Poweruser end
++        /*
+             SpigotTimings.worldSaveTimer.startTiming(); // Spigot
+             this.methodProfiler.a("save");
+             this.u.savePlayers();
+@@ -638,6 +656,7 @@ public abstract class MinecraftServer implements ICommandListener, Runnable, IMo
+             this.methodProfiler.b();
+             SpigotTimings.worldSaveTimer.stopTiming(); // Spigot
+         }
++        */
+ 
+         this.methodProfiler.a("tallying");
+         this.g[this.ticks % 100] = System.nanoTime() - i;
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 609fe32ae..54e304a7d 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -42,6 +42,7 @@ import net.frozenorb.LightingUpdater;
+ import net.frozenorb.WeakChunkCache;
+ import net.frozenorb.ThreadingManager;
+ import net.frozenorb.ThreadingManager.TaskQueueWorker;
++import net.frozenorb.autosave.AutoSaveWorldData;
+ // Poweruser end
+ 
+ public abstract class World implements IBlockAccess {
+@@ -212,6 +213,16 @@ public abstract class World implements IBlockAccess {
+         return this.worldProvider.e;
+     }
+ 
++
++    // Poweruser start
++    public ChunkProviderServer chunkProviderServer; // moved here from WorldServer
++    private final AutoSaveWorldData autoSaveWorldData;
++
++    public AutoSaveWorldData getAutoSaveWorldData() {
++        return this.autoSaveWorldData;
++    }
++    // Poweruser end
++
+     // CraftBukkit start
+     private final CraftWorld world;
+     public boolean pvpMode;
+@@ -313,6 +324,8 @@ public abstract class World implements IBlockAccess {
+         if (!spigotConfig.mobsEnabled) {
+             this.world.setSpawnFlags(false, false);
+         }
++
++        this.autoSaveWorldData = new AutoSaveWorldData(this); // Poweruser
+     }
+ 
+     protected abstract IChunkProvider j();
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index a5d634fbb..8627ef832 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -337,7 +337,7 @@ public class WorldServer extends World {
+             this.timings.doTickTiles_tickingChunks_getChunk.startTiming(); // Poweruser
+             // Poweruser start
+             Chunk chunk = this.getChunkIfLoaded(chunkX, chunkZ);
+-            if(chunk == null || chunk.wasUnloaded() || !chunk.areNeighborsLoaded(1) || this.chunkProviderServer.unloadQueue.contains( chunkX, chunkZ )) {
++            if(chunk == null || !chunk.areNeighborsLoaded(1) || this.chunkProviderServer.unloadQueue.contains( chunkX, chunkZ )) {
+                 iter.remove();
+                 continue;
+             }
+@@ -811,18 +811,30 @@ public class WorldServer extends World {
+         return this.worldProvider.h();
+     }
+ 
+-    public void save(boolean flag, IProgressUpdate iprogressupdate) throws ExceptionWorldConflict { // CraftBukkit - added throws
++    // Poweruser start
++    public void saveOnlyLevel(boolean flag, IProgressUpdate iprogressupdate) throws ExceptionWorldConflict {
+         if (this.chunkProvider.canSave()) {
+             if (iprogressupdate != null) {
+                 iprogressupdate.a("Saving level");
+             }
+ 
+             this.a();
++        }
++    }
++
++    public boolean saveOnlyChunks(boolean flag, IProgressUpdate iprogressupdate) {
++        if (this.chunkProvider.canSave()) {
+             if (iprogressupdate != null) {
+                 iprogressupdate.c("Saving chunks");
+             }
+ 
+-            this.chunkProvider.saveChunks(flag, iprogressupdate);
++            return this.chunkProvider.saveChunks(flag, iprogressupdate);
++        }
++        return true;
++    }
++
++    public void unloadOnlyUnusedChunks(boolean flag, IProgressUpdate iprogressupdate) {
++        if (this.chunkProvider.canSave()) {
+             // CraftBukkit - ArrayList -> Collection
+             Collection arraylist = this.chunkProviderServer.a();
+             Iterator iterator = arraylist.iterator();
+@@ -836,6 +848,17 @@ public class WorldServer extends World {
+             }
+         }
+     }
++    // Poweruser end
++
++    public void save(boolean flag, IProgressUpdate iprogressupdate) throws ExceptionWorldConflict { // CraftBukkit - added throws
++        if (this.chunkProvider.canSave()) {
++            // Poweruser start
++            this.saveOnlyLevel(flag, iprogressupdate);
++            this.saveOnlyChunks(flag, iprogressupdate);
++            this.unloadOnlyUnusedChunks(flag, iprogressupdate);
++            // Poweruser end
++        }
++    }
+ 
+     public void flushSave() {
+         if (this.chunkProvider.canSave()) {
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index eff9a948e..c2d272c5f 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -430,5 +430,20 @@ public class SpigotConfig
+     private static void playersPerChunkIOThread() {
+         playersPerChunkIOThread = Math.max(1, getInt( "settings.chunkio.players-per-thread", 150) );
+     }
++
++    public static int autoSaveChunksPerTick;
++    private static void autoSaveChunksPerTick() {
++        autoSaveChunksPerTick = getInt( "settings.autosave.chunks-per-tick" , 200 );
++    }
++
++    public static boolean autoSaveFireWorldSaveEvent;
++    private static void autoSaveFireWorldSaveEvent() {
++        autoSaveFireWorldSaveEvent = getBoolean ( "settings.autosave.fire-WorldSaveEvent", false);
++    }
++
++    public static boolean autoSaveClearRegionFileCache;
++    private static void autoSaveClearRegionFileCache() {
++        autoSaveClearRegionFileCache = getBoolean ( "settings.autosave.clear-RegionFileCache", false);
++    }
+     // Poweruser end
+ }
+-- 
+2.13.3
+

@@ -1,0 +1,29 @@
+From 0f76d43f8e0cbc05de1ce798a23f2f36d040d338 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Fri, 21 Jul 2017 00:38:12 +0100
+Subject: [PATCH] Prohibit excessive teleports
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 624ec598d..0d66e7e1b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -580,6 +580,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+             return false;
+         }
+ 
++        // MineHQ start - don't allow excessive teleports
++        int locationChunkX = location.getBlockX() >> 4;
++        int locationChunkZ = location.getBlockZ() >> 4;
++
++        if (46340 <= Math.abs(locationChunkX) || 46340 <= Math.abs(locationChunkZ)) {
++            throw new IllegalArgumentException("Invalid teleportation destination for " + this.getName() + "! Offending location: " + location.toString());
++        }
++        // MineHQ end
++
+         // From = Players current Location
+         Location from = this.getLocation();
+         // To = Players new Location if Teleport is Successful
+-- 
+2.13.3
+

@@ -1,0 +1,48 @@
+From b16d75a0ae634f78df33d5a27368449a72d977c3 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Mon, 16 Nov 2015 22:27:31 +0100
+Subject: [PATCH] Allow saving of player files to be disabled
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index 8ea21d53b..46cfe0f1c 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -279,6 +279,7 @@ public abstract class PlayerList {
+     }
+ 
+     protected void b(EntityPlayer entityplayer) {
++        if (org.spigotmc.SpigotConfig.disablePlayerFileSaving) { return; } // Poweruser
+         this.playerFileData.save(entityplayer);
+         ServerStatisticManager serverstatisticmanager = (ServerStatisticManager) this.n.get(entityplayer.getUniqueID());
+ 
+@@ -1145,6 +1146,7 @@ public abstract class PlayerList {
+     }
+ 
+     public void savePlayers() {
++        if (org.spigotmc.SpigotConfig.disablePlayerFileSaving) { return; } // Poweruser
+         for (int i = 0; i < this.players.size(); ++i) {
+             this.b((EntityPlayer) this.players.get(i));
+         }
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index f407eb8c6..d4fb112e5 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -398,4 +398,14 @@ public class SpigotConfig
+             Bukkit.getLogger().info( "Debug logging is disabled" );
+         }
+     }
++
++    // Poweruser start
++    public static boolean disablePlayerFileSaving;
++    private static void playerFiles() {
++        disablePlayerFileSaving = getBoolean( "settings.disable-player-file-saving", false );
++        if (disablePlayerFileSaving) {
++            disableStatSaving = true;
++        }
++    }
++    // Poweruser end
+ }
+-- 
+2.13.3
+

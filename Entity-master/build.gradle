@@ -1,0 +1,83 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version" apply true
+    id "org.jetbrains.kotlin.kapt" version "$kotlin_version" apply true // moshi
+    id "com.github.johnrengelman.shadow" version "$shadow_version" apply true
+}
+
+this.group = "org.cavepvp.entity"
+this.version = "1.0-SNAPSHOT"
+this.description = "Entity"
+
+repositories {
+
+    flatDir {
+        dirs 'libs'
+    }
+
+    mavenLocal()
+    mavenCentral()
+}
+
+this.tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+apply plugin: "kotlin"
+apply plugin: 'kotlin-kapt'
+apply plugin: 'maven-publish'
+
+
+this.targetCompatibility = '1.8'
+this.sourceCompatibility = '1.8'
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin/'
+}
+
+shadowJar {
+    shadowJar.classifier = null
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+dependencies {
+
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+
+    compileOnly "cc.fyre.proton:proton:2.0-SNAPSHOT"
+    implementation "mkremins:fanciful:0.4.0-SNAPSHOT"
+    compileOnly "net.valorhcf:vspigot-server:1.7.10-R0.1-SNAPSHOT"
+    compileOnly "org.projectlombok:lombok:1.16.16"
+
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+
+    compileOnly "com.comphenix.protocol:ProtocolLib:3.6.5-SNAPSHOT"
+
+    // put ur protocollib
+
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version" // Retrofit's okhttp version
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_converter_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+shadowJar {
+    shadowJar.archiveName = this.rootProject.name + "-" + this.name + "-" + this.version + ".jar"
+}
+
+publishing {
+
+    publications {
+
+        shadow(MavenPublication) {
+            publication -> project.shadow.component(publication)
+        }
+
+    }
+
+}

@@ -1,0 +1,72 @@
+{
+    "type": "NPC",
+    "name": "holiday-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 26.5,
+        "y": 70.0,
+        "z": 6.5,
+        "yaw": 90.0,
+        "pitch": -0.0
+    },
+    "commands": [
+        "viewproduct lifetime-holiday"
+    ],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_holiday-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 26.5,
+            "y": 72.095,
+            "z": 6.5,
+            "yaw": 90.0,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "§6§lSpooky Rank",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 72.095,
+                    "z": 6.5,
+                    "yaw": 90.0,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&oClick to view",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 71.865,
+                    "z": 6.5,
+                    "yaw": 90.0,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "wO3D0MH+tCDWzW5RfJdKodsaSdxTl2+UBiiP/hZRhMJ1aSJBLuAVWt794wob+RwfnC5+H2jM5h5ssGJ/cXyUnLiogr0Te90ZXaYuAiV7+yRG0h3bvKHD/jDPuITx/f6ZN7y1SbcQIhvd4KDgtspoNivWuz4GW7Ztb6VtXBMqasc5taUVl2BY/Di/amXgltYzcJwVEGvAFEjNSAj/vX849Wyyo1dk2qb+ZMmvErffSfL0/tAdvca0qov/b/hWqIriDgcQjcgyS7lvu6ygbboblBz0wYEMyWJoEc0GG91UYEnTPZmGDhjDPJ54H8uVqGcdcIN5DWvrHsL/wySo7kyyb78yQtnNpP0q++3X9K/lX8mq4ywTfyk6Hl3zOm80rgeaZf6ZKPT66ByIj6039mErU8XwP9oDkMpyypBHK02OgmysPmNrleaWhgtSGzzIXW25qw3J4lqJQARuHmPLhmD/4zlkPX7ypmIztU80tI/m7BsBVHGZQK65ku8ayZZmYRGXY8VPqedgIscsQiOsHjJJoBes+I0UiIZBuiQBeXlRt+gMAquhoz8TGqU+XZxViGS3CL0BqzCWx/ZR511jmszgkD1xPqXMUEaYHYrq4pVuS+dc+WHb77SvAvL3C3iDQq6Ml4gUgMI7rAogsqNLrk6oz/wDxCblAL9z7koJJ1eFRC8=",
+    "skinUsername": "golombeczek",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY2NTk1MjA3OTE3MywKICAicHJvZmlsZUlkIiA6ICJhYzljYzk2NmJhZWQ0MzRiYjEzYTJhMjljMWFiYmRjMCIsCiAgInByb2ZpbGVOYW1lIiA6ICJnb2xvbWJlY3playIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8xMDEwMjVjMWM4ZmYzMGZhZGIwYjRkY2I5YWVkNWJkZjE1NTA0N2YzMDYyY2FjMDhkYjczN2Q0NTg1ZDFmMzVmIgogICAgfQogIH0KfQ==",
+    "animations": [
+        "Rings_GREEN"
+    ],
+    "visibility": "VISIBLE"
+}

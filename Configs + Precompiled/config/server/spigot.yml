@@ -1,0 +1,191 @@
+# This is the main configuration file for Spigot.
+# As you can see, there's tons to configure. Some options may impact gameplay, so use
+# with caution, and make sure you know what each option does before configuring.
+# For a reference for any variable inside this file, check out the Spigot wiki at
+# http://www.spigotmc.org/wiki/spigot-configuration/
+# 
+# If you need help with the configuration or have any questions related to Spigot,
+# join us at the IRC or drop by our forums and leave a post.
+# 
+# IRC: #spigot @ irc.spi.gt ( http://www.spigotmc.org/pages/irc/ )
+# Forums: http://www.spigotmc.org/
+
+config-version: 8
+settings:
+  disable:
+    ticking:
+      weather: true
+      blocks: false
+      villages: true
+    general:
+      sleepcheck: true
+      entity-collisions: true
+    entityTracking: false
+    player-list-packets: false
+    ping-update-packets: false
+  disableSaving: false
+  save-user-cache-on-stop-only: false
+  instantRespawn: false
+  alternate-knockback: false
+  smeltingMultiplier: 4
+  brewingMultiplier: 3
+  only-custom-tab: true
+  pearl-through-gates-and-tripwire: true
+  logRemainingAsyncThreadsDuringShutdown: true
+  bungeecord: true
+  late-bind: false
+  sample-count: 12
+  player-shuffle: 0
+  filter-creative-items: true
+  user-cache-size: 1000
+  int-cache-limit: 1024
+  moved-wrongly-threshold: 0.225
+  moved-too-quickly-threshold: 100.0
+  chunkio:
+    players-per-thread: 150
+  autosave:
+    chunks-per-tick: 200
+    fire-WorldSaveEvent: false
+    clear-RegionFileCache: false
+  lagSpikeLogger:
+    enabled: false
+    tickLimitInMilliseconds: 60
+  cache-chunk-maps: false
+  reduce-armor-damage: true
+  timeout-time: 10
+  restart-on-crash: true
+  restart-script: ./start.sh
+  netty-threads: 4
+  attribute:
+    maxHealth:
+      max: 2048.0
+    movementSpeed:
+      max: 2048.0
+    attackDamage:
+      max: 2048.0
+  global-api-cache: false
+  disable-player-file-saving: false
+  debug: false
+  guardian:
+    enabled: false
+    testing: false
+  chunkSleeping:
+    enabled: true
+    tickDistance: 2
+  queued-player-chunk-loading:
+    directChunkLoadRange: 1
+commands:
+  tab-complete: -1
+  log: true
+  spam-exclusions:
+  - /skill
+  silent-commandblock-console: false
+  replace-commands:
+  - setblock
+  - summon
+  - testforblock
+  - tellraw
+messages:
+  whitelist: You are not whitelisted on this server!
+  unknown-command: Unknown command. Type "/help" for help.
+  server-full: The server is full!
+  outdated-client: Outdated client! Please use {0}
+  outdated-server: Outdated server! I'm still on {0}
+  restart: Server is restarting
+world-settings:
+  default:
+    verbose: true
+    mob-spawn-range: 3
+    nerf-spawner-mobs: true
+    enderPearlsCanPassNonSolidBlocks: true
+    growth:
+      cactus-modifier: 1000
+      cane-modifier: 1000
+      melon-modifier: 1000
+      mushroom-modifier: 1000
+      pumpkin-modifier: 1000
+      sapling-modifier: 1000
+      wheat-modifier: 1000
+    entity-activation-range:
+      animals: 2
+      monsters: 2
+      misc: 2
+    entity-tracking-range:
+      players: 48
+      animals: 12
+      monsters: 16
+      misc: 32
+      other: 32
+    hopper-alt-ticking: true
+    ticks-per:
+      hopper-transfer: 8
+      hopper-check: 8
+    hopper-amount: 1
+    anti-xray:
+      enabled: false
+      engine-mode: 1
+      hide-blocks:
+      - 14
+      - 15
+      - 16
+      - 21
+      - 48
+      - 49
+      - 54
+      - 56
+      - 73
+      - 74
+      - 82
+      - 129
+      - 130
+      replace-blocks:
+      - 1
+      - 5
+    random-light-updates: false
+    save-structure-info: false
+    max-bulk-chunks: 5
+    max-entity-collisions: 1
+    dragon-death-sound-radius: 0
+    seed-village: 10387312
+    seed-feature: 14357617
+    hunger:
+      walk-exhaustion: 0.2
+      sprint-exhaustion: 0.2
+      combat-exhaustion: 0.2
+      regen-exhaustion: 0.2
+    max-tnt-per-tick: 100
+    updateMapItemsInPlayerInventory: false
+    view-distance: 8
+    item-despawn-rate: 1200
+    merge-radius:
+      item: 6.0
+      exp: 6.0
+    chunks-per-tick: 500
+    clear-tick-list: true
+    mobs-enabled: true
+    exp-despawn-rate: 1200
+    arrow-despawn-rate: 200
+    enable-zombie-pigmen-portal-spawns: false
+    wither-spawn-sound-radius: 0
+    hanging-tick-frequency: 600
+    zombie-aggressive-towards-villager: false
+    useAlternateEndSpawn: false
+    tick-distance: 1
+    max-activation-per-chunk: 4
+    max-tick-time:
+      tile: 7
+      entity: 9
+    mob-limits:
+      spawner:
+        amount: 30
+        radius: 64
+      portal:
+        amount: 30
+        radius: 64
+  world_the_end:
+    entity-activation-range:
+      monsters: 16
+auto-wtap: false
+hcf-knockback: false
+stats:
+  forced-stats: {}

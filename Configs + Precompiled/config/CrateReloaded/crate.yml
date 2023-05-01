@@ -1,0 +1,1035 @@
+############################################
+# +---------------------------------------+#
+# |         Config Revision 16            |#
+# +---------------------------------------+#
+############################################
+                 
+Rare:
+    type: KEYCRATE
+    displayName: '&b&lRare Crate'
+    holographic:
+        - ''
+        - ''
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&b&lRare Key'
+        lore:
+            - ''
+            - '&7Right click the &bRare Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'reddust'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 2
+        maximumRewards: 2
+        rewards:
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &b&lRare_&7┃_&fHelmet  0:2;34:3), chance:(5)'
+            - 'item:(311 1 &b&lRare_&7┃_&fChestplate  0:2;34:3), chance:(5)'
+            - 'item:(312 1 &b&lRare_&7┃_&fLeggings  0:2;34:3), chance:(5)'
+            - 'item:(313 1 &b&lRare_&7┃_&fBoots  0:2;34:3;2:4), chance:(5)'
+            - 'item:(276 1 &b&lRare_&7┃_&fSword  16:2;21:3), chance:(5)'
+            - 'item:(261 1 &b&lRare_&7┃_&fBow  48:4;34:3;51:1), chance:(5)'
+            - 'cmd:(/giveitem %player% 368 4), display:(368 4), chance:(7)'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 133 16), display:(emerald_block 16), chance:(10)'
+            - 'cmd:(/giveitem %player% 57 16), display:(diamond_block 16), chance:(10)'
+            - 'cmd:(/addlives %player% 5), display:(339 5 &a&l5_Lives), chance:(7)'
+            - 'cmd:(/cr givekey %player% Legendary 3), display:(131 3 &5&lLegendary_Key %line%&7Right_click_the_&5Legendary_Key_&7to_obtain_rewards!), chance:(0.5)'
+            - 'cmd:(/giveitem %player% 322 8), display:(322 8), chance:(6)'
+            - 'cmd:(/giveitem %player% 348 16), display:(348 16), chance:(2)'
+            - 'cmd:(/giveitem %player% 289 16), display:(289 16), chance:(2)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 41 16), display:(gold_block 16), chance:(10)'
+            - 'cmd:(/giveitem %player% 42 16), display:(iron_block 16), chance:(10)'
+            - 'cmd:(/addlives %player% 10), display:(339 10 &a&l10_Lives), chance:(2)'
+            - 'cmd:(/fancybrewer give %player% 1), display:(379 1 &b&lFancy_Brewer &7A_brewing_stand..._but_fancy.%line%&7Place_the_brewer_and_open_to_get_started.%line%%line%&aLearn_more_at_cavepvp.org/fancybrewers), chance:(2)'
+            - 'cmd:(/giveitem %player% 322:1 1), display:(322:1 1), chance:(6)'
+            - 'cmd:(/giveitem %player% 372 16), display:(372 16), chance:(10)'
+            - 'cmd:(/giveitem %player% 382 16), display:(382 16), chance:(10)'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+Legendary:
+    type: KEYCRATE
+    displayName: '&5&lLegendary Crate'
+    holographic:
+        - ''
+        - ''
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&5&lLegendary Key'
+        lore:
+            - ''
+            - '&7Right click the &5Legendary Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'reddust'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 2
+        maximumRewards: 2
+        rewards:
+            - 'display:(160:10 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &5&lLegendary_&7┃_&fHelmet  0:2;34:3), chance:(5)'
+            - 'item:(311 1 &5&lLegendary_&7┃_&fChestplate &cFireResistance_I 0:2;34:3), chance:(5)'
+            - 'item:(312 1 &5&lLegendary_&7┃_&fLeggings  0:2;34:3), chance:(5)'
+            - 'item:(313 1 &5&lLegendary_&7┃_&fBoots &cSpeed_II 0:2;34:3;2:4), chance:(5)'
+            - 'item:(276 1 &5&lLegendary_&7┃_&fSword  16:2;21:3;34:3), chance:(5)'
+            - 'cmd:(/ability MedKit 2 %player%), display:(paper 2 &a&lMed_Kit %line%&6❙_&fRight_Click_to_receive_Resistance_3,%line%&6❙_&fRegeneration_3,_and_4_Absorption%line%&6❙_&fHearts_for_5_seconds!%line%%line%&fCan_be_found_in_the_&6&lHalloween_Crate&f!), chance:(2.5)'
+            - 'cmd:(/ability AntiBlockup 2 %player%), display:(369 2 &6&lAnti_Blockup %line%&6❙_&fWhen_you_hit_a_player_with_this%line%&6❙_&c&l3_times_&fthey_may_not_block_up_for_&e&l15_seconds&f.%line%%line%&fCan_be_found_in_the_&6&lHalloween_Crate&f!), chance:(2.5)'
+            - 'display:(160:10 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:2 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 133 32), display:(emerald_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% 57 32), display:(diamond_block 32), chance:(10)'
+            - 'cmd:(/addlives %player% 10), display:(339 10 &a&l10_Lives), chance:(7)'
+            - 'cmd:(/crates give %player% Reinforce 1), display:(138 1 &6&lReinforce_Lootbox %line%&7View_all_the_rewards_at_&estore.cavepvp.org&7!), chance:(2.0)'
+            - 'cmd:(/givebasetokens %player% 1), display:(95:14 1 &d&lBase_Token %line%&7Type_&d/blueprints_&7to_use_it!), chance:(1.0)'
+            - 'cmd:(/cr givekey %player% Seasonal 2), display:(131 2 &e&ki&6&lHalloween_Key&e&ki&r %line%&7Right_click_the_&6Halloween_Crate_&7to_obtain_rewards!), chance:(0.5)'
+            - 'cmd:(/giveitem %player% 322 32), display:(322 32), chance:(6)'
+            - 'display:(160:2 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:10 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 41 32), display:(gold_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% 42 32), display:(iron_block 32), chance:(10)'
+            - 'cmd:(/addlives %player% 15), display:(339 15 &a&l15_Lives), chance:(2)'
+            - 'cmd:(/fancybrewer give %player% 1), display:(379 1 &b&lFancy_Brewer &7A_brewing_stand..._but_fancy.%line%&7Place_the_brewer_and_open_to_get_started.%line%%line%&aLearn_more_at_cavepvp.org/fancybrewers), chance:(2)'
+            - 'cmd:(/givefallertokens %player% 1), display:(hopper 1 &4&lFaller_Tokens %line%&7Type_&c/blueprints_&7to_use_it!), chance:(1.0)'
+            - 'cmd:(/cr givekey %player% Seasonal 1), display:(131 1 &e&ki&6&lHalloween_Key&e&ki&r %line%&7Right_click_the_&6Halloween_Crate_&7to_obtain_rewards!), chance:(1.5)'
+            - 'cmd:(/giveitem %player% 322:1 1), display:(322:1 1), chance:(6)'
+            - 'display:(160:10 1 &7&o), chance:(0), noduplicate:()'
+
+Cave:
+    type: KEYCRATE
+    displayName: '&4&lCave Crate'
+    holographic:
+        - ''
+        - ''
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&4&lCave Key'
+        lore:
+            - ''
+            - '&7Right click the &4Cave Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'witchMagic'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 1
+        maximumRewards: 1
+        rewards:
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'cmd:(/ability Shockwave 3 %player%), display:(385 3 &4&lShockwave %line%&6❙_&fThrow_this_and_everybody_within%line%&6❙_&c&l10_blocks_&fof_where_it_lands_will_be_launched.%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(20)'
+            - 'cmd:(/ability WitchEffect 3 %player%), display:(383:65 3 &5&lWitch_Effect %line%&6❙_&fSpawn_a_witch_that_give_you_the_passive%line%&6❙_&fbard_effects:_strength,_regeneration,%line%&6❙_&fand_resistance.%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(20)'
+            - 'cmd:(/ability Combo 3 %player%), display:(38:0 3 &a&lCombo_Ability %line%&6❙_&fGet_a_second_of_strength_II_for_the%line%&6❙_&famount_of_hits_dealt_within_10_seconds.%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(20)'
+            - 'cmd:(/ability SpinBot 3 %player%), display:(stick 3 &3&lSpin_Bot %line%&6❙_&fHit_a_player_&c&l3_times_&fand_every%line%&6❙_&fhit_for_&e&l10_seconds_&fhas_a_chance%line%&6❙_&fof_rotating_their_head.%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(20)'
+            - 'cmd:(/ability phoenixmode 3 %player%), display:(emerald 3 &4&lPhoenix_Mode %line%&6❙_&fClick_to_create_a_cloud_of_particles.%line%&6❙_&fInside_the_cloud,_enemies_deal_&c&l-20%_&fdamage%line%&6❙_&fto_you_and_you_deal_&c&l+20%_&fdamage_to_enemies.%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(20)'
+            - 'cmd:(/ability ItemCounter 3 %player%), display:(345 3 &c&lItem_Counter %line%&6❙_&fHit_an_enemy_to_discover_how_many%line%&6❙_&fhealth_potions_and_ability_items_they_have!%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(20)'
+            - 'cmd:(/ability Tazer 3 %player%), display:(318 3 &d&lTazer %line%&6❙_&fHit_a_player_and_for_the_next%line%&6❙_&e&l5_seconds_&fthey_will_not_be_able_to%line%&6❙_&fmove_or_take_knockback.%line%%line%&fCan_be_found_in_the_&4&lCave_Crate&f!), chance:(0)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:0 1 &f)'
+Seasonal:
+    type: KEYCRATE
+    displayName: '&e&ki&6&lHalloween Crate&e&ki'
+    holographic:
+        - ''
+        - ''
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&e&ki&6&l Halloween Keys &e&ki'
+        lore:
+            - ''
+            - '&7Right click the &6&lHalloween Crate &7to obtain rewards'
+    effect:
+        onOpenEffects: 'reddust'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 2
+        maximumRewards: 2
+        rewards:
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:3), chance:(5)'
+            - 'item:(311 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:3), chance:(5)'
+            - 'item:(312 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:3), chance:(5)'
+            - 'item:(313 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:3;2:4), chance:(5)'
+            - 'item:(276 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fSword  16:2;34:3;21:3), chance:(5)'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/ability MedKit 5 %player%), display:(paper 5 &a&lMed_Kit %line%&6❙_&fRight_Click_to_receive_Resistance_3,%line%&6❙_&fRegeneration_3,_and_4_Absorption%line%&6❙_&fHearts_for_5_seconds!%line%%line%&fCan_be_found_in_the_&e&ki&6&lHalloween&e&ki&r_Crate&f!), chance:(2)'
+            - 'cmd:(/ability AntiBlockup 5 %player%), display:(369 5 &6&lAnti_Blockup %line%&6❙_&fWhen_you_hit_a_player_with_this%line%&6❙_&c&l3_times_&fthey_may_not_block_up_for_&e&l15_seconds&f.%line%%line%&fCan_be_found_in_the_&e&ki&6&lHalloween&e&ki&r_Crate&f!), chance:(2)'
+            - 'cmd:(/ability Eggport 8 %player%), display:(344 8 &d&lEggport %line%&6❙_&fSwitch_places_with_your%line%&6❙_&fenemy_that_are_within_&c&l15_blocks&f!%line%%line%&fCan_be_found_in_the_&e&ki&6&lHalloween&e&ki&r_Crate&f!), chance:(2)'
+            - 'cmd:(/crowbar %player%), display:(293 1 &cCrowbar &f%line%&eCan_Break:%line%&f_-_&bEnd_Portals:_&e1%line%&f_-_&bSpawners:_&e1), chance:(1.5)'
+            - 'cmd:(/giveitem %player% 120 1), display:(120 1), chance:(2)'
+            - 'item:(278 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fPickaxe  32:5;34:3;35:3), chance:(5)'
+            - 'item:(261 1 &e&ki&6&lHalloween&e&ki&r_&7┃_&fBow  48:5;34:4;50:1;51:1), chance:(5)'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/cr givekey %player% Seasonal 3), display:(131 3 &e&ki&6&l_Halloween_Key_&e&ki %line%&7Right_click_the_&e&ki&6&lHalloween_Crate&e&ki&7_to_obtain_rewards!), chance:(0.5)'
+            - 'cmd:(/permission add %player% crazyenchantments.gkitz.diamond), cmd:(/sbc &4&lCrate &8┃ &f%player% &7has found a &b&lDiamond Kit &7from a &e&ki&6&l Halloween Key &e&ki&7.), display:(310 1 &b&lDiamond_Kit_&7[30_Days] &c0.3%_chance 34:10), chance:(0.2)'
+            - 'cmd:(/vouchers addrank %player% Cave 30d &4&lCave Rank [30 Days]), cmd:(/raw &f), cmd:(/raw &4&lCrate &8┃ &f%player% &7has just won &c&k! &4&lCave Rank &c&k! &7from a &e&ki&4&l Halloween Key &e&ki&7.),cmd:(/raw &f), display:(351:1 1 &c&k!&4&l_Cave_Rank_&c&k!&7_[30_Days]  34:10), chance:(0.0)'
+            - 'cmd:(/permission add %player% crazyenchantments.gkitz.archer), cmd:(/sbc &4&lCrate &8┃ &f%player% &7has found a &d&lArcher Kit &7from a &e&ki&4&l Halloween Key &e&ki&7.), display:(298 1 &d&lArcher_Kit_&7[30_Days] &c0.3%_chance 34:10), chance:(0.2)'
+            - 'cmd:(/crates give %player% Seasonal 1), display:(130 1 &6&lFall_Lootbox %line%&7Purchasable_on_&fstore.cavepvp.org&7!), chance:(0.25)'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+Perk:
+    type: KEYCRATE
+    displayName: '&a&lPerk Crate'
+    animation: 'CSGO'
+    holographic:
+        - '&a&lPerk'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'NETHER_STAR'
+        enchantment: ''
+        name: '&a&lPerk Key'
+        lore:
+            - ''
+            - '&7Right click the &aPerk Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'firework, DRINK'
+        dormantEffects: ''
+        dormantRoulette: 'WOOD_CLICK'
+        onRouletteEnd: 'BAT_TAKEOFF'
+    reward:
+        minimumRewards: 1
+        maximumRewards: 1
+        rewards:
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:13 1 &f)'
+            - 'cmd:(/airdrops give %player% 5), cmd:(/broadcastperkkey %player% &b&l5x Airdrops), display:(130 2 &6&lSeptember_Mystery_Box &7Purchasable_on_&fstore.cavepvp.org&7! &734:5), chance:(1.0)'
+            - 'cmd:(/vouchers addrank %player% VIP 30d &e&lVIP Status [30 Days]), cmd:(/broadcastperkkey %player% &e&lVIP Status), display:(351:11 1 &e&lVIP_Status_&7[30_Days]  34:5), chance:(0.0)'
+            - 'cmd:(/vouchers addrank %player% Cave 30d &4&lCave Rank [30 Days]), cmd:(/broadcastperkkey %player% &c&ki&4&l Cave Rank &c&ki), display:(351:1 1 &4&lCave_Rank_&7[30_Days]  34:5), chance:(1.0)'
+            - 'cmd:(/vouchers addrank %player% Seasonal-Kit 30d &6&lHalloween Kit [30 Days]), cmd:(/broadcastperkkey %player% &6&lHalloween Kit), display:(400 1 &e&ki&6&lHalloween&e&ki&r_Kit_&7[30_Days]  34:5), chance:(0.0)'
+            - 'cmd:(/crates give %player% Seasonal 5), cmd:(/broadcastperkkey %player% &6&l5x Fall Lootbox), display:(130 5 &6&lFall_Lootbox &7Purchasable_on_&fstore.cavepvp.org&7! &734:5), chance:(1.0)'
+            - 'display:(160:13 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'cmd:(/vouchers addrank %player% Sapphire perm &9&lSapphire Rank [Lifetime]), cmd:(/broadcastperkkey %player% &9&lLifetime Sapphire Rank), display:(351:12 1 &9&lLifetime_Sapphire_Rank  34:5), chance:(0.9)'
+            - 'cmd:(/vouchers addrank %player% Ravine perm &d&lRavine Rank [Lifetime]), cmd:(/broadcastperkkey %player% &d&lLifetime Ravine Rank), display:(351:9 1 &d&lLifetime_Ravine_Rank  34:5), chance:(0.3)'
+            - 'cmd:(/vouchers addrank %player% Holiday perm &6&lSpooky Rank [Lifetime]), cmd:(/broadcastperkkey %player% &6&lLifetime Spooky Rank), display:(91 1 &6&lLifetime_Spooky_Rank  34:5), chance:(0.0)'
+            - 'cmd:(/vouchers addrank %player% Platinum perm &3&lPlatinum Rank [Lifetime]), cmd:(/broadcastperkkey %player% &3&lLifetime Platinum Rank), cmd:(/raw &f), display:(351:6 1 &3&lLifetime_Platinum_Rank  34:5), chance:(0.2)'
+            - 'cmd:(/vouchers addrank %player% Pearl perm &5&lLifetime Pearl Rank]), cmd:(/broadcastperkkey %player% &5&lLifetime Pearl Rank), display:(351:5 1 &5&lLifetime_Pearl_Rank&7  34:5), chance:(0.9)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'cmd:(/vouchers add %player% &a&l$10 Gift Card), display:(diamond 10 &2&l$&a&l10_Gift_Card  34:5), cmd:(/broadcastperkkey %player% &2&l$&a&l10 Gift Card), chance:(0)'
+            - 'cmd:(/vouchers addamount %player% 10), display:(7 10 &2&l$&a&l10_Store_Voucher  34:5), cmd:(/broadcastperkkey %player% &2&l$&a&l10 Store Voucher), chance:(0)'
+            - 'cmd:(/vouchers addamount %player% 50), display:(7 50 &2&l$&a&l50_Store_Voucher  34:5), cmd:(/broadcastperkkey %player% &2&l$&a&l50 Store Voucher), chance:(0)'
+            - 'cmd:(/vouchers addamount %player% 25), display:(7 25 &2&l$&a&l25_Store_Voucher  34:5), cmd:(/broadcastperkkey %player% &2&l$&a&l25 Store Voucher), chance:(0)'
+            - 'cmd:(/vouchers add %player% &a&l$25 Gift Card), display:(diamond 25 &2&l$&a&l25_Gift_Card  34:5), cmd:(/broadcastperkkey %player% &2&l$&a&l25 Gift Card), chance:(0)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:13 1 &f)'
+            - 'cmd:(/vouchers addrank %player% Sapphire 30d &9&lSapphire Rank [30d]), cmd:(/broadcastperkkey %player% &9&lSapphire Rank), display:(351:12 1 &9&lSapphire_Rank_&7[30_Days]), chance:(4)'
+            - 'cmd:(/vouchers addrank %player% Ravine 30d &d&lRavine Rank [30d]), cmd:(/broadcastperkkey %player% &d&lRavine Rank), display:(351:9 1 &d&lRavine_Rank_&7[30_Days]), chance:(2)'
+            - 'cmd:(/vouchers addrank %player% Holiday 30d &6&lSpooky Rank [30d]), cmd:(/broadcastperkkey %player% &6&lSpooky Rank), display:(91 1 &6&lSpooky_Rank_&7[30_Days]), chance:(0.8)'
+            - 'cmd:(/vouchers addrank %player% Platinum 30d &3&lPlatinum Rank [30d]), cmd:(/broadcastperkkey %player% &3&lPlatinum Rank), display:(351:6 1 &3&lPlatinum_Rank_&7[30_Days]), chance:(3)'
+            - 'cmd:(/vouchers addrank %player% Pearl 30d &5&lPearl Rank [30d]), cmd:(/broadcastperkkey %player% &5&lPearl Rank), display:(351:5 1 &5&lPearl_Rank_&7[30_Days]), chance:(5)'
+            - 'display:(160:13 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:5 1 &f)'
+            - 'display:(160:0 1 &f)'
+KOTH:
+    type: KEYCRATE
+    displayName: '&4&lKOTH Key'
+    holographic:
+        - '&4&lKOTH'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: '371'
+        enchantment: '34:1'
+        name: '&4&lKOTH Key'
+        lore:
+            - ''
+            - '&7Right click the &cKOTH Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'happyVillager'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 2
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'item:(276 1 &c&lKOTH_Sharpness  16:3;34:5;21:5),cmd:(/rawbc &f%player% &7has found a &c&oKOTH &fSharpness &7from a &4&lKOTH &7Crate.), chance:(0.5)'
+            - 'item:(276 1 &c&lKOTH_Fire  16:3;20:2;34:5),cmd:(/rawbc &f%player% &7has found a &c&oKOTH Fire &7from a &4&lKOTH &7Crate.), chance:(0.5)'
+            - 'item:(261 1 &c&lKOTH_Bow  48:5;34:4;50:1;51:1),cmd:(/rawbc &f%player% &7has found a &c&oKOTH Bow &7from a &4&lKOTH &7Crate.), chance:(8)'
+            - 'cmd:(/rawbc &f%player% &7has found 6x &5&lItem Keys &7from a &4&lKOTH &7Crate.), cmd:(/cr givekey %player% Items 6),display:(131 6 &76x_&5&lItem_Keys &c0.3%_chance 34:10), chance:(7)'
+            - 'item:(278 1 &c&lKOTH_Pickaxe  32:5;34:5;35:4),cmd:(/rawbc &f%player% &7has found a &c&oKOTH Pickaxe &7from a &4&lKOTH &7Crate.), chance:(8)'
+            - 'item:(175 2 &c&lKOTH_Knockback  19:1),cmd:(/rawbc &f%player% &7has found 2x &c&oKOTH Knockbacks &7from a &4&lKOTH &7Crate.), chance:(10)'
+            - 'cmd:(/giveitem %player% 120 2),cmd:(/rawbc &f%player% &7has found 2x &5&lEnd Portal Frame &7from a &4&lKOTH &7Crate.),display:(120 2), chance:(5)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'cmd:(/giveitem %player% emeraldblock 64),cmd:(/rawbc &f%player% &7has found 64x &a&lEmerald Blocks &7from a &4&lKOTH &7Crate.),display:(emerald_block 64), chance:(6)'
+            - 'cmd:(/giveitem %player% diamondblock 64),cmd:(/rawbc &f%player% &7has found 64x &b&lDiamond Blocks &7from a &4&lKOTH &7Crate.),display:(diamond_block 64), chance:(6)'
+            - 'cmd:(/giveitem %player% 322:1 4),cmd:(/rawbc &f%player% &7has found 4x &6&lEnchanted Golden Apples &7from a &4&lKOTH &7Crate.),display:(322:1 4), chance:(4)'
+            - 'cmd:(/cr givekey %player% Perk 1), cmd:(/rawbc &f%player% &7has found 1x &d&lPerk Key &7from a &4&lKOTH &7Crate.), display:(399 1 &71x_&c&lPerk_&7Key &c0.05%_chance 34:10), chance:(0.01)'
+            - 'cmd:(/giveitem %player% 322 64),cmd:(/rawbc &f%player% &7has found 64x &6&lCrapples &7from a &4&lKOTH &7Crate.),display:(322 64), chance:(6)'
+            - 'cmd:(/giveitem %player% ironblock 64),cmd:(/rawbc &f%player% &7has found 64x &7&lIron Blocks &7from a &4&lKOTH &7Crate.),display:(iron_block 64), chance:(6)'
+            - 'cmd:(/giveitem %player% goldblock 64),cmd:(/rawbc &f%player% &7has found 64x &6&lGold Blocks &7from a &4&lKOTH &7Crate.),display:(gold_block 64), chance:(6)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:7 1 &f)'
+            
+            
+Citadel:
+    type: KEYCRATE
+    displayName: '&5&lCitadel Crate'
+    holographic:
+        - '&5&lCitadel'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: '371'
+        enchantment: '34:1'
+        name: '&5&lCitadel Key'
+        lore:
+            - ''
+            - '&7Right click the &5Citadel Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'largeexplode'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 1
+        maximumRewards: 1
+        rewards:
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Helmet &7from the &5&lCitadel &7Crate.), item:(diamond_helmet 1 &5&lCitadel_Helmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Chestplate &7from the &5&lCitadel &7Crate.), item:(diamond_chestplate 1 &5&lCitadel_Chestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Leggings &7from the &5&lCitadel &7Crate.), item:(diamond_leggings 1 &5&lCitadel_Leggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Boots &7from the &5&lCitadel &7Crate.), item:(diamond_boots 1 &5&lCitadel_Boots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has found 4x &6&lEnchanted Golden Apples &7from the &5&lCitadel &7Crate.), cmd:(/giveitem %player% 322:1 8), display:(322:1 8), chance:(4)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Bard Helmet &7from the &5&lCitadel &7Crate.), item:(gold_helmet 1 &5&lCitadel_Bard_Helmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Bard Chestplate &7from the &5&lCitadel &7Crate.), item:(gold_chestplate 1 &5&lCitadel_Bard_Chestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Bard Leggings &7from the &5&lCitadel &7Crate.), item:(gold_leggings 1 &5&lCitadel_Bard_Leggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Bard Boots &7from the &5&lCitadel &7Crate.), item:(gold_boots 1 &5&lCitadel_Bard_Boots &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'item:(276 1 &5&lCitadel_Sharpness  16:3;34:5;21:5),cmd:(/rawbc &f%player% &7has found a &5&lCitadel &fSharpness &7from the &5&lCitadel &7Crate.), chance:(5)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Archer Helmet &7from the &5&lCitadel &7Crate.), item:(leather_helmet 1 &5&lCitadel_Archer_Helmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Archer Chestplate &7from the &5&lCitadel &7Crate.), item:(leather_chestplate 1 &5&lCitadel_Archer_Chestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Archer Leggings &7from the &5&lCitadel &7Crate.), item:(leather_leggings 1 &5&lCitadel_Archer_Leggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Archer Boots &7from the &5&lCitadel &7Crate.), item:(leather_boots 1 &5&lCitadel_Archer_Boots &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'item:(276 1 &5&lCitadel_Fire  16:3;20:3;34:5),cmd:(/rawbc &f%player% &7has found a &5&lCitadel Fire &7from the &5&lCitadel &7Crate.), chance:(5)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Rogue Helmet &7from the &5&lCitadel &7Crate.), item:(chainmail_helmet 1 &5&lCitadel_Rogue_Helmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Rogue Chestplate &7from the &5&lCitadel &7Crate.), item:(chainmail_chestplate 1 &5&lCitadel_Rogue_Chestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Rogue Leggings &7from the &5&lCitadel &7Crate.), item:(chainmail_leggings 1 &5&lCitadel_Rogue_Leggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has won a &5&lCitadel Rogue Boots &7from the &5&lCitadel &7Crate.), item:(chainmail_boots 1 &5&lCitadel_Rogue_Boots &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:3;34:5;1:5;3:5;4:5), chance:(10)'
+            - 'cmd:(/rawbc &f%player% &7has found 64x &6&lGolden Apples &7from a &5&lCitadel &7Crate.), cmd:(/giveitem %player% 322 64), display:(322 64), chance:(10)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            - 'display:(160:10 1 &f)'
+            - 'display:(160:2 1 &f)'
+            
+Airdrop:
+    type: KEYCRATE
+    displayName: '&b&lAirdrop Rewards'
+    preview:
+        enabled: true 
+        rows: 3
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&d&lGamble &7Key'
+        lore:
+            - ''
+            - '&7&oOpen this key at &aSpawn &7&oto redeem the loot!'
+    effect:
+        onOpenEffects: 'largeexplode'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 1
+        maximumRewards: 1
+        rewards:
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(351:1 1 &4&lCave_Rank_&7[7_Days]  34:5)'
+            - 'display:(7 5 &2&l$&a&l5&a&l_Buycraft_Voucher  34:5), cmd:(/giveitem dirt 64 %player%), chance(100)'
+            - 'display:(7 50 &2&l$&a&l50&a&l_Buycraft_Voucher  34:5)'
+            - 'display:(7 25 &2&l$&a&l25&a&l_Buycraft_Voucher  34:5)'
+            - 'display:(91 1 &6&lSpooky_Rank_&7[30_Days]  34:5)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(emerald_block 32)'
+            - 'display:(diamond_block 32)'
+            - 'display:(322:1 2)'
+            - 'display:(gold_block 32)'
+            - 'display:(iron_block 32)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(276 1 &b&lAirdrop&7_Sword  16:2;20:2;34:5)'
+            - 'display:(310 1 &b&lAirdrop&7_Helmet &cAll_custom_enchants 0:2;34:4)'
+            - 'display:(311 1 &b&lAirdrop&7_Chestplate &cAll_custom_enchants 0:2;34:4)'
+            - 'display:(312 1 &b&lAirdrop&7_Leggings &cAll_custom_enchants 0:2;34:4)'
+            - 'display:(313 1 &b&lAirdrop&7_Boots &cAll_custom_enchants 0:2;34:4;2:4)'
+            - 'display:(261 1 &b&lAirdrop&7_Bow  48:5;34:5;50:1;51:1)'
+            - 'display:(322 64)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(351:14 1 &6&lPortable_Bard &7Right_Click_to_chose_the_effect_you_want.%line%&7When_you_chose_the_effect_you_want,_you_will_be_given_an%line%&7item_where_you_should_right_click_it_when_you_want_to_give%line%&7you_and_your_team_the_effect_for_5_seconds.%line%%line%&fCan_be_found_in_&b&lAirdrops&f!)'
+            - 'display:(46 5 &4&lTNT_Minecart &7Right_Click_to_spawn_a_TNT_Minecart%line%&750_blocks_above_your_head!%line%%line%&fCan_be_found_in_&b&lAirdrops&f!)'
+            - 'display:(watch 5 &6&lTime_Warp &7Right_Click_to_go_back_to_where_you%line%&7pearled_from_15_seconds_ago.%line%%line%&fCan_be_found_in_&b&lAirdrops&f!)'
+            - 'display:(399 1 &b&lNinja_Star &7Teleport_to_the_last%line%&7person_who_hit_you_within_30_seconds.%line%%line%&fCan_be_found_in_&b&lAirdrops&f!)'
+            - 'display:(346 1 &6&lGrapple &7Hook_the_block_you_like_to%line%&7move_towards_and_then_release_to_get_sent!%line%%line%&fCan_be_found_in_&b&lAirdrops&f!)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:11 1 &f)'
+            - 'display:(160:0 1 &f)'
+            - 'display:(160:7 1 &f)'
+            - 'display:(160:3 1 &f)'
+            - 'display:(160:0 1 &f)'
+
+Lootbox:
+    type: KEYCRATE
+    displayName: '&6&lFall Lootbox'
+    preview:
+        enabled: true 
+        rows: 3
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&d&lGamble &7Key'
+        lore:
+            - ''
+            - '&7&oOpen this key at &aSpawn &7&oto redeem the loot!'
+    effect:
+        onOpenEffects: 'largeexplode'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 1
+        maximumRewards: 1
+        rewards:
+            - 'display:(160:4 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:4 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(351:11 30 &e&lVIP_Subscription_&7[30_Days]  34:5)'
+            - 'display:(91 14 &6&lSpooky_Rank_&7[14_Days]  34:5)'
+            - 'display:(351:1 7 &4&lCave_Rank_&7[7_Days]  34:5)'
+            - 'display:(7 10 &2&l$&a&l10&a&l_Buycraft_Voucher  34:5)'
+            - 'display:(7 5 &2&l$&a&l5&a&l_Buycraft_Voucher  34:5), cmd:(/giveitem dirt 64 %player%), chance(100)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(400 30 &6&lHalloween_Kit_&7[30_Days]  34:5)'
+            - 'display:(emerald_block 16)'
+            - 'display:(diamond_block 16)'
+            - 'cmd:(/crowbar %player%), display:(293 1 &cCrowbar &f%line%&eCan_Break:%line%&f_-_&bEnd_Portals:_&e1%line%&f_-_&bSpawners:_&e1), chance:(1.5)'
+            - 'display:(gold_block 16)'
+            - 'display:(iron_block 16)'
+            - 'display:(watch 1 &6&lBattle_Pass_Premium  34:5)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(322 64)'
+            - 'display:(310 1 &6&lFall_&7┃_&fHelmet &cAll_custom_enchants 0:2;34:4)'
+            - 'display:(311 1 &6&lFall_&7┃_&fChestplate &cAll_custom_enchants 0:2;34:4)'
+            - 'display:(312 1 &6&lFall_&7┃_&fLeggings &cAll_custom_enchants 0:2;34:4)'
+            - 'display:(313 1 &6&lFall_&7┃_&fBoots &cAll_custom_enchants 0:2;34:4;2:4)'
+            - 'display:(276 1 &6&lFall_&7┃_&fSword  16:2;20:2;34:5)'
+            - 'display:(261 1 &6&lFall_&7┃_&fBow  48:5;34:5;50:1;51:1)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(266 8 &6&lMidas_Touch &7Right_click_to_activate_and_for_15_seconds%line%&7a_3x3_of_gold_blocks_appear_under_you.%line%&7You_break/place/interact_with.%line%&7blocks_on_top_of_these_gold_blocks.%line%%line%&fCan_be_found_in_the_&6&lFall_Lootbox&f!)'
+            - 'display:(344 16 &d&lEggport &7Switch_places_with_your%line%&7enemy_that_are_within_15_Blocks!%line%%line%&fCan_be_found_in_the_&6&lFall_Lootbox&f!)'
+            - 'display:(322:1 1)'
+            - 'display:(paper 8 &a&lMed_Kit &7Right_Click_to_receive_Resistance_3,%line%&7Regeneration_3,_and_4_Absorption%line%&7Hearts_for_5_seconds!%line%%line%&fCan_be_found_in_the_&6&lFall_Lootbox&f!)'
+            - 'display:(369 8 &6&lAnti_Blockup &7Hit_an_enemy_3_times_and_they_may%line%&7no_longer_place/break_blocks%line%&7or_use_fencegates!%line%%line%&fCan_be_found_in_the_&6&lFall_Lootbox&f!), chance:(20)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:4 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:1 1 &f)'
+            - 'display:(160:4 1 &f)'
+            
+#OWNER CRATES
+
+iMakeMcVids:
+    type: KEYCRATE
+    displayName: '&c&liMakeMcVids Crate'
+    holographic:
+        - '&c&liMakeMcVids'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: '351:1'
+        enchantment: '34:1'
+        name: '&c&liMakeMcVids Key'
+        lore:
+            - ''
+            - '&7Right click the &ciMakeMcVids Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'flame'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 3
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &c&liMakeMcVids_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(311 1 &c&liMakeMcVids_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(312 1 &c&liMakeMcVids_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(313 1 &c&liMakeMcVids_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5;2:5), chance:(5)'
+            - 'item:(276 1 &c&liMakeMcVids_&7┃_&fSword  16:2;34:5;21:5), chance:(5)'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 322:1 1),display:(322:1 1), chance:(2.5)'
+            - 'cmd:(/giveitem %player% 322 32),display:(322 32), chance:(6)'
+            - 'cmd:(/airdrops give %player% 1), cmd:(/rawbc &f%player% &7has found a &b&lAirdrop &7from a &c&liMakeMcVids &7Crate.), display:(dropper 1 &b&lAirdrop &c0.5%_chance 34:10), chance:(0.1)'
+            - 'cmd:(/cr givekey %player% iMakeMcVids 3), cmd:(/rawbc &f%player% &7has found &c&l3x iMakeMcVids Keys &7from an &c&liMakeMcVids &7Crate.), display:(351:1 3 &c&liMakeMcVids_&7┃_&fKeys &7Right_click_the_&ciMakeMcVids_&7to_obtain_rewards! 34:5), chance:(0.7)'
+            - 'cmd:(/ownerclickablekit give &c&liMakeMcVids %player%), cmd:(/rawbc &f%player% &7has found a &c&lClickable Kit &7from a &c&liMakeMcVids &7Crate.), display:(340 1 &c&liMakeMcVids_&7┃_&fClickable_Kit &7Right_click_to_receive_the_&ciMakeMcVids_&7Kit!), chance:(0.1)'
+            - 'cmd:(/ability antipearl 3 %player%), display:(381 3 &c&lAnti_Pearl_2.0 %line%&6❙_&fHit_a_player_to_put_them_on_enderpearl_cooldown.%line%&6❙_&fRight_Click_to_remove_your_enderpearl_cooldown.%line%%line%&fCan_be_found_in_the_&c&liMakeMcVids_Crate&f!), chance:(2)'
+            - 'cmd:(/ability antipearl 6 %player%), display:(381 6 &c&lAnti_Pearl_2.0 %line%&6❙_&fHit_a_player_to_put_them_on_enderpearl_cooldown.%line%&6❙_&fRight_Click_to_remove_your_enderpearl_cooldown.%line%%line%&fCan_be_found_in_the_&c&liMakeMcVids_Crate&f!), chance:(2)'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% emeraldblock 32),display:(emerald_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% diamondblock 32),display:(diamond_block 32), chance:(10)'
+            - 'cmd:(/bukkit:give %player% minecraft:skull 1 3 {SkullOwner:"iMakeMcVids"}),display:(397:3 1 &c&liMakeMcVids_&7┃_&fHead), chance:(0.1)'
+            - 'cmd:(/giveitem %player% goldblock 32),display:(gold_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% ironblock 32),display:(iron_block 32), chance:(10)'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            
+NotRamix:
+    type: KEYCRATE
+    displayName: '&9&lNotRamix Crate'
+    holographic:
+        - '&9&lNotRamix'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: '351:12'
+        enchantment: '34:1'
+        name: '&9&lNotRamix Key'
+        lore:
+            - ''
+            - '&7Right click the &9NotRamix Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'HAPPYVILLAGER'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 3
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &9&lNotRamix_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(311 1 &9&lNotRamix_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(312 1 &9&lNotRamix_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(313 1 &9&lNotRamix_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5;2:5), chance:(5)'
+            - 'item:(276 1 &9&lNotRamix_&7┃_&fSword  16:2;34:5;21:5), chance:(5)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 322:1 1),display:(322:1 1), chance:(2.5)'
+            - 'cmd:(/giveitem %player% 322 32),display:(322 32), chance:(6)'
+            - 'cmd:(/airdrops give %player% 1), cmd:(/rawbc &f%player% &7has found a &b&lAirdrop &7from a &9&lNotRamix &7Crate.), display:(dropper 1 &b&lAirdrop &c0.5%_chance 34:10), chance:(0.1)'
+            - 'cmd:(/cr givekey %player% NotRamix 3), cmd:(/rawbc &f%player% &7has found &a&l3x NotRamix Keys &7from an &9&lNotRamix &7Crate.), display:(351:4 3 &9&lNotRamix_&7┃_&fKeys &7Right_click_the_&9NotRamix_&7to_obtain_rewards! 34:5), chance:(0.7)'
+            - 'cmd:(/ownerclickablekit give &9&lNotRamix %player%), cmd:(/rawbc &f%player% &7has found a &a&lClickable Kit &7from a &9&lNotRamix &7Crate.), display:(340 1 &9&lNotRamix_&7┃_&fClickable_Kit &7Right_click_to_receive_the_&9NotRamix_&7Kit!), chance:(0.1)'
+            - 'cmd:(/ability hulksmash 3 %player%), display:(336 3 &2&lHulk_Smash %line%&6❙_&fRight_Click_to_be_launched,_when%line%&6❙_&fyou_land_all_players_within_a_&c&l5x5_&fradius%line%&6❙_&fwill_take_damage_and_will_be_launched_in_the_air.%line%%line%&fCan_be_found_in_the_&9&lNotRamix_Crate&f!), chance:(2)'
+            - 'cmd:(/ability hulksmash 6 %player%), display:(336 6 &2&lHulk_Smash %line%&6❙_&fRight_Click_to_be_launched,_when%line%&6❙_&fyou_land_all_players_within_a_&c&l5x5_&fradius%line%&6❙_&fwill_take_damage_and_will_be_launched_in_the_air.%line%%line%&fCan_be_found_in_the_&9&lNotRamix_Crate&f!), chance:(1)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% emeraldblock 32),display:(emerald_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% diamondblock 32),display:(diamond_block 32), chance:(10)'
+            - 'cmd:(/bukkit:give %player% minecraft:skull 1 3 {SkullOwner:"NotRamix"}),display:(397:3 1 &9&lNotRamix_&7┃_&fHead), chance:(0.1)'
+            - 'cmd:(/giveitem %player% goldblock 32),display:(gold_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% ironblock 32),display:(iron_block 32), chance:(10)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+Dylan:
+    type: KEYCRATE
+    displayName: '&a&lDylan Crate'
+    holographic:
+        - '&a&lDylan'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: '351:10'
+        enchantment: '34:1'
+        name: '&a&lDylan Key'
+        lore:
+            - ''
+            - '&7Right click the &aDylan Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'HAPPYVILLAGER'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 3
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:13 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:5 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &a&lDylan_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(311 1 &a&lDylan_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(312 1 &a&lDylan_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(313 1 &a&lDylan_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5;2:5), chance:(5)'
+            - 'item:(276 1 &a&lDylan_&7┃_&fSword  16:2;34:5;21:5), chance:(5)'
+            - 'display:(160:5 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:13 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:5 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 322:1 1),display:(322:1 1), chance:(2.5)'
+            - 'cmd:(/giveitem %player% 322 32),display:(322 32), chance:(6)'
+            - 'cmd:(/airdrops give %player% 1), cmd:(/rawbc &f%player% &7has found a &b&lAirdrop &7from a &a&lDylan &7Crate.), display:(dropper 1 &b&lAirdrop &c0.5%_chance 34:10), chance:(0.1)'
+            - 'cmd:(/cr givekey %player% Dylan 3), cmd:(/rawbc &f%player% &7has found &a&l3x Dylan Keys &7from an &a&lDylan &7Crate.), display:(351:10 3 &a&lDylan_&7┃_&fKeys &7Right_click_the_&aDylan_Crate_&7to_obtain_rewards! 34:5), chance:(0.7)'
+            - 'cmd:(/ownerclickablekit give &a&lDylan %player%), cmd:(/rawbc &f%player% &7has found a &a&lClickable Kit &7from a &a&lDylan &7Crate.), display:(340 1 &a&lDylan_&7┃_&fClickable_Kit &7Right_click_to_receive_the_&aDylan_&7Kit!), chance:(0.1)'
+            - 'cmd:(/ability Combo 3 %player%), display:(38:0 3 &a&lCombo_Ability %line%&6❙_&fGet_a_second_of_strength_II_for_the%line%&6❙_&famount_of_hits_dealt_within_10_seconds.%line%%line%&fCan_be_found_in_the_&a&lDylan_Crate&f!), chance:(1)'
+            - 'cmd:(/ability Combo 6 %player%), display:(38:0 6 &a&lCombo_Ability %line%&6❙_&fGet_a_second_of_strength_II_for_the%line%&6❙_&famount_of_hits_dealt_within_10_seconds.%line%%line%&fCan_be_found_in_the_&a&lDylan_Crate&f!), chance:(0.5)'
+            - 'display:(160:5 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:13 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:5 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% emeraldblock 32),display:(emerald_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% diamondblock 32),display:(diamond_block 32), chance:(10)'
+            - 'cmd:(/bukkit:give %player% minecraft:skull 1 3 {SkullOwner:"Dylan"}),display:(397:3 1 &a&lDylan''s_Head), chance:(0.1)'
+            - 'cmd:(/giveitem %player% goldblock 32),display:(gold_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% ironblock 32),display:(iron_block 32), chance:(10)'
+            - 'display:(160:5 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:13 1 &7&o), chance:(0), noduplicate:()'
+Resucting:
+    type: KEYCRATE
+    displayName: '&4&lResucting Crate'
+    holographic:
+        - '&4&lResucting'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: '351:1'
+        enchantment: '34:1'
+        name: '&4&lResucting Key'
+        lore:
+            - ''
+            - '&7Right click the &4Resucting Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'heart'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 3
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:7 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &4&lResucting_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(311 1 &4&lResucting_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(312 1 &4&lResucting_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(313 1 &4&lResucting_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5;2:5), chance:(5)'
+            - 'item:(276 1 &4&lResucting_&7┃_&fSword  16:2;34:5;21:5), chance:(5)'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:7 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 322:1 1),display:(322:1 1), chance:(2.5)'
+            - 'cmd:(/giveitem %player% 322 32),display:(322 32), chance:(6)'
+            - 'cmd:(/airdrops give %player% 1), cmd:(/rawbc &f%player% &7has found a &b&lAirdrop &7from a &4&lResucting &7Crate.), display:(dropper 1 &b&lAirdrop &a0.5%_chance 34:10), chance:(0.1)'
+            - 'cmd:(/cr givekey %player% Resucting 3), cmd:(/rawbc &f%player% &7has found &4&l3x Resucting Keys &7from an &4&lResucting &7Crate.), display:(351:1 3 &4&lResucting_&7┃_&fKeys &7Right_click_the_&4Resucting_&7to_obtain_rewards! 34:5), chance:(0.7)'
+            - 'cmd:(/ownerclickablekit give &4&lResucting %player%), cmd:(/rawbc &f%player% &7has found a &4&lClickable Kit &7from a &4&lResucting &7Crate.), display:(340 1 &4&lResucting_&7┃_&fClickable_Kit &7Right_click_to_receive_the_&4Resucting_&7Kit!), chance:(0.1)'
+            - 'cmd:(/ability phoenixmode 3 %player%), display:(emerald 3 &4&lPhoenix_Mode %line%&6❙_&fClick_to_create_a_cloud_of_particles.%line%&6❙_&fInside_the_cloud,_enemies_deal_&c&l-20%_&fdamage%line%&6❙_&fto_you_and_you_deal_&c&l+20%_&fdamage_to_enemies.%line%%line%&fCan_be_found_in_the_&4&lResucting_Crate&f!), chance:(2)'
+            - 'cmd:(/ability phoenixmode 6 %player%), display:(emerald 6 &4&lPhoenix_Mode %line%&6❙_&fClick_to_create_a_cloud_of_particles.%line%&6❙_&fInside_the_cloud,_enemies_deal_&c&l-20%_&fdamage%line%&6❙_&fto_you_and_you_deal_&c&l+20%_&fdamage_to_enemies.%line%%line%&fCan_be_found_in_the_&4&lResucting_Crate&f!), chance:(1)'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:7 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% emeraldblock 32),display:(emerald_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% diamondblock 32),display:(diamond_block 32), chance:(10)'
+            - 'cmd:(/bukkit:give %player% minecraft:skull 1 3 {SkullOwner:"Resucting"}),display:(397:3 1 &4&lResucting_&7┃_&fHead), chance:(0.1)'
+            - 'cmd:(/giveitem %player% goldblock 32),display:(gold_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% ironblock 32),display:(iron_block 32), chance:(10)'
+            - 'display:(160:14 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:7 1 &7&o), chance:(0), noduplicate:()'
+
+Headed:
+    type: KEYCRATE
+    displayName: '&3&lHeaded Crate'
+    holographic:
+        - '&3&lHeaded Crate'
+    preview:
+        enabled: true 
+        rows: 3
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        broadcast: ''
+    key:
+        item: '131'
+        enchantment: '34:1'
+        name: '&3&lHeaded Key'
+        lore:
+            - '&7Right click a &3Headed Crate &7to receive rewards!'
+    effect:
+        onOpenEffects: 'SPELL'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 3
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &3&lHeaded_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(311 1 &3&lHeaded_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(312 1 &3&lHeaded_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(313 1 &3&lHeaded_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5;2:5), chance:(5)'
+            - 'item:(276 1 &3&lHeaded_&7┃_&fSword  16:2;34:5;21:5), chance:(5)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 322:1 1),display:(322:1 1), chance:(2.5)'
+            - 'cmd:(/giveitem %player% 322 32),display:(322 32), chance:(6)'
+            - 'cmd:(/airdrops give %player% 1), cmd:(/rawbc &f%player% &7has found a &b&lAirdrop &7from a &3&lHeaded &7Crate.), display:(dropper 1 &b&lAirdrop &a0.5%_chance 34:10), chance:(0.1)'
+            - 'cmd:(/cr givekey %player% Headed 3), cmd:(/rawbc &f%player% &7has found &3&l3x Headed Keys &7from an &3&lHeaded &7Crate.), display:(351:6 3 &3&lHeaded_&7┃_&fKeys &7Right_click_the_&3Headed_&7to_obtain_rewards! 34:5), chance:(0.7)'
+            - 'cmd:(/ownerclickablekit give &3&lHeaded %player%), cmd:(/rawbc &f%player% &7has found a &3&lClickable Kit &7from a &3&lHeaded &7Crate.), display:(340 1 &3&lHeaded_&7┃_&fClickable_Kit &7Right_click_to_receive_the_&3Headed_&7Kit!), chance:(0.1)'
+            - 'cmd:(/ability Scrambler 3 %player%), display:(349:2 3 &9&lScrambler %line%&6❙_&fHit_a_player_3_times_to%line%&6❙_&fscramble_their_hotbar!%line%%line%&fCan_be_found_in_the_&9&lHeaded_Crate&f), chance:(2)'
+            - 'cmd:(/ability Scrambler 6 %player%), display:(349:2 6 &9&lScrambler %line%&6❙_&fHit_a_player_3_times_to%line%&6❙_&fscramble_their_hotbar!%line%%line%&fCan_be_found_in_the_&9&lHeaded_Crate&f), chance:(1)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% emeraldblock 32),display:(emerald_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% diamondblock 32),display:(diamond_block 32), chance:(10)'
+            - 'cmd:(/bukkit:give %player% minecraft:skull 1 3 {SkullOwner:"Headed"}),display:(397:3 1 &3&lHeaded_&7┃_&fHead), chance:(0.1)'
+            - 'cmd:(/giveitem %player% goldblock 32),display:(gold_block 32), chance:(10)'
+            - 'cmd:(/giveitem %player% ironblock 32),display:(iron_block 32), chance:(10)'
+            - 'display:(160:3 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:11 1 &7&o), chance:(0), noduplicate:()'
+New:
+    type: KEYCRATE
+    displayName: '&4&l??? Crate'
+    holographic:
+        - '&4&l???'
+        - '&7&oCrate Loot'
+    preview:
+        enabled: true 
+        rows: 1
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: ''
+        raw: ''
+    key:
+        item: 'Tripwire_Hook'
+        enchantment: ''
+        name: '&4&l??? Key'
+        lore:
+            - ''
+            - '&7Right click the &4??? Crate &7to obtain rewards!'
+    effect:
+        onOpenEffects: 'witchMagic'
+        dormantEffects: ''
+    reward:
+        minimumRewards: 1
+        maximumRewards: 1
+        rewards:
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'cmd:(/ability AttackDogs 2 %player%), display:(paper 1 &4&l??? &7Big_announcement_coming_today%line%&715_minutes_into_SOTW!_Check_our_twitter!%line%%line%&ahttps://twitter.com/CavePvPorg), chance:(100)'
+            - 'cmd:(/ability AttackDogs 2 %player%), display:(paper 1 &4&l??? &7Big_announcement_coming_today%line%&715_minutes_into_SOTW!_Check_our_twitter!%line%%line%&ahttps://twitter.com/CavePvPorg), chance:(100)'
+            - 'cmd:(/ability AttackDogs 2 %player%), display:(paper 1 &4&l??? &7Big_announcement_coming_today%line%&715_minutes_into_SOTW!_Check_our_twitter!%line%%line%&ahttps://twitter.com/CavePvPorg), chance:(100)'
+            - 'cmd:(/ability AttackDogs 2 %player%), display:(paper 1 &4&l??? &7Big_announcement_coming_today%line%&715_minutes_into_SOTW!_Check_our_twitter!%line%%line%&ahttps://twitter.com/CavePvPorg), chance:(100)'
+            - 'cmd:(/ability AttackDogs 2 %player%), display:(paper 1 &4&l??? &7Big_announcement_coming_today%line%&715_minutes_into_SOTW!_Check_our_twitter!%line%%line%&ahttps://twitter.com/CavePvPorg), chance:(100)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            - 'display:(160:14 1 &f)'
+            
+# PARTNER CRATES
+
+Partner:
+    type: KEYCRATE
+    displayName: '&d&lPartner Crate'
+    holographic:
+        - '&d&lPartner Crate'
+    preview:
+        enabled: true 
+        rows: 3
+    buy:
+        enabled: false
+        cost: 0
+    message:
+        onOpen: '&aSuccessfully opened a &d&lPartner Crate&a!'
+        broadcast: ''
+    key:
+        item: '131'
+        enchantment: '34:1'
+        name: '&d&lPartner Key'
+        lore:
+            - '&7Right click a &dPartner Crate &7to receive rewards!'
+    effect:
+        onOpenEffects: ''
+        dormantEffects: ''
+    reward:
+        minimumRewards: 3
+        maximumRewards: 3
+        rewards:
+            - 'display:(160:2 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'item:(310 1 &d&lPartner_&7┃_&fHelmet &cHellForged_IV%line%&cImplants_V%line%&cMermaid_III%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(311 1 &d&lPartner_&7┃_&fChestplate &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(312 1 &d&lPartner_&7┃_&fLeggings &cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5), chance:(5)'
+            - 'item:(313 1 &d&lPartner_&7┃_&fBoots &cSpeed_II%line%&cHellForged_IV%line%&cRecover_I%line%&cFireResistance_I 0:2;34:5;2:5), chance:(5)'
+            - 'item:(276 1 &d&lPartner_&7┃_&fSword  16:2;34:5;21:5), chance:(5)'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:2 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% 322 16),display:(322 16), chance:(6)'
+            - 'cmd:(/ability ReverseCard 3 %player%), display:(empty_map 3 &6&lReverse_Card %line%&6❙_&fHit_a_player_three_times.%line%&6❙_&f&fFor_&e&l12_seconds&f,_you_can_click%line%&6❙_&fany_block_they_click_with_and_you%line%&6❙_&fcan_break_any_block_they_place.%line%%line%&fCan_be_found_in_the_&d&lPartner_&fCrate!), chance:(2)'
+            - 'cmd:(/ability MidasTouch 3 %player%), display:(gold_ingot 3 &6&lMidas_Touch %line%&6❙_&fClick_to_activate_and_for_&e&l15_seconds%line%&6❙_&fa_3x3_of_gold_blocks_appear_under_you.%line%&6❙_&fYou_cannot_break/place/interact_with.%line%&6❙_&fblocks_on_top_of_these_gold_blocks.%line%%line%&fCan_be_found_in_the_&d&lPartner_&fCrate!), chance:(2)'
+            - 'cmd:(/cr givekey %player% Partner 3), cmd:(/rawbc &f%player% &7has found &d&l3x Partner Keys &7from an &d&lPartner &7Crate.), display:(351:9 3 &d&lPartner_&7┃_&fKeys &7Right_click_the_&dPartner_&7to_obtain_rewards! 34:5), chance:(0.7)'
+            - 'cmd:(/ability Spider 3 %player%), display:(spider_eye 3 &5&lSpider_Ability %line%&6❙_&fRight_Click_to_activate_and_for_15_seconds,_all_hits%line%&6❙_&fdealt_have_a_25%_chance_of_putting_a_cobweb_underneath_the_enemy.%line%%line%&fCan_be_found_in_the_&d&lPartner_&fCrate!), chance:(2)'
+            - 'cmd:(/ability Invisibility 3 %player%), display:(351 3 &3&lInvisibility %line%&6❙_&fWhen_you_right_click_this_item%line%&6❙_&fyour_armor_will_no_longer_be_visible.%line%%line%&fCan_be_found_in_the_&d&lPartner_&fCrate!), chance:(2)'
+            - 'cmd:(/giveitem %player% 322 32),display:(322 32), chance:(6)'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:2 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'cmd:(/giveitem %player% emeraldblock 8),display:(emerald_block 8), chance:(10)'
+            - 'cmd:(/giveitem %player% diamondblock 8),display:(diamond_block 8), chance:(10)'
+            - 'cmd:(/crates give %player% Seasonal 1), cmd:(/rawbc &f%player% &7has found a &b&lAirdrop &7from a &d&lPartner &7Crate.), display:(ender_chest 1 &6&lFall_Lootbox  34:10), chance:(0.1)'
+            - 'cmd:(/giveitem %player% goldblock 8),display:(gold_block 8), chance:(10)'
+            - 'cmd:(/giveitem %player% ironblock 8),display:(iron_block 8), chance:(10)'
+            - 'display:(160:6 1 &7&o), chance:(0), noduplicate:()'
+            - 'display:(160:2 1 &7&o), chance:(0), noduplicate:()'
+           

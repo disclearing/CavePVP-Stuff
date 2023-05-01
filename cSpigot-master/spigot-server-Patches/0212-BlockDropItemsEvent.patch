@@ -1,0 +1,116 @@
+From 1f3324a0b49793e7f063e06089273ca979ff5ad0 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Tue, 15 Aug 2017 04:25:29 +0100
+Subject: [PATCH] BlockDropItemsEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/Block.java b/src/main/java/net/minecraft/server/Block.java
+index 33c5a963c..29eed8b76 100644
+--- a/src/main/java/net/minecraft/server/Block.java
++++ b/src/main/java/net/minecraft/server/Block.java
+@@ -1,9 +1,14 @@
+ package net.minecraft.server;
+ 
++import java.util.ArrayList;
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Random;
+ 
++import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.entity.CraftItem;
++import org.bukkit.event.block.BlockDropItemsEvent;
++
+ import net.frozenorb.blocks.BlockAccessCache; // Poweruser
+ 
+ public class Block {
+@@ -52,7 +57,8 @@ public class Block {
+ 
+     // MineHQ start
+     private int blockId = -1;
+-    private static final Block[] blocksArray = new Block[4096]; 
++    private static final Block[] blocksArray = new Block[4096];
++    public List<org.bukkit.entity.Item> droppedItemsCatcher;
+     // MineHQ end
+ 
+     public static int getId(Block block) {
+@@ -466,7 +472,23 @@ public class Block {
+     }
+ 
+     public final void b(World world, int i, int j, int k, int l, int i1) {
+-        this.dropNaturally(world, i, j, k, l, 1.0F, i1);
++        // MineHQ start
++        if (this == Blocks.AIR) return;
++        if (this.droppedItemsCatcher == null) {
++            this.droppedItemsCatcher = new ArrayList<org.bukkit.entity.Item>(1);
++            this.dropNaturally(world, i, j, k, l, 1.0f, i1);
++            BlockDropItemsEvent dropItemsEvent = new BlockDropItemsEvent(world.getWorld().getBlockAt(i, j, k), null, this.droppedItemsCatcher);
++            Bukkit.getPluginManager().callEvent(dropItemsEvent);
++            if (!dropItemsEvent.isCancelled() && dropItemsEvent.getToDrop() != null) {
++                for (final org.bukkit.entity.Item item : dropItemsEvent.getToDrop()) {
++                    world.addEntity(((CraftItem) item).getHandle());
++                }
++            }
++            this.droppedItemsCatcher = null;
++        } else {
++            this.dropNaturally(world, i, j, k, l, 1.0F, i1);
++        }
++        // MineHQ end
+     }
+ 
+     public void dropNaturally(World world, int i, int j, int k, int l, float f, int i1) {
+@@ -495,7 +517,13 @@ public class Block {
+             EntityItem entityitem = new EntityItem(world, (double) i + d0, (double) j + d1, (double) k + d2, itemstack);
+ 
+             entityitem.pickupDelay = 10;
+-            world.addEntity(entityitem);
++            // MineHQ start
++            if (this.droppedItemsCatcher == null) {
++                world.addEntity(entityitem);
++            } else {
++                this.droppedItemsCatcher.add(new CraftItem(world.getServer(), entityitem));
++            }
++            // MineHQ end
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/server/PlayerInteractManager.java b/src/main/java/net/minecraft/server/PlayerInteractManager.java
+index cefeb7ddb..3021ac878 100644
+--- a/src/main/java/net/minecraft/server/PlayerInteractManager.java
++++ b/src/main/java/net/minecraft/server/PlayerInteractManager.java
+@@ -2,6 +2,13 @@ package net.minecraft.server;
+ 
+ // CraftBukkit start
+ import org.bukkit.event.block.BlockBreakEvent;
++import org.bukkit.event.block.BlockDropItemsEvent;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.entity.CraftItem;
+ import org.bukkit.craftbukkit.event.CraftEventFactory;
+ import org.bukkit.event.Event;
+ import org.bukkit.event.block.Action;
+@@ -315,7 +322,19 @@ public class PlayerInteractManager {
+                 }
+ 
+                 if (flag && flag1) {
++                    // MineHQ start
++                    List<org.bukkit.entity.Item> items = new ArrayList<org.bukkit.entity.Item>(1);
++                    block.droppedItemsCatcher = items;
+                     block.a(this.world, this.player, i, j, k, l);
++                    block.droppedItemsCatcher = null;
++                    BlockDropItemsEvent dropItemsEvent = new BlockDropItemsEvent(this.world.getWorld().getBlockAt(i, j, k), this.player.getBukkitEntity(), items);
++                    Bukkit.getPluginManager().callEvent(dropItemsEvent);
++                    if (!dropItemsEvent.isCancelled() && dropItemsEvent.getToDrop() != null) {
++                        for (final org.bukkit.entity.Item item : dropItemsEvent.getToDrop()) {
++                            this.world.addEntity(((CraftItem) item).getHandle());
++                        }
++                    }
++                    // MineHQ end
+                 }
+             }
+ 
+-- 
+2.13.5 (Apple Git-94)
+

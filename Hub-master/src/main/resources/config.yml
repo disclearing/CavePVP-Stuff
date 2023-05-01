@@ -1,0 +1,340 @@
+border: 1000
+y-teleport: 0
+no-track-distance: 3000
+join-message:
+  - "&7&m------------------------------"
+  - "&fWelcome to the &4CavePvP Network&f!"
+  - ""
+  - "&7 »&f Twitter:&c https://twitter.com/CavePvPorg"
+  - "&7 »&f Discord:&c https://discord.gg/CavePvP"
+  - "&7 »&f Teamspeak:&c ts.cavepvp.org"
+  - ""
+  - "&7&m------------------------------"
+scoreboard:
+  title: "&4&lCavePvP &7┃ &f{hub}"
+  scores:
+    - "&1&7&m--------------------"
+    - "&4Online:"
+    - "&f{online}"
+    - ""
+    - "&4Rank:"
+    - "&f{rank}"
+    - ""
+  queue:
+    - "&6Queue:"
+    - "&f{queue}"
+    - "&fPosition: &6#{queue-position}&f out of &6{queue-size}"
+    - ""
+items:
+  0:
+    menu: "main"
+    name: "&c»&6&l Server Selector &c«"
+    amount: 1
+    material: "WATCH"
+    durability: 0
+  1:
+    name: "&c»&5&l Ender Butt &c«"
+    amount: 1
+    material: "ENDER_PEARL"
+    durability: 0
+menus:
+  main:
+    rows: 3
+    title: "Select a server."
+    placeholder: true
+    auto-update: true
+    update-after-click: true
+    buttons:
+      10:
+        server: "Fasts"
+        name:
+          online: "&4&lFasts"
+          offline: "&4&lFasts"
+          whitelisted: "&4&lFasts"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "DIAMOND_SWORD"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "DIAMOND_SWORD"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 2, Sharp 2"
+            - "&7• &cFaction Size: &f5"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 2, Sharp 2"
+            - "&7• &cFaction Size: &f5"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 2, Sharp 2"
+            - "&7• &cFaction Size: &f5"
+            - ""
+            - "&eClick to join the queue!"
+      11:
+        server: "Teams"
+        name:
+          online: "&4&lTeams"
+          offline: "&4&lTeams"
+          whitelisted: "&4&lTeams"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "DIAMOND_SWORD"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "DIAMOND_SWORD"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 1, Sharp 1"
+            - "&7• &cFaction Size: &f20"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 1, Sharp 1"
+            - "&7• &cFaction Size: &f20"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 1, Sharp 1"
+            - "&7• &cFaction Size: &f20"
+            - ""
+            - "&eClick to join the queue!"
+      12:
+        server: "Kits"
+        name:
+          online: "&4&lKits"
+          offline: "&4&lKits"
+          whitelisted: "&4&lKits"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "ENDER_CHEST"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "ENDER_CHEST"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 1, Sharp 1"
+            - "&7• &cFaction Size: &f25"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 1, Sharp 2"
+            - "&7• &cFaction Size: &f25"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cMap Kit: &fProt 1, Sharp 1"
+            - "&7• &cFaction Size: &f25"
+            - ""
+            - "&eClick to join the queue!"
+      15:
+        server: "Bunkers-Lobby"
+        name:
+          online: "&4&lBunkers"
+          offline: "&4&lBunkers"
+          whitelisted: "&4&lBunkers"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "BEACON"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "BEACON"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+      16:
+        server: "UHC-01"
+        name:
+          online: "&4&lUHC"
+          offline: "&4&lUHC"
+          whitelisted: "&4&lUHC"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "BEACON"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "BEACON"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+  practicemenu:
+    rows: 3
+    title: "Select A Region"
+    placeholder: true
+    auto-update: true
+    update-after-click: true
+    buttons:
+      12:
+        server: "NA-Practice"
+        name:
+          online: "&4&lNA Practice"
+          offline: "&4&lNA Practice"
+          whitelisted: "&4&lNA Practice"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "BOW"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "BOW"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cRegion: &fNorth America"
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cRegion: &fNorth America"
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cRegion: &fNorth America"
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+      14:
+        server: "Practice"
+        name:
+          online: "&4&lAU Practice"
+          offline: "&4&lAU Practice"
+          whitelisted: "&4&lAU Practice"
+        amount:
+          online: 1
+          offline: 1
+          whitelisted: 1
+        material:
+          online: "BOW"
+          offline: "REDSTONE_BLOCK"
+          whitelisted: "BOW"
+        durability:
+          online: 0
+          offline: 0
+          whitelisted: 0
+        lore:
+          online:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cRegion: &fAustralia"
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"
+          offline:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cRegion: &fAustralia"
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&cServer is currently offline."
+          whitelisted:
+            - "&7• &cPlayers: &f{players}"
+            - ""
+            - "&7• &cRegion: &fAustralia"
+            - "&7• &cPlaying: &fN/A"
+            - "&7• &cQueuing: &fN/A"
+            - ""
+            - "&eClick to join the queue!"

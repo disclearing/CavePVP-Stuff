@@ -1,0 +1,13 @@
+Redis:
+  Host: 'localhost'
+  Pass: 'none'
+  DbId: 5
+  Port: 6379
+Backbone:
+  Host: 'localhost'
+  Pass: 'none'
+  DbId: 0
+  Port: 6379
+NametagPacketRestriction:
+  Enabled: false
+  BypassPrefix: '&a'

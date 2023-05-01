@@ -1,0 +1,120 @@
+From 5d23dae48bf8942829701489d8a34a44cc07adc6 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Sat, 30 Jan 2016 01:49:06 +0100
+Subject: [PATCH] Reuse empty netty channel listener array
+
+
+diff --git a/src/main/java/net/minecraft/server/HandshakeListener.java b/src/main/java/net/minecraft/server/HandshakeListener.java
+index 7566110a6..df93c9c87 100644
+--- a/src/main/java/net/minecraft/server/HandshakeListener.java
++++ b/src/main/java/net/minecraft/server/HandshakeListener.java
+@@ -47,7 +47,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
+                     if (throttleTracker.containsKey(address) && !"127.0.0.1".equals(address.getHostAddress()) && currentTime - throttleTracker.get(address) < connectionThrottle) {
+                         throttleTracker.put(address, currentTime);
+                         chatcomponenttext = new ChatComponentText("Connection throttled! Please wait before reconnecting.");
+-                        this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
++                        this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), NetworkManager.emptyListenerArray); // Poweruser
+                         this.b.close(chatcomponenttext);
+                         return;
+                     }
+@@ -74,11 +74,11 @@ public class HandshakeListener implements PacketHandshakingInListener {
+ 
+             if (packethandshakinginsetprotocol.d() > 5 && packethandshakinginsetprotocol.d() != 47) { // Spigot
+                 chatcomponenttext = new ChatComponentText( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedServerMessage, "1.7.10" ) ); // Spigot
+-                this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
++                this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), NetworkManager.emptyListenerArray); // Poweruser
+                 this.b.close(chatcomponenttext);
+             } else if (packethandshakinginsetprotocol.d() < 4) {
+                 chatcomponenttext = new ChatComponentText( java.text.MessageFormat.format( org.spigotmc.SpigotConfig.outdatedClientMessage, "1.7.10" ) ); // Spigot
+-                this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
++                this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), NetworkManager.emptyListenerArray); // Poweruser
+                 this.b.close(chatcomponenttext);
+             } else {
+                 this.b.a((PacketListener) (new LoginListener(this.a, this.b)));
+@@ -92,7 +92,7 @@ public class HandshakeListener implements PacketHandshakingInListener {
+                     } else
+                     {
+                         chatcomponenttext = new ChatComponentText("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!");
+-                        this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
++                        this.b.handle(new PacketLoginOutDisconnect(chatcomponenttext), NetworkManager.emptyListenerArray); // Poweruser
+                         this.b.close(chatcomponenttext);
+                         return;
+                     }
+diff --git a/src/main/java/net/minecraft/server/LoginListener.java b/src/main/java/net/minecraft/server/LoginListener.java
+index d88181373..22a8e91b3 100644
+--- a/src/main/java/net/minecraft/server/LoginListener.java
++++ b/src/main/java/net/minecraft/server/LoginListener.java
+@@ -62,7 +62,7 @@ public class LoginListener implements PacketLoginInListener {
+             c.info("Disconnecting " + this.i.getName() + ": " + s);
+             ChatComponentText chatcomponenttext = new ChatComponentText(s);
+ 
+-            this.networkManager.handle(new PacketLoginOutDisconnect(chatcomponenttext), new GenericFutureListener[0]);
++            this.networkManager.handle(new PacketLoginOutDisconnect(chatcomponenttext), NetworkManager.emptyListenerArray); // Poweruser
+             this.networkManager.close(chatcomponenttext);
+         } catch (Exception exception) {
+             c.error("Error whilst disconnecting player", exception);
+@@ -123,7 +123,7 @@ public class LoginListener implements PacketLoginInListener {
+                 } );
+             }
+             // Spigot end
+-            this.networkManager.handle(new PacketLoginOutSuccess(this.i), new GenericFutureListener[0]);
++            this.networkManager.handle(new PacketLoginOutSuccess(this.i), NetworkManager.emptyListenerArray); // Poweruser
+             this.server.getPlayerList().a(this.networkManager, this.server.getPlayerList().processLogin(this.i, s)); // CraftBukkit - add player reference
+         }
+     }
+@@ -146,7 +146,7 @@ public class LoginListener implements PacketLoginInListener {
+         this.i = packetlogininstart.c();
+         if (this.server.getOnlineMode() && !this.networkManager.c()) {
+             this.g = EnumProtocolState.KEY;
+-            this.networkManager.handle(new PacketLoginOutEncryptionBegin(this.j, this.server.K().getPublic(), this.e), new GenericFutureListener[0]);
++            this.networkManager.handle(new PacketLoginOutEncryptionBegin(this.j, this.server.K().getPublic(), this.e), NetworkManager.emptyListenerArray); // Poweruser
+         } else {
+             ThreadingManager.execute(new ThreadPlayerLookupUUID(this)); // Poweruser
+         }
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index 5a5604ca7..34a9f5557 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -68,6 +68,8 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+     }
+     // Spigot End
+ 
++    public static final GenericFutureListener[] emptyListenerArray = new GenericFutureListener[0]; // Poweruser
++
+     public NetworkManager(boolean flag) {
+         this.j = flag;
+     }
+diff --git a/src/main/java/net/minecraft/server/PacketStatusListener.java b/src/main/java/net/minecraft/server/PacketStatusListener.java
+index f1571f1bf..cf68d570d 100644
+--- a/src/main/java/net/minecraft/server/PacketStatusListener.java
++++ b/src/main/java/net/minecraft/server/PacketStatusListener.java
+@@ -125,11 +125,11 @@ public class PacketStatusListener implements PacketStatusInListener {
+         ping.setPlayerSample(playerSample);
+         ping.setServerInfo(new ServerPingServerData(minecraftServer.getServerModName() + " " + minecraftServer.getVersion(), networkManager.getVersion())); // TODO: Update when protocol changes
+ 
+-        this.networkManager.handle(new PacketStatusOutServerInfo(ping), new GenericFutureListener[0]);
++        this.networkManager.handle(new PacketStatusOutServerInfo(ping), NetworkManager.emptyListenerArray); // Poweruser
+         // CraftBukkit end
+     }
+ 
+     public void a(PacketStatusInPing packetstatusinping) {
+-        this.networkManager.handle(new PacketStatusOutPong(packetstatusinping.c()), new GenericFutureListener[0]);
++        this.networkManager.handle(new PacketStatusOutPong(packetstatusinping.c()), NetworkManager.emptyListenerArray); // Poweruser
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index c8d718d97..6a48c8003 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -804,7 +804,7 @@ public class PlayerConnection implements PacketPlayInListener {
+         // CraftBukkit end
+ 
+         try {
+-            this.networkManager.handle(packet, new GenericFutureListener[0]);
++            this.networkManager.handle(packet, NetworkManager.emptyListenerArray); // Poweruser
+         } catch (Throwable throwable) {
+             CrashReport crashreport = CrashReport.a(throwable, "Sending packet");
+             CrashReportSystemDetails crashreportsystemdetails = crashreport.a("Packet being sent");
+-- 
+2.13.3
+

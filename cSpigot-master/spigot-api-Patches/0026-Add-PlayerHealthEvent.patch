@@ -1,0 +1,52 @@
+From 53848cb00964607cfeee2d1aedee7a8b9bd37fa0 Mon Sep 17 00:00:00 2001
+From: Francisco Saldanha <francisco.gsaldanha@gmail.com>
+Date: Thu, 13 Apr 2017 18:28:14 -0300
+Subject: [PATCH] Add PlayerHealthEvent
+
+
+diff --git a/src/main/java/org/bukkit/event/player/PlayerHealthChangeEvent.java b/src/main/java/org/bukkit/event/player/PlayerHealthChangeEvent.java
+new file mode 100644
+index 00000000..0ca0c8b0
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/player/PlayerHealthChangeEvent.java
+@@ -0,0 +1,37 @@
++package org.bukkit.event.player;
++
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++
++public class PlayerHealthChangeEvent extends PlayerEvent {
++
++    private static final HandlerList handlers = new HandlerList();
++
++    private final double previousHealth;
++    private final double newHealth;
++
++    public PlayerHealthChangeEvent(final Player player, final double previousHealth, final double newHealth) {
++        super(player);
++
++        this.previousHealth = previousHealth;
++        this.newHealth = newHealth;
++    }
++
++    public double getPreviousHealth() {
++        return previousHealth;
++    }
++
++    public double getNewHealth() {
++        return newHealth;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++
++}
+-- 
+2.11.0.windows.3
+

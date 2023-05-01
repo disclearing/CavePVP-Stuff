@@ -1,0 +1,283 @@
+From 6725b437b9a86d3fee08aa9ce052fbac58130084 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Mon, 9 Jul 2018 13:36:57 -0500
+Subject: [PATCH] PotionEffect event updates
+
+
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
+index 248052ee..998d6ca2 100644
+--- a/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectAddEvent.java
+@@ -5,36 +5,73 @@ import org.bukkit.event.Cancellable;
+ import org.bukkit.event.HandlerList;
+ import org.bukkit.potion.PotionEffect;
+ 
+-import lombok.Getter;
+-import lombok.Setter;
+-
+-
++/**
++ * Called when a potion effect is applied to an entity, or an existing effect is extended or upgraded
++ */
+ public class PotionEffectAddEvent extends PotionEffectEvent implements Cancellable {
+-    
++
+     private static final HandlerList handlers = new HandlerList();
+-    
+-    @Getter @Setter private boolean cancelled;
+-    @Getter protected final EffectCause effectCause;
++
++    private boolean cancelled;
++    protected final EffectCause effectCause;
+ 
+     public PotionEffectAddEvent(LivingEntity entity, PotionEffect effect, EffectCause effectCause) {
+         super(entity, effect);
+         this.effectCause = effectCause;
+     }
+-    
++
++    public EffectCause getCause() {
++        return effectCause;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancelled = cancel;
++    }
++
+     @Override
+     public HandlerList getHandlers() {
+         return handlers;
+     }
+-    
++
+     public static HandlerList getHandlerList() {
+         return handlers;
+     }
+-    
++
++    /**
++     * The cause of receiving a potion effect
++     */
+     public enum EffectCause {
++
++        /**
++         * Indicates the effect was caused by the proximity of a potion effect splash
++         */
+         POTION_SPLASH,
++        /**
++         * Indicates the effect was caused by the proximity of a beacon
++         */
+         BEACON,
++        /**
++         * Indicates the effect was caused by damage from a wither skeleton
++         */
+         WITHER_SKELETON,
++        /**
++         * Indicates the effect was caused by damage from a wither skull
++         */
++        WITHER_SKULL,
++        /**
++         * Indicates the effect was caused by a plugin
++         */
+         PLUGIN,
++        /**
++         * Indicates the effect was caused by an event not covered by
++         * this enum
++         */
+         UNKNOWN
+     }
+-}
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
+index 4af5e2f3..6510a624 100644
+--- a/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectEvent.java
+@@ -3,21 +3,21 @@ package org.bukkit.event.entity;
+ import org.bukkit.entity.LivingEntity;
+ import org.bukkit.potion.PotionEffect;
+ 
+-import lombok.Getter;
+-
+ public abstract class PotionEffectEvent extends EntityEvent {
+-    
+-    @Getter private final PotionEffect effect;
+-    
++
++    private final PotionEffect effect;
++
+     public PotionEffectEvent(LivingEntity what, PotionEffect effect) {
+         super(what);
+         this.effect = effect;
+     }
+-    
++
+     @Override
+     public LivingEntity getEntity() {
+         return (LivingEntity) super.getEntity();
+     }
+-    
+-    
+-}
++
++    public PotionEffect getEffect() {
++        return effect;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
+index 14719849..e8d37105 100644
+--- a/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectExpireEvent.java
+@@ -3,28 +3,43 @@ package org.bukkit.event.entity;
+ import org.bukkit.entity.LivingEntity;
+ import org.bukkit.potion.PotionEffect;
+ 
+-import lombok.Getter;
+-
++/**
++ * Called when a potion effect on an entity runs out. Cancelling the event extends
++ * the effect with a practically infinite duration. The new duration can also be set
++ * explicitly by calling {@link #setDuration}.
++ *
++ * Handlers of {@link PotionEffectRemoveEvent} will also receive this event.
++ */
+ public class PotionEffectExpireEvent extends PotionEffectRemoveEvent {
+-    
+-    @Getter private int duration = 0;
+-    
++
++    private int duration = 0;
++
+     public PotionEffectExpireEvent(LivingEntity entity, PotionEffect effect) {
+         super(entity, effect);
+     }
+-    
++
++    /**
++     * Get the new duration for the potion effect. This is initially 0.
++     */
++    public int getDuration() {
++        return duration;
++    }
++
++    /**
++     * Set a new duration for the potion effect. Passing 0 to this method un-cancels
++     * the event, and passing anything above 0 cancels it.
++     */
+     public void setDuration(int duration) {
+         this.duration = Math.max(0, duration);
+     }
+-    
++
+     @Override
+     public boolean isCancelled() {
+         return duration > 0;
+     }
+-    
++
+     @Override
+     public void setCancelled(boolean cancel) {
+         this.duration = cancel ? Integer.MAX_VALUE : 0;
+     }
+-    
+-}
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
+index 3dbdd268..1292c2fb 100644
+--- a/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectExtendEvent.java
+@@ -3,14 +3,24 @@ package org.bukkit.event.entity;
+ import org.bukkit.entity.LivingEntity;
+ import org.bukkit.potion.PotionEffect;
+ 
+-import lombok.Getter;
+-
++/**
++ * Called when an entity's active potion effect is extended or upgraded.
++ *
++ * Handlers of {@link PotionEffectAddEvent} will also receive this event.
++ */
+ public class PotionEffectExtendEvent extends PotionEffectAddEvent {
+-    
+-    @Getter private final PotionEffect oldEffect;
+-    
++
++    private final PotionEffect oldEffect;
++
+     public PotionEffectExtendEvent(LivingEntity entity, PotionEffect effect, PotionEffect oldEffect, EffectCause effectCause) {
+         super(entity, effect, effectCause);
+         this.oldEffect = oldEffect;
+     }
+-}
++
++    /**
++     * Get the state of the potion effect prior to the change
++     */
++    public PotionEffect getOldEffect() {
++        return oldEffect;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java b/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
+index 4bb7f51e..0622dd09 100644
+--- a/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
++++ b/src/main/java/org/bukkit/event/entity/PotionEffectRemoveEvent.java
+@@ -5,26 +5,35 @@ import org.bukkit.event.Cancellable;
+ import org.bukkit.event.HandlerList;
+ import org.bukkit.potion.PotionEffect;
+ 
+-import lombok.Getter;
+-import lombok.Setter;
+-
++/**
++ * Called when a potion effect is removed from an entity for whatever reason
++ */
+ public class PotionEffectRemoveEvent extends PotionEffectEvent implements Cancellable {
+-    
++
+     private static final HandlerList handlers = new HandlerList();
+-    
+-    @Getter @Setter private boolean cancelled;
+-    
++
++    private boolean cancelled;
++
+     public PotionEffectRemoveEvent(LivingEntity entity, PotionEffect effect) {
+         super(entity, effect);
+     }
+-    
++
++    @Override
++    public boolean isCancelled() {
++        return cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancelled = cancel;
++    }
++
+     @Override
+     public HandlerList getHandlers() {
+         return handlers;
+     }
+-    
++
+     public static HandlerList getHandlerList() {
+         return handlers;
+     }
+-    
+-}
++}
+\ No newline at end of file
+-- 
+2.15.2 (Apple Git-101.1)
+

@@ -1,0 +1,80 @@
+From 34ddc9450aea569a818cecaecd930d4f04c2f132 Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sat, 24 Jun 2017 13:13:55 -0700
+Subject: [PATCH] Optimise Block by ID and ID by Block lookups
+
+
+diff --git a/src/main/java/net/minecraft/server/Block.java b/src/main/java/net/minecraft/server/Block.java
+index d7a941538..33c5a963c 100644
+--- a/src/main/java/net/minecraft/server/Block.java
++++ b/src/main/java/net/minecraft/server/Block.java
+@@ -50,12 +50,23 @@ public class Block {
+     public float frictionFactor;
+     private String name;
+ 
++    // MineHQ start
++    private int blockId = -1;
++    private static final Block[] blocksArray = new Block[4096]; 
++    // MineHQ end
++
+     public static int getId(Block block) {
+-        return REGISTRY.b(block);
++        return block == null ? 0 : block.blockId; // MineHQ
+     }
+ 
+     public static Block getById(int i) {
+-        return blockCache.getById(i); // Poweruser
++        // MineHQ start
++        if (0 <= i && i < 4096) {
++            return blocksArray[i];
++        }
++        
++        return null;
++        // MineHQ end
+     }
+ 
+     public static Block a(Item item) {
+@@ -290,28 +301,21 @@ public class Block {
+         REGISTRY.a(173, "coal_block", (new Block(Material.STONE)).c(5.0F).b(10.0F).a(i).c("blockCoal").a(CreativeModeTab.b).d("coal_block"));
+         REGISTRY.a(174, "packed_ice", (new BlockPackedIce()).c(0.5F).a(k).c("icePacked").d("ice_packed"));
+         REGISTRY.a(175, "double_plant", new BlockTallPlant());
+-        Iterator iterator = REGISTRY.iterator();
+-
+-        while (iterator.hasNext()) {
+-            Block block10 = (Block) iterator.next();
+-
+-            if (block10.material == Material.AIR) {
+-                block10.u = false;
+-            } else {
+-                boolean flag = false;
+-                boolean flag1 = block10.b() == 10;
+-                boolean flag2 = block10 instanceof BlockStepAbstract;
+-                boolean flag3 = block10 == block4;
+-                boolean flag4 = block10.s;
+-                boolean flag5 = block10.r == 0;
+-
+-                if (flag1 || flag2 || flag3 || flag4 || flag5) {
+-                    flag = true;
+-                }
+ 
+-                block10.u = flag;
++        // MineHQ start - blocks array
++        for (int prefillIndex = 0; prefillIndex < 4096; prefillIndex++) {
++            Block prefillBlock = (Block) REGISTRY.a(prefillIndex);
++            if (prefillBlock != null) {
++                if (prefillBlock.blockId == -1) prefillBlock.blockId = prefillIndex;
++                blocksArray[prefillIndex] = prefillBlock;
++                if (block.material == Material.AIR) {
++                    block.u = false;
++                } else {
++                    block.u = block == block4 || block.s || block.r == 0 || block.b() == 10 || block instanceof BlockStepAbstract;
++                }
+             }
+         }
++        // MineHQ end
+     }
+ 
+     protected Block(Material material) {
+-- 
+2.13.3
+

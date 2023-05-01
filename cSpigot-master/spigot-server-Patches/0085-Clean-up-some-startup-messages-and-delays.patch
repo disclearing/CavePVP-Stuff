@@ -1,0 +1,55 @@
+From 26d6231921fef728cc33973c20bd68c0112f00e9 Mon Sep 17 00:00:00 2001
+From: Colin McDonald <macguy8.main@gmail.com>
+Date: Sat, 4 Jul 2015 01:08:56 -0400
+Subject: [PATCH] Clean up some startup messages and delays
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index 0d7a9d60c..f958a7f2c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -138,32 +138,7 @@ public class Main {
+             }
+         } else if (options.has("v")) {
+             System.out.println(CraftServer.class.getPackage().getImplementationVersion());
+-        } else {
+-            // Spigot start - Update 20140909b
+-            File lock = new File( ".update-lock" );
+-            if ( !new File( "update-lock" ).exists() && !lock.exists()  && System.getProperty( "IReallyKnowWhatIAmDoingThisUpdate" ) == null )
+-            {
+-                System.err.println( "WARNING: This Minecraft update alters the way in which saved data is stored." );
+-                System.err.println( "Please ensure your server is in the correct online/offline mode state, as the changes made are PERMANENT" );
+-                System.err.println( "If you are running in offline mode, but your BungeeCord is in online mode, it is imperative that BungeeCord support is enabled in spigot.yml and BungeeCord's config.yml" );
+-                System.err.println( "By typing `yes` you acknowledge that you have taken the necessary backups and are aware of this conversion" );
+-                System.err.println( "Please type yes to continue starting the server. You have been warned :)" );
+-                System.err.println( "See http://www.spigotmc.org/wiki/uuid-conversion/ if you have any questions and remember BACKUP BACKUP BACKUP" );
+-                System.err.println( "=================================================================================" );
+-                System.err.println( "Starting server in 10 seconds" );
+-                lock.createNewFile();
+-                try
+-                {
+-                    Thread.sleep( TimeUnit.SECONDS.toMillis( 10 ) );
+-                } catch ( InterruptedException ex )
+-                {
+-                }
+-            }
+-
+-            System.err.println( "This PaperSpigot build only supports Minecraft 1.7.x and 1.8.x clients!\n"
+-                    + "*** It is imperative that backups be taken before running this build on your server! ***\n"
+-                    + "Please report issues directly to Paper, and always ensure you're up-to-date!\n"
+-                    + "*** Any bug reports not running the very latest version of the software will be ignored ***\n\n" );
++        }
+ 
+             // Spigot end
+ 
+@@ -209,7 +184,6 @@ public class Main {
+             } catch (Throwable t) {
+                 t.printStackTrace();
+             }
+-        }
+     }
+ 
+     private static List<String> asList(String... params) {
+-- 
+2.13.3
+

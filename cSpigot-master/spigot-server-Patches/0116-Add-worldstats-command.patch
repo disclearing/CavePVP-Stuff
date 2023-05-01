@@ -1,0 +1,329 @@
+From 9f73fe271f41928e09451c36f817d87c6ce24947 Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Sat, 26 Dec 2015 06:59:09 +0100
+Subject: [PATCH] Add worldstats command
+
+
+diff --git a/src/main/java/net/frozenorb/ThreadingManager.java b/src/main/java/net/frozenorb/ThreadingManager.java
+index 0698caa61..0ee93dbf0 100644
+--- a/src/main/java/net/frozenorb/ThreadingManager.java
++++ b/src/main/java/net/frozenorb/ThreadingManager.java
+@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledFuture;
+ import java.util.concurrent.TimeUnit;
+ import java.util.concurrent.atomic.AtomicInteger;
+ 
++import net.frozenorb.command.WorldStatsCommand.WorldStatsTask;
+ import net.frozenorb.pathsearch.PathSearchThrottlerThread;
+ import net.frozenorb.pathsearch.jobs.PathSearchJob;
+ import net.minecraft.server.NBTCompressedStreamTools;
+@@ -171,4 +172,8 @@ public class ThreadingManager {
+         public void tickFinishedEarly() {
+         }
+     }
++
++    public static void addWorldStatsTask(WorldStatsTask task) {
++        instance.timerService.schedule(task, 2, TimeUnit.SECONDS);
++    }
+ }
+diff --git a/src/main/java/net/frozenorb/command/WorldStatsCommand.java b/src/main/java/net/frozenorb/command/WorldStatsCommand.java
+new file mode 100644
+index 000000000..e90dd1049
+--- /dev/null
++++ b/src/main/java/net/frozenorb/command/WorldStatsCommand.java
+@@ -0,0 +1,220 @@
++package net.frozenorb.command;
++
++import java.text.DecimalFormat;
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.Comparator;
++import java.util.LinkedList;
++import java.util.List;
++
++import net.frozenorb.ThreadingManager;
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.server.WorldServer;
++
++import org.bukkit.Bukkit;
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.command.ConsoleCommandSender;
++import org.bukkit.craftbukkit.SpigotTimings;
++import org.bukkit.plugin.SimplePluginManager;
++import org.spigotmc.CustomTimingsHandler;
++
++public class WorldStatsCommand extends Command {
++
++    public static WorldStatsTask task = null;
++
++    public WorldStatsCommand(String name) {
++        super(name);
++        this.usageMessage = "/worldstats";
++        this.description = "Displays technically important details about the active worlds";
++        this.setPermission("valor.command.worldstats");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String currentAlias, String[] args) {
++        if(!this.testPermission(sender)) { return true; }
++
++        SimplePluginManager pm = (SimplePluginManager)Bukkit.getPluginManager();
++        boolean isTimingsAlreadyOn = pm.useTimings();
++
++        if(task == null) {
++            task = new WorldStatsTask(isTimingsAlreadyOn);
++            ThreadingManager.addWorldStatsTask(task);
++            if(!isTimingsAlreadyOn) {
++                pm.useTimings(true);
++                CustomTimingsHandler.reload();
++            }
++        }
++        task.addSender(sender);
++        return true;
++    }
++
++    public class WorldStatsTask implements Runnable {
++
++        private List<CommandSender> senderList = new ArrayList<CommandSender>();
++        private WorldNameComparator comparator = new WorldNameComparator();
++        private DecimalFormat formater = new DecimalFormat("###0.0");
++
++        private boolean wasTimingAlreadyOn;
++
++        public WorldStatsTask(boolean wasTimingAlreadyOn) {
++            this.wasTimingAlreadyOn = wasTimingAlreadyOn;
++        }
++
++        private void broadcastMessage(String msg) {
++            for(CommandSender sender: this.senderList) {
++                if(sender instanceof ConsoleCommandSender) {
++                    sender.sendMessage(ChatColor.stripColor(msg));
++                } else {
++                    sender.sendMessage(msg);
++                }
++            }
++        }
++
++        @Override
++        public void run() {
++            WorldStatsCommand.task = null;
++            SimplePluginManager pm = (SimplePluginManager) Bukkit.getPluginManager();
++            pm.useTimings(this.wasTimingAlreadyOn);
++
++            StringBuilder sb = new StringBuilder();
++            sb.append("[mSpigot]");
++            sb.append(ChatColor.GOLD);
++            sb.append(" WorldStats:");
++            sb.append("\n");
++            sb.append(ChatColor.GRAY);
++            sb.append("Name  ");
++            sb.append(ChatColor.YELLOW);
++            sb.append("Chunks  ");
++            sb.append(ChatColor.GREEN);
++            sb.append("Entites  ");
++            sb.append(ChatColor.BLUE);
++            sb.append("TileEntities  ");
++            sb.append(ChatColor.DARK_PURPLE);
++            sb.append("Players  ");
++            sb.append(ChatColor.RED);
++            sb.append("TickTime");
++            sb.append("\n");
++
++            List<WorldServer> worlds = new LinkedList<WorldServer>();
++            worlds.addAll(MinecraftServer.getServer().worlds);
++            Collections.sort(worlds, this.comparator);
++            InfoHolder overall = new InfoHolder("TOTAL");
++
++            for(WorldServer ws: worlds) {
++                InfoHolder worldDetails = this.readWorldDetails(ws);
++                overall.add(worldDetails);
++                sb.append(ChatColor.GRAY);
++                sb.append(worldDetails.name);
++                sb.append("  ");
++                sb.append(ChatColor.YELLOW);
++                sb.append(worldDetails.chunks);
++                sb.append(ChatColor.RED);
++                sb.append("(");
++                sb.append(formatNanoToMilliseconds(ws.timings.doTick.getRecentAverage()));
++                sb.append(")  ");
++                sb.append(ChatColor.GREEN);
++                sb.append(worldDetails.entities);
++                sb.append(ChatColor.RED);
++                sb.append("(");
++                sb.append(formatNanoToMilliseconds(ws.timings.entityTick.getRecentAverage()));
++                sb.append(" | ");
++                sb.append(ChatColor.DARK_PURPLE);
++                sb.append(formatNanoToMilliseconds(ws.timings.entityPlayerTickNormal.getRecentAverage()));
++                sb.append(ChatColor.RED);
++                sb.append(" | ");
++                sb.append(ChatColor.DARK_PURPLE);
++                sb.append(formatNanoToMilliseconds(ws.timings.entityPlayerTickOnMove.getRecentAverage()));
++                sb.append(ChatColor.RED);
++                sb.append(")  ");
++                sb.append(ChatColor.BLUE);
++                //sb.append(worldDetails.tileEntities);
++                sb.append("--");
++                sb.append(ChatColor.RED);
++                sb.append("(");
++                sb.append(formatNanoToMilliseconds(ws.timings.tileEntityTick.getRecentAverage()));
++                sb.append(")  ");
++                sb.append(ChatColor.DARK_PURPLE);
++                sb.append(worldDetails.players);
++                sb.append(ChatColor.RED);
++                sb.append("(");
++                sb.append(formatNanoToMilliseconds(ws.timings.tracker.getRecentAverage()));
++                sb.append(")  ");
++                sb.append("\n");
++            }
++
++            sb.append(ChatColor.DARK_AQUA);
++            sb.append(ChatColor.BOLD);
++            sb.append(overall.name);
++            sb.append(" ");
++            sb.append(ChatColor.RESET);
++            sb.append(ChatColor.YELLOW);
++            sb.append(overall.chunks);
++            sb.append("  ");
++            sb.append(ChatColor.GREEN);
++            sb.append(overall.entities);
++            sb.append("  ");
++            sb.append(ChatColor.BLUE);
++            //sb.append(overall.tileEntities);
++            sb.append("--");
++            sb.append("  ");
++            sb.append(ChatColor.DARK_PURPLE);
++            sb.append(overall.players);
++            sb.append(ChatColor.RED);
++            sb.append("  (");
++            sb.append(formatNanoToMilliseconds(SpigotTimings.serverTickTimer.getRecentAverage()));
++            sb.append(")");
++            this.broadcastMessage(sb.toString());
++        }
++
++        public void addSender(CommandSender sender) {
++            if(!this.senderList.contains(sender)) {
++                this.senderList.add(sender);
++            }
++        }
++
++        private String formatNanoToMilliseconds(long nano) {
++            long milliPlusOne = nano / 100000L;
++            double milli = (double) milliPlusOne / 10.0F;
++            return this.formater.format(milli);
++        }
++
++        private class InfoHolder {
++            public String name;
++            public int chunks = 0;
++            public int entities = 0;
++            public int tileEntities = 0;
++            public int players = 0;
++
++            public InfoHolder(String name) {
++                this.name = name;
++            }
++
++            public void add(InfoHolder ih) {
++                this.chunks += ih.chunks;
++                this.entities += ih.entities;
++                this.tileEntities += ih.tileEntities;
++                this.players += ih.players;
++            }
++        }
++
++        private class WorldNameComparator implements Comparator<WorldServer> {
++            @Override
++            public int compare(WorldServer arg0, WorldServer arg1) {
++                String n1 = arg0.getWorld().getName();
++                String n2 = arg1.getWorld().getName();
++                return n1.compareToIgnoreCase(n2);
++            }
++        }
++
++        private InfoHolder readWorldDetails(WorldServer ws) {
++            InfoHolder ih = new InfoHolder(ws.getWorld().getName());
++            ih.chunks = ws.chunkProviderServer.chunks.size();
++            ih.entities = ws.entityList.size();
++            //ih.tileEntities = ws.tileEntityList.size();
++            ih.players = ws.players.size();
++            return ih;
++        }
++    }
++}
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 11a1fb294..3581aa392 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -179,6 +179,8 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     }
+ 
+     public void h() {
++        this.world.timings.entityPlayerTickNormal.startTiming(); // Poweruser
++
+         // CraftBukkit start
+         if (this.joining) {
+             this.joining = false;
+@@ -253,9 +255,11 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+                 }
+             }
+         }
++        this.world.timings.entityPlayerTickNormal.stopTiming(); // Poweruser
+     }
+ 
+     public void i() {
++        this.world.timings.entityPlayerTickOnMove.startTiming(); // Poweruser
+         try {
+             super.h();
+ 
+@@ -317,6 +321,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+             this.a(crashreportsystemdetails);
+             throw new ReportedException(crashreport);
+         }
++        this.world.timings.entityPlayerTickOnMove.stopTiming(); // Poweruser
+     }
+ 
+     protected void j() {
+diff --git a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+index 41d2d87ee..e1c779bf1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
++++ b/src/main/java/org/bukkit/craftbukkit/SpigotTimings.java
+@@ -131,6 +131,10 @@ public class SpigotTimings {
+         public final CustomTimingsHandler tracker;
+         public final CustomTimingsHandler doTick;
+         public final CustomTimingsHandler tickEntities;
++        // Poweruser start
++        public final CustomTimingsHandler entityPlayerTickNormal;
++        public final CustomTimingsHandler entityPlayerTickOnMove;
++        // Poweruser end
+ 
+         public final CustomTimingsHandler syncChunkLoadTimer;
+         public final CustomTimingsHandler syncChunkLoadDataTimer;
+@@ -155,6 +159,10 @@ public class SpigotTimings {
+             entityTick = new CustomTimingsHandler("** " + name + "entityTick");
+             tileEntityTick = new CustomTimingsHandler("** " + name + "tileEntityTick");
+             tileEntityPending = new CustomTimingsHandler("** " + name + "tileEntityPending");
++            // Poweruser start
++            entityPlayerTickNormal = new CustomTimingsHandler("** " + name + "entityPlayerTick_normal");
++            entityPlayerTickOnMove = new CustomTimingsHandler("** " + name + "entityPlayerTick_onMove");
++            // Poweruser end
+ 
+             syncChunkLoadTimer = new CustomTimingsHandler("** " + name + "syncChunkLoad");
+             syncChunkLoadDataTimer = new CustomTimingsHandler("** " + name + "syncChunkLoad - Data");
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index 0fb5da06d..213af4299 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -412,5 +412,9 @@ public class SpigotConfig
+     {
+         commands.put( "tps2", new net.frozenorb.command.TPSCommand( "tps2" ) );
+     }
++
++    private static void worldstatsCommand() {
++        commands.put( "worldstats", new net.frozenorb.command.WorldStatsCommand( "worldstats" ) );
++    }
+     // Poweruser end
+ }
+-- 
+2.13.3
+

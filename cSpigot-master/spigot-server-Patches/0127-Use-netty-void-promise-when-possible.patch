@@ -1,0 +1,68 @@
+From ce4d526440266439e71216af16b3bcc1bac6be11 Mon Sep 17 00:00:00 2001
+From: Poweruser_rs <poweruser.rs@hotmail.com>
+Date: Sun, 21 Feb 2016 22:34:29 +0100
+Subject: [PATCH] Use netty void promise when possible
+
+
+diff --git a/src/main/java/net/minecraft/server/NetworkManager.java b/src/main/java/net/minecraft/server/NetworkManager.java
+index 34a9f5557..b35650ee0 100644
+--- a/src/main/java/net/minecraft/server/NetworkManager.java
++++ b/src/main/java/net/minecraft/server/NetworkManager.java
+@@ -144,11 +144,13 @@ public class NetworkManager extends SimpleChannelInboundHandler {
+         }
+ 
+         if (this.m.eventLoop().inEventLoop()) {
++            /* Poweruser - is done in QueuedProtocolSwitch.execute(..)
+             if (enumprotocol != enumprotocol1) {
+                 this.a(enumprotocol);
+             }
++            */
+ 
+-            this.m.writeAndFlush(packet).addListeners(agenericfuturelistener).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
++            QueuedProtocolSwitch.execute(this, enumprotocol, enumprotocol1, packet, agenericfuturelistener); // Poweruser
+         } else {
+             this.m.eventLoop().execute(new QueuedProtocolSwitch(this, enumprotocol, enumprotocol1, packet, agenericfuturelistener));
+         }
+diff --git a/src/main/java/net/minecraft/server/QueuedProtocolSwitch.java b/src/main/java/net/minecraft/server/QueuedProtocolSwitch.java
+index 344e4f00b..5af794649 100644
+--- a/src/main/java/net/minecraft/server/QueuedProtocolSwitch.java
++++ b/src/main/java/net/minecraft/server/QueuedProtocolSwitch.java
+@@ -1,9 +1,10 @@
+ package net.minecraft.server;
+ 
+ import net.minecraft.util.io.netty.channel.ChannelFutureListener;
++import net.minecraft.util.io.netty.channel.ChannelPromise; // Poweruser
+ import net.minecraft.util.io.netty.util.concurrent.GenericFutureListener;
+ 
+-class QueuedProtocolSwitch implements Runnable {
++public class QueuedProtocolSwitch implements Runnable { // Poweruser - public
+ 
+     final EnumProtocol a;
+     final EnumProtocol b;
+@@ -20,10 +21,20 @@ class QueuedProtocolSwitch implements Runnable {
+     }
+ 
+     public void run() {
+-        if (this.a != this.b) {
+-            this.e.a(this.a);
++    // Poweruser start
++        execute(this.e, this.a, this.b, this.c, this.d);
++    }
++
++    public static void execute(NetworkManager networkmanager, EnumProtocol enumprotocol, EnumProtocol enumprotocol1, Packet packet, GenericFutureListener[] agenericfuturelistener) {
++        if (enumprotocol != enumprotocol1) {
++            networkmanager.a(enumprotocol);
+         }
+ 
+-        NetworkManager.a(this.e).writeAndFlush(this.c).addListeners(this.d).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
++        if(agenericfuturelistener == null || agenericfuturelistener.length == 0) {
++            NetworkManager.a(networkmanager).writeAndFlush(packet, NetworkManager.a(networkmanager).voidPromise());
++        } else {
++            NetworkManager.a(networkmanager).writeAndFlush(packet).addListeners(agenericfuturelistener).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
++        }
+     }
++    // Poweruser end
+ }
+-- 
+2.13.3
+

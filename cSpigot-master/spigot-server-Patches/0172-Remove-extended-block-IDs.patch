@@ -1,0 +1,350 @@
+From 59f832a3c448dcf688c0e7f89530c716b07ccfae Mon Sep 17 00:00:00 2001
+From: Alfie Cleveland <alfeh@me.com>
+Date: Sun, 18 Jun 2017 20:43:25 +0100
+Subject: [PATCH] Remove extended block IDs
+
+
+diff --git a/src/main/java/net/minecraft/server/ChunkRegionLoader.java b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+index 6907b40df..7a27c6c3d 100644
+--- a/src/main/java/net/minecraft/server/ChunkRegionLoader.java
++++ b/src/main/java/net/minecraft/server/ChunkRegionLoader.java
+@@ -226,10 +226,13 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+                 nbttagcompound1 = new NBTTagCompound();
+                 nbttagcompound1.setByte("Y", (byte) (chunksection.getYPosition() >> 4 & 255));
+                 nbttagcompound1.setByteArray("Blocks", chunksection.getIdArray());
++                // MineHQ start - 1.7 has no extended block IDs
++                /*
+                 if (chunksection.getExtendedIdArray() != null) {
+                     nbttagcompound1.setByteArray("Add", chunksection.getExtendedIdArray().a);
+                 }
+-
++                */
++                // MineHQ end
+                 nbttagcompound1.setByteArray("Data", chunksection.getDataArray().a);
+                 nbttagcompound1.setByteArray("BlockLight", chunksection.getEmittedLightArray().a);
+                 if (flag) {
+@@ -321,9 +324,13 @@ public class ChunkRegionLoader implements IChunkLoader, IAsyncChunkSaver {
+             ChunkSection chunksection = new ChunkSection(b1 << 4, flag);
+ 
+             chunksection.setIdArray(nbttagcompound1.getByteArray("Blocks"));
++            // MineHQ start - 1.7 has no extended block IDs
++            /*
+             if (nbttagcompound1.hasKeyOfType("Add", 7)) {
+                 chunksection.setExtendedIdArray(new NibbleArray(nbttagcompound1.getByteArray("Add"), 4));
+             }
++            */
++            // MineHQ end
+ 
+             chunksection.setDataArray(new NibbleArray(nbttagcompound1.getByteArray("Data"), 4));
+             chunksection.setEmittedLightArray(new NibbleArray(nbttagcompound1.getByteArray("BlockLight"), 4));
+diff --git a/src/main/java/net/minecraft/server/ChunkSection.java b/src/main/java/net/minecraft/server/ChunkSection.java
+index db1e52c98..b0e92d6c9 100644
+--- a/src/main/java/net/minecraft/server/ChunkSection.java
++++ b/src/main/java/net/minecraft/server/ChunkSection.java
+@@ -8,13 +8,13 @@ public class ChunkSection {
+     private int nonEmptyBlockCount;
+     private int tickingBlockCount;
+     private byte[] blockIds;
+-    private NibbleArray extBlockIds;
++    // private NibbleArray extBlockIds; // MineHQ - 1.7 has no extended block IDs
+     private NibbleArray blockData;
+     private NibbleArray emittedLight;
+     private NibbleArray skyLight;
+     // CraftBukkit start - Compact storage
+     private int compactId;
+-    private byte compactExtId;
++    // private byte compactExtId; // MineHQ
+     private byte compactData;
+     private byte compactEmitted;
+     private byte compactSky;
+@@ -65,9 +65,13 @@ public class ChunkSection {
+     public ChunkSection(int y, boolean flag, byte[] blkIds, byte[] extBlkIds) {
+         this.yPos = y;
+         this.setIdArray(blkIds);
++        // MineHQ start - 1.7 has no extended block IDs
++        /*
+         if (extBlkIds != null) {
+             this.setExtendedIdArray(new NibbleArray(extBlkIds, 4));
+         }
++        */
++        // MineHQ end
+         if (!flag) {
+             this.compactSky = -1;
+         }
+@@ -78,6 +82,8 @@ public class ChunkSection {
+     public Block getTypeId(int i, int j, int k) {
+         // CraftBukkit start - Compact storage
+         if (this.blockIds == null) {
++            // MineHQ start - 1.7 has no extended block IDs
++            /*
+             int id = this.compactId;
+             if (this.extBlockIds == null) {
+                 id |= this.compactExtId << 8;
+@@ -86,15 +92,21 @@ public class ChunkSection {
+             }
+ 
+             return Block.getById(id);
++            */
++            return Block.getById(this.compactId);
++            // MineHQ end
+         }
+         // CraftBukkit end
+ 
+         int l = this.blockIds[j << 8 | k << 4 | i] & 255;
+ 
++        // MineHQ start
++        /*
+         if (this.extBlockIds != null) {
+             l |= this.extBlockIds.a(i, j, k) << 8;
+         }
+-
++        */
++        // MineHQ end
+         return Block.getById(l);
+     }
+ 
+@@ -130,6 +142,8 @@ public class ChunkSection {
+         // CraftBukkit end
+ 
+         this.blockIds[j << 8 | k << 4 | i] = (byte) (i1 & 255);
++        // MineHQ start
++        /*
+         if (i1 > 255) {
+             if (this.extBlockIds == null) {
+                 this.extBlockIds = expandCompactNibble(this.compactExtId); // CraftBukkit - Compact storage
+@@ -139,6 +153,8 @@ public class ChunkSection {
+         } else if (this.extBlockIds != null) {
+             this.extBlockIds.a(i, j, k, 0);
+         }
++        */
++        // MineHQ end
+     }
+ 
+     public int getData(int i, int j, int k) {
+@@ -221,107 +237,37 @@ public class ChunkSection {
+         int cntNonEmpty = 0;
+         int cntTicking = 0;
+ 
++        // MineHQ start - 1.7 has no extended block IDs
+         if (this.blockIds == null) {
+             int id = this.compactId;
+-            if (this.extBlockIds == null) {
+-                id |= this.compactExtId << 8;
+-                if (id > 0) {
+-                    Block block = Block.getById(id);
+-                    if (block == null) {
+-                        this.compactId = 0;
+-                        this.compactExtId = 0;
+-                    } else {
+-                        cntNonEmpty = 4096;
+-                        if (block.isTicking()) {
+-                            cntTicking = 4096;
+-                        }
+-                    }
+-                }
+-            } else {
+-                byte[] ext = this.extBlockIds.a;
+-                for (int off = 0, off2 = 0; off < 4096;) {
+-                    byte extid = ext[off2];
+-                    int l = (id & 0xFF) | ((extid & 0xF) << 8); // Even data
+-                    if (l > 0) {
+-                        Block block = Block.getById(l);
+-                        if (block == null) {
+-                            this.compactId = 0;
+-                            ext[off2] &= 0xF0;
+-                        } else {
+-                            ++cntNonEmpty;
+-                            if (block.isTicking()) {
+-                                ++cntTicking;
+-                            }
+-                        }
+-                    }
+-                    off++;
+-                    l = (id & 0xFF) | ((extid & 0xF0) << 4); // Odd data
+-                    if (l > 0) {
+-                        Block block = Block.getById(l);
+-                        if (block == null) {
+-                            this.compactId = 0;
+-                            ext[off2] &= 0x0F;
+-                        } else {
+-                            ++cntNonEmpty;
+-                            if (block.isTicking()) {
+-                                ++cntTicking;
+-                            }
+-                        }
++            if (id > 0) {
++                Block block = Block.getById(id);
++                if (block == null) {
++                    this.compactId = 0;
++                } else {
++                    cntNonEmpty = 4096;
++                    if (block.isTicking()) {
++                        cntTicking = 4096;
+                     }
+-                    off++;
+-                    off2++;
+                 }
+             }
+         } else {
+             byte[] blkIds = this.blockIds;
+-            if (this.extBlockIds == null) { // No extended block IDs?  Don't waste time messing with them
+-                for (int off = 0; off < blkIds.length; off++) {
+-                    int l = blkIds[off] & 0xFF;
+-                    if (l > 0) {
+-                        if (Block.getById(l) == null) {
+-                            blkIds[off] = 0;
+-                        } else {
+-                            ++cntNonEmpty;
+-                            if (Block.getById(l).isTicking()) {
+-                                ++cntTicking;
+-                            }
+-                        }
+-                    }
+-                }
+-            } else {
+-                byte[] ext = this.extBlockIds.a;
+-                for (int off = 0, off2 = 0; off < blkIds.length;) {
+-                    byte extid = ext[off2];
+-                    int l = (blkIds[off] & 0xFF) | ((extid & 0xF) << 8); // Even data
+-                    if (l > 0) {
+-                        if (Block.getById(l) == null) {
+-                            blkIds[off] = 0;
+-                            ext[off2] &= 0xF0;
+-                        } else {
+-                            ++cntNonEmpty;
+-                            if (Block.getById(l).isTicking()) {
+-                                ++cntTicking;
+-                            }
+-                        }
+-                    }
+-                    off++;
+-                    l = (blkIds[off] & 0xFF) | ((extid & 0xF0) << 4); // Odd data
+-                    if (l > 0) {
+-                        if (Block.getById(l) == null) {
+-                            blkIds[off] = 0;
+-                            ext[off2] &= 0x0F;
+-                        } else {
+-                            ++cntNonEmpty;
+-                            if (Block.getById(l).isTicking()) {
+-                                ++cntTicking;
+-                            }
++            for (int off = 0; off < blkIds.length; off++) {
++                int l = blkIds[off] & 0xFF;
++                if (l > 0) {
++                    if (Block.getById(l) == null) {
++                        blkIds[off] = 0;
++                    } else {
++                        ++cntNonEmpty;
++                        if (Block.getById(l).isTicking()) {
++                            ++cntTicking;
+                         }
+                     }
+-                    off++;
+-                    off2++;
+                 }
+             }
+         }
++        // MineHQ end
+         this.nonEmptyBlockCount = cntNonEmpty;
+         this.tickingBlockCount = cntTicking;
+     }
+@@ -358,6 +304,8 @@ public class ChunkSection {
+         return this.blockIds;
+     }
+ 
++    // MineHQ start - 1.7 has no extended block IDs
++    /*
+     public NibbleArray getExtendedIdArray() {
+         // CraftBukkit start - Compact storage
+         if (this.extBlockIds == null && this.compactExtId != 0) {
+@@ -366,6 +314,8 @@ public class ChunkSection {
+         // CraftBukkit end
+         return this.extBlockIds;
+     }
++    */
++    // MineHQ end
+ 
+     public NibbleArray getDataArray() {
+         // CraftBukkit start - Compact storage
+@@ -408,6 +358,8 @@ public class ChunkSection {
+         this.blockIds = this.validateByteArray(abyte); // CraftBukkit - Validate data
+     }
+ 
++    // MineHQ start - 1.7 has no extended block IDs
++    /*
+     public void setExtendedIdArray(NibbleArray nibblearray) {
+         // CraftBukkit start - Compact storage
+         if (nibblearray == null) {
+@@ -421,6 +373,8 @@ public class ChunkSection {
+         // CraftBukkit end
+         this.extBlockIds = this.validateNibbleArray(nibblearray); // CraftBukkit - Validate data
+     }
++    */
++    // MineHQ end
+ 
+     public void setDataArray(NibbleArray nibblearray) {
+         // CraftBukkit start - Compact storage
+diff --git a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+index ee27c15e5..fed2f0492 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
++++ b/src/main/java/net/minecraft/server/PacketPlayOutMapChunk.java
+@@ -167,10 +167,13 @@ public class PacketPlayOutMapChunk extends Packet {
+         for (l = 0; l < achunksection.length; ++l) {
+             if (achunksection[l] != null && (!flag || !achunksection[l].isEmpty()) && (i & 1 << l) != 0) {
+                 chunkmap.b |= 1 << l;
++                // MineHQ start - 1.7 has no extended block IDs
++                /*
+                 if (achunksection[l].getExtendedIdArray() != null) {
+                     chunkmap.c |= 1 << l;
+                     ++k;
+                 }
++                */
+             }
+         }
+ 
+@@ -248,6 +251,8 @@ public class PacketPlayOutMapChunk extends Packet {
+             }
+         }
+ 
++        // MineHQ start - 1.7 has no extended block IDs
++        /*
+         if (k > 0 && version < 24) {
+             for (l = 0; l < achunksection.length; ++l) {
+                 if (achunksection[l] != null && (!flag || !achunksection[l].isEmpty()) && achunksection[l].getExtendedIdArray() != null && (i & 1 << l) != 0) {
+@@ -257,6 +262,8 @@ public class PacketPlayOutMapChunk extends Packet {
+                 }
+             }
+         }
++        */
++        // MineHQ end
+ 
+         if (flag) {
+             byte[] abyte2 = chunk.m();
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
+index 99d3d40f7..8208a06c2 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
+@@ -173,7 +173,9 @@ public class CraftChunk implements Chunk {
+                     blockids[j] = (short) (baseids[j] & 0xFF);
+                 }
+ 
+-                if (cs[i].getExtendedIdArray() != null) { /* If we've got extended IDs */
++                // MineHQ start - 1.7 has no extended block IDs
++                /*
++                if (cs[i].getExtendedIdArray() != null) { /* If we've got extended IDs *//*
+                     byte[] extids = cs[i].getExtendedIdArray().a;
+ 
+                     for (int j = 0; j < 2048; j++) {
+@@ -187,7 +189,8 @@ public class CraftChunk implements Chunk {
+                         blockids[(j<<1)+1] |= (b & 0xF0) << 4;
+                     }
+                 }
+-
++                */
++                // MineHQ end
+                 sectionBlockIDs[i] = blockids;
+ 
+                 /* Get block data nibbles */
+-- 
+2.13.3
+

@@ -1,0 +1,603 @@
+{
+  "chests": [
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 205.0,
+        "y": 32.0,
+        "z": -469.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 278.0,
+        "y": 35.0,
+        "z": -577.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 106.0,
+        "y": 34.0,
+        "z": -546.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 99.0,
+        "y": 32.0,
+        "z": -630.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 92.0,
+        "y": 33.0,
+        "z": -474.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 221.0,
+        "y": 31.0,
+        "z": -635.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 170.0,
+        "y": 36.0,
+        "z": -471.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 82.0,
+        "y": 36.0,
+        "z": -459.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 135.0,
+        "y": 32.0,
+        "z": -632.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 186.0,
+        "y": 34.0,
+        "z": -480.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 198.0,
+        "y": 31.0,
+        "z": -635.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 58.0,
+        "y": 34.0,
+        "z": -568.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 93.0,
+        "y": 38.0,
+        "z": -533.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 41.0,
+        "y": 37.0,
+        "z": -482.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 44.0,
+        "y": 34.0,
+        "z": -489.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 138.0,
+        "y": 32.0,
+        "z": -530.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 48.0,
+        "y": 36.0,
+        "z": -630.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 126.0,
+        "y": 34.0,
+        "z": -535.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 44.0,
+        "y": 32.0,
+        "z": -457.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 52.0,
+        "y": 34.0,
+        "z": -605.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 160.0,
+        "y": 32.0,
+        "z": -585.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 95.0,
+        "y": 40.0,
+        "z": -517.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    },
+    {
+      "location": {
+        "world": "world_nether",
+        "x": 47.0,
+        "y": 33.0,
+        "z": -522.0,
+        "yaw": 0.0,
+        "pitch": 0.0
+      }
+    }
+  ],
+  "loot": [
+    {
+      "type": "SNOW_BALL",
+      "amount": 4,
+      "data": 0,
+      "meta": {
+        "displayName": "§d§lSwitcher Ball",
+        "lore": [
+          "§7Switch positions with an enemy",
+          "§7within 8 blocks of you!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 2,
+      "data": 14,
+      "meta": {
+        "displayName": "§d§lPortable Bard",
+        "lore": [
+          "§7Click and choose to receive 5 of",
+          "§7any right-clickable bard effect!"
+        ]
+      }
+    },
+    {
+      "type": "STICK",
+      "amount": 3,
+      "data": 0,
+      "meta": {
+        "displayName": "§d§lAnti-Build Stick",
+        "lore": [
+          "§7Hit a player 3 times with this item",
+          "§7to prevent all block interactions!"
+        ]
+      }
+    },
+    {
+      "type": "RAW_FISH",
+      "amount": 3,
+      "data": 3,
+      "meta": {
+        "displayName": "§9§lDebuff",
+        "lore": [
+          "§7Hit a player 3 times to double",
+          "§7debuff them for 20 seconds!"
+        ]
+      }
+    },
+    {
+      "type": "SHEARS",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§3§lShark Bite",
+        "lore": [
+          "§7Hit an opponent to deal a bleeding effect for 10 seconds"
+        ]
+      }
+    },
+    {
+      "type": "WATCH",
+      "amount": 3,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§d§lPowerup",
+        "lore": [
+          "§7Receive the following effects for 10 seconds:",
+          "§7- §bSpeed 2",
+          "§7- §cStrength 1",
+          "§7- §6Resistance 1",
+          "§7- §dRegeneration 1"
+        ]
+      }
+    },
+    {
+      "type": "BOW",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "ARROW_DAMAGE",
+          "level": 3
+        },
+        {
+          "enchantment": "ARROW_INFINITE",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§2§lBow",
+        "lore": [
+          "§7Shoot an enemy and they will be",
+          "§7poisoned for 5 seconds!"
+        ]
+      }
+    },
+    {
+      "type": "NETHER_STAR",
+      "amount": 2,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§c§lGift",
+        "lore": [
+          "§7Right click to fully heal yourself",
+          "§7and receive 5 seconds of Strength II"
+        ]
+      }
+    },
+    {
+      "type": "STICK",
+      "amount": 4,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§d§lSwitch Stick",
+        "lore": [
+          "§7Rotates your opponent by 180 degrees"
+        ]
+      }
+    },
+    {
+      "type": "GOLD_INGOT",
+      "amount": 4,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lAnti-Bard",
+        "lore": [
+          "§7Hit an opponent to prevent them from",
+          "§7receiving bard effects for 1 minute"
+        ]
+      }
+    },
+    {
+      "type": "RAW_FISH",
+      "amount": 3,
+      "data": 2,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§9§lScrambler",
+        "lore": [
+          "§7Hit a player 3 times to",
+          "§7scramble their hotbar!"
+        ]
+      }
+    },
+    {
+      "type": "DIAMOND_SWORD",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "DAMAGE_ALL",
+          "level": 3
+        },
+        {
+          "enchantment": "FIRE_ASPECT",
+          "level": 2
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 4
+        }
+      ],
+      "meta": {
+        "displayName": "§5§lCitadel Sword",
+        "lore": [
+          "§9Bubble I",
+          "§eRepair IV",
+          "§dGrinding V"
+        ]
+      }
+    },
+    {
+      "type": "DIAMOND_HELMET",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 3
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 4
+        }
+      ],
+      "meta": {
+        "displayName": "§5§lCitadel Helmet",
+        "lore": [
+          "§eRepair IV",
+          "§3Saturation V",
+          "§9Water Breathing III"
+        ]
+      }
+    },
+    {
+      "type": "DIAMOND_CHESTPLATE",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 3
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 4
+        }
+      ],
+      "meta": {
+        "displayName": "§5§lCitadel Chestplate",
+        "lore": [
+          "§eRepair IV",
+          "§cRecover I"
+        ]
+      }
+    },
+    {
+      "type": "DIAMOND_LEGGINGS",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 3
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 4
+        }
+      ],
+      "meta": {
+        "displayName": "§5§lCitadel Leggings",
+        "lore": [
+          "§eRepair IV",
+          "§6Fire Resistance I"
+        ]
+      }
+    },
+    {
+      "type": "DIAMOND_BOOTS",
+      "amount": 1,
+      "data": 0,
+      "enchants": [
+        {
+          "enchantment": "PROTECTION_ENVIRONMENTAL",
+          "level": 3
+        },
+        {
+          "enchantment": "DURABILITY",
+          "level": 4
+        },
+        {
+          "enchantment": "PROTECTION_FALL",
+          "level": 4
+        }
+      ],
+      "meta": {
+        "displayName": "§5§lCitadel Boots",
+        "lore": [
+          "§bSpeed II",
+          "§eRepair IV"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 2,
+      "data": 10,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§a§lArmory Key",
+        "lore": [
+          "§7Right click a key chest to obtain rewards!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 2,
+      "data": 11,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§6§lWeaponry Key",
+        "lore": [
+          "§7Right click a key chest to obtain rewards!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 2,
+      "data": 9,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§d§lAbility Key",
+        "lore": [
+          "§7Right click a key chest to obtain rewards!"
+        ]
+      }
+    },
+    {
+      "type": "INK_SACK",
+      "amount": 2,
+      "data": 1,
+      "enchants": [
+        {
+          "enchantment": "DURABILITY",
+          "level": 1
+        }
+      ],
+      "meta": {
+        "displayName": "§4§lCE Key",
+        "lore": [
+          "§7Right click a key chest to obtain rewards!"
+        ]
+      }
+    }
+  ]
+}

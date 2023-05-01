@@ -1,0 +1,72 @@
+plugins {
+    id "org.jetbrains.kotlin.kapt"
+    id "com.github.johnrengelman.shadow"
+    id "net.minecrell.plugin-yml.bukkit" version "0.5.1"
+}
+
+group 'cc.fyre.modsuite'
+version '1.0-SNAPSHOT'
+
+apply plugin: "kotlin-kapt"
+
+dependencies {
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+    compileOnly "net.hylist:spigot-server:1.7.10-R0.1-SNAPSHOT"
+
+    compileOnly "com.comphenix.protocol:ProtocolLib:3.6.5-SNAPSHOT"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    compileOnly "redis.clients:jedis:$redis_version"
+    compileOnly "cc.fyre.proton:proton:1.0-SNAPSHOT"
+    compileOnly "cc.fyre.universe:spigot:1.0-SNAPSHOT"
+    compileOnly "cc.fyre.piston:piston:1.0-SNAPSHOT"
+    compileOnly "org.cavepvp.profiles:Profiles:1.0-SNAPSHOT"
+    compileOnly "cc.fyre.neutron:neutron:1.0-SNAPSHOT"
+
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+shadowJar {
+    shadowJar.archiveName = this.rootProject.name + "-" + this.name + "-" + this.version + ".jar"
+}
+
+publishing {
+
+    publications {
+
+        shadow(MavenPublication) {
+            publication -> project.shadow.component(publication)
+        }
+
+    }
+
+}
+
+bukkit {
+    main = 'cc.fyre.modsuite.ModSuite'
+    name = 'ModSuite'
+    depend = ['Proton','Universe','Neutron']
+    authors = ['Fyre Services']
+    softDepend = ['LunarClient-API']
+
+    try {
+        version = 'git-' + this.getGitHash()
+    } catch (Exception ignored) {
+        version = this.version
+    }
+
+    website = "https://fyre.cc"
+}
+
+String getGitHash() {
+    def output = new ByteArrayOutputStream()
+    exec {
+        standardOutput = output // Only the std, not errors as it's not to worry about as long as it's a repo
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+    }
+    return output.toString().trim()
+}

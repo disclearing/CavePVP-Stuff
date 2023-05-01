@@ -1,0 +1,71 @@
+{
+    "type": "NPC",
+    "name": "custom-rank",
+    "location": {
+        "world": "Spawn",
+        "x": 26.5,
+        "y": 70.0,
+        "z": 0.5,
+        "yaw": 93.11694,
+        "pitch": -0.0
+    },
+    "commands": [],
+    "equipment": [
+        null,
+        null,
+        null,
+        null,
+        null
+    ],
+    "faces": false,
+    "hologram": {
+        "name": "NPC_custom-rank_HOLOGRAM",
+        "location": {
+            "world": "Spawn",
+            "x": 26.5,
+            "y": 72.095,
+            "z": 0.5,
+            "yaw": 93.11694,
+            "pitch": -0.0
+        },
+        "lines": [
+            {
+                "type": "TEXT",
+                "text": "&e&ki&6&lCustom Rank&e&ki",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 72.095,
+                    "z": 0.5,
+                    "yaw": 93.11694,
+                    "pitch": -0.0
+                }
+            },
+            {
+                "type": "TEXT",
+                "text": "&f&ostore.cavepvp.org",
+                "location": {
+                    "world": "Spawn",
+                    "x": 26.5,
+                    "y": 71.865,
+                    "z": 0.5,
+                    "yaw": 93.11694,
+                    "pitch": -0.0
+                }
+            }
+        ],
+        "animations": [],
+        "visibility": "VISIBLE"
+    },
+    "signature": "bXBf7aY/nF9j4gIoTrOByLbo+NLiIMz7BCTZW8WRXikG9uZpSLuzUeqxnPyGbHxMpcmREIz65JZxK97i9F5lI90uOASB3Stw4ltX87aW4A9axkRyKScj08I9Rn+UHKpKTTnbqZs68eFpKWQMLUQYFEnw+NZcLiOSoTBwxWchzYJSyESjrq2caedvvBi2V0c0o/Yr3VrMAQSyFtSzTWyyKx31vZEX49TZ07kmywczlGWfadUaP++C9FY+J2nVuN8Y21t9UE12BvWRldF9BVRylEqzRnkr5Y/P3pQAGD76tzonY10jCa4Hz8l4+WeSPi5/bfWJP3FAnXkQOayRNaMq6B8yhWhUF08CVuRh7kHW9o2URnYZb+QEFs+A5HzOhwunLyQiyYbilrgfw4lCId5hJSuLxUFrh7cKKumLycKXKHXdVgbqjjdUlJAYyCB+hp7kmI8R0NqHXltyrXZS8/3qEO/lzzZtURUyINlpRyMTiIsJ02p12qd+FhoQMPbFacFaLTTBHV6Mw1/H6zFmNYxzlo2BYqSdOj0T12u69wCvRV1iuFrIrxvhSntqojvf0ZONZSvwVHuuHH4fur9w0+e1/g2wdgSDgWj4OnCu55fb5W4uDvK4/JrSdSEKE1uikxdbcLtV65fi0Vur883qcyeW6Tq1+LbR2JzI2CdxLJGOGtc=",
+    "skinUsername": "SimplyTrash",
+    "swing": true,
+    "tabVisibility": "HIDDEN",
+    "tagVisibility": "HIDDEN",
+    "texture": "ewogICJ0aW1lc3RhbXAiIDogMTY2NTk1MjE1NDg5MiwKICAicHJvZmlsZUlkIiA6ICIwZjdhNGU5ODdmNTA0NjU0ODMzNGVlMTcxMDkyNWFjZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTaW1wbHlUcmFzaCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9jMTEwYWY1M2YyZmEyZDdlODIwMWIxODY4Yjc3ZGZiNGJkNmZkZDY5ODRkMmZkYzFhZjZiOTkxMDUzM2RhOWY4IgogICAgfQogIH0KfQ==",
+    "animations": [
+        "Rings_YELLOW",
+        "Rings_GOLD"
+    ],
+    "visibility": "VISIBLE"
+}
